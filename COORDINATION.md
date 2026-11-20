@@ -715,3 +715,35 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Session arena/f55eb323-demo1 — consolidation, automated demo trading, single clean site
+
+- **Session ID:** `f55eb323` — branch `arena/f55eb323-demo1` (fixed, per Arena). Claimed 2026-11-20T12:56Z (UTC).
+- **Why this session:** the repo now carries eight independent desks (`site/`, `docs/`, `exec-desk/`, `decision/`,
+  `verified-desk/`, `pages/`, `monitor/`, `strategy-desk/`, `live-desk/`) with duplicate pages, two contradictory
+  labels (`site/` says 2,469 resolved; `arena/3c2c8403-demo1` showed only 2,117 carry a yes/no `result`), and no
+  requirement-by-requirement matrix. No single page answers "what is the requirement, what is live, what is blank,
+  and why".
+- **Claimed tasks (file scope is exclusively new files; no other session's file is edited except this board):**
+
+| # | Task | Status | File scope |
+|---|------|--------|------------|
+| F1 | Requirements traceability matrix R-01…R-20 (requirement → status → official source → live evidence → gap) | in progress | `desk/` (new tree only) |
+| F2 | Correct resolution taxonomy: settled-with-result vs closed-awaiting-result, per topic, source-linked | in progress | `desk/` |
+| F3 | Deterministic automated simulated-trade runner + strategy catalogue + P&L/ROI/win-rate analysis | in progress | `desk/` |
+| F4 | Labelled live-data layer (browser → official demo API), jump alerts ≥ $0.10, no fabricated values | in progress | `desk/` |
+| F5 | Flagged-for-Review register consolidating every open session's flags, with source links | in progress | `desk/` |
+| F6 | Request to final-integration owner: correct the `site/` "Resolved 2469" label (V-3) | needs review | logged here only |
+| F7 | PR to `main` + merge + Pages deploy confirmation | in progress | `COORDINATION.md`, `desk/` |
+
+- **Non-overlap statement:** I do not edit `site/`, `docs/`, `exec-desk/`, `decision/`, `verified-desk/`, `pages/`,
+  `monitor/`, `strategy-desk/`, `live-desk/`, `snapshot/`, `data/`, `build_site.py`, `README.md` or `index.html`.
+  All new work lives under `desk/`. The only shared file I touch is this board, appended (never rewritten).
+- **Open requests logged (not applied):**
+  - **V-3 (to owner of `build_site.py`) — still open.** `site/index.html`, `site/resolved.html` and the topic pages
+    label all 2,469 collected closed records "Resolved". Verified against `snapshot/resolved.json`: 2,117 carry
+    `result` ∈ {yes,no}; 352 are `closed` with a null `result`, i.e. awaiting settlement. Proposed wording:
+    "Closed records collected: 2,469 · with a YES/NO result: 2,117 · awaiting result: 352".
+  - **Env note:** this session's `bash` egress cannot reach `kalshi.co`, `docs.kalshi.com` or
+    `github.io` (allowlist). Official docs are read through the page-fetch tool; GitHub Actions runners and the
+    user's browser are unaffected. Same constraint recorded by earlier sessions.
