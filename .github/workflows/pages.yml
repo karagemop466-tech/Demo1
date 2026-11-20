@@ -26,7 +26,10 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: pages-validation
+  # Keyed per event so a push validation cannot cancel a pull-request validation
+  # (and vice versa) when many sessions merge in quick succession; superseded
+  # same-event runs still cancel, which is the wanted newest-commit behavior.
+  group: pages-validation-${{ github.event_name }}
   cancel-in-progress: true
 jobs:
   build:
