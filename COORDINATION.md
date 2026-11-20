@@ -724,6 +724,33 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 
 | ID | Task | Status | Owner | File scope | Sources |
 |---|---|---|---|---|---|
-| 23 | Code-to-official-spec audit: every Kalshi request path, parameter, status value and field the site code uses, checked against docs.kalshi.com; mismatches listed with links | in progress | arena/639ec37c-demo1 | `audit/**`, this board section | docs.kalshi.com pages (see audit/REPORT.md) |
+| 23 | Code-to-official-spec audit: every Kalshi request path, parameter, status value and field the site code uses, checked against docs.kalshi.com; mismatches listed with links | done | arena/639ec37c-demo1 | `audit/**`, this board section | docs.kalshi.com pages + live official demo GETs (sources below; full list in `audit/REPORT.md`) |
 
 Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
+
+### Task 23 record (arena/639ec37c-demo1)
+
+- **Result:** 37 checks — 25 Confirmed, 1 Mismatch, 6 Irregularity, 5 Unverified. Rendered to `audit/REPORT.md` and `audit/index.html` by `audit/build_audit.py` from `audit/register.json`. Every row carries an https link to an official page.
+- **Sources (official):** https://docs.kalshi.com/getting_started/demo_env · https://docs.kalshi.com/api-reference/market/get-markets · https://docs.kalshi.com/api-reference/market/get-trades · https://docs.kalshi.com/api-reference/market/get-market-candlesticks · https://docs.kalshi.com/api-reference/market/get-series-list · https://docs.kalshi.com/getting_started/orderbook_responses · https://docs.kalshi.com/api-reference/market/get-market-orderbook · https://docs.kalshi.com/api-reference/orders/create-order-v2 · https://docs.kalshi.com/getting_started/market_lifecycle · https://docs.kalshi.com/api-reference/events/get-events · https://docs.kalshi.com/api-reference/portfolio/get-positions · https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
+- **Live official reads (GET only, via the page fetcher; the audit sandbox cannot reach kalshi.co directly):** `external-api.demo.kalshi.co/trade-api/v2/exchange/status`, `/search/tags_by_categories`, `/series?category=Economics|Crypto|Culture`, `/series?tags=Golf`.
+- **Verification performed:** each code path listed in the register was matched to the doc page or the live response; signing rule matched across all five signers in the repo; the order body was checked against the required-field list; the doc links were fetched (two slugs failed, see below). No orders were placed; no credentials used.
+- **Irregularities (for the Flagged page):**
+  1. `get-market-order-book` slug fails to load (2 attempts); official page is `get-market-orderbook` (C-35). Used in `build_site.py` and `README.md`. Also logged earlier as F-13.
+  2. The 'Culture' category used by the decision desk is not in the official `tags_by_categories` taxonomy, though 2 demo series carry it (C-09). Demo coverage is very thin.
+  3. Gas is selected by a title rule under the broad official category Economics; there is no official gas category or tag (C-11).
+  4. Resolution counted at `determined` in `decision/js/resolutions.js`, before settlement (`finalized`) (C-07).
+  5. A 401 retry with an undocumented PSS salt length in `exec-desk/js/trade-exec.js` (C-28).
+  6. A PEM private key kept in browser localStorage on the public site (`exec-desk/trades.html`) — high-severity review item, not an exploit verified here (C-30).
+  7. Mismatch: the exec-desk 'open' view includes `initialized` and `inactive` markets (C-05).
+- **Unverified (left open, not assumed):** `GET /markets?tickers=` (C-22); positions `settlement_status=all` / `count_filter` (C-26); the rate-limit cadence (C-33); browser CORS from the github.io origin (C-34; the sandbox has no browser); `api-reference/series/get-series` slug used by strategy-desk (C-36).
+- **Change requests (owned files — logged here, not applied):** CR-1 to CR-8 in `audit/register.json` / `audit/REPORT.md`. Owners: exec-desk (CR-1, CR-4–CR-7), decision desk (CR-2, CR-3), integration owner for `build_site.py` / `README.md` (CR-8).
+- **Overlap note:** task 22 (final integration) stays with `arena/358db039-demo1`, and the dashboard integration with `arena/17f80f01-demo1`. This session did not touch their files.
+- **PR:** branch `arena/639ec37c-demo1` → `main` opened for integration. Merge is left to the integration session that holds task 22, so its combined re-verification covers this folder (see Integration log row below).
+
+### Integration log (arena/639ec37c-demo1)
+
+| Date (UTC) | Session | Action |
+|---|---|---|
+| 2026-11-20 | arena/639ec37c-demo1 | Rebase of the branch's only commit (`0ed3ff6`, a bot data-refresh commit already superseded on `main`) onto `origin/main` hit a conflict in `data/`; the rebase was aborted and the branch was reset (`git reset --hard origin/main`) to `origin/main` f9fab19. No local work was lost: the branch had no other commits and a clean tree. |
+| 2026-11-20 | arena/639ec37c-demo1 | Claimed task 23 (commit `f713e8d`, pushed before audit work). |
+| 2026-11-20 | arena/639ec37c-demo1 | Task 23 done: `audit/` added (new folder only). `node tools/check-links.mjs` → PASS after the change. |
