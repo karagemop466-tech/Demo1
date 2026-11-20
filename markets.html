@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price &amp; liquidity — Kalshi demo markets</title>
+<meta name="description" content="Interactive contract-price chart with selectable time granularity plus an order-book depth ladder showing contracts available at any price.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="markets">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Price &amp; liquidity</h1>
+    <p class="lede">X axis is time, Y axis is the YES contract price in dollars (0–1, a settled YES pays $1.00). Below it, the depth ladder answers “how many contracts are actually available at this price”, and the slider turns that into cost, slippage and fees.</p>
+  </div>
+
+  <div id="mount-explorer" data-mount></div>
+
+  <div class="card">
+    <h2>Time-axis granularity <span class="sub">what the API can and cannot serve</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Requested axis</th><th scope="col">REST source</th><th scope="col">Status</th><th scope="col">Detail / source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Seconds</td>
+            <td>none — candlesticks stop at 1 minute</td>
+            <td><span class="badge no">not available from REST</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">period_interval ∈ {1, 60, 1440} minutes</a>. Options: bucket <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">GET /trades</a> timestamps, or subscribe to <code>ticker</code> / <code>trade</code> / <code>cfbenchmarks_value_5hz</code> on the <a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket</a>. This site's “seconds” view is 60-second buckets of 1-minute candles, labelled as such.</td>
+          </tr>
+          <tr>
+            <td>Minutes</td>
+            <td><code>period_interval=1</code></td>
+            <td><span class="badge yes">supported</span></td>
+            <td class="src">up to 5,000 candles per request (~3.5 days) — <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">docs</a></td>
+          </tr>
+          <tr>
+            <td>Hours</td>
+            <td><code>period_interval=60</code></td>
+            <td><span class="badge yes">supported</span></td>
+            <td class="src">same endpoint; ~208 days per request</td>
+          </tr>
+          <tr>
+            <td>Days</td>
+            <td><code>period_interval=1440</code></td>
+            <td><span class="badge yes">supported</span></td>
+            <td class="src">older settled markets move to <a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener"><code>GET /historical/markets/{ticker}/candlesticks</code></a> past the historical cutoff</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="body"><p class="dim" style="font-size:12.5px;margin:0">Timestamps must be Unix <strong>seconds</strong>; millisecond values are rejected with <code>400 bad_request</code>. The URL builder in <code>assets/kalshi.js</code> refuses those inputs before the request is sent, and unit tests assert it.</p></div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>Liquidity — what the ladder means</h3>
+      <div class="body prose">
+        <ul>
+          <li>Kalshi returns <strong>bids only</strong>: <code>orderbook_fp.yes_dollars</code> and <code>orderbook_fp.no_dollars</code>, each an ascending array of <code>[price_dollars, count_fp]</code> strings, best bid <em>last</em>.</li>
+          <li>A NO bid at <code>Y</code> <em>is</em> a YES ask at <code>$1.00 − Y</code>. So asks are derived arithmetic, not a separate feed — <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>.</li>
+          <li>Empty arrays are ambiguous by design: a closed market, an empty book and a mistyped ticker all return <code>200</code> with no rows. Cross-check with <a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">GET /markets/{ticker}</a> before concluding a market is dead.</li>
+          <li>Order counts per level are <em>not</em> returned, so “how many orders sit there” is unknowable — only contract quantity. The <code>depth</code> query parameter trims to the best N levels per side.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cost of taking liquidity</h3>
+      <div class="body prose">
+        <p style="margin-top:0">The slider walks the book level by level and reports average fill, slippage against the touch, and the fee under Kalshi's published formula:</p>
+        <p><code>fee = roundup(M × 0.07 × C × P × (1 − P))</code> taker, <code>× 0.0175</code> maker.</p>
+        <ul>
+          <li>Peak cost is at 50¢: <strong>$1.75 per 100 contracts</strong>. At 1¢ or 99¢ it is <strong>$0.07</strong>.</li>
+          <li>No settlement fee, so holding to resolution costs nothing extra (<a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a>).</li>
+          <li><code>KXAAAGASM</code> (the gas series charted here) carries maker multiplier 1 and taker multiplier 1, so quoting it earns no maker rebate.</li>
+          <li>All of this is reproduced by tests, not hand-waved: <code>tests/kalshi.test.mjs</code> asserts 21 rows of the official table.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice warn">
+    <h4>Honest limit of the captured data</h4>
+    <p style="margin:0">One market has real recorded candles in this repo — <code>KXBTC15M-26NOV200615-15</code>, sixteen 1-minute candles through its 11:15:00Z close — and its order book was captured <em>after</em> it closed, so both sides came back empty. Selecting any other market shows the exact live URL that would fetch its candles instead of showing invented prices. Pick the BTC market (it is the default) to see a real chart.</p>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

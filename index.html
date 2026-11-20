@@ -140,9 +140,12 @@
         <dt>data/snapshot.json</dt><dd>every captured API row, with the exact request URL on each row and <code>null</code> where the capture was truncated.</dd>
         <dt>assets/kalshi.js</dt><dd>the engine: classification, ranking, resolution, order-book maths, fees, portfolio maths. Pure functions only.</dd>
         <dt>assets/app.js</dt><dd>shell, tables, chart, explorer, simulator. Contains no market maths of its own.</dd>
-        <dt>tests/kalshi.test.mjs</dt><dd><code>node --test tests/kalshi.test.mjs</code> — 34 tests, including reproducing 21 rows of the published fee table.</dd>
-        <dt>tools/refresh_snapshot.py</dt><dd>regenerate the snapshot from anywhere with network access, with the same schema.</dd>
-        <dt>tools/kalshi_sign.py</dt><dd>reference signer for the <code>KALSHI-ACCESS-*</code> headers (RSA-PSS and Ed25519), verified locally against the published scheme.</dd>
+        <dt>assets/app.css</dt><dd>the whole design system: masthead, tabs, KPI cards, tables, chart, depth ladder. No CDN, no webfonts, no images, so it renders offline and on Pages unchanged.</dd>
+        <dt>tests/kalshi.test.mjs</dt><dd><code>node --test tests/kalshi.test.mjs</code> — 34 pure-function tests, including reproducing 21 rows of the published fee table and asserting every snapshot row is sourced.</dd>
+        <dt>tests/browser_boot.test.mjs</dt><dd>boots each page in jsdom against the real snapshot and fails on any script error, empty mount or row-less table (14 checks; skips if jsdom is absent).</dd>
+        <dt>tools/refresh_snapshot.py</dt><dd>regenerate the snapshot from anywhere with network access, same schema, nulls preserved, cursor-following; <code>--check</code> re-probes the documented API quirks and <code>--dry-run</code> writes nothing.</dd>
+        <dt>tools/check_links.py</dt><dd>pre-commit gate: every internal link and anchor, every mount id the renderers expect, every <code>docs.kalshi.com</code> URL against the official index, and source coverage in the snapshot.</dd>
+        <dt>tools/kalshi_sign.py</dt><dd>reference signer for the <code>KALSHI-ACCESS-*</code> headers (Ed25519 built in, RSA-PSS via <code>cryptography</code>); <code>--self-test</code> reproduces the RFC 8032 vectors and confirms the query string is excluded from the signed payload. It refuses to send unless <code>KALSHI_ALLOW_LIVE=1</code> is set.</dd>
         <dt>COORDINATION.md</dt><dd>shared task board for parallel agent sessions, claims, sources and handoffs.</dd>
       </dl>
     </div>

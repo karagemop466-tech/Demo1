@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open questions — what must be answered before a decision</title>
+<meta name="description" content="Decision register for the Kalshi demo project: questions answered from official sources, information that is missing, and the concrete step that would discover each missing piece.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="questions">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Open questions</h1>
+    <p class="lede">Part 1 is closed out with sources. Part 2 is what this project cannot know on its own — each gap carries the cheapest action that would discover it. Nothing is “answered” by guessing.</p>
+  </div>
+
+  <div class="grid cols-4">
+    <div class="kpi"><div class="label">Answered from sources</div><div class="value">9</div><div class="note">no action needed</div></div>
+    <div class="kpi"><div class="label">Open</div><div class="value">12</div><div class="note">11 need a decision · 1 needs one click</div></div>
+    <div class="kpi"><div class="label">Blocking account features</div><div class="value">2</div><div class="note"><a href="#q-1">Q-1</a> credentials · <a href="#q-2">Q-2</a> key custody</div></div>
+    <div class="kpi"><div class="label">Blocking the merge</div><div class="value">0</div><div class="note">open items are published, not hidden</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Part 1 · Answered <span class="sub">information the brief asked for, resolved from official sources</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Question</th><th scope="col">Answer</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><td>Are the endpoints in the brief the right ones?</td><td>Yes — both the recommended and the shared demo hosts match Kalshi's own table, REST and WebSocket.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+          <tr><td>Is the demo exchange actually up?</td><td>Yes at capture: <code>exchange_active</code> and <code>trading_active</code> both true across four shards.</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">/exchange/status</a></td></tr>
+          <tr><td>Do market-data reads need a key?</td><td>No. Only portfolio and order operations do; public reads are unauthenticated but rate-limited separately.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">market data</a> · <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">limits</a></td></tr>
+          <tr><td>Is demo money real money?</td><td>No — “a demo environment with mock funds”, and its prices “may not be reflective of those in real markets”.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+          <tr><td>Can we rank by dollar amount straight from the API?</td><td>No. Markets expose <code>volume_fp</code> in contracts; dollars must be computed (proxy) or summed from trades (exact).</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+          <tr><td>Can the graph show seconds?</td><td>Not from REST: candlesticks are 1-minute, 1-hour, 1-day only. Seconds require the authenticated WS feed or trade timestamps.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
+          <tr><td>How do we know an event resolved, and how?</td><td>Per market: <code>result</code> = “yes”/“no”, confirmed by <code>settlement_value_dollars</code> 1.0000/0.0000 and <code>settlement_ts</code>. An event is done when no leg is pending.</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXBTC15M&amp;with_nested_markets=true&amp;limit=3&amp;status=settled" target="_blank" rel="noopener">settled rows</a></td></tr>
+          <tr><td>What do trades cost?</td><td>Taker <code>0.07·C·P·(1−P)</code> rounded up, maker <code>0.0175·…</code>, no settlement fee; the gas series runs multipliers 1/1.</td><td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a></td></tr>
+          <tr><td>What is the correct order endpoint today?</td><td><code>POST /portfolio/events/orders</code> with the V2 body; legacy <code>/portfolio/orders</code> writes are gone (<code>410</code>).</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">quick start</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Part 2 · Open <span class="sub">each row is a real gap, the owner who can close it, and the discovery action</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">ID</th><th scope="col">Question we cannot answer yet</th><th scope="col">Why it matters</th><th scope="col">Owner</th><th scope="col">Cheapest way to find out</th><th scope="col">Answer</th></tr></thead>
+        <tbody>
+          <tr id="q-1"><td><code>Q-1</code></td><td>Is there a Kalshi <strong>demo API key</strong> (key id + private key) this project may use?</td><td>Gates every account feature: real balance, positions, fills, order placement, WS streaming. Nothing else on the roadmap unblocks them.</td><td>You (account holder)</td><td>On <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> → Account settings → API keys → create; supply the key id and keep the private key out of this repo. <a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">official walkthrough</a>.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-2"><td><code>Q-2</code></td><td>Where may the private key live?</td><td>Signing must happen outside page code; a leaked key can place real orders on a funded account.</td><td>You + infra</td><td>Decide: local process, secrets manager, or a small proxy. The site is already written so only one component needs it (<a href="suggestions.html#s-2">S-2</a>).</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-3"><td><code>Q-3</code></td><td>Does a browser on your network get a CORS-approved response from the demo host?</td><td>Determines whether “live” is a real mode or whether everything must be proxied/pre-computed.</td><td>Machine (5 min)</td><td>Click <em>Scan live API now</em> on the dashboard: it either reports pages fetched or prints the failure verbatim. No code change needed to learn this.</td><td><span class="badge unverified">unverified here</span></td></tr>
+          <tr id="q-4"><td><code>Q-4</code></td><td>Which “dollar amount” definition is authoritative for you — proxy or exact?</td><td>Changes the whole ranking, and whether a nightly trade-summing job is required.</td><td>You</td><td>Read the one-paragraph trade-off in <a href="suggestions.html#s-1">S-1</a> and pick; the code path for both exists.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-5"><td><code>Q-5</code></td><td>Is 1-minute granularity acceptable until a WS bridge exists, or is sub-second a launch requirement?</td><td>It is the difference between a static site and a static site plus a server.</td><td>You</td><td>Look at the real 1-minute tape on <a href="markets.html">Price &amp; liquidity</a> (the capture shows 0.57 → 0.003 in seven minutes) and judge whether that is enough resolution to act on.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-6"><td><code>Q-6</code></td><td>What exactly is in scope for “elections”?</td><td>The demo <code>Elections</code> category holds hundreds of series, most with zero volume; “track elections” is unexecutable until the list is short.</td><td>You</td><td>Name the races or series tickers (e.g. <code>KXCABALLOTMEASURES</code>, <code>KXTALARICOPAXTONDEBATE</code>) — or authorise “top N by dollar volume in the Elections category”, which the dashboard can already compute.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-7"><td><code>Q-7</code></td><td>Culture is empty in demo — track it on production, or drop it?</td><td>One of the five requested topics has essentially no demo data (2 series, 0 volume) — <a href="flagged.html#fl-5">FL-5</a>.</td><td>You</td><td>One decision; production public reads need no key, so “track culture on production” costs nothing but a host switch in the UI.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-8"><td><code>Q-8</code></td><td>What is the starting balance and position set of the demo account to be tracked?</td><td>Portfolio performance is meaningless without a baseline date and starting equity.</td><td>You / Q-1</td><td>Comes free with Q-1: read <code>GET /portfolio/balance</code> once and store the timestamp as the baseline.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-9"><td><code>Q-9</code></td><td>Are maker-fee programs, margin or subaccount netting enabled on that account?</td><td>Determines whether spread-provision strategies are even legal to run (shorts need collateral).</td><td>You / Q-1</td><td><code>GET /account/limits</code> + <code>GET /portfolio/subaccounts/netting</code> once, recorded into provenance.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-10"><td><code>Q-10</code></td><td>How stale may data be before the dashboard must refuse to act on it?</td><td>The docs state reads are cached and can lag several seconds; filtered listings lag longer. A trading loop needs a staleness budget.</td><td>You</td><td>Pick a number (e.g. 5s for crypto, 5min for gas). The header already shows capture age and can enforce it.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-11"><td><code>Q-11</code></td><td>What are the hard trading limits — max contracts per order, per day, allowed topics, max loss?</td><td>Without them, “execute trades” is unbounded autonomy. This project self-imposed 1 contract and demo-only as a placeholder.</td><td>You</td><td>Write the numbers here; they become assertions in the order path plus an order-group kill switch.</td><td><span class="badge unverified">unanswered</span></td></tr>
+          <tr id="q-12"><td><code>Q-12</code></td><td>Which “site” does the improvement brief refer to — this dashboard, or kalshi.com?</td><td>“Make suggestions on how to improve the site” is ambiguous; we cannot propose changes to Kalshi's own product roadmap from an API client's seat.</td><td>You</td><td>Assumption recorded and used: <em>this dashboard</em>. If you meant kalshi.com, <a href="suggestions.html">the ten suggestions</a> still transfer as a gap analysis but become feedback, not a backlog.</td><td><span class="badge open">assumed, please confirm</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>What is <em>not</em> a question</h3>
+      <div class="body prose">
+        <p style="margin-top:0">To keep the register honest, these were the tempting items that turned out to be answered by the data or the docs, so they are not listed above: whether the demo host works, whether market data is free to read, whether resolution is observable, what fees are, what the order endpoint is, whether seconds come from REST, whether Elections and Politics are distinct categories, whether <code>/series</code> paginates, and whether an empty book means a dead market.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Suggested discovery order</h3>
+      <div class="body prose">
+        <ol style="margin-top:0">
+          <li><strong>Q-3</strong> first — it is free, takes one click, and decides the architecture.</li>
+          <li><strong>Q-1 + Q-2</strong> together — the only credential decision; everything account-shaped follows it.</li>
+          <li><strong>Q-4, Q-5, Q-10</strong> — three product definitions, five minutes of reading.</li>
+          <li><strong>Q-6, Q-7</strong> — topic scoping; until then the dashboard ranks what exists rather than what you meant.</li>
+          <li><strong>Q-11</strong> before any order, always.</li>
+        </ol>
+        <p class="dim" style="font-size:12.5px">Each answer should land in this table's <em>Answer</em> column plus <code>COORDINATION.md</code>, so the decision is dated and attributable rather than remembered.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

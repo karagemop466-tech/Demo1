@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live dashboard — highest dollar-volume events</title>
+<meta name="description" content="Kalshi demo dashboard: highest estimated dollar-volume live events across gas prices, elections, culture, crypto and golf, with per-leg resolution tracking.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="dashboard">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Live dashboard</h1>
+    <p class="lede">Highest <em>dollar-volume</em> events on the demo exchange, restricted to the five requested topics, with a resolution tracker that keeps an event open until every leg prints yes or no.</p>
+  </div>
+
+  <div class="grid cols-4" id="mount-kpis" data-mount></div>
+
+  <div class="notice info">
+    <h4>How this ranking is built — and what it is not</h4>
+    <p style="margin:0 0 6px">Kalshi's API publishes contract counts (<code>volume_fp</code>), not dollars, so this table ranks by <code>Σ (volume_fp × last_price_dollars)</code> over each event's legs. That is an <strong>estimate</strong>: it prices a market's whole lifetime at its last trade rather than at each trade. Exact turnover needs <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">GET /trades</a> summed as <code>price × count</code> (<a href="suggestions.html#s-1">S-1</a>).</p>
+    <p style="margin:0" class="dim">A <span class="badge warn">floor</span> badge means at least one leg had no usable volume field at capture, so the true figure is higher than shown. <strong>Estimated dollar figures are never presented as market dollars.</strong></p>
+  </div>
+
+  <div id="mount-events" data-mount></div>
+
+  <div class="card">
+    <h2>Refresh modes</h2>
+    <div class="body table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Mode</th><th scope="col">What it does</th><th scope="col">Data freshness</th><th scope="col">Requirements</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Snapshot (default)</td>
+            <td>Renders <code>data/snapshot.json</code> — rows captured straight from the demo API and committed with their source URLs.</td>
+            <td>frozen at <code>2026-11-20 11:11–11:21 UTC</code></td>
+            <td>none; works offline once loaded</td>
+          </tr>
+          <tr>
+            <td>Scan live API now</td>
+            <td>Pages <code>GET /events?status=open&amp;limit=200</code> from your browser, follows the cursor, deduplicates by <code>event_ticker</code>, classifies to topics, re-ranks.</td>
+            <td>as of your click; Kalshi itself caches responses, so prices can lag a few seconds (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">documented</a>)</td>
+            <td>browser must be permitted to read <code>external-api.demo.kalshi.co</code> cross-origin</td>
+          </tr>
+          <tr>
+            <td>True streaming</td>
+            <td><span class="badge no">not in a static page</span> Sub-second updates require the authenticated WebSocket feed, which page code cannot open.</td>
+            <td>—</td>
+            <td>signed handshake + a proxy holding the key — <a href="flagged.html#fl-3">FL-3</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <section id="resolutions">
+    <div id="mount-resolutions" data-mount></div>
+  </section>
+
+  <div class="card">
+    <h3>Reading the tracker</h3>
+    <div class="body prose">
+      <ul>
+        <li><strong>Legs settled n/m</strong> — the event stays “partial” until every leg has a result; the California ballot event is the worked example (3 of 4 settled, one leg still active).</li>
+        <li><strong>Per-leg outcome</strong> badges come from the market's <code>result</code> field, which is only non-empty after determination — never inferred from price.</li>
+        <li><strong>Payout/contract</strong> is <code>settlement_value_dollars</code>: <code>$1.0000</code> for the winning side, <code>$0.0000</code> for the losing side.</li>
+        <li><strong>Still open</strong> lists the market tickers the poller must keep watching, which is exactly the set a resolution alert should subscribe to.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

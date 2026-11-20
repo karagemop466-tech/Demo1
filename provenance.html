@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data provenance — how every number got here</title>
+<meta name="description" content="Full capture log for the Kalshi demo snapshot: every request, its outcome, the transcription method, and how to reproduce or refresh the data.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="provenance">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Data provenance</h1>
+    <p class="lede">Every value on this site traces to one of the requests below or to one of the documentation pages cited inline. Nothing was typed from memory.</p>
+  </div>
+
+  <div class="grid cols-4">
+    <div class="kpi"><div class="label">Capture window (UTC)</div><div class="value" style="font-size:15px">2026-11-20<br>11:11 → 11:21</div><div class="note">all snapshot rows</div></div>
+    <div class="kpi"><div class="label">API requests logged</div><div class="value">27</div><div class="note">21 returned data (3 empty/null by design) · 6 failed</div></div>
+    <div class="kpi"><div class="label">Docs pages read</div><div class="value">13</div><div class="note">docs.kalshi.com + the fee PDF</div></div>
+    <div class="kpi"><div class="label">Rows with a source URL</div><div class="value">100%</div><div class="note">enforced by a unit test</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Method <span class="sub">and its one unusual constraint</span></h2>
+    <div class="body prose">
+      <p style="margin-top:0"><strong>The sandbox where this work ran has no network route to Kalshi.</strong> Direct calls from the shell to the demo host fail at the TLS layer (three attempts, all <code>curl</code> exit 35), because only a short list of package and Git hosts is reachable. Live data was therefore retrieved through the agent's page-fetch tool, which returned real JSON from <code>external-api.demo.kalshi.co</code>. Consequences, stated plainly:</p>
+      <ul>
+        <li>Large responses arrive in ~15&nbsp;KB chunks; where a listing continued past the first chunk, only what was read is reproduced here, and the event's row count reflects that. That is what left one golf volume field empty (see <a href="flagged.html#fl-8">FL-8</a>).</li>
+        <li>No sandbox script could reach the API, so <code>tools/refresh_snapshot.py</code> has been run <em>only</em> for its failure paths: <code>--check</code> and <code>--dry-run</code> both report “the demo host was unreachable from this machine” and write nothing, which is the behaviour that matters when a capture dies mid-run. Its request shapes are the ones logged below, all plain unauthenticated <code>GET</code>s, so a machine with egress should reproduce them. <code>tools/check_links.py</code> runs fully offline and passes.</li>
+        <li>No HTTP response <em>headers</em> were observable, which is why CORS behaviour and rate-limit headers are open questions rather than findings.</li>
+      </ul>
+      <p><strong>Transcription rule applied:</strong> API field → same-named key in <code>data/snapshot.json</code>, value copied verbatim (strings kept as strings). Empty API strings stay <code>""</code>; fields not present in the captured text become <code>null</code>. The only computed values on the site are labelled in the table headers or carry a <em>floor</em>/<em>estimate</em> badge, and the formula is printed next to them.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Request log <span class="sub">GET requests against the demo host, in order</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">#</th><th scope="col">Request (path + query)</th><th scope="col">Outcome</th><th scope="col">What it settled</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="tick"><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">/exchange/status</a></td><td><span class="badge yes">200</span></td><td>demo exchange live, trading active, 4 shards</td></tr>
+          <tr><td>2</td><td class="tick">/markets?limit=2&amp;status=open</td><td><span class="badge yes">200</span></td><td>market object shape; proved volume fields are contract counts; showed multivariate rows and <code>price_ranges</code></td></tr>
+          <tr><td>3</td><td class="tick">/events?limit=1&amp;with_nested_markets=true&amp;status=open&amp;with_daily_volumes=true</td><td><span class="badge yes">200</span></td><td>event shape; unknown param silently ignored</td></tr>
+          <tr><td>4</td><td class="tick">/series?category=Crypto&amp;limit=5</td><td><span class="badge yes">200</span></td><td>proved <code>limit</code> is ignored on <code>/series</code>; supplied crypto series tickers</td></tr>
+          <tr><td>5</td><td class="tick">/series/KXGASPRICE</td><td><span class="badge no">non-2xx</span></td><td>that ticker does not exist in demo</td></tr>
+          <tr><td>6</td><td class="tick">/series/KXPGACHAMP</td><td><span class="badge no">non-2xx</span></td><td>as above</td></tr>
+          <tr><td>7</td><td class="tick">/series/KXBTCMAX90</td><td><span class="badge yes">200</span></td><td>proved the <code>/series/{ticker}</code> path itself works, so #5/#6 were real misses, not path errors</td></tr>
+          <tr><td>8</td><td class="tick">/events?limit=3&amp;with_nested_markets=true&amp;series_ticker=KXAAAGASM</td><td><span class="badge yes">200</span></td><td>gas events + 5 strikes with prices, sizes, rules (AAA)</td></tr>
+          <tr><td>9</td><td class="tick">/events?series_ticker=KXBTC15M&amp;with_nested_markets=true&amp;limit=3&amp;status=open</td><td><span class="badge yes">200</span></td><td>the 11:15:00Z market, one open event</td></tr>
+          <tr><td>10</td><td class="tick">/events?series_ticker=KXBTC15M&amp;…&amp;status=settled</td><td><span class="badge yes">200</span></td><td>three resolved markets: <code>result</code>, <code>settlement_ts</code>, <code>settlement_value_dollars</code></td></tr>
+          <tr><td>11</td><td class="tick">/events?series_ticker=KXPGATOP40&amp;…&amp;status=open</td><td><span class="badge warn">200 empty</span></td><td>no open golf top-40 events — <code>{"events":[]}</code></td></tr>
+          <tr><td>12</td><td class="tick">/events?series_ticker=KXPGATOP40&amp;…&amp;status=settled</td><td><span class="badge yes">200</span> (81 chunks)</td><td>The Open 2026 resolutions; only the first chunk was read → partial coverage, one null volume</td></tr>
+          <tr><td>13</td><td class="tick">/series?category=Politics&amp;include_volume=true</td><td><span class="badge yes">200</span> (374 chunks)</td><td>series-level <code>volume_fp</code>; confirmed Politics ≠ Elections</td></tr>
+          <tr><td>14</td><td class="tick">/series?category=Elections&amp;include_volume=true</td><td><span class="badge yes">200</span> (529 chunks)</td><td>election series incl. <code>KXCABALLOTMEASURES</code></td></tr>
+          <tr><td>15</td><td class="tick">/series?category=Culture&amp;include_volume=true</td><td><span class="badge yes">200</span> (1 chunk)</td><td><strong>only two Culture series exist in demo</strong>, both zero volume → <a href="flagged.html#fl-5">FL-5</a></td></tr>
+          <tr><td>16</td><td class="tick">/series?tags=Golf&amp;include_volume=true</td><td><span class="badge yes">200</span> (27 chunks)</td><td>golf series volumes incl. <code>KXPGATOP40</code> 1,791,408</td></tr>
+          <tr><td>17</td><td class="tick">/series?tags=BTC&amp;include_volume=true</td><td><span class="badge yes">200</span> (5 chunks)</td><td><code>KXBTC15M</code> 7,949,039 contracts — the deepest thing in the sandbox</td></tr>
+          <tr><td>18</td><td class="tick">/series?tags=Culture</td><td><span class="badge warn">200 null</span></td><td>unknown tag → <code>{"series":null}</code>, not <code>[]</code></td></tr>
+          <tr><td>19</td><td class="tick">/series?tags=Election · /series?tags=Midterms</td><td><span class="badge warn">200 null</span></td><td>those tags do not exist</td></tr>
+          <tr><td>20</td><td class="tick">/series/KXMIDTERMSENATE</td><td><span class="badge no">non-2xx</span></td><td>guessed ticker does not exist; discovery stopped at verified values</td></tr>
+          <tr><td>21</td><td class="tick">/markets/KXBTC15M-26NOV200615-15/orderbook</td><td><span class="badge yes">200 empty</span></td><td>book shape + closed-market empties behave as documented</td></tr>
+          <tr><td>22</td><td class="tick">/series/KXBTC15M/markets/KXBTC15M-26NOV200615-15/candlesticks?start_ts=1795165200&amp;end_ts=1795174200&amp;period_interval=1</td><td><span class="badge yes">200</span></td><td>16 one-minute candles: 0.57 → 0.003 into the close</td></tr>
+          <tr><td>23</td><td class="tick">/trades?ticker=KXBTC15M-26NOV200615-15&amp;limit=25</td><td><span class="badge no">failed</span></td><td>could not confirm; see <a href="flagged.html#fl-6">FL-6</a></td></tr>
+          <tr><td>24</td><td class="tick">/trades?market_tickers=KXBTC15M-26NOV200615-15&amp;limit=20</td><td><span class="badge no">failed</span></td><td>same, second parameter form</td></tr>
+          <tr><td>25</td><td class="tick">/events?series_ticker=KXPGARYDER&amp;…&amp;status=open</td><td><span class="badge yes">200</span></td><td>live golf event, MECNET, three legs</td></tr>
+          <tr><td>26</td><td class="tick">/events?series_ticker=KXCABALLOTMEASURES&amp;…&amp;status=open</td><td><span class="badge yes">200</span></td><td>open event holding three already-finalized legs → <a href="flagged.html#fl-11">FL-11</a></td></tr>
+          <tr><td>27</td><td class="tick">/search/tags_by_categories</td><td><span class="badge no">failed</span></td><td>tag vocabulary unavailable, hence the tag probing above</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Documentation used <span class="sub">the only sources cited anywhere in this repo</span></h2>
+    <div class="body prose">
+      <ul style="columns:2;column-gap:28px">
+        <li><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test in the demo environment</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">Quick start: first order</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Quick start: market data</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits and tiers</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/pagination" target="_blank" rel="noopener">Pagination</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook responses</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical data</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/exchange_sharding" target="_blank" rel="noopener">Exchange sharding</a></li>
+        <li><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-point representation</a></li>
+        <li><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a> · <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></li>
+        <li><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a></li>
+        <li><a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket connection</a></li>
+        <li><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi trading fee schedule</a> (last updated 2026-07-07)</li>
+        <li><a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">Creating and using a demo account</a> (linked from the demo-env page)</li>
+      </ul>
+      <p class="dim" style="font-size:12.5px">Third-party articles were used only to <em>find candidate series tickers</em> (e.g. the <code>KXAAAGASM</code> gas series). Each candidate was then confirmed against the demo API before appearing in any table; the ticker that could not be confirmed is not mentioned on this site.</p>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>Reproduce or refresh</h3>
+      <div class="body prose">
+        <p style="margin-top:0">From any machine with internet access:</p>
+        <pre style="margin:0;font-size:12.5px;overflow:auto;background:#fafbfc;border:1px solid var(--line);border-radius:8px;padding:12px"><code>python3 tools/refresh_snapshot.py \
+  --base https://external-api.demo.kalshi.co/trade-api/v2 \
+  --out data/snapshot.json --check
+node --test tests/kalshi.test.mjs
+python3 tools/check_links.py</code></pre>
+        <p class="dim" style="font-size:12.5px">The refresher writes the same schema, records its own request log, keeps <code>null</code> for anything the API omits, and refuses to invent fields. <code>--check</code> re-verifies the two things that break silently: <code>/series</code> pagination behaviour and the <code>tags</code>→<code>null</code> case.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Integrity checks that run automatically</h3>
+      <div class="body prose">
+        <ul style="margin-top:0">
+          <li>Every event and series row carries a source URL matching the demo host.</li>
+          <li>Market rows may only use field names the API actually returns — an invented key fails the test suite.</li>
+          <li>Nulls are preserved as nulls; the ranking marks a partial total as a floor.</li>
+          <li>The fee model must reproduce the published table; the URL builder must reject millisecond timestamps and &gt;5,000-period ranges.</li>
+          <li>The base list must keep the exact hosts from the brief, and the “not exercised” flag on the un-probed hosts.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

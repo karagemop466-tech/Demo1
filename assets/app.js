@@ -57,7 +57,7 @@
         else n.setAttribute(k, v === true ? "" : String(v));
       }
     }
-    (Array.isArray(kids) ? kids : kids === undefined ? [] : [kids]).forEach((c) => {
+    (Array.isArray(kids) ? kids : kids === undefined ? [] : [kids]).flat(Infinity).forEach((c) => {
       if (c === null || c === undefined || c === false) return;
       n.appendChild(typeof c === "object" ? c : document.createTextNode(String(c)));
     });
@@ -729,6 +729,158 @@
   /* ------------------------------------------------------------------ *
    * page: suggestions
    * ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------ *
+   * page: strategies — run each documented rule against the capture
+   * ------------------------------------------------------------------ */
+  function renderStrategies() {
+    const mount = document.getElementById("mount-signals");
+    if (!mount) return;
+    const snap = state.snapshot;
+    const firstTs = String(snap.capture_window_utc || "").split(" to ")[0];
+    const parsed = Date.parse(firstTs);
+    const asOf = Number.isNaN(parsed) ? Math.floor(Date.now() / 1000) : Math.round(parsed / 1000);
+
+    const markets = [];
+    (snap.events || []).forEach((ev) => (ev.markets || []).forEach((m) => markets.push(Object.assign({}, m, {
+      _topic: ev.topic, _event: ev.event_ticker, _mecc: ev.collateral_return_type === "MECNET", _source: m.source || ev.source,
+    }))));
+
+    const hrsToClose = (m) => {
+      const c = num2(m.close_time);
+      return c === null || c === "" ? null : (Number(c) - asOf) / 3600;
+    };
+    const oneSided = (m) => num2(m.yes_bid_dollars) === 0 || num2(m.yes_ask_dollars) >= 1;
+    const spread = (m) => {
+      const b = num2(m.yes_bid_dollars); const a = num2(m.yes_ask_dollars);
+      return b === null || a === null ? null : a - b;
+    };
+
+    // Only the clauses named here are evaluated; each is a strict subset of the
+    // strategy's documented rule, and the un-evaluated clauses are printed too.
+    const screens = {
+      "favorite-drift": {
+        clause: "last_price_dollars ≥ 0.90 · close within 72 h · open_interest_fp > 500",
+        notChecked: "nothing else in the rule is verifiable from the snapshot",
+        test: (m) => (num2(m.last_price_dollars) || 0) >= 0.9 && (hrsToClose(m) ?? -1) > 0 && (hrsToClose(m) ?? 999) <= 72 && (num2(m.open_interest_fp) || 0) > 500,
+      },
+      "longshot-decay": {
+        clause: "last_price_dollars ≤ 0.05 · one-sided top of book · more than 1 h to close",
+        notChecked: "the short side needs margin and a borrow, which the demo account terms do not establish",
+        test: (m) => (num2(m.last_price_dollars) ?? 1) <= 0.05 && oneSided(m) && (hrsToClose(m) ?? 0) > 1,
+      },
+      "resolution-snipe": {
+        clause: "status = active while close_time has already passed (the determination window)",
+        notChecked: "whether an official source is already decisive — that needs a news feed we do not have",
+        test: (m) => m.status === "active" && Number(m.close_time) <= asOf,
+      },
+      "crypto-15m-momentum": {
+        clause: "candles captured for the 15-minute series (the strike walk)",
+        notChecked: "the CF Benchmarks BRTI print that the rules actually settle on",
+        test: () => false,
+        note: (snap.candlesticks && (snap.candlesticks.candles || []).length) || 0,
+      },
+      "maker-spread": {
+        clause: "spread ≥ 0.02 or a one-sided top of book",
+        notChecked: "queue position, which is the whole edge — it needs an authenticated read",
+        test: (m) => (spread(m) ?? 1) >= 0.02 || oneSided(m),
+      },
+      "gas-strike-ladder": {
+        clause: "gas-topic strikes with a price and a strike, sorted by distance to close",
+        notChecked: "the AAA national average itself, which is not part of any API response",
+        test: (m) => m._topic === "gas-prices" && num2(m.floor_strike) !== null,
+      },
+      "mec-basket": {
+        clause: "Σ yes_ask_dollars over the legs of a MECNET event < 1.00",
+        notChecked: "whether every leg could be filled simultaneously",
+        test: () => false,
+      },
+    };
+
+    const baskets = (snap.events || [])
+      .filter((e) => e.mutually_exclusive === true)
+      .map((e) => {
+        const m = K.mecMispricing(e);
+        return { event: e.event_ticker, sum: m ? m.sumYesAsk : null, edge: m ? m.buyAllEdge : null, legs: m ? m.legs : 0 };
+      });
+
+    const rows = K.STRATEGIES.map((st) => {
+      const sc = screens[st.id] || { clause: "—", notChecked: "the rule needs fields this snapshot does not carry", test: () => false };
+      const hits = markets.filter(sc.test);
+      const basket = st.id === "mec-basket" ? baskets.filter((b) => b.sum !== null && b.sum < 1) : [];
+      const mecNote = st.id === "mec-basket" && baskets.length
+        ? `${baskets.length} mutually-exclusive event(s) evaluated: ` + baskets.map((b) => `${b.event} Σask ${b.sum === null ? "n/a" : b.sum.toFixed(4)}`).join(" · ")
+        : "";
+      const matched = st.id === "mec-basket" ? basket.map((b) => b.event) : hits.map((m) => m.ticker);
+      const count = st.id === "mec-basket" ? basket.length : hits.length;
+      return {
+        id: st.id,
+        label: st.label,
+        theme: st.theme,
+        clause: sc.clause,
+        count,
+        matched,
+        note: mecNote ? mecNote + " — " + sc.notChecked : sc.notChecked,
+        state: st.observableNow ? "screenable" : "blocked",
+        blockedBy: st.blockedBy || "",
+        source: "data/snapshot.json",
+      };
+    });
+
+    const detail = [];
+    markets.forEach((m) => {
+      const hit = rows.filter((r) => r.matched.includes(m.ticker)).map((r) => r.id);
+      if (!hit.length) return;
+      detail.push({
+        ticker: m.ticker, topic: m._topic, price: num2(m.last_price_dollars),
+        bid: num2(m.yes_bid_dollars), ask: num2(m.yes_ask_dollars),
+        oi: num2(m.open_interest_fp), htc: hrsToClose(m), strategies: hit.join(", "),
+        source: m._source,
+      });
+    });
+
+    const money2 = (v) => (v === null || v === undefined ? el("span", { class: "dim", text: "—" }) : document.createTextNode(v.toFixed(4)));
+    const pct = (v) => (v === null || v === undefined ? "—" : v.toFixed(1));
+
+    mount.textContent = "";
+    mount.append(
+      el("div", { class: "notice" }, [
+        el("strong", {}, "How to read this."),
+        el("span", {}, ` Each rule below is applied to the ${markets.length} market rows in data/snapshot.json, captured ${snap.capture_window_utc}. `),
+        el("em", {}, "Matches is a screen count, not a trade signal: no order is placed from this page, and the clauses the snapshot cannot see are listed in the last column."),
+      ]),
+      dataTable({
+        columns: [
+          { key: "label", label: "Strategy", render: (r) => el("span", {}, [el("strong", { text: r.label }), el("br"), el("code", { text: r.id })]) },
+          { key: "theme", label: "Theme" },
+          { key: "clause", label: "Clause evaluated against the capture", render: (r) => el("code", { class: "tick", text: r.clause }) },
+          { key: "count", label: "Matches", numeric: true, render: (r) => el("strong", { text: String(r.count) }) },
+          { key: "matched", label: "Rows matched", render: (r) => (r.matched.length ? el("span", {}, r.matched.slice(0, 6).map((t, i) => [i ? ", " : "", el("a", { href: "markets.html?market=" + encodeURIComponent(t), text: t })]).flat()) : el("span", { class: "dim", text: "none in this capture" })) },
+          { key: "state", label: "Status", render: (r) => el("span", { class: "badge " + (r.state === "screenable" ? "muted" : "unverified"), text: r.state === "screenable" ? "screenable" : "blocked" }) },
+          { key: "note", label: "What this screen does not check", render: (r) => el("span", { class: "dim", text: r.state === "blocked" && r.blockedBy ? r.blockedBy + " — " + r.note : r.note }) },
+          { key: "source", label: "Data source", class: "src", render: (r) => el("a", { href: r.source, text: "snapshot.json" }) },
+        ],
+        rows,
+      }),
+      el("div", { style: "height:18px" }),
+      el("h3", { text: "Screen detail — every row that matched, with the fields the rules read" }),
+      dataTable({
+        columns: [
+          { key: "ticker", label: "Market", render: (r) => el("a", { class: "tick", href: "markets.html?market=" + encodeURIComponent(r.ticker), text: r.ticker }) },
+          { key: "topic", label: "Topic" },
+          { key: "price", label: "Last", numeric: true, render: (r) => money2(r.price) },
+          { key: "bid", label: "Yes bid", numeric: true, render: (r) => money2(r.bid) },
+          { key: "ask", label: "Yes ask", numeric: true, render: (r) => money2(r.ask) },
+          { key: "oi", label: "Open interest", numeric: true, render: (r) => el("span", { text: r.oi === null ? "—" : r.oi.toFixed(2) }) },
+          { key: "htc", label: "Hours to close", numeric: true, render: (r) => el("span", { text: pct(r.htc) }) },
+          { key: "strategies", label: "Matched rules", render: (r) => el("span", { class: "tick", text: r.strategies }) },
+          { key: "source", label: "Source", class: "src", render: (r) => srcLink(r.source, "API row") },
+        ],
+        rows: detail,
+        emptyText: "No market in the capture satisfies any screen — expected when the snapshot is taken outside the trading windows.",
+      })
+    );
+  }
+
   const SUGGESTIONS = [
     { id: "S-1", title: "Publish an exact dollar-volume figure (or accept the proxy explicitly)", area: "data", impact: "high", effort: "M", why: "The brief ranks by dollar amount, but Kalshi's market payload only exposes contract counts (volume_fp). Every ranking on this site is therefore an estimate built as volume × last price.", action: "Compute turnover from GET /trades (Σ price × count) in the collector and cache it per event, or formally adopt the proxy and label it in every table header.", evidence: [K.SOURCES.markets, "https://docs.kalshi.com/api-reference/market/get-trades.md"], blocks: "Decision confidence on 'which events matter most'" },
     { id: "S-2", title: "Stand up a tiny signed proxy for portfolio + WebSocket work", area: "architecture", impact: "high", effort: "S", why: "Portfolio reads, order placement and the WebSocket feed all require an authenticated handshake. A browser cannot send custom WS headers and must never hold a private key, so a static GitHub Pages site can only ever show public REST data.", action: "Run one small server-side component holding the demo key; keep the Pages site static and have it call the proxy for /portfolio/* and the WS bridge.", evidence: [K.SOURCES.websocket, K.SOURCES.apiKeys], blocks: "portfolio tracking, order placement, sub-minute streaming" },
@@ -794,7 +946,7 @@
   /* ------------------------------------------------------------------ *
    * boot
    * ------------------------------------------------------------------ */
-  const PAGES = { dashboard: renderDashboard, markets: renderMarkets, portfolio: renderPortfolio, suggestions: renderSuggestions };
+  const PAGES = { dashboard: renderDashboard, markets: renderMarkets, portfolio: renderPortfolio, strategies: renderStrategies, suggestions: renderSuggestions };
 
   async function boot() {
     buildShell();
