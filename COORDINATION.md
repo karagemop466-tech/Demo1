@@ -1502,4 +1502,14 @@ All live values in the site are drawn from the committed snapshot collected from
 3. **Demo venue** — all values are mock-funds demo values (official demo-env warning); no credentials, no orders anywhere in alert-desk.
 
 
+## Publish record — session arena/91fc2cc7-demo1
 
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/56 — "Trader's guide: one-page operating manual + close-out verification (session 91fc2cc7)" |
+| Pre-merge checks | PASS — `check` (run 44802803618), `links` (run 44802803825), `fetch` (run 44802855443, 2m1s) |
+| Merge result | **MERGED** 2026-11-20T19:37:56Z via `gh pr merge 56 --merge` (no approval wait, per brief); merge commit `1cf87c90871460e73738f8236aac1a641d37f07e` |
+| Conflict handling | One rebase conflict vs main mid-flight (PRs #53/#55 landed during work): COORDINATION.md resolved by keeping both sides via `tools/resolve_board.py`; no other session's content discarded |
+| Pages state after merge | transient `errored` reading was a superseded build; the build for `1cf87c9` completed **success**, API `status: built` (source `main:/`) |
+| Live verification | https://karagemop466-tech.github.io/Demo1/trader-guide/index.html fetched post-deploy: renders full guide with all tables and source links; landing and exec-desk/dashboard verified live earlier in G-2 |
+| Tasks G-1..G-3 | All done. Sources, verification and irregularities recorded above (Results section) |
