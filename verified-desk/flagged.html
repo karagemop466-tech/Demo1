@@ -71,10 +71,10 @@
           </tr>
           <tr id="fl-7">
             <td><code>FL-7</code></td>
-            <td><strong>The tools in this repo have not been executed against the API.</strong> The sandbox blocks all egress except package and Git hosts (three direct attempts failed at TLS with exit 35), so <code>refresh_snapshot.py</code> and <code>kalshi_sign.py</code> are code-reviewed and, for the signer, self-tested — but never round-tripped to Kalshi from here.</td>
+            <td><strong>The collector in this repo has never reached the API from here.</strong> The sandbox blocks all egress except package and Git hosts (three direct attempts failed at TLS with exit 35), so <code>verified-desk/tools/refresh_snapshot.py</code> has only had its failure paths exercised: <code>--check</code> and <code>--dry-run</code> both exit cleanly and write nothing, which is the behaviour that matters when a capture dies mid-run. <code>verified-desk/tools/kalshi_sign.py</code> is a different case — its Ed25519 is verified offline against the published RFC 8032 vectors, so the algorithm is proven here even though Kalshi's verifier has never seen a request from it. <code>verified-desk/tools/check_links.py</code> runs fully offline and passes.</td>
             <td><span class="badge warn">untested path</span></td>
-            <td class="src"><code>COORDINATION.md</code> “Environment finding” section</td>
-            <td>One run of <code>python3 tools/refresh_snapshot.py --check</code> on a normal network; failures will print the request that broke.</td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a> (an environment fact, not a Kalshi claim)</td>
+            <td>One run of <code>python3 tools/refresh_snapshot.py --check</code> followed by <code>python3 tools/refresh_snapshot.py</code> on any machine with ordinary egress; the collector logs every request it makes, so a partial failure is visible in <code>request_log</code> rather than silently shrinking the file.</td>
           </tr>
           <tr id="fl-8">
             <td><code>FL-8</code></td>
@@ -83,13 +83,14 @@
             <td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGATOP40&amp;with_nested_markets=true&amp;limit=2&amp;status=settled" target="_blank" rel="noopener">the paged query</a></td>
             <td>The refresher follows cursors to completion; the UI already marks the affected event's dollar total with a <em>floor</em> badge instead of hiding it.</td>
           </tr>
-          <tr id="fl-9">
-            <td><code>FL-9</code></td>
-            <td><strong>Repository and hosting irregularities found at start.</strong> The base commit contained only <code>README.md</code> with the text <code># Demo1</code> — no code, no license, no <code>COORDINATION.md</code>. GitHub Pages was already configured as a <em>legacy Jekyll</em> build from <code>main</code> at <code>/</code>, which strips files beginning with an underscore and needs <code>.nojekyll</code> for an asset-driven static site.</td>
-            <td><span class="badge warn">environment</span></td>
-            <td class="src"><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">repo root</a> · <a href="https://karagemop466-tech.github.io/Demo1/" target="_blank" rel="noopener">Pages URL</a></td>
-            <td><code>.nojekyll</code> added and <code>README.md</code> rewritten to describe the project; a LICENSE decision is still yours if this is to be shared outside the team.</td>
-          </tr>
+<tr id="fl-9">
+  <td><code>FL-9</code></td>
+  <td><strong>This repository is being written by several agent sessions at once, and the collisions were real.</strong> The base commit contained only <code>README.md</code> with the text <code># Demo1</code>. While this desk was being built, four other sessions merged their own sites into <code>main</code>, and each also wrote root-level <code>index.html</code>, <code>dashboard.html</code>, <code>markets.html</code>, <code>portfolio.html</code>, <code>questions.html</code>, <code>suggestions.html</code> and <code>flagged.html</code> — the same filenames this desk had chosen. Merging naively would have overwritten someone else's landing page or hidden this one. How it was resolved at integration: the whole desk (pages, <code>assets/</code>, <code>data/</code>, <code>tests/</code>, <code>tools/</code>) moved under <code>verified-desk/</code> with its own landing page, and the root <code>index.html</code> keeps its hub role with one additive section linking here. No file owned by another session was deleted or rewritten. GitHub Pages remains a <em>legacy Jekyll</em> build of <code>main</code> at <code>/</code>, so <code>.nojekyll</code> must stay (it does) and any file beginning with an underscore would be stripped from the published site.</td>
+  <td><span class="badge warn">process</span></td>
+  <td class="src"><a href="https://github.com/karagemop466-tech/Demo1/commits/main" target="_blank" rel="noopener">main commit history</a> · <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener">Pages publishing source</a></td>
+  <td>Nothing to clear — this is the record of how the collision was handled. Unifying the five desks under one navigation is a decision for the repo owner, not something to do unilaterally in an integration commit.</td>
+</tr>
+
           <tr id="fl-10">
             <td><code>FL-10</code></td>
             <td><strong>Silent-parameter behaviour will mislead extensions.</strong> <code>GET /series?limit=5</code> returned the whole category; an unknown <code>tags=</code> value returns <code>{"series":null}</code> rather than an empty list; <code>GET /events?with_daily_volumes=true</code> was accepted and ignored. None of these raise an error you could catch.</td>

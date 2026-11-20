@@ -146,7 +146,7 @@
         <dt>tools/refresh_snapshot.py</dt><dd>regenerate the snapshot from anywhere with network access, same schema, nulls preserved, cursor-following; <code>--check</code> re-probes the documented API quirks and <code>--dry-run</code> writes nothing.</dd>
         <dt>tools/check_links.py</dt><dd>pre-commit gate: every internal link and anchor, every mount id the renderers expect, every <code>docs.kalshi.com</code> URL against the official index, and source coverage in the snapshot.</dd>
         <dt>tools/kalshi_sign.py</dt><dd>reference signer for the <code>KALSHI-ACCESS-*</code> headers (Ed25519 built in, RSA-PSS via <code>cryptography</code>); <code>--self-test</code> reproduces the RFC 8032 vectors and confirms the query string is excluded from the signed payload. It refuses to send unless <code>KALSHI_ALLOW_LIVE=1</code> is set.</dd>
-        <dt>COORDINATION.md</dt><dd>shared task board for parallel agent sessions, claims, sources and handoffs.</dd>
+        <dt>../COORDINATION.md</dt><dd>shared task board for all parallel agent sessions: claims, verification log, conflict log, irregularities. Everything listed above lives inside <code>verified-desk/</code> — one of several independent desks published side by side in this repository (<a href="flagged.html#fl-9">FL-9</a>).</dd>
       </dl>
     </div>
   </div>
