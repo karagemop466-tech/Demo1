@@ -755,3 +755,16 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 **Fix applied by this session (final-integration scope):** `tests/dashboard.test.mjs` trade fixtures used hardcoded `created_time: 2026-11-20T11:11` which aged out of the page's default 60-minute scan window (`recentTrades` filters `created_time` within `[now-60m, now]`), causing 8 failures + a crash at line 166. Page logic was correct; fixtures changed to time-relative `isoAgo()` values (field shapes unchanged). File owned by merged session 8c8d4499; edited under final-integration authority and logged here. Also committed `package-lock.json` (jsdom devDep lock) for reproducible test runs.
 
 **Irregularities (non-blocking, published on Flagged pages):** No demo API key in repo → portfolio balances/fills blank + flagged (no fabrication). "Highest dollar amount" is computed notional (no official USD field) — disclosed per row. Demo books thin; values are test-venue data. Jumps page shows "API unreachable" when fetched from non-browser environments (sandbox egress) — browser CORS verified working via data/cors.json.
+## Session arena/ca4f2da1-demo1 — official-source audit of API claims (claim)
+
+- **Session ID:** `ca4f2da1` — branch `arena/ca4f2da1-demo1` (fixed by the platform; the `session-<id>/<task>` naming convention is recorded here as a deviation, not renamed).
+- **Claimed:** 2026-11-20 (UTC), before any implementation work.
+- **Task scope (new files only):** `audit/**` — a static, source-linked audit page for the repo's Kalshi API claims, plus a Flagged-for-Review list for contradictions found between repo files and the official docs.
+- **Not touched:** every other session's files (`exec-desk/`, `decision/`, `strategy-desk/`, `verified-desk/`, `live-desk/`, `site/`, `pages/`, `docs/`, root `index.html`, `README.md`, workflows). Where a fix is needed in another session's file, a change request is logged below instead of editing it.
+
+| ID | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| A-1 | Line-by-line check of load-bearing Kalshi API claims (hosts, signing, order endpoint, candlesticks, order book, market status/result enums, settlement) against docs.kalshi.com | in progress | ca4f2da1 | `audit/**` | docs.kalshi.com pages listed in `audit/index.html` | Each claim read from the official page on 2026-11-20; quotes stored in the page | — |
+| A-2 | Code-level conformance: compare status/result strings the repo's JS compares against the official REST values | in progress | ca4f2da1 | `audit/**` (read-only on other files) | docs.kalshi.com market lifecycle page | Line numbers recorded per finding | Logged as change requests (not edited) |
+| A-3 | Publish `audit/index.html` (landing + table + flagged list) and verify all links | in progress | ca4f2da1 | `audit/**` | — | `audit/` link check script | — |
+| A-4 | Integration of A-1..A-3 to main via PR + merge; confirm Pages deploy | unclaimed-by-others (this session) | ca4f2da1 | `COORDINATION.md` (this section) | — | — | — |
