@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>High-ROI screen — model spec · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+ main{max-width:1040px}
+ code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+ pre{background:#0f1720;color:#dbe7f4;padding:12px 14px;border-radius:8px;overflow-x:auto;font-size:13px}
+ .f{background:#f4f7fb;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:10px 14px;margin:10px 0}
+ .gate{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;background:var(--card)}
+ .gate h3{margin:0 0 4px;font-size:15px}
+ .no{color:var(--bad);font-weight:600}
+ .ok{color:var(--ok);font-weight:600}
+</style>
+</head><body><div id="site-nav"></div>
+<main>
+<h1>High-ROI screen — what “the model likes” means</h1>
+<p class="lead">Tape B on <a href="../alerts.html">the alert tapes page</a> shows a swing only when its market clears five gates.
+This page is the whole model: the formulas, the constant values, the field each one reads, and what the model cannot see.
+It is a <b>screen</b>, not a forecast and not a trade signal — no order is placed anywhere, and nothing here is investment advice.</p>
+
+<div class="f"><b>Everything is computed from two documented, unauthenticated reads.</b> Prices and quotes come from
+<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><code>GET /markets</code></a>;
+resting depth comes from <a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener"><code>GET /markets/orderbooks?tickers=…</code></a>;
+printed trades come from <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener"><code>GET /markets/trades</code></a>.
+No field is inferred: if a price or a size is missing, the gate fails and the line says why.</div>
+
+<h2>1. Contract maths (the only two formulas)</h2>
+<div class="f">
+<p><b>Taker fee</b> — from the official fee schedule (footer: “Last updated and effective: July 7, 2026”):</p>
+<pre>fee = round up( M × 0.07 × C × P × (1 − P) )      M = contract multiplier (default 1)
+                                                     C = contracts, P = price in dollars
+maker fee uses 0.0175 in place of 0.07, with M = 0 unless the series is listed</pre>
+<p>“round up such that the fee + positionCost is rounded to a centicent” — this model rounds the fee <i>up</i> to the cent,
+which is the conservative direction, and the rounding rules are documented in
+<a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding</a>.
+Two rows of the schedule’s own table are asserted by the test suite: P=$0.50, C=100 → <b>$1.75</b>; P=$0.10, C=100 → <b>$0.63</b>.</p>
+</div>
+<div class="f">
+<p><b>Buying one side and holding to resolution</b> — a winning contract pays $1.00, a losing one pays $0
+(<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>):</p>
+<pre>outlay  = P × C + fee
+payout  = $1.00 × C                 (only if the side wins)
+net ROI = (payout − outlay) / outlay
+breakeven win probability = outlay / payout</pre>
+<p>Example, printed exactly as the page computes it: entry <code>$0.2000</code>, C = 1 → fee <code>$0.02</code>,
+outlay <code>$0.2200</code>, payout <code>$1.00</code>, net ROI <b>354.5 %</b>, breakeven win probability <b>22.0 %</b>.
+The ROI is large at low prices because the payoff is 5:1 — it is <i>not</i> a 354 % expected return; it is what a win pays.</p>
+</div>
+
+<h2>2. The five gates</h2>
+<div class="gate"><h3>G1 · in-window</h3><p><code>status</code> is <code>active</code>/<code>open</code>/<code>unopened</code>
+<i>and</i> <code>close_time</code> is in the future. Resolved or out-of-window markets cannot qualify, which is also what keeps the
+page “tracking live events until they resolve”: the tape keeps a market in the watchlist until the API returns
+<code>result = yes | no</code> (or <code>scalar</code>), then posts a RESOLUTION line instead of a swing line.</p></div>
+<div class="gate"><h3>G2 · fillable</h3><p>An ask must exist on the candidate side with at least
+<b>1 contract</b> resting (<code>minContractsAtAsk</code>). The API returns bids only, so the YES ask is derived from the best NO bid as
+<code>$1.00 − bid</code> and the NO ask from the best YES bid — the documented reciprocal identity in
+<a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>.
+Every line names its derivation (“derived from NO bid” or “quoted ask”). Zero depth → gate fails, and a demo book with no
+resting orders is common.</p></div>
+<div class="gate"><h3>G3 · reversion lead</h3><p>The offered ask must sit at least <b>$0.02</b> (<code>minPull</code>) below the
+<b>session VWAP</b> — the volume-weighted average of <code>yes_price_dollars</code> over the public prints this browser has actually seen
+for that market (last 200 prints). It is <i>not</i> an official Kalshi VWAP field and is labelled “session VWAP” everywhere it appears;
+when no print has been seen the gate fails with “VWAP is blank” rather than defaulting to zero.</p></div>
+<div class="gate"><h3>G4 · payoff</h3><p>Fee-adjusted <code>net ROI ≥ 0.10</code> (<code>minRoi</code>, i.e. at least 10 %) at the current ask,
+computed with the formulas above. This is what keeps the right-hand tape about <i>payoff</i> rather than about noise: a $0.94 ask
+cannot clear it, a $0.14 ask can.</p></div>
+<div class="gate"><h3>G5 · swing trigger</h3><p>A move of <b>≥ $0.10</b> in either direction between two consecutive reads — the brief’s
+threshold, editable on the page. Deltas are compared on the market’s <b>mark</b>: the traded last price when one exists, otherwise
+the book mid. At most one alert per market per direction per 60 s (<code>cooldownMs</code>) so a single jump cannot flood the tape.</p></div>
+
+<h2>3. Score (ranking only, never a threshold)</h2>
+<pre>depthWeight = 0.5 + 0.5 × min(1, contractsAtAsk / 100)
+pullWeight  = 1 + min(1, max(0, sessionVWAP − ask) / 0.20)
+score       = net ROI × depthWeight × pullWeight      (only when all five gates pass)</pre>
+<p>The score orders Tape B and is shown on each line so any reader can redo it from the printed inputs. Depth caps at 100 contracts
+because deeper books are more likely to absorb a real order; the reversion bonus caps at 1.0 so an extreme gap cannot dominate the payoff.</p>
+
+<h2>4. What the model cannot see (deliberately excluded)</h2>
+<ul class="plain">
+  <li><span class="no">No news feed.</span> The API returns prices only — there is no official field that says <i>why</i> a market moved
+      (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks</a>).
+      Each line links a news search for the market title as a <b>lead</b>; a search result is never presented as a cause.</li>
+  <li><span class="no">No order book beyond the visible top levels</span>, no queue position, no other participants’ resting sizes.</li>
+  <li><span class="no">No settlement probability</span> from the underlying source (AAA, ESPN, a court filing…). G3 compares the market
+      to its own traded history, not to the truth.</li>
+  <li><span class="no">No fees beyond the trade fee.</span> The docs state settlement fees are zero for simple yes/no determinations but
+      may apply to sub-cent scalar settlement, and the actual payout is rounded to whole cents
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>).</li>
+  <li><span class="no">No series fee multipliers.</span> A handful of series carry non-standard maker/taker multipliers (for example
+      <code>KXAAAGASM</code> charges maker fees at M = 1); the screen applies the general table with M = 1 and says so. Where the
+      multiplier is not 1 the printed ROI is optimistic on the maker side only.</li>
+  <li><span class="no">No streaming.</span> A WebSocket subscription would be lower latency, but its handshake requires a signed,
+      authenticated connection that a browser page cannot make without a private key
+      (<a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a>) —
+      and a public static site must never hold one.</li>
+  <li><span class="no">Not a fill guarantee.</span> <code>GET /markets</code> responses are cached “for a short time”, so the ask quoted on a
+      line may already be gone; lines are marked with the request that produced them.</li>
+</ul>
+
+<h2>5. How this differs from the other two engines in the repo</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Surface</th><th>Trigger</th><th>Fills</th><th>State</th><th>Where</th></tr></thead>
+<tbody>
+<tr><td>Alert tapes (this page)</td><td>live tape + quotes, every 15 s in the browser</td><td>none — screen only</td><td>this browser tab</td><td><a href="../alerts.html">alerts.html</a></td></tr>
+<tr><td>sim-desk</td><td>official trades tape, run by CI every 30 min</td><td>simulated at the implied ask, fee applied</td><td>append-only ledger committed in the repo, positions settle at $1 on resolution</td><td><a href="../sim-desk/index.html">sim-desk/index.html</a></td></tr>
+<tr><td>strategy engine</td><td>committed 1-minute candles, offline backtest</td><td>simulated, fee-aware</td><td>static result files</td><td><a href="../engine/index.html">engine/index.html</a></td></tr>
+<tr><td>paper runner</td><td>on demand, in the browser</td><td>simulated, browser-local</td><td>this browser only</td><td><a href="../pages/paper-trading.html">pages/paper-trading.html</a></td></tr>
+</tbody></table></div>
+<p class="note">Rows 2–4 are prior sessions’ deliverables, linked rather than re-implemented. None of the four places an order:
+authenticated order placement needs a demo API key, which was not provided (see
+<a href="../flagged.html">Flagged for Review</a>, items B-01/B-02).</p>
+
+<h2>6. Verification of this spec</h2>
+<ul class="plain">
+  <li><span class="ok">Maths:</span> <code>node tests/alerts.test.mjs</code> asserts the two fee-schedule table rows, the payout/ROI
+      identity, both swing directions, the derived-ask identity, and that a gate failure blocks Tape B.</li>
+  <li><span class="ok">Behaviour:</span> the same harness boots <a href="../alerts.html">alerts.html</a> in jsdom against mocked
+      official responses and checks that a swing line, its source links, a RESOLUTION line and a model pick render as specified.</li>
+  <li><span class="no">Not verified:</span> the screen has no live win-rate claim. The repo publishes no performance figure for these
+      gates, because a demo venue with mock funds and a screen this small would make any such number meaningless.</li>
+</ul>
+<p class="note">Sources read for this page: <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi fee schedule (PDF)</a>,
+<a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding</a>,
+<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>,
+<a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>,
+<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>,
+<a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener">Get Multiple Market Orderbooks</a>,
+<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a>,
+<a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a>,
+<a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits</a>,
+<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a> — all opened during this session.</p>
+</main>
+<script src="../assets/common.js"></script>
+</body></html>
