@@ -1248,6 +1248,7 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 - **Evidence:** run list — PRs #42 (44742853332), #47 (44743793697), #46 (44744146008), #48 (44745150447), #49 (44745455115) all `failure`; last success was PR #45. The legacy pages publisher ("pages build and deployment") stayed green throughout, so the published site was never down.
 - **Fix (PR #50, merged):** added `npm install --no-audit --no-fund --silent jsdom` inside that step — identical to what `desk.yml` itself does; no other line changed. Post-fix deploy: run 44745860089 **success**.
 
+
 # Session arena/9bfdf3bc-demo1 — final integration, verification & publish
 
 ## Session claim
@@ -1308,7 +1309,38 @@ All live values in the site are drawn from the committed snapshot collected from
 
 ---
 
----
+## Session arena/d973ced5-demo1 — final integration + two-chat price-swing alerts
+
+## Session claim
+
+- **Session ID:** `arena/d973ced5-demo1` — branch `arena/d973ced5-demo1` (platform-fixed; starts at `origin/main` commit `cb6f8b77` == current `main`).
+- **Claimed at:** 2026-11-20 (UTC), before any implementation commit.
+- **Role:** final integration session. Verifies the combined site line by line, builds the one user requirement with no implementation anywhere in the repo — a **two-chat scrolling alert system** for contract-price swings ≥ $0.10 in either direction (one chat with all swings, one selective high-ROI filter) — then runs the build/link gates, PR → main → merge, confirms GitHub Pages deploys, and records the PR link and merge result here.
+- **File scope (new/additive only):** `alerts.html` (new), `assets/js/alerts.js` (new), root `index.html` (one additive nav link), `COORDINATION.md` (this section). No other session's files edited.
+
+## Task board
+
+| # | Task | Status | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|---------|--------------|----------------|
+| I-1 | Repo review + line-by-line verification (build_site link gate, repo-wide link audit, JS/Python syntax, snapshot reconciliation) | done | repo-wide (read-only checks) | docs.kalshi.com candlesticks/orderbook/api_environments; snapshot/*.json | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS (346 files); `python3 tools/verify_site.py` → PASS, 0 errors; all JS + Python syntax OK | None new; pre-existing demo-venue caveats carried forward |
+| I-2 | Two-chat scrolling alert system ≥ $0.10 (all swings + selective high-ROI filter), official candlestick data, per-row source URLs, venue + news links | done | `alerts.html`, `assets/js/alerts.js`, root `index.html` (nav link) | docs.kalshi.com/api-reference/market/get-market-candlesticks; snapshot/charts.json (official demo API capture) | Jump math re-derived from `snapshot/charts.json`; page renders swings only where official closes exist; golf correctly empty; no cause asserted for any jump | Golf has no ≥$0.10 swing in the committed snapshot (blank, not fabricated); high-ROI filter is a disclosed magnitude heuristic, not a predictive model |
+| I-3 | Build + link/secret/source-citation gate on the changed tree | done | repo-wide | — | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS; `node --check` + `py_compile` OK | — |
+| I-4 | PR → main, merge, confirm GitHub Pages deploy, record PR link + merge result here | in progress | GitHub PR + this board | docs.github.com Pages | See publish record below | — |
+
+## Publish record — session arena/d973ced5-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | pending |
+| Merge result | pending |
+| GitHub Pages deploy | pending |
+| Live verification | pending |
+
+### Claim log
+
+| Date/time (UTC) | Session ID | Action |
+|---|---|---|
+| 2026-11-20 | arena/d973ced5-demo1 | Claimed final-integration scope (I-1..I-4); claim pushed before implementation. |
 
 ## Session arena/ff380b7c-demo1 — live-site re-verification + board record (claim)
 
