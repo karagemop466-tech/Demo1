@@ -62,6 +62,52 @@ A second, CORS-proof data path plus the audit layer lives under `docs/`:
 | `tests/test_fetch_kalshi_data.py` | Offline unit tests using recorded live payloads |
 | `EXECUTIVE_SUMMARY.md`, `SOURCES.md`, `REVIEW.md` | Executive summary, verified sources register, repo review |
 
+## Live trade desk (`trade-desk/`, session arena/87015421-demo1)
+
+A live, interactive desk built directly on the official Kalshi demo Trade API. It is plain HTML/JS/CSS with
+no build step and no dependency at runtime, so it runs unchanged on GitHub Pages and in a local server.
+
+| Page | What it does |
+|---|---|
+| `trade-desk/index.html` | **Two scrolling alert chats**: Feed A = every contract move of at least **$0.10** in either direction on the five topics; Feed B = the subset that clears a published fee-aware screen. Plus the largest events ranked by traded dollars, a live price chart, an order-book depth ladder and a market picker. |
+| `trade-desk/chart.html` | One market in detail: x = time (30s / 2m / 15m / 1h / 6h / 24h), y = YES price, jump markers, the full depth ladder and the cost to buy 10 contracts by walking the real asks with the official fee. |
+| `trade-desk/resolutions.html` | Follows markets until the API returns a result (`yes`, `no`, or `scalar`), with the API's own settlement fields and a local watch list. |
+| `trade-desk/strategies.html` | Automated **paper** trading: four disclosed strategies, equity curve, and performance by strategy, topic, side and entry-price band. |
+| `trade-desk/model.html` | The exact screen behind Feed B, both ROI definitions, the fee formula checked against all 21 rows of the official schedule, and measured calibration from the committed snapshot. |
+| `trade-desk/sources.html` | Every official document and API response this desk depends on, with what each verified. |
+| `trade-desk/flagged.html` | 14 disclosed irregularities and limits (TD-01 … TD-14), each with evidence and an official source. |
+| `trade-desk/suggestions.html` | Prioritised suggestions, each marked implemented / ready / blocked with the reason. |
+
+### What is verified, and how
+
+- **Fee formula**: asserted against all 21 rows of the published Kalshi fee table
+  ([PDF](https://kalshi.com/docs/kalshi-fee-schedule.pdf)) in `trade-desk/tests/engine.test.mjs`.
+- **Jump threshold**: inclusive at exactly $0.10 and exclusive below it, compared on the API's own fixed-point
+  strings so IEEE-754 rounding cannot drop a real $0.10 move.
+- **Topic assignment**: from official `GET /series` category and tags (never guessed), with the deciding field
+  recorded per series in `trade-desk/data/series-map.json`. Energy series that are not retail gasoline are
+  excluded explicitly.
+- **Paper P&L**: fills at the implied YES ask, official taker fee, $1/$0 settlement per the official settlement
+  page, `scalar` value when the API returns one. Markets with no result are never settled by assumption.
+
+```bash
+node trade-desk/tests/engine.test.mjs     # 45 checks: fees, threshold, ledger, rollups
+node trade-desk/tests/page_boot.test.mjs  # 24 checks: every page in jsdom on mocked official payloads
+node trade-desk/tests/links.test.mjs      # 13 checks: links, scripts, nav parity, sources
+python3 trade-desk/tools/calibrate.py     # regenerates trade-desk/data/calibration.json
+node trade-desk/tools/build_series_map.mjs
+```
+
+CI: `.github/workflows/trade-desk.yml` reruns all of the above and regenerates both data files.
+
+### Limits stated on the pages themselves
+
+- Polls the REST API; the official WebSocket needs a signed key a public page must not hold.
+- Seconds windows come from the **trades tape**, because the candlestick endpoint only supports
+  1/60/1440-minute periods and returned empty arrays for the demo markets checked.
+- The demo venue is a test exchange: prices, depth and fills are not real money.
+- Feed B is a screen, not a forecast; its ROI figures are the win case, not an expected value.
+
 ## Data sources
 
 All market values come from Kalshi's public REST API (no key needed for market data):

@@ -67,7 +67,15 @@
   </div>
 
   <h2>Live dashboards and analysis</h2>
+  <div class="callout" style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:10px 12px;border-radius:0 8px 8px 0;font-size:13px;margin:0 0 12px">
+    <b>Live trade desk (this session).</b> Two scrolling alert chats for every contract move of at least $0.10
+    (one unfiltered, one filtered by a published fee-aware screen), a time-axis price chart with seconds / minutes /
+    hours windows, order-book depth, resolution tracking to YES/NO, and automated paper trading with performance
+    analysis. It polls the official demo API in your browser and never uses a key or places an order.
+    <a href="trade-desk/index.html">Open the trade desk ↗</a>
+  </div>
   <div class="tiles">
+    <a class="tile" href="trade-desk/index.html"><b>Live trade desk — two alert chats</b><span>Live ≥ $0.10 swing feeds (all, and model-filtered), seconds/minutes/hours price chart, order-book liquidity, resolution tracker and paper-trading analytics. Public endpoints only.</span></a>
     <a class="tile" href="exec-desk/dashboard.html"><b>Primary live market desk</b><span>Five-topic demo-market scan, price-history views, reported order-book liquidity and market-resolution status from the official API.</span></a>
     <a class="tile" href="desk/index.html"><b>Consolidated requirements desk</b><span>Separate session-built dashboard for five topics, resolution tracking, paper simulation and jump alerts. Its requirements matrix and review register are linked from its own navigation; this integration does not change its implementation.</span></a>
     <a class="tile" href="pages/live.html"><b>Additional live dashboard</b><span>Event scan, candle/sub-minute chart, order-book contracts and dollars, and per-request evidence log. Its mocked regression suite passes 46 checks; that is not a live-API availability test (TEST-01).</span></a>
