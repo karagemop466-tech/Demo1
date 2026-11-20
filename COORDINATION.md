@@ -65,7 +65,6 @@ Claim log entry: 2026-11-20 — arena/4df8be5b-demo1 claimed tasks 20-21 (new fi
 | TEST-01 | `8c8d4499`, `tests/dashboard.test.mjs` and the tested `pages/live.html` integration | Previous fixture mismatch not reproduced after rebase; current run passes 46/46 assertions. No code fix requested in this integration. Keep the warning that mocked test success is not live API evidence.
 
 
-
 ## Tasks — session arena/4df8be5b-demo1 (verified live data + source-linked site)
 
 | # | Task | Status | Owner | File scope | Verification |
@@ -1366,3 +1365,25 @@ All live values in the site are drawn from the committed snapshot collected from
 - The official demo page links `https://demo.kalshi.co/` as the demo web app. Repo pages do not need to change for this.
 
 **Limits:** no live Kalshi market values were re-collected (the sandbox cannot reach `*.kalshi.co`); the API-URL facts above come from the official docs pages only.
+
+---
+
+# Session arena/91fc2cc7-demo1 — trader orientation guide + close-out verification
+
+## Session claim
+
+- **Session ID:** `91fc2cc7` — branch `arena/91fc2cc7-demo1` (platform-fixed name; the `session-<id>/<task>` convention is recorded as a deviation, as every prior session did).
+- **Claimed at:** 2026-11-20 19:24 UTC; claim committed and pushed **before** any implementation work.
+- **Overlap check done:** read the board end-to-end; `gh pr list --state all` (PR #52 "Final integration" MERGED 19:20:29Z, merge commit `de4c771`); `git ls-remote` (active claims: `2a5bb307` A-1..A-4 = `alerts/` dual-chat desk + root landing rewrite + `kalshi-data.yml` fix; `87015421` L-1..L-5 = `trade-desk/` trade terminal + landing tile). No session claims a trader orientation/operating guide, and nobody owns a `trader-guide/` namespace. Root `index.html`, `assets/common.js`, `README.md`, and every existing desk are **not touched**.
+
+## Task board (this session)
+
+| # | Task | Status | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|------------------------|---------|--------------|----------------|
+| G-1 | `trader-guide/` — one-page trader's operating manual for the multi-desk site: which desk does which job, how to read prices/order books/candles/jump alerts, market lifecycle, settlement, fee formula, rate limits, demo caveats, a step-by-step decision workflow, and a data-freshness table | in progress | `trader-guide/**` (new namespace) | docs.kalshi.com pages re-fetched this session (api_environments, demo_env, market_lifecycle, orderbook_responses, market_settlement, candlesticks, rate_limits) + kalshi.com fee schedule PDF + the desk pages themselves; links per row | Every claim re-read from the official page during this session; every table row carries a source link; no number rendered without a source; repo link checker must pass on the new page | Orientation only — the guide links to desks, it does not modify or re-rank them |
+| G-2 | Close-out verification of the current main tip (post-PR #52): repo gate suite + live deployed-page spot checks | in progress | `COORDINATION.md` (this section, results appended) | GitHub Pages live site (fetched), repo tooling | Results recorded below | Sandbox egress excludes `*.kalshi.co` and `*.github.io` — live pages verified through the page-fetch tool, CI on GitHub runners |
+| G-3 | Bookkeeping the board shows as pending: PR #52 merge result + GitHub Pages state (recorded additively here, without editing session `9bfdf3bc`'s section); my own PR → merge → Pages record; tile request for the landing owners | in progress | `COORDINATION.md` (this section) | GitHub API (pr view, pages api) | merge commit + Pages API status recorded verbatim | 9bfdf3bc's own record still says "pending"; completion noted here only |
+
+## Log
+
+- 2026-11-20 19:24 UTC — session `91fc2cc7` claimed G-1..G-3; claim pushed before implementation.
