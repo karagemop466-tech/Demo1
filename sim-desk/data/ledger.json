@@ -3,8 +3,8 @@
  "meta": {
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "started_cash_dollars": 1000.0,
-  "updated_ts": "2026-11-20T13:09:40Z",
-  "runs": 0,
+  "updated_ts": "2026-11-20T13:15:12Z",
+  "runs": 1,
   "simulated": true,
   "notes": [
    "All fills are SIMULATED \u2014 no orders were placed and no Kalshi account was touched.",
@@ -25,5 +25,19 @@
  "cash": 1000.0,
  "positions_open": [],
  "trades_settled": [],
- "runs": []
+ "runs": [
+  {
+   "ts": "2026-11-20T13:15:12Z",
+   "run_id": "20261120T131509Z",
+   "universe_markets": 3000,
+   "candidates": 0,
+   "new_trades": 0,
+   "settled": 0,
+   "api_calls": 3,
+   "errors": 0,
+   "cash": 1000.0,
+   "equity": 1000.0,
+   "open_positions": 0
+  }
+ ]
 }

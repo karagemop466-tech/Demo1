@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_ts": "2026-11-20T13:09:40Z",
+ "updated_ts": "2026-11-20T13:15:12Z",
  "simulated": true,
  "started_cash_dollars": 1000.0,
  "cash": 1000.0,
@@ -10,7 +10,12 @@
  "settled_count": 0,
  "realized_pnl": 0,
  "roi_on_started_cash": 0.0,
- "equity_curve": [],
+ "equity_curve": [
+  {
+   "ts": "2026-11-20T13:15:12Z",
+   "equity": 1000.0
+  }
+ ],
  "by_strategy": {},
  "by_topic": {},
  "by_band": {},

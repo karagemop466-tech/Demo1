@@ -1,11 +1,33 @@
 {
  "schema": 1,
- "ts": "2026-11-20T13:09:40Z",
- "requests": [],
+ "ts": "2026-11-20T13:15:09Z",
+ "requests": [
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000",
+   "ts": "2026-11-20T13:15:09Z",
+   "status": 200,
+   "ms": 698,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIv--A2AYQ0Iz1-gISKktYTkZMTU9TVFJTSFlEUy0yNk5PVjIyTFZERU4tREVOSkNPTEVNQU4yMA",
+   "ts": "2026-11-20T13:15:10Z",
+   "status": 200,
+   "ms": 567,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIvu-A2AYQkISsPxIeS1hQQUxMQURJVU1ILTI2Tk9WMjMxNi1UODg3LjQ5",
+   "ts": "2026-11-20T13:15:11Z",
+   "status": 200,
+   "ms": 611,
+   "ok": true
+  }
+ ],
  "errors": [],
  "summary": {
-  "run_id": null,
-  "api_calls": 0,
+  "run_id": "20261120T131509Z",
+  "api_calls": 3,
   "request_errors": 0,
   "new_trades": 0,
   "settled": 0,
