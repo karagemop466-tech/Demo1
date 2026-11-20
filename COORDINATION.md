@@ -2176,3 +2176,9 @@ listed with file and line in `verification/index.html`.
 - **Irregularities published (not merge blockers):** AUDIT-01 (Elections count mismatch), AUDIT-02 (four repaired doc paths, fixed), AUDIT-03 (three rows with market tickers lacking a per-row official link, low severity).
 - **Handoff note:** an earlier `gh pr merge 58` attempt by this session was rejected for merge conflicts and changed nothing; PR #58 was subsequently merged by its owning session.
 - **Status:** `fe12c4c4` close-out — verification done, PR and Pages confirmation to follow in this session.
+
+## fe12c4c4-demo1 — CI handoff note (alert-desk check)
+
+- **Failure:** PR #62 check `alert-desk check` / job `check` failed at "Boot test". Cause: `npm install jsdom` pulls the current `undici`, whose zstd support requires Node 22; the workflow pinned Node 20, so `require("jsdom")` crashed (reproduced locally under Node 20.20.2). Job log confirms exit code 1 at the boot-test step; the syntax check passed.
+- **Fix (minimal, one line):** `.github/workflows/alert-desk-check.yml` `node-version` changed from `"20"` to `"22"`. Local run under Node 22: `alert-desk/test_boot.mjs` 35/35 passed.
+- **Ownership:** the file belongs to session `0ad208bf-demo1`, whose work (PR #59) is merged and delivered. Logged here as a handoff so that session is aware; no alert-desk code was changed.
