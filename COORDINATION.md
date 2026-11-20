@@ -408,6 +408,40 @@ Status values: `unclaimed`, `in progress`, `done`, `needs review` (published on 
 - Local static-HTTP smoke test: all pages 200 ✅
 - No invented values: live mode renders only fetched API values; snapshot mode renders only archived official-response values; unfetchable values are blank + flagged.
 
+### Rebase and duplicate-work record — session `65df996f`, 2026-11-20 (during PR #61)
+
+Three rebases onto a moving `main`; every conflict resolved keeping **both** sides, nothing discarded:
+
+| File | What collided | Resolution |
+|---|---|---|
+| `COORDINATION.md` | append-only board, twice | `python3 tools/resolve_board.py` (1481 → 1588 lines) |
+| `alerts.html` (root) | both `d973ced5` and `65df996f` created it | mine kept at the root path, theirs preserved verbatim as `alerts-snapshot.html` with a cross-reference banner; its engine `assets/js/alerts.js` untouched |
+| `.github/workflows/kalshi-data.yml` | both sessions hardened the same data-commit step in the same window | **main’s version kept** (it rebuilds the data commit on the remote tip, which a plain rebase cannot); my rationale recorded as comments above it |
+| `assets/common.js` nav | main added `alerts.html` + `site/*` topic links; I added the same `alerts.html` | main’s block kept, my duplicate line dropped, `alerts-snapshot.html`, `alerts/index.html`, `trade-desk/index.html`, `alert-desk/index.html`, `sim-desk`, `engine` appended (34 entries, no duplicates) |
+| `index.html` | I restructured the hub into task groups; two sessions added tiles (trade-desk, alert-desk, resolutions) in the same region | my grouped structure kept, **all** of their tiles and links folded into it (verified: zero hrefs lost from either side), and their “Live trade desk (this session)” callout replaced by a tile that names the owning session |
+
+**The brief’s two-chat ≥ $0.10 alert feed now exists five times**, because five sessions worked the same requirement in parallel:
+`alerts.html` (65df996f, live polling + five-gate screen), `alerts-snapshot.html` (d973ced5, committed candlesticks),
+`alerts/index.html` (its own generated feed + QLM score), `trade-desk/` (87015421, print-to-print + paper trading),
+`alert-desk/` (0ad208bf, trades tape + snapshot fallback). All five are published and cross-linked from the home page and from
+`flagged.html` §E-08; the decision about which one survives is `suggestions.html#s16`. Deliberate non-edits: no other session’s
+page, engine or workflow was rewritten to look like mine.
+
+**One unresolved technical disagreement worth reading:** `trade-desk/assets/engine.js` (lines 13–16) states the demo candlestick
+endpoint “returns empty candle arrays for the active markets checked on 2026-11-20”, and `docs/data/history.json` in the CI capture
+does show `candles: []`. Two other implementations nevertheless key their swings off candle closes. This session’s page uses the
+candles only as a *fallback* and the REST/tape prices first, so it works either way — but nobody has established which baseline the
+demo venue actually supports today. Recorded as unverified, not settled by editing anyone’s code.
+
+**Follow-up request to another owner (logged, not done here):** `desk.yml` and `account.yml` still push their committed data exactly
+once with no retry, the shape that reddened `kalshi-data` on run 44746307623. `kalshi-data.yml` is now hardened; those two are yours
+if you want the same three-attempt loop.
+
+Gates run before this merge: 33 python tests, `tests/alerts.test.mjs` 81, `tests/dashboard.test.mjs` 46, `tests/dashboard-jumps.test.mjs` 9,
+`alerts/tools/test_alerts.py` 23 + `alerts/tools/test_dom.mjs` PASS, `alert-desk/test_boot.mjs` 35, `trade-desk` 45 + 24 + 13,
+`python3 build_site.py` 17 pages, `node tools/check-links.mjs` PASS, `tools/verify_site.py` errors=0.
+
+
 ## Publish record — session 8c8d4499
 - PR #12 https://github.com/karagemop466-tech/Demo1/pull/12 — **merged** 2026-11-20T11:39:43Z (`gh pr merge 12 --merge`, merge commit `7cc5f2420dcb8248aa7169a09a18ba7e4b87d6d7`); 17 files, +2,215 lines.
 - Deploy of that commit: [Deploy static site to GitHub Pages run 44729417122](https://github.com/karagemop466-tech/Demo1/actions/runs/44729417122) → **success**; [pages build and deployment 44729416014](https://github.com/karagemop466-tech/Demo1/actions/runs/44729416014) → **success**; Pages API status `built`. Site: https://karagemop466-tech.github.io/Demo1/pages/live.html

@@ -64,7 +64,8 @@
     (<code class="key">GET /markets</code> + <code class="key">GET /markets/orderbooks</code> + <code class="key">GET /markets/trades</code> every 15&nbsp;s)
     instead of reading only the committed candlestick capture, and its high-ROI filter is a documented five-gate screen
     (<a href="docs/alerts-model.html">model spec</a>, <a href="tests/alerts.test.mjs">test suite</a>). A third implementation of the same brief, built by
-    another session over its own generated feed, is published at <a href="alerts/index.html">alerts/index.html</a>. All three use the same
+    another session over its own generated feed, is published at <a href="alerts/index.html">alerts/index.html</a>; two further sessions shipped the
+    same requirement as <a href="trade-desk/index.html">trade-desk/</a> and <a href="alert-desk/index.html">alert-desk/</a>. All five use the same
     $0.10 rule; nothing on either page is inferred, and neither places an order. Board record: COORDINATION.md, sessions
     <code class="key">d973ced5</code> (I-1…I-4) and <code class="key">65df996f</code> (N-1…N-4).
   </div>

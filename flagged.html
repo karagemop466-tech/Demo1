@@ -126,10 +126,20 @@
         <td><span class="tag t-unv">Open by nature</span></td>
         <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/api-verification.md" target="_blank" rel="noopener">docs/api-verification.md</a></td></tr>
 
-      <tr><td>E-08</td><td>Three pages now implement the same $0.10 requirement</td>
-        <td>Sessions <code>d973ced5</code>, <code>65df996f</code> (this one) and one more built the brief’s two-chat alert feed in parallel, unaware of each other; two of them collided on the filename <code>alerts.html</code>. Nothing was discarded. As merged, the live page is <a href="alerts.html">alerts.html</a> (browser polls REST every 15 s; swing measured on the best available official price), <a href="alerts-snapshot.html">alerts-snapshot.html</a> is the preserved snapshot variant (candle close-to-close), and <a href="alerts/index.html">alerts/index.html</a> renders its own generated <code>alerts/data/feed.json</code> with a published QLM score. Same threshold, three different baselines for “a move”, which is exactly why one should win: a $0.10 flag on one page is not guaranteed to appear on another at the same minute. Pick a survivor and the others can be archived with a banner.</td>
-        <td><span class="tag t-info">All kept; needs your decision</span> <a href="suggestions.html#s16">S16</a></td>
-        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a> · <a href="https://github.com/karagemop466-tech/Demo1/tree/main/alerts" target="_blank" rel="noopener">alerts/README.md</a></td></tr>
+      <tr><td>E-08</td><td>Five pages now implement the same $0.10 requirement</td>
+        <td>Five sessions built the brief’s two-chat alert feed in parallel against the same branch and could not see each other; two collided on the
+        filename <code>alerts.html</code>. Nothing was discarded. As merged: <a href="alerts.html">alerts.html</a> (this session — browser polling every
+        15&nbsp;s, five-gate screen, rule stated in <a href="docs/alerts-model.html">the model spec</a>),
+        <a href="alerts-snapshot.html">alerts-snapshot.html</a> (session d973ced5, official candlestick capture),
+        <a href="alerts/index.html">alerts/index.html</a> (its own generated <code>alerts/data/feed.json</code>; README: “moves … between two adjacent
+        official candlesticks”), <a href="trade-desk/index.html">trade-desk/</a> (session 87015421, print-to-print on the trades tape, with a documented
+        reason for not using candles: <code>trade-desk/assets/engine.js</code> lines 13–16 record that the demo returned empty candle arrays for the
+        markets it checked on 2026-11-20), and <a href="alert-desk/index.html">alert-desk/</a> (session 0ad208bf, also print-to-print,
+        <code>alert-desk/app.js</code> line 25, with a committed-snapshot fallback).</td>
+        <td><span class="tag t-unv">Empty candlesticks reported by one session vs. candle-driven pages by two others — unresolved</span></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/tree/main/trade-desk/assets/engine.js" target="_blank" rel="noopener">trade-desk/assets/engine.js</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/data/history.json" target="_blank" rel="noopener">docs/data/history.json (candles: [] in the CI capture)</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
       <tr><td>E-09</td><td>“Which markets are in a topic” has two answers in this repo</td>
         <td>The site pages (<code>site/gas-prices.html</code> …) count <b>116 open gas markets</b> because their collector,
         <code>tools/collect_kalshi.py</code>, classifies by the series’ <i>published Kalshi categories</i>. The data pipeline behind the live desk and the

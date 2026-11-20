@@ -118,10 +118,12 @@
 
   <h2>Where the rest of the desk is</h2>
   <p class="note">Topic tables and per-row sources: <a href="site/index.html">snapshot desks</a>. Candle-level jump scan:
-  <a href="pages/price-jumps.html">price jumps</a>. The same $0.10 rule applied to the committed candlestick capture, as built by
-  another session, is preserved at <a href="alerts-snapshot.html">alerts-snapshot.html</a>, and a third, built by a further session over its own
-  generated <code>alerts/data/feed.json</code> with a published QLM score, is at <a href="alerts/index.html">alerts/index.html</a>. All three
-  apply the same $0.10 rule to a different price baseline, so a flag here need not appear there; which one stays is <a href="suggestions.html#s16">S16</a>. Chart with seconds/minutes/hours and the depth ladder:
+  <a href="pages/price-jumps.html">price jumps</a>. The same $0.10 rule is also implemented by three further sessions and all are kept: the committed-candlestick page
+  <a href="alerts-snapshot.html">alerts-snapshot.html</a>, a chat over its own generated <code>alerts/data/feed.json</code> at
+  <a href="alerts/index.html">alerts/index.html</a>, and the two-pane feeds at <a href="trade-desk/index.html">trade-desk/</a> and
+  <a href="alert-desk/index.html">alert-desk/</a>. Every one of the five applies ≥ $0.10 in either direction, none places an order, and each measures a
+  “move” against a different price — so a flag on this page need not appear on another in the same minute. Picking one survivor is
+  <a href="suggestions.html#s16">S16</a>. Chart with seconds/minutes/hours and the depth ladder:
   <a href="dashboard.html">live dashboard</a> and <a href="site/liquidity.html">liquidity</a>. Resolutions:
   <a href="site/resolved.html">resolved outcomes</a> and <a href="exec-desk/markets.html">the live resolution tracker</a>.
   Unverified items: <a href="flagged.html">Flagged for Review</a>. Everything on one page: <a href="index.html">home</a>.</p>
