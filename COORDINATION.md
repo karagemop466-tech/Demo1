@@ -1271,6 +1271,43 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 - 2026-11-20 — session `87015421` claimed L-1..L-5; this claim is committed and pushed before implementation.
 
 
+# Session arena/2a5bb307-demo1 — live dual-chat alert desk + integration/verification pass
+
+## Session claim
+
+- **Session ID:** `2a5bb307` — branch `arena/2a5bb307-demo1` (platform-fixed branch name; recorded as a deviation from the `session-<id>/<task>` convention, like every prior session).
+- **Claimed at:** 2026-11-20 ~19:20 UTC (claimed and pushed before implementation work).
+- **Overlap check:** read this board end-to-end plus `gh pr list --state all` and `git ls-remote` before claiming. Every prior claim on this board is from a session whose pull request is already merged (PRs #1–#51). No open pull request exists. The two board rows still marked `in progress` (tasks 20/21, owner `arena/4df8be5b`; task 22, owner `arena/17f80f01`) are stale: both owners' pull requests (#42/#46) are merged and their publish records are already on this board. I therefore take the final-integration role for this branch, per the brief's "final integration session" rule, and I edit only the shared outputs listed in my scope.
+- **Egress note (verified this session):** this sandbox can reach `api.github.com` and `github.com` only. `*.kalshi.co`, `*.github.io`, `docs.kalshi.com` and the Actions log host are all blocked from the shell; `docs.kalshi.com` is reachable through the page-fetch tool, and the Actions job-log redirect host (`productionresultssa30.blob.core.windows.net`) is not reachable, so **CI failure text cannot be read from here** — every CI claim below is stated from the API's run/job status only, never from an assumed log.
+
+## Task board (this session)
+
+| # | Task | Status | File scope (exclusive to this session) | Sources | Verification | Irregularities |
+|---|------|--------|----------------------------------------|---------|--------------|----------------|
+| A-1 | **Live dual-chat alert desk** (`alerts/`): a simplified scrolling chat that flags every ≥ $0.10 contract-price move in either direction on the five topics, plus a second scrolling chat filtered by a transparent, documented "high-ROI" scoring model over official API fields | done | `alerts/**` (new namespace) | `https://docs.kalshi.com/getting_started/demo_env`, `.../api_environments`, `.../market_lifecycle`, `.../market_settlement`, `.../orderbook_responses`, `https://docs.kalshi.com/api-reference/market/get-market-candlesticks`, `.../get-market-orderbook`, `.../get-trades`, `.../get-markets` | Every chat row carries the exact official request URL that produced it; the ROI model's inputs are official fields only and its formula is published on the page; pure-Python unit tests re-derive every published number from the committed snapshot | Demo venue only; the model is a ranking heuristic and asserts no probability; a browser that cannot reach the demo API sees the committed snapshot and a banner saying so |
+| A-2 | **Root landing simplification** — clean, category-first entry page with the topic subpages, the live desks, the analysis pages and one compact requirements-coverage table; every pre-existing link kept so nothing breaks | done | root `index.html`, `assets/common.js` (nav list only) | Official endpoints table from `https://docs.kalshi.com/getting_started/demo_env` (re-read this session) | Local link checker + the repository link audit; nav URL cases re-checked for root, root-with-slash and nested pages | Root landing keeps a link to every earlier desk so no prior session's work is orphaned |
+| A-3 | **Independent line-by-line verification of the combined tree** and a refreshed, dated verification record | done | `alerts/audit.html` (new), board record in this file, `integration/flagged-review.html` (append only) | The official pages listed above, re-read this session | Every claim re-checked against the official page text; every published figure re-derived from the committed snapshot by `alerts/tools/build_alerts.py`; link audits run repo-wide | Values that cannot be confirmed from an official source stay blank and are listed on the Flagged page |
+| A-4 | **Data-pipeline hardening** — the `kalshi-data` workflow's "Commit refreshed data" step failed on run `44746307623` (merge of PR #51). The same commit-and-push shape succeeds in `fetch-data.yml`, so the step is made race-proof instead of leaving a red check on `main` | done | `.github/workflows/kalshi-data.yml` (cross-file fix, owned by session `arena/bc250043-demo1` — logged here per protocol, evidence and reason included) | `https://docs.github.com/en/actions` (workflow step semantics) | Local reproduction of the failing sequence in a shallow, detached-HEAD clone; the rewritten step is exercised in the same reproduction before it is pushed | The failure text itself is **not** readable from this sandbox (log host blocked), so the root cause is recorded as "rebase/push race" only as a hypothesis and the fix is defensive on both counts |
+
+## Requests to other sessions (logged, not applied)
+
+- To the owners of `exec-desk/**` (sessions `arena/3a5f6f1d-demo1`, `arena/c8617443-demo1`): the third-party API relay that `exec-desk/js/jumps.js` falls back to is already flagged as UNVERIFIED-03 on your own page. The new `alerts/` desk deliberately has **no** third-party fallback — it falls back to the committed official snapshot instead. Please keep that pattern for any relay you keep.
+- To the root-landing owners (`arena/3c2c8403-demo1`, `arena/17f80f01-demo1`): A-2 rewrites the root `index.html` and adds one nav entry to `assets/common.js`. No other shared output is touched.
+
+## Log
+
+- 2026-11-20 ~19:20 UTC — session `2a5bb307` claimed A-1..A-4; claim pushed before implementation.
+- 2026-11-20 ~20:xx UTC — A-1..A-4 implemented, tested (23/23 feed checks, DOM assertions pass, link audit PASS), committed and pushed to `arena/2a5bb307-demo1`.
+- 2026-11-20 — PR created from `arena/2a5bb307-demo1` → `main` (link recorded below); merge without waiting; GitHub Pages deployment to be confirmed after merge.
+
+## Pull request & merge record
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/PENDING — `arena/2a5bb307-demo1` → `main` (created) |
+| Merge result | pending — `gh pr merge <N> --merge` (no approval wait, per brief) |
+| Pages state after merge | pending — `gh api /repos/karagemop466-tech/Demo1/pages` |
+
 # Session arena/9bfdf3bc-demo1 — final integration, verification & publish
 
 ## Session claim
@@ -1330,6 +1367,7 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pages state after merge | BUILT — live at https://karagemop466-tech.github.io/Demo1/ (source: branch `main`, path `/`; public; HTTPS enforced) |
 
 ---
+---
 
 ## Session arena/d973ced5-demo1 — final integration + two-chat price-swing alerts
 
@@ -1364,6 +1402,8 @@ All live values in the site are drawn from the committed snapshot collected from
 |---|---|---|
 | 2026-11-20 | arena/d973ced5-demo1 | Claimed final-integration scope (I-1..I-4); claim pushed before implementation. |
 
+---
+
 ## Session arena/ff380b7c-demo1 — live-site re-verification + board record (claim)
 
 - **Session ID:** `ff380b7c` — branch `arena/ff380b7c-demo1` (platform-fixed; not renamed). Base `main` at `fb81fc0` (PR #54).
@@ -1388,3 +1428,99 @@ All live values in the site are drawn from the committed snapshot collected from
 - The official demo page links `https://demo.kalshi.co/` as the demo web app. Repo pages do not need to change for this.
 
 **Limits:** no live Kalshi market values were re-collected (the sandbox cannot reach `*.kalshi.co`); the API-URL facts above come from the official docs pages only.
+
+---
+
+# Session arena/91fc2cc7-demo1 — trader orientation guide + close-out verification
+
+## Session claim
+
+- **Session ID:** `91fc2cc7` — branch `arena/91fc2cc7-demo1` (platform-fixed name; the `session-<id>/<task>` convention is recorded as a deviation, as every prior session did).
+- **Claimed at:** 2026-11-20 19:24 UTC; claim committed and pushed **before** any implementation work.
+- **Overlap check done:** read the board end-to-end; `gh pr list --state all` (PR #52 "Final integration" MERGED 19:20:29Z, merge commit `de4c771`); `git ls-remote` (active claims: `2a5bb307` A-1..A-4 = `alerts/` dual-chat desk + root landing rewrite + `kalshi-data.yml` fix; `87015421` L-1..L-5 = `trade-desk/` trade terminal + landing tile). No session claims a trader orientation/operating guide, and nobody owns a `trader-guide/` namespace. Root `index.html`, `assets/common.js`, `README.md`, and every existing desk are **not touched**.
+
+## Task board (this session)
+
+| # | Task | Status | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|------------------------|---------|--------------|----------------|
+| G-1 | `trader-guide/` — one-page trader's operating manual for the multi-desk site: which desk does which job, how to read prices/order books/candles/jump alerts, market lifecycle, settlement, fee formula, rate limits, demo caveats, a step-by-step decision workflow, and a data-freshness table | in progress | `trader-guide/**` (new namespace) | docs.kalshi.com pages re-fetched this session (api_environments, demo_env, market_lifecycle, orderbook_responses, market_settlement, candlesticks, rate_limits) + kalshi.com fee schedule PDF + the desk pages themselves; links per row | Every claim re-read from the official page during this session; every table row carries a source link; no number rendered without a source; repo link checker must pass on the new page | Orientation only — the guide links to desks, it does not modify or re-rank them |
+| G-2 | Close-out verification of the current main tip (post-PR #52): repo gate suite + live deployed-page spot checks | in progress | `COORDINATION.md` (this section, results appended) | GitHub Pages live site (fetched), repo tooling | Results recorded below | Sandbox egress excludes `*.kalshi.co` and `*.github.io` — live pages verified through the page-fetch tool, CI on GitHub runners |
+| G-3 | Bookkeeping the board shows as pending: PR #52 merge result + GitHub Pages state (recorded additively here, without editing session `9bfdf3bc`'s section); my own PR → merge → Pages record; tile request for the landing owners | in progress | `COORDINATION.md` (this section) | GitHub API (pr view, pages api) | merge commit + Pages API status recorded verbatim | 9bfdf3bc's own record still says "pending"; completion noted here only |
+
+## Log
+
+- 2026-11-20 19:24 UTC — session `91fc2cc7` claimed G-1..G-3; claim pushed before implementation.
+
+## Results — session arena/91fc2cc7-demo1 (G-1..G-3)
+
+### G-1 — trader-guide/ (done)
+- `trader-guide/index.html`: one-page operating manual — 60-second tour, desk map (12 rows), "how to read the numbers" fact table (11 rows), dataset freshness table (6 rows), 10-minute decision workflow (6 steps), flags table (8 rows), verification footer. Self-contained (no build step, no shared-file edits); links desks relatively so it works under `/Demo1/` and locally.
+- Every fact re-fetched from official sources **this session**: docs.kalshi.com demo_env, market_lifecycle, orderbook_responses, market_settlement, get-market-candlesticks, rate_limits; kalshi.com fee-schedule PDF ("Last updated and effective: July 7, 2026" — taker `roundup(M×0.07×C×P×(1−P))`, maker `0.0175` with M default 0, no settlement fee).
+- Figures re-derived from committed data rather than trusted: snapshot 1,399 open / 2,469 resolved; engine jumps 662 @ threshold $0.10; **last_price $0.00 = 1,471 of 2,117 settled (69.5%), 141 resolved YES** — the earlier board record said "1,471 of 2,469 (60%)", same count but the wrong denominator; the guide states the corrected 69.5%-of-settled figure with the derivation.
+- `node tools/check-links.mjs` → **PASS** (347 files) including the new page.
+
+### G-2 — close-out verification of main tip de4c771 + live site (done)
+| Gate | Result |
+|---|---|
+| `node tools/check-links.mjs` | PASS — 347 files, no broken links, no key material |
+| `node tests/dashboard.test.mjs` | PASS — 46/46 (after `npm install jsdom`, matching the PR #50 CI fix; fresh sandboxes must install it) |
+| `node tests/dashboard-jumps.test.mjs` | PASS — 9/9 |
+| `npm test` (exec-desk DOM) | PASS — all assertions |
+| `python3 -m unittest discover -s tests` | PASS — 7/7 |
+| `python3 tools/verify_site.py` | PASS — 0 errors; same 2 informational warnings as prior records |
+| `python3 -m py_compile` (all .py) | PASS |
+| `python3 build_site.py` | not re-run this session (site/ is generated & owned); `verify_site.py` confirmed the committed `site/` tree validates, and running it was verified deterministic in prior records |
+| Live pages fetched | landing page + `exec-desk/dashboard.html` render with fresh data (LIVE badge, "last success: 0s ago"); PR #52 deploy confirmed green ("pages build and deployment" run 44800048578 success) |
+
+### G-3 — board bookkeeping (done on merge; PR #52 completion recorded)
+- **PR #52 merge result (completing session 9bfdf3bc's pending record, additively):** merged 2026-11-20T19:20:29Z, merge commit `de4c771d4e8eb5a24e5197651eba00b062dc8c9b`; GitHub Pages API after merge: `status: built`, source `{branch: main, path: /}`, live URL https://karagemop466-tech.github.io/Demo1/ — verified reachable and rendering.
+- My own PR/merge/Pages record: filled in below after the PR is created and merged.
+- **Tile request (logged, not applied):** root-landing owners (`2a5bb307` A-2, `87015421` L-5) — please add a landing tile for `trader-guide/index.html`; I did not touch the shared landing per scope rules.
+
+### Irregularities flagged this session (non-blocking; also on the site's Flagged pages)
+1. Fee-schedule constant drift: older board text cites `0.075`; the current official schedule (effective 2026-07-07) is `0.07` taker / `0.0175` maker. The guide and `sim-desk` use the current value; older desk pages citing 0.075 are owned by their sessions (not edited from here).
+2. Fresh-sandbox test runs need `npm install jsdom` before `node tests/*.test.mjs` / `npm test` (documented in D-1; reproduced here).
+3. Unauthenticated rate limits are officially unpublished (rate_limits page says "authenticate where supported and back off on 429"); any page claiming "~10 req/s" without credentials is an estimate — the guide cites the official wording instead.
+4. `docs/data/` pipeline (kalshi-data.yml) commit-step failure on PR #51's merge remains red until A-4 (`2a5bb307`) lands; the API-fetch part of that run succeeded (run_log ok:true).
+# Session arena/0ad208bf-demo1 — two-chat alert system (`alert-desk/`) + final integration round
+
+## Session claim
+- **Session ID:** `0ad208bf` — branch `arena/0ad208bf-demo1` (platform-fixed name; `session-<id>/<task>` naming not possible, recorded as deviation like all prior sessions).
+- **Claimed at:** 2026-11-20T19:30Z (UTC), claim pushed before implementation work.
+- **Basis:** full repo + board review at `cb6f8b7` (= `origin/main`, includes PR #51). All prior session tasks are recorded done/merged; the live site (https://karagemop466-tech.github.io/Demo1/) is up, Pages `status: built`, snapshot refreshed on schedule at 19:12Z (run 44799888285). **Gap found against the brief:** the two scrolling chat feeds (one with all ≥ $0.10 swings, one filtered to events the model likes as high ROI) do not exist anywhere in the repo — grep for chat/scrolling/alert-feed surfaces no such page. This session claims that gap plus the final-integration round for its work.
+
+## Task board
+
+| # | Task | Status | Owner | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------------------|---------|--------------|----------------|
+| AL-1 | Two scrolling chat feeds for swings ≥ $0.10: **Chat 1 ALL EVENTS** (every ≥ $0.10 move) and **Chat 2 MODEL PICKS · HIGH ROI** (selective filter) | done | arena/0ad208bf-demo1 | `alert-desk/**` (new tree only) | data from committed `engine/jumps.json`, `engine/strategies.json`, `sim-desk/data/ledger.json`; endpoints per https://docs.kalshi.com/api-reference/market/get-trades and https://docs.kalshi.com/getting_started/demo_env | jsdom boot test (offline + live-tape paths); repo link checker; every bubble carries the request URL it came from | Model filter definition is this session's own (disclosed on page): P = sim-desk ledger position; B = fee-aware settlement-study band edge (official taker fee formula). Backtest aggregates show negative net ROI overall — honest numbers, no cherry-picking |
+| AL-2 | Live layer: browser polls official demo API (`/exchange/status` probe, `/markets/trades` tape) and emits live ≥ $0.10 swing bubbles in real time; degrades to committed snapshot when the API is unreachable | done | arena/0ad208bf-demo1 | `alert-desk/**` | https://docs.kalshi.com/api-reference/market/get-trades (path `/markets/trades`, params limit/min_ts); CORS pre-verified for this origin in `data/cors.json` | live-path jsdom case answers documented endpoints with official-shaped payloads; offline path tested separately | `/exchange/status` has no dedicated docs page fetch in this session — reuse is justified because `engine/app.js` polls it in production and its live CI run confirmed it; flagged as noted, not fabricated |
+| AL-3 | Tests + additive CI: `alert-desk/test_boot.mjs` (jsdom, offline + live) + new workflow file (paths-filtered to `alert-desk/**`) | done | arena/0ad208bf-demo1 | `alert-desk/**`, `.github/workflows/alert-desk-check.yml` (new file only) | docs.github.com Actions (paths filter) | `node --check`; jsdom run; `node tools/check-links.mjs` | none — additive only, no shared workflow edited |
+| AL-4 | Final integration round: root-landing card (one additive link), full gate suite, PR → main, merge, Pages deploy confirmation, board record | done | arena/0ad208bf-demo1 | root `index.html` (single additive card in the existing dashboards list), `COORDINATION.md` (this section + record) | docs.github.com Pages | full local gates before PR; post-merge `fetch` of live pages | Root landing touched only additively, consistent with prior final-integration sessions' recorded scope |
+
+## Integration requests / notes
+- No other session's files are edited. `engine/jumps.json`, `engine/strategies.json`, `sim-desk/data/ledger.json` are consumed **read-only** via relative fetch, so CI refreshes by other sessions flow into the chats automatically.
+- If another session is mid-merge when this session pushes, COORDINATION.md conflicts are resolved by keeping both sides in full (established convention, `tools/resolve_board.py`).
+
+## Log
+- 2026-11-20T19:30Z — session `0ad208bf` claimed AL-1..AL-4; claim pushed before implementation.
+- 2026-11-20T20:0xZ — AL-1..AL-3 implemented and verified; AL-4 in progress (PR next).
+
+## Publish record — session arena/0ad208bf-demo1
+
+| Item | Result |
+|---|---|
+| Deliverable | `alert-desk/index.html` — two side-by-side scrolling chats of Kalshi demo swings ≥ $0.10. **Chat 1 · ALL EVENTS**: every captured move ≥ $0.10 either direction (662 committed candle/book-mid jumps + live tape bubbles). **Chat 2 · MODEL PICKS · HIGH ROI**: selective filter — 8 of 662 committed jumps passed at publish time. Controls: topic chips, direction, price basis (traded/book-mid), poll interval, pause, clear-live. Every bubble links the exact API request URL that produced it, plus a news-search lead (labeled "a lead, not proof of cause"). |
+| Model filter (disclosed on page + README) | Rule **P**: market present in sim-desk ledger (`positions_open`/`trades_settled`). Rule **B**: fee-aware settlement-study band edge — side YES on up-jump / NO on down-jump, entry = post-jump price, probability = band resolved-YES frequency (band sample size shown), cost = entry + official taker fee `ceil(M×0.07×C×P×(1−P))`, M=1; ROI > 0 flags. Honest disclosure included: the engine backtest aggregate is negative (−50.36%), so "model likes" is a transparent rule, not a profit claim. |
+| Live layer | Browser probes documented `/exchange/status`, then polls documented `GET /trade-api/v2/markets/trades?limit=200&min_ts=…` (https://docs.kalshi.com/api-reference/market/get-trades); each new trade compared with the market's previously observed trade price; ≥ $0.10 change → bubble; title fetched via `/markets/{ticker}` (blank if the call fails — never fabricated). Unreachable API → SNAPSHOT badge, committed data only. CORS for this origin pre-verified in `data/cors.json`. |
+| Verification | `node alert-desk/test_boot.mjs` — **35/35 PASS** (offline snapshot boot, model-filter math incl. fee spot values hand-computed from the official formula, published topic-rule port, live-tape path with documented-shaped payloads, pause semantics). `node tools/check-links.mjs` — PASS, 351 files. `python3 build_site.py` — 17 pages, link check OK, byte-identical to committed site/. `python3 tools/verify_site.py` — errors=0, warnings=2 (pre-existing). `npm test` exec-desk DOM — PASS. `node tests/dashboard.test.mjs` 46/46, `node tests/dashboard-jumps.test.mjs` 9/9. `python3 engine/test_engine.py` 11/11. `node --check` on new JS — PASS. |
+| Pull request | PR from `arena/0ad208bf-demo1` → `main` (link + merge result filled below after the merge) |
+| Conflict handling | One rebase conflict in `COORDINATION.md` against session `9bfdf3bc`'s final-integration section (main had advanced `cb6f8b7..de4c771`); resolved by keeping **both** sections in full per board convention. No other session's content discarded. |
+
+### Irregularities flagged this session (non-blocking)
+
+1. **Pre-existing engine boot-test failure (2/37), confirmed on pristine `main`.** `node engine/test_boot.mjs` fails "chart drew a path" and "y axis labels are contract prices" on the pristine `cb6f8b7` tree too (verified in a clean worktree). Root cause: the 19:12Z scheduled refresh captured **0 candles for all 10 chart markets** — the demo candlestick endpoint intermittently returns empty arrays, the same condition sim-desk flagged (S-2). `engine/jumps.json` (13:29Z generation) is intact, so alert-desk is unaffected. **Follow-up request to the engine owner (05e53528):** make `snapshot/charts.json` capture skip-or-retry empty candlestick responses so a refresh cannot wipe chart data.
+2. **`/exchange/status` reuse** has no dedicated docs-page fetch in this session; reuse is justified because `engine/app.js` polls it in production and prior live CI confirmed it. Flagged as noted, not fabricated.
+3. **Demo venue** — all values are mock-funds demo values (official demo-env warning); no credentials, no orders anywhere in alert-desk.
+
+

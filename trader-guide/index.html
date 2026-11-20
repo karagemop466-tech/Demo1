@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trader's Guide — Kalshi Demo Dashboard</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background: #f6f7f9; color: #16202c; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 20px 64px; }
+  h1 { font-size: 1.55rem; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 34px 0 8px; border-bottom: 2px solid #d7dee6; padding-bottom: 6px; }
+  h3 { font-size: 1rem; margin: 18px 0 6px; }
+  .sub { color: #5a6b7d; font-size: .92rem; margin: 0 0 14px; }
+  .banner { background: #eef4ee; border: 1px solid #cfe3cf; border-radius: 8px; padding: 10px 14px; font-size: .92rem; margin: 12px 0; }
+  .banner.warn { background: #fdf3e7; border-color: #ecd9b8; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border: 1px solid #dbe2ea; border-radius: 8px; overflow: hidden; font-size: .9rem; }
+  th { background: #eef1f5; text-align: left; padding: 8px 10px; border-bottom: 1px solid #dbe2ea; font-size: .82rem; text-transform: uppercase; letter-spacing: .03em; color: #44566b; }
+  td { padding: 8px 10px; border-bottom: 1px solid #edf0f4; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td a { word-break: break-all; }
+  .src { color: #5a6b7d; font-size: .84rem; }
+  ol.steps { line-height: 1.7; }
+  footer { margin-top: 40px; font-size: .84rem; color: #5a6b7d; border-top: 1px solid #dbe2ea; padding-top: 14px; }
+  code { background: #eef1f5; border-radius: 4px; padding: 1px 5px; font-size: .86em; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #10161d; color: #dbe4ee; }
+    table { background: #17212c; border-color: #2c3a48; }
+    th { background: #1d2935; color: #a7b7c8; border-color: #2c3a48; }
+    td { border-color: #22303d; }
+    .banner { background: #17251b; border-color: #2c4a34; }
+    .banner.warn { background: #2a2214; border-color: #55431f; }
+    code { background: #1d2935; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Trader's Guide — how to use this dashboard</h1>
+  <p class="sub">One page that maps the whole site: which desk does which job, what every number means, and where each fact comes from.
+     Written by session <code>91fc2cc7</code>, 2026-11-20. Every row carries a source link; unconfirmed values are blank or flagged, never inferred.</p>
+
+  <div class="banner">This site tracks five topics on the <strong>Kalshi demo exchange</strong> — gas prices, elections, culture, crypto, golf — via the official Trade API.
+     Demo is a <strong>test exchange with mock funds</strong>; its prices and liquidity may not reflect real markets.
+     Source: <a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com — Test In The Demo Environment</a> (fetched 2026-11-20).</div>
+  <div class="banner warn"><strong>Never paste a private API key into any page of this public site.</strong> The site needs no key: market data is public. Portfolio and order placement need signed requests, and those cells are left blank rather than faked. See <a href="../integration/flagged-review.html#sec-01">SEC-01 on the Flagged for Review page</a>.</div>
+
+  <h2>1 · The 60-second tour</h2>
+  <ol class="steps">
+    <li><strong>Scan the five topics live</strong> → open the <a href="../exec-desk/dashboard.html">primary live desk</a>. It polls the official demo API directly in your browser and ranks events by dollar activity.</li>
+    <li><strong>Pick a market and read the chart</strong> → same page: price over time with a seconds / minutes / hours x-axis, plus the order-book ladder (contracts available at each price).</li>
+    <li><strong>Check what just moved</strong> → the <a href="../exec-desk/jumps.html">jump scanner (≥ $0.10)</a> lists sharp moves with a news-search lead per jump. A lead is a hint, not a proven cause.</li>
+    <li><strong>Test your idea with paper money</strong> → the <a href="../sim-desk/index.html">simulated-trading desk</a> runs rule-based strategies on the live trades tape with the official fee formula; nothing is sent to the exchange.</li>
+    <li><strong>Follow it to resolution</strong> → the <a href="../site/resolved.html">resolution page</a> and every desk's Resolution column show the final <code>result</code> (yes / no — <code>scalar</code> is also possible) returned by the API.</li>
+  </ol>
+
+  <h2>2 · Which desk does what</h2>
+  <p>The site grew through parallel build sessions, so several desks coexist. They are separate deliverables, not duplicates to delete; this table is the map. Source for each row is the desk itself.</p>
+  <table>
+    <thead><tr><th>Task</th><th>Desk / page</th><th>What you get</th></tr></thead>
+    <tbody>
+      <tr><td>Live scan of the five topics, ranked by dollar activity; price chart (s/m/h); order-book depth</td>
+          <td><a href="../exec-desk/dashboard.html">exec-desk/dashboard.html</a></td>
+          <td>Primary live desk. Reads the official demo API from your browser, re-polls while open, and shows last price, bid/ask, 24h contracts, computed $ volume, open-interest $, official notional, resolution column, and contracts available at each price. <span class="src">Source: the desk's own header and footnotes; verified rendering live (LIVE badge, last success 0s) on 2026-11-20.</span></td></tr>
+      <tr><td>Requirements coverage and per-topic detail pages</td>
+          <td><a href="../desk/index.html">desk/index.html</a></td>
+          <td>Consolidated requirements desk: a requirements matrix, the five topic pages, resolution taxonomy, strategy catalogue and its own flagged register. <span class="src">Source: <a href="../desk/README.md">desk/README.md</a>.</span></td></tr>
+      <tr><td>Sharp-move alerts ≥ $0.10 with candidate cause links</td>
+          <td><a href="../exec-desk/jumps.html">exec-desk/jumps.html</a> · <a href="../pages/price-jumps.html">pages/price-jumps.html</a></td>
+          <td>Flags price moves ≥ $0.10 in either direction computed from official candles/book mids; each row links the API request it came from plus a news search for the event. The search is a lead — no cause is asserted. <span class="src">Source: the desk pages' own methodology notes.</span></td></tr>
+      <tr><td>Single-page trader view with second-resolution ticks and fee-aware backtests</td>
+          <td><a href="../engine/index.html">engine/index.html</a></td>
+          <td>Topic-grouped dollar-ranked board, chart with seconds/minutes/hours/days x-axis, depth ladder with the documented implied-ask identity, jump feed, resolution log, strategy rollups; falls back to the committed snapshot when the API is unreachable. <span class="src">Source: <a href="../engine/README.md">engine/README.md</a>.</span></td></tr>
+      <tr><td>Automated simulated trading with a persistent ledger</td>
+          <td><a href="../sim-desk/index.html">sim-desk/index.html</a></td>
+          <td>CI-run strategy engine on the live trades tape: equity curve, open positions marked to market, automatic settlement at $1/$0 when the market resolves, per-strategy win rate / P&L / ROI. Simulated fills only — no orders are placed. <span class="src">Source: <a href="../sim-desk/data/ledger.json">sim-desk/data/ledger.json</a> (schema header states all fills are simulated).</span></td></tr>
+      <tr><td>On-demand paper trading in your own browser</td>
+          <td><a href="../pages/paper-trading.html">pages/paper-trading.html</a></td>
+          <td>Runs simulated rules on demand; trades stay in the browser; no exchange orders are sent. <span class="src">Source: the page's own disclosure.</span></td></tr>
+      <tr><td>Verified snapshot tables per topic and a full data browser</td>
+          <td><a href="../site/index.html">site/index.html</a> · <a href="../site/gas-prices.html">gas</a> · <a href="../site/elections.html">elections</a> · <a href="../site/culture.html">culture</a> · <a href="../site/crypto.html">crypto</a> · <a href="../site/golf.html">golf</a> · <a href="../site/explore.html">explore.html</a></td>
+          <td>Every collected market record with the official request URL that produced it. <span class="src">Source: <a href="../snapshot/metadata.json">snapshot/metadata.json</a>.</span></td></tr>
+      <tr><td>Candles and contracts at each price</td>
+          <td><a href="../site/liquidity.html">site/liquidity.html</a></td>
+          <td>Price over time from official 1-minute, 1-hour and 1-day candles, and the bid ladder with contract counts at each price. <span class="src">Source: the page + <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">candlestick API docs</a>.</span></td></tr>
+      <tr><td>Resolution tracking to yes / no</td>
+          <td><a href="../site/resolved.html">site/resolved.html</a> · <a href="../exec-desk/markets.html">exec-desk/markets.html</a> · <a href="../pages/resolutions.html">pages/resolutions.html</a></td>
+          <td>Markets with the API-returned <code>result</code> (yes / no / scalar) and settlement fields; live desks follow open markets until resolved. <span class="src">Source: <a href="../snapshot/resolved.json">snapshot/resolved.json</a> + <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle docs</a>.</span></td></tr>
+      <tr><td>Portfolio reporting on the demo account</td>
+          <td><a href="../exec-desk/portfolio.html">exec-desk/portfolio.html</a></td>
+          <td>Paper-ledger analytics are available; authenticated balance, positions and fills are <strong>blank</strong> because no demo credentials exist in this repo — flagged, not fabricated. <span class="src">Source: the page's own blank-state notice + <a href="../integration/flagged-review.html">Flagged for Review</a>.</span></td></tr>
+      <tr><td>Flagged items, verification logs, executive summary, suggestions</td>
+          <td><a href="../integration/flagged-review.html">flagged-review</a> · <a href="../docs/verification-log.md">verification log</a> · <a href="../integration/executive-summary.html">executive summary</a> · <a href="../site/suggestions.html">suggestions</a></td>
+          <td>All open irregularities with source links; line-by-line verification notes; the project executive summary; ideas to make the site more live. <span class="src">Source: those pages.</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>3 · How to read the numbers</h2>
+  <p>Every fact below was re-read from the official Kalshi documentation and fee schedule on 2026-11-20 (links per row). If a value could not be confirmed from an official source, it is flagged instead of filled in.</p>
+  <table>
+    <thead><tr><th>Fact</th><th>What it means for you</th><th>Official source</th></tr></thead>
+    <tbody>
+      <tr><td>Contract price</td><td>Prices run $0.01–$0.99. A YES at $0.60 = market-implied 60% chance. YES and NO sum to $1.00.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/market_settlement">Market settlement docs</a> (binary payout at $1); <a href="https://docs.kalshi.com/getting_started/orderbook_responses">orderbook docs</a> (reciprocal relationship).</td></tr>
+      <tr><td>Settlement pays $1</td><td>YES outcome → $1 per YES contract; NO outcome → $1 per NO contract; only net positions settle. No settlement fee for simple yes/no.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/market_settlement">docs.kalshi.com/getting_started/market_settlement</a></td></tr>
+      <tr><td>Order book shows bids only</td><td>The API returns <code>yes_dollars</code> / <code>no_dollars</code> bid ladders as <code>[price, count]</code> pairs, ascending, best bid last. The ask is implied: a NO bid at $0.30 = a YES ask at $0.70. Spread = implied ask − best bid. An empty or unknown book returns HTTP 200 with empty arrays — not an error.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses">docs.kalshi.com/getting_started/orderbook_responses</a></td></tr>
+      <tr><td>Chart resolution</td><td>Official candlesticks exist only at 1-minute, 60-minute and 1440-minute (1-day) intervals. "Seconds" views on this site are client-sampled quotes collected in your browser, clearly labelled — there is no official sub-minute series.</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">candlestick API reference</a> (period_interval = 1, 60, 1440); seconds-view disclosure on the <a href="../exec-desk/dashboard.html">live desk</a>.</td></tr>
+      <tr><td>Market lifecycle</td><td><code>initialized → active → closed → determined → finalized</code> (with <code>inactive</code>, <code>disputed</code>, <code>amended</code> states). REST filters: <code>unopened / open / paused / closed / settled</code>. After close, all order operations are rejected.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/market_lifecycle">docs.kalshi.com/getting_started/market_lifecycle</a></td></tr>
+      <tr><td>Resolution result</td><td>The API sets <code>result</code> to <code>yes</code>, <code>no</code> — or <code>scalar</code> for range markets. The brief's "yes or no" framing is incomplete; desks render <code>scalar</code> as-is rather than forcing YES/NO.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle docs</a> (determination and settlement section).</td></tr>
+      <tr><td>Trading fees</td><td>Taker fee = round up(M × 0.07 × C × P × (1−P)) where P = price in dollars, C = contracts, M = multiplier (default 1). Example from the schedule's own table: 100 contracts at $0.50 → $1.75 fee. Maker fee = round up(M × 0.0175 × C × P × (1−P)) with M default 0 — so no maker fee unless the series is listed. No settlement or membership fee. Fee schedule "Last updated and effective: July 7, 2026".</td>
+          <td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf">kalshi.com fee schedule PDF</a> (fetched 2026-11-20).</td></tr>
+      <tr><td>Rate limits</td><td>Token-bucket based; most requests cost 10 tokens against Read/Write buckets that refill per second. <strong>Unauthenticated requests have separate limits that Kalshi does not publish</strong> — the desks throttle themselves and back off on 429.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/rate_limits">docs.kalshi.com/getting_started/rate_limits</a> ("Unauthenticated requests" section).</td></tr>
+      <tr><td>Demo endpoints</td><td>Recommended REST root <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (alt <code>demo-api.kalshi.co</code>); WebSocket <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code>. Public market data needs no key; portfolio and orders need signed requests. Credentials are not shared between demo and production.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env">demo environment docs</a>; <a href="https://docs.kalshi.com/getting_started/api_environments">API environments</a>.</td></tr>
+      <tr><td>"Highest dollar amount" is computed, not official</td><td>The API publishes no dollar-volume field. Desks rank by volume × price (e.g. 24h $ volume = volume_24h_fp × last_price_dollars) and label it as an estimate. Definitions differ slightly per desk — disclosed on each page.</td>
+          <td class="src"><a href="https://karagemop466-tech.github.io/Demo1/exec-desk/flagged.html">exec-desk UNVERIFIED-04</a>; <a href="../integration/flagged-review.html#rank-01">RANK-01 on the Flagged page</a>.</td></tr>
+      <tr><td>last_price $0.00 trap</td><td>In the collected demo snapshot, 1,471 of the 2,117 settled markets (69.5%) record <code>last_price</code> $0.00 — including 141 that resolved YES. It means "no trade recorded", not a fillable price; backtests that use it as an entry silently buy at zero. The engine excludes those rows and counts them.</td>
+          <td class="src">Re-derived this session from <a href="../snapshot/resolved.json">snapshot/resolved.json</a>; methodology on <a href="../engine/README.md">engine/README.md</a>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4 · Where each dataset comes from and how fresh it is</h2>
+  <p>Four automated pipelines collect from the official demo API on GitHub-hosted runners and commit their output to this repo (the build sandbox itself cannot reach <code>*.kalshi.co</code>, so nothing is fabricated at build time). Each row links the committed provenance file.</p>
+  <table>
+    <thead><tr><th>Dataset</th><th>Last collection (UTC)</th><th>What it holds</th><th>Provenance / source</th></tr></thead>
+    <tbody>
+      <tr><td><code>snapshot/</code> — verified five-topic snapshot</td><td>2026-11-20T11:43:59Z</td>
+          <td>1,399 open markets and 2,469 resolved/closed records across the five topics, plus order books and charts; every record stores the exact request URL.</td>
+          <td class="src"><a href="../snapshot/metadata.json">snapshot/metadata.json</a> · <a href="../snapshot/collect-log.txt">snapshot/collect-log.txt</a> · counts re-verified on the <a href="https://karagemop466-tech.github.io/Demo1/">landing page</a>.</td></tr>
+      <tr><td><code>data/</code> — 15-minute cron snapshot</td><td>2026-11-20T19:12:10Z (run completed 19:12:46Z, 0 errors)</td>
+          <td>25,194 topic markets (gas 924, elections 34, culture 334, crypto 23,412, golf 490), 50 order books, exchange/CORS checks. Crypto's count is large because topic matching is a published keyword rule, not an official taxonomy.</td>
+          <td class="src"><a href="../data/meta.json">data/meta.json</a> · <a href="../data/cors.json">data/cors.json</a> (demo API reflects the Pages origin in <code>access-control-allow-origin</code>, checked 19:12:10Z).</td></tr>
+      <tr><td><code>docs/data/</code> — hourly pipeline</td><td>Last successful API run 2026-11-20T13:40:48Z</td>
+          <td>Events scan, topic matches, books, history, resolutions. The pipeline's "commit refreshed data" step failed on the PR #51 merge; a race-proof rewrite is in flight (board task A-4, session 2a5bb307) — the API fetch itself succeeded.</td>
+          <td class="src"><a href="../docs/data/run_log.json">docs/data/run_log.json</a> · <a href="https://github.com/karagemop466-tech/Demo1/actions/workflows/kalshi-data.yml">pipeline runs on GitHub Actions</a>.</td></tr>
+      <tr><td><code>engine/</code> — jump &amp; strategy analytics</td><td>Derived from the snapshot above; widened by an engine-refresh workflow</td>
+          <td>≥$0.10 jump scan — 662 moves, threshold and method recorded in the file (adjacent candle closes / book mids that differ by ≥ $0.10, nulls skipped) — and a fee-aware strategy study; note the committed chart series covers 10 markets — flagged, widened per topic by CI.</td>
+          <td class="src"><a href="../engine/jumps.json">engine/jumps.json</a> · <a href="../engine/README.md">engine/README.md</a> (coverage disclosure).</td></tr>
+      <tr><td><code>sim-desk/data/ledger.json</code> — simulated trades</td><td>Updated 2026-11-20T13:40:46Z, 10 recorded runs</td>
+          <td>Simulated bankroll from $1,000, open positions marked to market, settled trades with the official result, fees via the official taker formula.</td>
+          <td class="src"><a href="../sim-desk/data/ledger.json">sim-desk/data/ledger.json</a> · fee formula checked against the <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf">official fee schedule</a>.</td></tr>
+      <tr><td>Live browser mode</td><td>Whenever a desk page is open</td>
+          <td>The live desks fetch the official demo API directly from your browser (public market data needs no key). Verified live this session: the primary desk rendered with LIVE status and a fresh poll.</td>
+          <td class="src"><a href="https://karagemop466-tech.github.io/Demo1/exec-desk/dashboard.html">exec-desk/dashboard.html</a> (fetched 2026-11-20, "LIVE — last success: 0s ago").</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5 · A ten-minute decision workflow</h2>
+  <ol class="steps">
+    <li><strong>Orient (1 min):</strong> open the <a href="../exec-desk/dashboard.html">live desk</a> and keep the <a href="https://karagemop466-tech.github.io/Demo1/">landing page</a> open for the verified snapshot counts.</li>
+    <li><strong>Find the money (2 min):</strong> rank by 24h $ volume within one topic (keep topics separate; each topic page groups its markets — <a href="../site/index.html">site/index.html</a>). Remember the ranking is computed and labelled (UNVERIFIED-04).</li>
+    <li><strong>Read the book (2 min):</strong> best bid, implied ask = 1 − opposite best bid, spread, depth within ±5¢ — contracts available at each price, straight from the official bids-only book (<a href="https://docs.kalshi.com/getting_started/orderbook_responses">docs</a>).</li>
+    <li><strong>Check context (2 min):</strong> open the <a href="../exec-desk/jumps.html">jump feed</a> for ≥ $0.10 moves on that market; follow the news-search lead if one exists, and treat it as a lead only.</li>
+    <li><strong>Size the trade honestly (1 min):</strong> expected P&L must clear the official taker fee <code>0.07 × C × P × (1−P)</code> (<a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf">fee schedule</a>). The simulated desks already apply this formula.</li>
+    <li><strong>Rehearse, then track (2 min):</strong> paper-trade the idea on the <a href="../sim-desk/index.html">sim desk</a>, then follow the market to resolution on the <a href="../site/resolved.html">resolution page</a> — the API returns <code>result</code> yes / no / scalar and settlement pays $1 per winning contract (<a href="https://docs.kalshi.com/getting_started/market_settlement">docs</a>).</li>
+  </ol>
+
+  <h2>6 · Flags every trader should know before using the site</h2>
+  <table>
+    <thead><tr><th>Flag</th><th>What it means</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>SEC-01 / AUTH-01 / KEY-01</td><td>Never enter a private key on this public site. Portfolio balances, positions, fills and order placement stay blank without a secure credential service.</td>
+          <td class="src"><a href="../integration/flagged-review.html#sec-01">integration/flagged-review.html — SEC-01</a></td></tr>
+      <tr><td>Demo venue</td><td>All values are demo-book values with mock funds; prices and liquidity may not reflect real markets.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env">demo environment docs</a></td></tr>
+      <tr><td>UNVERIFIED-04 / RANK-01</td><td>Dollar rankings are computed (volume × price); no official dollar-volume field exists. Each desk discloses its own definition.</td>
+          <td class="src"><a href="https://karagemop466-tech.github.io/Demo1/exec-desk/flagged.html">exec-desk flagged register</a> · <a href="../integration/flagged-review.html#rank-01">RANK-01</a></td></tr>
+      <tr><td>last_price $0.00</td><td>60% of settled demo markets in the snapshot have last_price $0.00 = "no trade recorded"; it is not an entry price.</td>
+          <td class="src"><a href="../engine/README.md">engine/README.md</a></td></tr>
+      <tr><td>scalar results</td><td>Range markets resolve to <code>scalar</code>, not just yes/no; desks render the raw value.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle docs</a></td></tr>
+      <tr><td>No browser streaming</td><td>The WebSocket handshake requires signed authentication even for public channels, so a static site polls REST instead; sub-minute "seconds" charts are client-sampled quotes.</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WS quick start</a> · desk disclosure on the <a href="../exec-desk/dashboard.html">live desk</a></td></tr>
+      <tr><td>Mocked tests ≠ live evidence (TEST-01)</td><td>The DOM/regression suites pass against fixtures; they do not prove live-API availability. Live evidence is the CI collector logs and the browser LIVE badge.</td>
+          <td class="src"><a href="../integration/flagged-review.html">integration/flagged-review.html</a></td></tr>
+      <tr><td>Third-party relays</td><td>One desk falls back to a third-party API relay when the official API is unreachable (flagged UNVERIFIED-03 on that desk); the newer desks fall back to the committed official snapshot instead.</td>
+          <td class="src"><a href="https://karagemop466-tech.github.io/Demo1/exec-desk/flagged.html">exec-desk flagged register</a> · <a href="../integration/flagged-review.html">integration flagged register</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>7 · Verification performed for this guide</h2>
+  <ul>
+    <li>Official pages fetched and re-read on 2026-11-20: <a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a>, <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market_lifecycle</a>, <a href="https://docs.kalshi.com/getting_started/orderbook_responses">orderbook_responses</a>, <a href="https://docs.kalshi.com/getting_started/market_settlement">market_settlement</a>, <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">get-market-candlesticks</a>, <a href="https://docs.kalshi.com/getting_started/rate_limits">rate_limits</a>, and the <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf">fee schedule PDF</a>. Every fact in section 3 comes from those fetches.</li>
+    <li>Dataset timestamps re-derived from the committed provenance files at write time (section 4): <a href="../snapshot/metadata.json">snapshot/metadata.json</a>, <a href="../data/meta.json">data/meta.json</a>, <a href="../docs/data/run_log.json">docs/data/run_log.json</a>, <a href="../sim-desk/data/ledger.json">sim-desk/data/ledger.json</a>, <a href="../data/cors.json">data/cors.json</a>.</li>
+    <li>Deployed pages fetched live: the <a href="https://karagemop466-tech.github.io/Demo1/">landing page</a> and <a href="https://karagemop466-tech.github.io/Demo1/exec-desk/dashboard.html">exec-desk/dashboard.html</a> render with fresh data (LIVE badge, last success 0s ago).</li>
+    <li>Repo-wide link/hygiene checker (<code>node tools/check-links.mjs</code>) run over this page and the repository; every local link resolves and every table row above carries a source link.</li>
+    <li>Not verified (left blank, not inferred): anything requiring demo-account credentials — balances, positions, fills, placed orders. There are none in this repo, by design.</li>
+  </ul>
+
+  <footer>
+    Part of the <a href="https://karagemop466-tech.github.io/Demo1/">Kalshi Demo Dashboard</a> (repo <code>karagemop466-tech/Demo1</code>).
+    Built by session <code>arena/91fc2cc7-demo1</code> on 2026-11-20 · task G-1 on <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md">COORDINATION.md</a>.
+    This guide links to desks; it does not modify or re-rank them. Flagged and unverified items never block publication — they are listed above with sources for review.
+  </footer>
+</main>
+</body>
+</html>

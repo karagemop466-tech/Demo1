@@ -118,6 +118,41 @@
             <td class="status">Rechecked · 46/46 pass; mocked coverage only</td>
             <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/tests/dashboard.test.mjs" target="_blank" rel="noopener">Mocked test evidence ↗</a><a href="https://github.com/karagemop466-tech/Demo1/blob/main/pages/live.html" target="_blank" rel="noopener">Tested dashboard page ↗</a><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Official public market-data guide ↗</a></td>
           </tr>
+          <tr id="alert-01">
+            <td class="id">ALERT-01</td>
+            <td>Live-poll against the real demo API was not exercised from this sandbox.</td>
+            <td><code>*.kalshi.co</code> is blocked from the shell, so the alerts desk's best-effort live fetch could not be run against <code>https://external-api.demo.kalshi.co/trade-api/v2</code>. The desk falls back to the committed official snapshot, the live-poll path is code-reviewed, and <code>alerts/tools/test_dom.mjs</code> plus <code>alerts/tools/test_alerts.py</code> cover it with committed-feed bytes.</td>
+            <td class="status">Open · fallback + tested, not live-exercised</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/alerts/assets/alerts.js" target="_blank" rel="noopener">Live-poll code ↗</a><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Official demo environment ↗</a></td>
+          </tr>
+          <tr id="alert-02">
+            <td class="id">ALERT-02</td>
+            <td>Parallel-session overlap on the &ge;$0.10 alert requirement.</td>
+            <td>PR #53 (<code>arena/d973ced5-demo1</code>) added root-level <code>alerts.html</code> + <code>assets/js/alerts.js</code> for the same requirement and was merged to main. This session's namespaced <code>alerts/</code> desk (dual scrolling chats, QLM shortlist, 23 checks) is kept alongside it; neither implementation was discarded and no file owned by the other session was edited.</td>
+            <td class="status">Logged · both kept, coordinated</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/pull/53" target="_blank" rel="noopener">PR #53 ↗</a><a href="../COORDINATION.md" target="_blank" rel="noopener">Coordination board ↗</a><a href="../alerts/audit.html" target="_blank" rel="noopener">Alerts verification ↗</a></td>
+          </tr>
+          <tr id="alert-03">
+            <td class="id">ALERT-03</td>
+            <td>Seconds-resolution candles are not available from the official REST endpoint.</td>
+            <td>Official candlestick periods are 1, 60, or 1440 seconds only, so the alerts desk's selector offers minutes/hours/day rather than seconds. No value is inferred.</td>
+            <td class="status">Blank · official constraint</td>
+            <td class="refs"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Official candlestick reference ↗</a></td>
+          </tr>
+          <tr id="alert-04">
+            <td class="id">ALERT-04</td>
+            <td>Authenticated portfolio figures and real order execution remain blank.</td>
+            <td>No Kalshi demo API key or connected account exists in this sandbox; a public static site must not hold keys. Simulated/paper mode only; no real orders placed.</td>
+            <td class="status">Blank · no credentials available</td>
+            <td class="refs"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Official API-key guidance ↗</a></td>
+          </tr>
+          <tr id="alert-05">
+            <td class="id">ALERT-05</td>
+            <td>No venue/news cause is asserted for any price jump.</td>
+            <td>Each alert row links to its official API request only. No third-party fallback or cause lookup is included in this desk.</td>
+            <td class="status">Blank · by design</td>
+            <td class="refs"><a href="../alerts/audit.html" target="_blank" rel="noopener">Alerts verification (item 6) ↗</a></td>
+          </tr>
         </tbody>
       </table>
     </div>

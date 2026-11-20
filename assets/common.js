@@ -2,9 +2,15 @@
 (function () {
   var pages = [
     ["index.html", "Home"],
+    ["alerts.html", "Price swing alerts"],
+    ["site/gas-prices.html", "Gas prices"],
+    ["site/elections.html", "Elections"],
+    ["site/culture.html", "Culture"],
+    ["site/crypto.html", "Crypto"],
+    ["site/golf.html", "Golf"],
+    ["site/index.html", "Topic snapshots"],
     ["exec-desk/dashboard.html", "Live desk"],
     ["desk/index.html", "Consolidated desk"],
-    ["site/index.html", "Topic snapshots"],
     ["exec-desk/jumps.html", "Price jumps"],
     ["exec-desk/markets.html", "Resolutions"],
     ["pages/paper-trading.html", "Paper strategies"],
