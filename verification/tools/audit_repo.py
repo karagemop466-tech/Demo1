@@ -582,6 +582,25 @@ def load_doc_index(path: str):
     return urls
 
 
+def strip_code_spans(text: str) -> str:
+    """Remove code spans and <code> blocks: they are not links."""
+    text = re.sub(r"`[^`\n]*`", " ", text)
+    text = re.sub(r"<code\b[^>]*>.*?</code>", " ", text, flags=re.S | re.I)
+    return text
+
+
+def documented_broken_paths() -> set:
+    """Paths the site deliberately records as broken (pre-fix values)."""
+    path = os.path.join(ROOT, "build_site.py")
+    if not os.path.exists(path):
+        return set()
+    text = read(path)
+    match = re.search(r"REPAIRED_DOC_LINKS\s*=\s*\[(.*?)\n\]", text, re.S)
+    if not match:
+        return set()
+    return set(re.findall(r"\"(https://docs\.kalshi\.com[^\"]+)\"", match.group(1)))
+
+
 def extract_doc_urls(text: str):
     """Documentation URLs from real links, not from prose fragments."""
     found = set()
@@ -591,7 +610,7 @@ def extract_doc_urls(text: str):
             found.add(url)
     for match in re.finditer(r"\]\((https://docs\.kalshi\.com[^)\s]*)\)", text):
         found.add(clean_url(match.group(1)))
-    for match in re.finditer(r"https://docs\.kalshi\.com[^\s\"'<>)\(\]]*", text):
+    for match in re.finditer(r"https://docs\.kalshi\.com[^\s\"'<>)\(\]]*", strip_code_spans(text)):
         url = clean_url(match.group(0))
         if url.startswith("https://docs.kalshi.com"):
             found.add(url)
@@ -612,12 +631,16 @@ def check_doc_links(files: list, index_path: str):
             used[url] += 1
             where[url].add(page)
     index = load_doc_index(index_path)
+    recorded_broken = documented_broken_paths()
     rows = []
     for url in sorted(used):
         key = normalise_doc_url(url)
         parsed = urllib.parse.urlparse(url)
         site_root = parsed.path.rstrip("/") in SITE_ROOT_PATHS
-        if index is None:
+        if url in recorded_broken:
+            status = "documented-broken"
+            note = "recorded on the Flagged for review page as a repaired path, not a live link"
+        elif index is None:
             status = "unverified"
             note = "official doc index not available in this sandbox"
         elif key in index:
@@ -725,6 +748,7 @@ def build_report(canonical: dict, index_path: str):
             "doc_links_used": len(doc_rows),
             "doc_links_in_index": sum(1 for d in doc_rows if d["status"] == "in-index"),
             "doc_links_not_in_index": len(doc_not_in_index),
+            "doc_links_documented_broken": sum(1 for d in doc_rows if d["status"] == "documented-broken"),
             "doc_links_unverified": len(doc_unverified),
             "tables_checked": len(per_page),
             "cross_desk_quantities": len(cross_desk),
@@ -816,7 +840,7 @@ def render_html(report: dict) -> str:
             "<td class='fine mono'>{f}</td></tr>".format(
                 u=esc(doc["url"]), n=esc(doc["uses"]),
                 cls={"in-index": "ok", "not-in-index": "bad", "unverified": "warn",
-                     "site-root": "warn"}[doc["status"]],
+                     "site-root": "warn", "documented-broken": "warn"}[doc["status"]],
                 st=esc(doc["status"]), note=esc(doc["note"]),
                 f=esc(", ".join(doc["files"]) or "-"),
             )

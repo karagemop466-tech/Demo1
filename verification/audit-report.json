@@ -77,9 +77,10 @@
     "warnings": 3,
     "mismatches": 0,
     "explained": 2,
-    "doc_links_used": 348,
-    "doc_links_in_index": 341,
+    "doc_links_used": 351,
+    "doc_links_in_index": 337,
     "doc_links_not_in_index": 0,
+    "doc_links_documented_broken": 8,
     "doc_links_unverified": 0,
     "tables_checked": 24,
     "cross_desk_quantities": 64,
@@ -361,15 +362,6 @@
         "archive/monitor.html",
         "audit/build_audit.py",
         "decision/index.html"
-      ]
-    },
-    {
-      "url": "https://docs.kalshi.com/api-reference/",
-      "uses": 1,
-      "status": "site-root",
-      "note": "documentation site entry point, not a page listed in llms.txt",
-      "files": [
-        "engine/app.js"
       ]
     },
     {
@@ -776,13 +768,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
-      "uses": 3,
-      "status": "in-index",
-      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "uses": 5,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
+        "build_site.py",
+        "site/flagged.html",
         "strategy-desk/suggestions.html",
-        "tools/engine_refresh.py",
-        "verified-desk/api-reference.html"
+        "tools/engine_refresh.py"
       ]
     },
     {
@@ -1283,6 +1276,15 @@
       ]
     },
     {
+      "url": "https://docs.kalshi.com/api-reference/market/get-exchange-status",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
       "url": "https://docs.kalshi.com/api-reference/market/get-market",
       "uses": 11,
       "status": "in-index",
@@ -1319,10 +1321,19 @@
       ]
     },
     {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-order-book",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
-      "uses": 45,
-      "status": "in-index",
-      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "uses": 47,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
         "COORDINATION.md",
         "README.md",
@@ -1399,14 +1410,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-series",
-      "uses": 4,
-      "status": "in-index",
-      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "uses": 6,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
         "COORDINATION.md",
-        "strategy-desk/data/series-map.json",
-        "strategy-desk/sources.html",
-        "verified-desk/api-reference.html"
+        "build_site.py",
+        "site/flagged.html",
+        "strategy-desk/data/series-map.json"
       ]
     },
     {
@@ -2066,6 +2077,15 @@
       ]
     },
     {
+      "url": "https://docs.kalshi.com/api-reference/series/get-series",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
       "url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-target.md",
       "uses": 1,
       "status": "in-index",
@@ -2653,6 +2673,15 @@
       ]
     },
     {
+      "url": "https://docs.kalshi.com/getting_started/quick_start",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
       "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
       "uses": 25,
       "status": "in-index",
@@ -2702,14 +2731,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
-      "uses": 27,
-      "status": "in-index",
-      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "uses": 29,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
         "COORDINATION.md",
         "README.md",
         "app.js",
-        "data/demo-snapshot.json"
+        "build_site.py"
       ]
     },
     {
@@ -2857,7 +2886,7 @@
     },
     {
       "url": "https://docs.kalshi.com/llms.txt",
-      "uses": 21,
+      "uses": 23,
       "status": "site-root",
       "note": "documentation site entry point, not a page listed in llms.txt",
       "files": [
