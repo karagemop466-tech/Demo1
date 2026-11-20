@@ -18,7 +18,7 @@ numbers the API does not return, which are computed and labelled as such:
 Endpoints (official references):
   GET /markets?status=open&limit=200      https://docs.kalshi.com/api-reference/market/get-markets
   GET /events?limit=200                   https://docs.kalshi.com/api-reference/events/get-events
-  GET /markets/{t}/orderbook              https://docs.kalshi.com/api-reference/market/get-market-order-book
+  GET /markets/{t}/orderbook              https://docs.kalshi.com/api-reference/market/get-market-orderbook
   GET /series/{s}/markets/{t}/candlesticks https://docs.kalshi.com/api-reference/market/get-market-candlesticks
   GET /exchange/status                    https://docs.kalshi.com/api-reference/exchange/get-exchange-status
 

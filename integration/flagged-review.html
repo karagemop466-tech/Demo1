@@ -135,7 +135,7 @@
           <tr id="alert-03">
             <td class="id">ALERT-03</td>
             <td>Seconds-resolution candles are not available from the official REST endpoint.</td>
-            <td>Official candlestick periods are 1, 60, or 1440 seconds only, so the alerts desk's selector offers minutes/hours/day rather than seconds. No value is inferred.</td>
+            <td>Official candlestick periods are 1, 60, or 1440 <b>minutes</b> only (1 minute, 1 hour, 1 day), so the alerts desk's selector offers minutes/hours/day rather than seconds. No value is inferred.</td>
             <td class="status">Blank · official constraint</td>
             <td class="refs"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Official candlestick reference ↗</a></td>
           </tr>
@@ -152,6 +152,27 @@
             <td>Each alert row links to its official API request only. No third-party fallback or cause lookup is included in this desk.</td>
             <td class="status">Blank · by design</td>
             <td class="refs"><a href="../alerts/audit.html" target="_blank" rel="noopener">Alerts verification (item 6) ↗</a></td>
+          </tr>
+          <tr id="audit-01">
+            <td class="id">AUDIT-01</td>
+            <td>Two desks publish different Elections counts: 132 records here, 57 in the desk tracker.</td>
+            <td>The <code>KXWTI</code> series is titled “WTI oil <b>election</b> day”, so the published elections keyword rule files 75 settled and 60 open crude-oil markets under <code>topic=elections</code>. The desk tracker excludes that series prefix (<code>desk/tools/track_resolutions.py</code>). Neither number is wrong — they measure different scopes — but a reader comparing the two desks sees two answers, and the row itself does not state the exclusion. Needs a decision: publish one Elections definition across desks, or show the exclusion in the topic table.</td>
+            <td class="status">Open · needs an owner decision</td>
+            <td class="refs"><a href="../verification/index.html" target="_blank" rel="noopener">Consistency audit (C8) ↗</a><a href="../site/flagged.html" target="_blank" rel="noopener">Flagged page ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Official series list ↗</a></td>
+          </tr>
+          <tr id="audit-02">
+            <td class="id">AUDIT-02</td>
+            <td>Four <code>docs.kalshi.com</code> links in the repository pointed at pages that do not exist.</td>
+            <td><code>api-reference/market/get-market-order-book</code>, <code>api-reference/series/get-series</code>, <code>api-reference/market/get-exchange-status</code> and <code>getting_started/quick_start</code> all returned an error. They were found by comparing every documentation link with the official page index <code>https://docs.kalshi.com/llms.txt</code> and then fetching each URL; the corrected paths were fetched and confirmed. All four are repaired, and the before/after pairs are published on the Flagged page.</td>
+            <td class="status">Fixed · 404 before, reference page now</td>
+            <td class="refs"><a href="../verification/index.html" target="_blank" rel="noopener">Consistency audit (C6) ↗</a><a href="../site/flagged.html" target="_blank" rel="noopener">Flagged page ↗</a><a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">Official documentation index ↗</a></td>
+          </tr>
+          <tr id="audit-03">
+            <td class="id">AUDIT-03</td>
+            <td>Three rendered market rows quote a market ticker without linking an official source.</td>
+            <td><code>docs/pages/suggestions.html</code> (row Q7), <code>verified-desk/flagged.html</code> (1 of 2 market rows) and <code>verified-desk/provenance.html</code> (4 of 4 request-log rows, which print an endpoint path rather than a full official URL). No value is affected; the rows are listed with file and line in the audit report.</td>
+            <td class="status">Open · low severity</td>
+            <td class="refs"><a href="../verification/index.html" target="_blank" rel="noopener">Consistency audit (C5) ↗</a></td>
           </tr>
         </tbody>
       </table>

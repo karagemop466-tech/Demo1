@@ -47,7 +47,7 @@
  "endpoints_used": [
   "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
   "https://docs.kalshi.com/api-reference/market/get-markets",
-  "https://docs.kalshi.com/api-reference/market/get-market-order-book",
+  "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
   "https://docs.kalshi.com/getting_started/orderbook_responses",
   "https://docs.kalshi.com/getting_started/market_lifecycle"
  ],

@@ -1,0 +1,47 @@
+name: Repo consistency & source audit
+
+# Fetches the official Kalshi documentation index and re-derives every rendered
+# count in the repository from the committed official demo-API capture.
+# GitHub-hosted runners have network access to docs.kalshi.com; the local
+# sandbox does not, so this workflow is what turns "unverified" doc links into
+# "in the official index" or "not in the official index".
+
+on:
+  push:
+    branches: ["**"]
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the official Kalshi documentation index
+        run: |
+          mkdir -p verification/data
+          curl --fail --silent --show-error --location --max-time 60 \
+            "https://docs.kalshi.com/llms.txt" \
+            --output verification/data/kalshi-docs-index.txt
+          echo "index bytes: $(wc -c < verification/data/kalshi-docs-index.txt)"
+          echo "indexed pages: $(grep -c '^- \[' verification/data/kalshi-docs-index.txt || true)"
+
+      - name: Run the repo-wide consistency and source audit
+        run: python3 verification/tools/audit_repo.py
+
+      - name: Commit the refreshed audit artefacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verification/data/kalshi-docs-index.txt verification/audit-report.json verification/index.html
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+            exit 0
+          fi
+          git commit -m "audit: refresh repo consistency + source-link audit [skip ci]"
+          git push

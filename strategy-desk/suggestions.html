@@ -37,7 +37,7 @@
     <b>Discover:</b> (1) log into demo.kalshi.co; (2) create an API key in account settings; (3) store the private key only in a server-side secret store (see S1). <b>Decision needed:</b> approve S1 proxy or accept SIM-only portfolio.</div></div>
 
   <div class="qa-item"><div class="q">Q2 · Can the browser call <span class="mono">external-api.demo.kalshi.co</span> directly (CORS)? <span class="flag">gating</span></div>
-    <div class="a"><b>Known:</b> the endpoint is the documented recommended demo host (<a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a>) and public market data needs no key (<a href="https://docs.kalshi.com/getting_started/quick_start" target="_blank" rel="noopener">quick start</a>). Official docs do not state CORS behavior for browser origins.
+    <div class="a"><b>Known:</b> the endpoint is the documented recommended demo host (<a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a>) and public market data needs no key (<a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">quick start</a>). Official docs do not state CORS behavior for browser origins.
     <b>Missing:</b> whether <span class="mono">Access-Control-Allow-Origin</span> permits arbitrary origins for public GETs.
     <b>Discover:</b> open <a href="markets.html">Live Markets</a> on the published site and check the connection badge; or run <span class="mono">curl -I -H "Origin: https://karagemop466-tech.github.io" …/markets?limit=1</span> and inspect headers. If blocked → S1 proxy (read-only variant) is required.</div></div>
 
@@ -116,7 +116,7 @@
     <b>Why:</b> demo lineups can be sparse; production context improves decision quality. <b>Impact:</b> better topic coverage. <b>Effort:</b> ~2 h. <b>First step:</b> confirm you want production data visible (Q5).</div></div>
 
   <div class="qa-item"><div class="q"><b>S9 · Rate-limit budget meter</b> <span class="pill">deferred</span></div>
-    <div class="a"><b>What:</b> show remaining read/write budget via <a href="https://docs.kalshi.com/api-reference/market/get-exchange-status" target="_blank" rel="noopener">account/limits</a> (authenticated). Deferred until S1 exists; the public dashboard already self-throttles (120 ms between calls) and polls on fixed schedules.</div></div>
+    <div class="a"><b>What:</b> show remaining read/write budget via <a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">account/limits</a> (authenticated). Deferred until S1 exists; the public dashboard already self-throttles (120 ms between calls) and polls on fixed schedules.</div></div>
 
   <div class="qa-item"><div class="q"><b>S10 · This page as the review workflow</b> <span class="pill">accepted</span> (shipped)</div>
     <div class="a">Suggestions carry status pills; decisions get logged in <span class="mono">COORDINATION.md</span> with date + rationale. Review by editing statuses there or requesting changes on the integration PR.</div></div>

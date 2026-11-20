@@ -1,0 +1,4544 @@
+{
+  "generated_utc": "2026-11-20T11:43:59Z",
+  "audit_base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "canonical": {
+    "generated_utc": "2026-11-20T11:43:59Z",
+    "base": "https://external-api.demo.kalshi.co/trade-api/v2",
+    "totals": {
+      "open": 1399,
+      "records": 2469,
+      "yes": 222,
+      "no": 1895,
+      "awaiting": 352,
+      "topics": 5,
+      "resolved_yesno": 2117
+    },
+    "per_topic": {
+      "gas_prices": {
+        "label": "gas prices",
+        "open": 116,
+        "records": 367,
+        "yes": 107,
+        "no": 243,
+        "awaiting": 17,
+        "resolved_yesno": 350
+      },
+      "elections": {
+        "label": "elections",
+        "open": 255,
+        "records": 132,
+        "yes": 29,
+        "no": 102,
+        "awaiting": 1,
+        "resolved_yesno": 131
+      },
+      "culture": {
+        "label": "culture",
+        "open": 191,
+        "records": 428,
+        "yes": 57,
+        "no": 311,
+        "awaiting": 60,
+        "resolved_yesno": 368
+      },
+      "crypto": {
+        "label": "crypto",
+        "open": 474,
+        "records": 900,
+        "yes": 9,
+        "no": 659,
+        "awaiting": 232,
+        "resolved_yesno": 668
+      },
+      "golf": {
+        "label": "golf",
+        "open": 363,
+        "records": 642,
+        "yes": 20,
+        "no": 580,
+        "awaiting": 42,
+        "resolved_yesno": 600
+      }
+    },
+    "requests": 494,
+    "failed": 0,
+    "snapshot_files": {
+      "markets": "snapshot/markets.json",
+      "resolved": "snapshot/resolved.json",
+      "charts": "snapshot/charts.json",
+      "metadata": "snapshot/metadata.json",
+      "collect_log": "snapshot/collect-log.txt"
+    }
+  },
+  "counts": {
+    "files_scanned": 454,
+    "findings": 6,
+    "errors": 0,
+    "warnings": 4,
+    "mismatches": 0,
+    "explained": 2,
+    "doc_links_used": 351,
+    "doc_links_in_index": 337,
+    "doc_links_not_in_index": 0,
+    "doc_links_documented_broken": 8,
+    "doc_links_unverified": 0,
+    "tables_checked": 25,
+    "cross_desk_quantities": 69,
+    "cross_desk_differences": 3
+  },
+  "findings": [
+    {
+      "check": "C3",
+      "file": "desk/resolutions.html",
+      "line": 43,
+      "topic": "elections",
+      "field": "topic summary row",
+      "claimed": [
+        56,
+        5,
+        51,
+        1
+      ],
+      "canonical": [
+        1,
+        29,
+        102,
+        131,
+        132,
+        255,
+        387
+      ],
+      "status": "EXPLAINED",
+      "detail": "The page matches its own data source, desk/data/resolutions-log.json (tracked 57, resolved 56, awaiting 1). The snapshot holds 132 records for this topic; the difference of 75 is the series-prefix exclusion declared in desk/tools/track_resolutions.py (see C8). The row itself does not state the exclusion, so a reader comparing desks sees two different numbers."
+    },
+    {
+      "check": "C5",
+      "file": "docs/pages/suggestions.html",
+      "field": "market rows without official source link",
+      "claimed": 1,
+      "canonical": 1,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "tape-desk/verified.html",
+      "field": "market rows without official source link",
+      "claimed": 43,
+      "canonical": 89,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "verified-desk/flagged.html",
+      "field": "market rows without official source link",
+      "claimed": 1,
+      "canonical": 2,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "verified-desk/provenance.html",
+      "field": "market rows without official source link",
+      "claimed": 4,
+      "canonical": 4,
+      "status": "WARNING"
+    },
+    {
+      "check": "C8",
+      "file": "snapshot/resolved.json",
+      "topic": "elections",
+      "field": "records excluded from the desk tracker by series prefix",
+      "claimed": 75,
+      "canonical": 132,
+      "status": "EXPLAINED",
+      "detail": "75 resolved and 60 open records use series KXWTI, which the desk tracker excludes (desk/tools/track_resolutions.py). Snapshot records for this topic: 132; desk-tracked: 57."
+    }
+  ],
+  "row_source_coverage": {
+    "desk/crypto.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/culture.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/elections.html": {
+      "market_rows": 81,
+      "rows_with_official_source": 81,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/gas-prices.html": {
+      "market_rows": 97,
+      "rows_with_official_source": 97,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/golf.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/live.html": {
+      "market_rows": 30,
+      "rows_with_official_source": 30,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/markets.html": {
+      "market_rows": 40,
+      "rows_with_official_source": 40,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/resolutions.html": {
+      "market_rows": 180,
+      "rows_with_official_source": 180,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/strategy.html": {
+      "market_rows": 16,
+      "rows_with_official_source": 16,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/pages/flagged.html": {
+      "market_rows": 1,
+      "rows_with_official_source": 1,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/pages/suggestions.html": {
+      "market_rows": 1,
+      "rows_with_official_source": 0,
+      "rows_without_official_source": 1,
+      "coverage_pct": 0.0,
+      "unsourced_examples": [
+        {
+          "line": 42,
+          "first_cell": "Q7"
+        }
+      ]
+    },
+    "docs/pages/verification.html": {
+      "market_rows": 5,
+      "rows_with_official_source": 5,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/verification-3c2c8403.html": {
+      "market_rows": 3,
+      "rows_with_official_source": 3,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "flagged.html": {
+      "market_rows": 2,
+      "rows_with_official_source": 2,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/crypto.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/culture.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/elections.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/flagged.html": {
+      "market_rows": 40,
+      "rows_with_official_source": 40,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/gas-prices.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/golf.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/markets.html": {
+      "market_rows": 250,
+      "rows_with_official_source": 250,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/resolved.html": {
+      "market_rows": 250,
+      "rows_with_official_source": 250,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "tape-desk/verified.html": {
+      "market_rows": 89,
+      "rows_with_official_source": 46,
+      "rows_without_official_source": 43,
+      "coverage_pct": 51.7,
+      "unsourced_examples": [
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        },
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        },
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        }
+      ]
+    },
+    "verified-desk/flagged.html": {
+      "market_rows": 2,
+      "rows_with_official_source": 1,
+      "rows_without_official_source": 1,
+      "coverage_pct": 50.0,
+      "unsourced_examples": [
+        {
+          "line": 127,
+          "first_cell": "volume_fp , volume_24h_fp"
+        }
+      ]
+    },
+    "verified-desk/provenance.html": {
+      "market_rows": 4,
+      "rows_with_official_source": 0,
+      "rows_without_official_source": 4,
+      "coverage_pct": 0.0,
+      "unsourced_examples": [
+        {
+          "line": 66,
+          "first_cell": "21"
+        },
+        {
+          "line": 67,
+          "first_cell": "22"
+        },
+        {
+          "line": 68,
+          "first_cell": "23"
+        }
+      ]
+    }
+  },
+  "doc_links": [
+    {
+      "url": "https://docs.kalshi.com",
+      "uses": 36,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        "build_site.py",
+        "docs/sources.md",
+        "pages/flagged-review.html",
+        "pages/landing-executive-summary.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/",
+      "uses": 12,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "archive/monitor.html",
+        "audit/build_audit.py",
+        "decision/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/get-account-api-limits",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/get-account-api-limits.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/get-account-api-usage-level-volume-progress.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/list-non-default-endpoint-costs.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/upgrade-account-api-usage-level.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/api-keys/create-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/api-keys/delete-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/api-keys/generate-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/api-keys/get-api-keys.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/accept-block-trade-proposal.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/accept-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/accept-rfq-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/cancel-block-trade-proposal.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/confirm-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/confirm-rfq-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/create-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/create-rfq.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/delete-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/delete-rfq-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/delete-rfq.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-block-trade-proposals.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-communications-id.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-quotes.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-rfq-quote.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-rfq.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/get-rfqs.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/propose-block-trade.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/communications/reject-block-trade-proposal.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/create-subtrader-bound-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/create-subtrader-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/delete-subtrader-bound-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/delete-subtrader-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/estimate-portfolio-maintenance-margin.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event-candlesticks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event-fee-changes.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event-forecast-percentile-history.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event-metadata.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-events",
+      "uses": 38,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "audit/index.html",
+        "data/demo-snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-events.md",
+      "uses": 12,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "REVIEW.md",
+        "SOURCES.md",
+        "assets/js/kalshi-core.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-multivariate-events.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-schedule.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
+      "uses": 6,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py",
+        "site/flagged.html",
+        "strategy-desk/suggestions.html",
+        "tools/engine_refresh.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status.md",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/verification.html",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-position-transfer.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-subtrader.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/delete-fcm-subtrader-event-contract-daily-cap.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-fills.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-positions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-blocked-categories.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-event-contract-daily-cap.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/list-fcm-subtraders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-blocked-categories.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-event-contract-daily-cap.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/generate-subtrader-bound-api-key.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-active-margin-obligations.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-funding-estimate-by-asset-class.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-funding-schedule.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-guaranty-fund-balance.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-large-trader-positions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-maintenance-margin-metadata.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-margin-reports.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-member-funding-payments.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-obligation-corporate-action-payments.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-obligation-funding-payments.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-obligation-history.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-obligation-maintenance-margin-details.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-obligation-settlement-details.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-settlement-balance-history.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-settlement-balance-withdrawal.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-settlement-balance.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-settlement-estimate-by-asset-class.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-settlement-prices.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/get-subtrader-groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-cutoff-timestamps.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-fills.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-market-candlesticks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-market.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-markets.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-positions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/historical/get-historical-trades.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentive-schedules.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentives.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/list-subtrader-bound-api-keys.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-event-live-data",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-event-live-data.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-game-stats.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-live-data-with-type.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-live-data.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-multiple-live-data.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index-calibrations.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/batch-get-market-candlesticks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-exchange-status",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market",
+      "uses": 15,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "live-desk/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+      "uses": 87,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts-live.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md",
+      "uses": 11,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-order-book",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+      "uses": 59,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "alerts/README.md",
+        "alerts/data/feed.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook.md",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "docs/pages/verification.html",
+        "verification/data/kalshi-docs-index.txt",
+        "verified-desk/assets/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market.md",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt",
+        "verified-desk/assets/app.js",
+        "verified-desk/suggestions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-markets",
+      "uses": 92,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "alerts-live.html",
+        "alerts/README.md"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-markets.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks",
+      "uses": 14,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts-live.html",
+        "assets/alerts.js",
+        "docs/alerts-model.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series",
+      "uses": 8,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "COORDINATION.md",
+        "build_site.py",
+        "site/flagged.html",
+        "strategy-desk/data/series-map.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series-list",
+      "uses": 30,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "audit/index.html",
+        "data/demo-snapshot.json",
+        "decision/js/api-notes.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series-list.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-trades",
+      "uses": 49,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alert-desk/README.md",
+        "alert-desk/app.js",
+        "alert-desk/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-trades.md",
+      "uses": 5,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "docs/api-verification.md",
+        "pages/live.html",
+        "verification/data/kalshi-docs-index.txt",
+        "verified-desk/assets/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/create-concert-cancellation-market.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/create-weather-point-market.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/get-concert-cancellation-market-availability.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/get-concerts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/get-weather-point-market-availability.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/markets/search-concerts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/milestone/get-milestone.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/milestone/get-milestones.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/multivariate/create-market-in-multivariate-event-collection.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collection.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collections.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/create-order-group",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/create-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/delete-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/get-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/get-order-groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/reset-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/trigger-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/update-order-group-limit.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/amend-order-v2",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/amend-order-v2.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/batch-cancel-orders-v2.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/batch-create-orders-v2.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/cancel-all-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md",
+      "uses": 5,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/verification.html",
+        "scripts/demo_trader.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
+      "uses": 33,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "EXECUTIVE_SUMMARY.md",
+        "audit/flagged.html",
+        "audit/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "SOURCES.md",
+        "docs/index.html",
+        "docs/pages/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/decrease-order-v2.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-order-queue-position",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-order-queue-position.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-orders",
+      "uses": 11,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "decision/js/trading.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/create-subaccount.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-all-subaccount-balances.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
+      "uses": 28,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-balance.md",
+      "uses": 7,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/portfolio.html",
+        "docs/pages/sources.html",
+        "docs/pages/verification.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-credit-history.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-deposits.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
+      "uses": 26,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills.md",
+      "uses": 6,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "docs/api-verification.md",
+        "docs/pages/portfolio.html",
+        "docs/pages/verification.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfer.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-positions",
+      "uses": 27,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-positions.md",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "docs/pages/portfolio.html",
+        "docs/pages/verification.html",
+        "pages/strategy.html",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-settlements",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/js/kalshi.js",
+        "exec-desk/docs/SOURCES.md",
+        "exec-desk/js/config.js",
+        "exec-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-settlements.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-netting.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-transfers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-target-balance-allocation.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-total-resting-order-value.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-withdrawals.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/intra-account-transfer.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/set-target-balance-allocation.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/transfer-between-subaccounts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/update-subaccount-netting.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-filters-for-sports",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-filters-for-sports.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories.md",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "docs/api-verification.md",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/series/get-series",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-target.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-targets.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/update-subtrader-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/withdraw-settlement-balance.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/cfbenchmarks/rest-passthrough.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/changelog",
+      "uses": 7,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "docs/sources.md",
+        "pages/dashboard.html",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/changelog/index.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/authentication.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/connectivity.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/drop-copy.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/error-handling.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/listener-sessions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/market-data.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/order-entry.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix-margin/order-groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/authentication.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/common-components.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/connectivity.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/drop-copy.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/error-handling.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/listener-sessions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/market-data.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/market-settlement.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/order-entry.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/order-groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/rfq-messages.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/fix/subpenny-pricing.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_environments",
+      "uses": 75,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts-live.html",
+        "alerts/README.md",
+        "alerts/audit.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_environments.md",
+      "uses": 14,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "EXECUTIVE_SUMMARY.md",
+        "SOURCES.md",
+        "assets/js/kalshi-core.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_keys",
+      "uses": 36,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts/tools/build_verification.py",
+        "alerts/verification.html",
+        "decision/api-notes.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_keys.md",
+      "uses": 6,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/concert_rfqs.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/demo_env",
+      "uses": 108,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts-live.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/demo_env.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "EXECUTIVE_SUMMARY.md",
+        "SOURCES.md",
+        "docs/assets/site.js",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/exchange_sharding",
+      "uses": 7,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "tape-desk/data/live-check.json",
+        "tape-desk/data/watchlist.json",
+        "tape-desk/tools/build_watchlist.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/exchange_sharding.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fee_rounding",
+      "uses": 10,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "assets/alerts.js",
+        "docs/alerts-model.html",
+        "flagged.html",
+        "pages/paper-trading.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fee_rounding.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fixed_point_migration",
+      "uses": 7,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/api-notes.html",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "scripts/fetch_kalshi_data.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fixed_point_migration.md",
+      "uses": 7,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/data/snapshot.json",
+        "docs/pages/flagged.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/historical_data",
+      "uses": 8,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "app.js",
+        "chart.html",
+        "review.html",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/historical_data.md",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/maintenance_and_pauses.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/making_your_first_request.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
+      "uses": 56,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts/README.md",
+        "alerts/data/feed.json",
+        "alerts/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_lifecycle.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_settlement",
+      "uses": 55,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts-live.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_settlement.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/index.html",
+        "docs/pages/live.html",
+        "docs/pages/resolutions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/mcp.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_direction",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "decision/js/kalshi.js",
+        "decision/js/requirements.js",
+        "decision/portfolio.html",
+        "decision/trading.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_direction.md",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt",
+        "verified-desk/assets/app.js",
+        "verified-desk/strategies.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_errors",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "decision/js/trading.js",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_errors.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
+      "uses": 67,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts-live.html",
+        "alerts/README.md",
+        "alerts/data/feed.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses.md",
+      "uses": 13,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/pagination",
+      "uses": 3,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verified-desk/api-reference.html",
+        "verified-desk/assets/kalshi.js",
+        "verified-desk/provenance.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/pagination.md",
+      "uses": 4,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start",
+      "uses": 1,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "build_site.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
+      "uses": 25,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "audit/index.html",
+        "decision/api-notes.html",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md",
+      "uses": 10,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/data/portfolio.json",
+        "docs/pages/flagged.html",
+        "docs/pages/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_create_order",
+      "uses": 25,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "docs/sources.md",
+        "live-desk/pages/flagged.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_create_order.md",
+      "uses": 6,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "docs/api-verification.md",
+        "pages/strategy.html",
+        "tools/kalshi-signer.mjs",
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
+      "uses": 33,
+      "status": "documented-broken",
+      "note": "recorded on the Flagged for review page as a repaired path, not a live link",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "build_site.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_market_data.md",
+      "uses": 6,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/index.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
+      "uses": 36,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts-live.html",
+        "app.js",
+        "assets/alerts.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets.md",
+      "uses": 10,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/pages/flagged.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/rate_limits",
+      "uses": 35,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "alerts-live.html",
+        "assets/alerts.js",
+        "decision/js/api-notes.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/rate_limits.md",
+      "uses": 9,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/pages/flagged.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/rfqs.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/settlement_bounds.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/sub_users_vs_subaccounts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/subaccounts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/targets_and_milestones.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/terms.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/weather_rfqs.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_s\u2026",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/llms-full.txt",
+      "uses": 3,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "docs/sources.md",
+        "pages/landing-executive-summary.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/llms.txt",
+      "uses": 24,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        ".github/workflows/desk.yml",
+        ".github/workflows/live-data.yml",
+        ".github/workflows/repo-audit.yml",
+        "COORDINATION.md"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin#order-rejections",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/account/get-perps-account-api-limits.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/corporate-actions/get-margin-corporate-actions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exchange/get-enabled-status.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exchange/get-exchange-status.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-trigger-by-id.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-triggers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-isolated-exit-trigger.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-cross-exit-triggers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-isolated-exit-triggers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-cross-exit-trigger.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-isolated-exit-trigger.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/exit-triggers/update-cross-exit-trigger.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-position-transfer.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-subtrader.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-notional-risk-limit.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-subtrader-risk-controls.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/get-fcm-subtrader-risk-controls.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-notional-risk-limit.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-subtrader-risk-controls.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tier-rates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tiers.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/funding/get-funding-history.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/funding/get-funding-rate-estimate.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/funding/get-historical-funding-rates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/funding/get-premium-index.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-market-candlesticks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-market-orderbook.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-market-schedules.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-market.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-markets.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-multiple-market-orderbooks.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/market/get-trades.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/create-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/delete-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-groups.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/reset-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/trigger-order-group.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/order-groups/update-order-group-limit.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/amend-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/cancel-all-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/cancel-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/create-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/decrease-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/get-order.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/orders/get-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/create-subaccount.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/get-balance.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/get-fills.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/get-positions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/intra-account-transfer.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/portfolio/transfer-between-subaccounts.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/risk/get-notional-risk-limit.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/risk/get-risk-parameters.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-rest/risk/get-risk.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/connection-keep-alive.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/market-lifecycle.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/market-ticker.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/order-group-updates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/orderbook-updates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/public-trades.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/user-fills.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/user-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin-ws/websockets/websocket-connection.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin/corporate-actions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/margin/price-banding.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/sdks/overview.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/cfbenchmarks-value-5hz.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/cfbenchmarks-value.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/communications.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/connection-keep-alive.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/market-and-event-lifecycle.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/market-positions.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/market-ticker.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/multivariate-market-and-event-lifecycle.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/order-group-updates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/orderbook-updates",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "engine/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/orderbook-updates.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/public-trades.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/pyth-value.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/user-fills.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/user-orders.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/websocket-connection",
+      "uses": 8,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "COORDINATION.md",
+        "monitor/app.js",
+        "verified-desk/api-reference.html",
+        "verified-desk/assets/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/websocket-connection.md",
+      "uses": 2,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt",
+        "verified-desk/suggestions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/welcome",
+      "uses": 1,
+      "status": "site-root",
+      "note": "documentation site entry point, not a page listed in llms.txt",
+      "files": [
+        "exec-desk/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/welcome/index.md",
+      "uses": 1,
+      "status": "in-index",
+      "note": "listed in https://docs.kalshi.com/llms.txt",
+      "files": [
+        "verification/data/kalshi-docs-index.txt"
+      ]
+    }
+  ],
+  "cross_desk": [
+    {
+      "quantity": "awaiting",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 232,
+        "desk/resolutions.html": 232,
+        "verification/index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 60,
+        "desk/resolutions.html": 60,
+        "verification/index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 1,
+        "desk/resolutions.html": 1,
+        "verification/index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 17,
+        "desk/resolutions.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 42,
+        "desk/resolutions.html": 42,
+        "verification/index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "crypto",
+      "values": {
+        "index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "culture",
+      "values": {
+        "index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "elections",
+      "values": {
+        "index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "golf",
+      "values": {
+        "index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "crypto",
+      "values": {
+        "docs/verification-3c2c8403.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "culture",
+      "values": {
+        "docs/verification-3c2c8403.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "elections",
+      "values": {
+        "docs/verification-3c2c8403.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "gas_prices",
+      "values": {
+        "docs/verification-3c2c8403.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "golf",
+      "values": {
+        "docs/verification-3c2c8403.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 659,
+        "desk/resolutions.html": 659,
+        "verification/index.html": 659
+      },
+      "distinct_values": [
+        659
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 311,
+        "desk/resolutions.html": 311,
+        "verification/index.html": 311
+      },
+      "distinct_values": [
+        311
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 102,
+        "desk/resolutions.html": 51,
+        "verification/index.html": 102
+      },
+      "distinct_values": [
+        51,
+        102
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "no",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 243,
+        "desk/resolutions.html": 243
+      },
+      "distinct_values": [
+        243
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 580,
+        "desk/resolutions.html": 580,
+        "verification/index.html": 580
+      },
+      "distinct_values": [
+        580
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 474,
+        "docs/verification-3c2c8403.html": 474,
+        "verification/index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 191,
+        "docs/verification-3c2c8403.html": 191,
+        "verification/index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 255,
+        "docs/verification-3c2c8403.html": 255,
+        "verification/index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 116,
+        "docs/verification-3c2c8403.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 363,
+        "docs/verification-3c2c8403.html": 363,
+        "verification/index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "crypto",
+      "values": {
+        "index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "culture",
+      "values": {
+        "index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "elections",
+      "values": {
+        "index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "golf",
+      "values": {
+        "index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "crypto",
+      "values": {
+        "verification/index.html": 900
+      },
+      "distinct_values": [
+        900
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "culture",
+      "values": {
+        "verification/index.html": 428
+      },
+      "distinct_values": [
+        428
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "elections",
+      "values": {
+        "verification/index.html": 132
+      },
+      "distinct_values": [
+        132
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "golf",
+      "values": {
+        "verification/index.html": 642
+      },
+      "distinct_values": [
+        642
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 668,
+        "desk/resolutions.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 368,
+        "desk/resolutions.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 131,
+        "desk/resolutions.html": 56
+      },
+      "distinct_values": [
+        56,
+        131
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 350,
+        "desk/resolutions.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 600,
+        "desk/resolutions.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "crypto",
+      "values": {
+        "index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "culture",
+      "values": {
+        "index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "elections",
+      "values": {
+        "index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "golf",
+      "values": {
+        "index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "crypto",
+      "values": {
+        "docs/verification-3c2c8403.html": 668,
+        "verification/index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "culture",
+      "values": {
+        "docs/verification-3c2c8403.html": 368,
+        "verification/index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "elections",
+      "values": {
+        "docs/verification-3c2c8403.html": 131,
+        "verification/index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "gas_prices",
+      "values": {
+        "docs/verification-3c2c8403.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "golf",
+      "values": {
+        "docs/verification-3c2c8403.html": 600,
+        "verification/index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "settled w/ yes/no result",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "settled w/ yes/no result",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "settled w/ yes/no result",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "settled w/ yes/no result",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "settled w/ yes/no result",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 9,
+        "desk/resolutions.html": 9,
+        "verification/index.html": 9
+      },
+      "distinct_values": [
+        9
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 57,
+        "desk/resolutions.html": 57,
+        "verification/index.html": 57
+      },
+      "distinct_values": [
+        57
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 29,
+        "desk/resolutions.html": 5,
+        "verification/index.html": 29
+      },
+      "distinct_values": [
+        5,
+        29
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "yes",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 107,
+        "desk/resolutions.html": 107
+      },
+      "distinct_values": [
+        107
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 20,
+        "desk/resolutions.html": 20,
+        "verification/index.html": 20
+      },
+      "distinct_values": [
+        20
+      ],
+      "status": "agree"
+    }
+  ]
+}

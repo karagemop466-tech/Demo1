@@ -1,37 +1,37 @@
 {
-  "$comment": "Category-to-series mapping used by markets.html. Every mapping is verified AT RUNTIME against the official Kalshi Trade API GET /series (docs: https://docs.kalshi.com/api-reference/series/get-series) — if the API does not list a candidate series, it is shown as UNVERIFIED and excluded from tables. 'docs' links point to official Kalshi pages only.",
+  "$comment": "Category-to-series mapping used by markets.html. Every mapping is verified AT RUNTIME against the official Kalshi Trade API GET /series (docs: https://docs.kalshi.com/api-reference/market/get-series) — if the API does not list a candidate series, it is shown as UNVERIFIED and excluded from tables. 'docs' links point to official Kalshi pages only.",
   "categories": [
     {
       "id": "gas",
       "label": "Gas Prices",
       "candidates": [
-        { "series": "KXGASUSD", "search": "gasoline retail price US weekly", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXGASBAM", "search": "gasoline price California", "docs": "https://docs.kalshi.com/api-reference/series/get-series" }
+        { "series": "KXGASUSD", "search": "gasoline retail price US weekly", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXGASBAM", "search": "gasoline price California", "docs": "https://docs.kalshi.com/api-reference/market/get-series" }
       ]
     },
     {
       "id": "elections",
       "label": "Elections",
       "candidates": [
-        { "series": "KXGOVERNOR", "search": "governor election", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXMAYOR", "search": "mayor election", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXSENATE", "search": "senate election", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXHOUSE", "search": "house election", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXPRESIDENT", "search": "presidential election", "docs": "https://docs.kalshi.com/api-reference/series/get-series" }
+        { "series": "KXGOVERNOR", "search": "governor election", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXMAYOR", "search": "mayor election", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXSENATE", "search": "senate election", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXHOUSE", "search": "house election", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXPRESIDENT", "search": "presidential election", "docs": "https://docs.kalshi.com/api-reference/market/get-series" }
       ]
     },
     {
       "id": "culture",
       "label": "Culture",
       "candidates": [
-        { "series": "KXMOVIE", "search": "movie box office", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXGRAMMY", "search": "grammy awards", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXOSCARS", "search": "academy awards oscars", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXMETGALA", "search": "met gala", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXROYAL", "search": "royal family", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXPOPE", "search": "pope", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXSPACE", "search": "space rocket launch", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXPERSON", "search": "person of the year time", "docs": "https://docs.kalshi.com/api-reference/series/get-series" }
+        { "series": "KXMOVIE", "search": "movie box office", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXGRAMMY", "search": "grammy awards", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXOSCARS", "search": "academy awards oscars", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXMETGALA", "search": "met gala", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXROYAL", "search": "royal family", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXPOPE", "search": "pope", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXSPACE", "search": "space rocket launch", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXPERSON", "search": "person of the year time", "docs": "https://docs.kalshi.com/api-reference/market/get-series" }
       ]
     },
     {
@@ -46,10 +46,10 @@
       "id": "golf",
       "label": "Golf",
       "candidates": [
-        { "series": "KXPGACHAMP", "search": "pga championship", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXPGA", "search": "pga tour", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXMASTERS", "search": "masters tournament", "docs": "https://docs.kalshi.com/api-reference/series/get-series" },
-        { "series": "KXRYDER", "search": "ryder cup", "docs": "https://docs.kalshi.com/api-reference/series/get-series" }
+        { "series": "KXPGACHAMP", "search": "pga championship", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXPGA", "search": "pga tour", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXMASTERS", "search": "masters tournament", "docs": "https://docs.kalshi.com/api-reference/market/get-series" },
+        { "series": "KXRYDER", "search": "ryder cup", "docs": "https://docs.kalshi.com/api-reference/market/get-series" }
       ]
     }
   ]
