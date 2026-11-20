@@ -86,7 +86,15 @@
 
   async function render() {
     const tb = $("m-table").querySelector("tbody");
-    tb.innerHTML = '<tr><td colspan="10" class="empty">Loading…</td></tr>';
+    tb.innerHTML = '<tr><td colspan="10" class="empty">Loading series &amp; events…</td></tr>';
+    // Safety: never leave the table stuck on a spinner — render empty-state instead.
+    const safety = setTimeout(() => {
+      const t = $("m-table").querySelector("tbody");
+      if (t && /Loading/.test(t.textContent)) t.innerHTML = '<tr><td colspan="10" class="empty">Timed out reaching the official API — see banner / <a href="flagged.html">Flagged</a>. Use Refresh to retry.</td></tr>';
+    }, 9000);
+    try { await renderBody(tb); } finally { clearTimeout(safety); }
+  }
+  async function renderBody(tb) {
     $("series-list").textContent = "Topic series used (highest official volume first): " +
       (((S.seriesByTopic || {})[S.topic] || []).slice(0, 6).map(s => s.ticker + " — " + s.title).join(" · ") || "…");
     try {

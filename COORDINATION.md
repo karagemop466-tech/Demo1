@@ -679,3 +679,15 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
   workflow rebuilds it and fails the deploy if any internal link breaks.
 - `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
 - Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.
+
+### Post-merge record (written after merges completed — session arena-3a5f6f1d)
+
+| Item | Result |
+|---|---|
+| PR #25 (main delivery) | **MERGED** 2026-11-20T12:03:11Z, merge commit `11de1f12b8cd0125dc8f4ea84c67c8ea45fa11c0`; one conflict round while open (main advanced via PRs #23/#24) resolved by keeping both sessions' COORDINATION sections — logged above |
+| PR #28 (parallel fetch + CORS record) | **MERGED** 2026-11-20T12:10:06Z, merge commit `0263ec5cfdb42fa50e6235c4cc375b07b963bf04` |
+| CI | `site-check` and `Strategy-desk link & syntax check` **pass** on both PR heads; repo-wide `node tools/check-links.mjs` PASS; all `pages.yml` deploy steps verified locally (`python3 build_site.py` → "link check: OK") |
+| GitHub Pages | API `status: built`, source `{branch: main, path: /}`; builds for `11de1f1` (superseded by a later session's merge under `cancel-in-progress`) and `0263ec5` **built** with no error; site URL https://karagemop466-tech.github.io/Demo1/ |
+| Live verification | Fetched https://karagemop466-tech.github.io/Demo1/exec-desk/ post-deploy: page serves exec-desk content, and its runtime status reads **"LIVE official demo API reachable directly"** — browser→demo-API CORS confirmed end-to-end from the deployed origin (matches `data/cors.json` header evidence) |
+| Conflict handling | Both conflict rounds resolved without discarding any other session's work; logged in the Conflict log above |
+

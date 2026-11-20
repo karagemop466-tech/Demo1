@@ -280,9 +280,18 @@
     window.addEventListener("resize", () => { drawPrice(); });
   }
 
+  function setStage(msg) {
+    const tb = $("top-table").querySelector("tbody");
+    if (tb && /Loading/.test(tb.textContent)) tb.innerHTML = '<tr><td colspan="12" class="empty">' + msg + "</td></tr>";
+  }
+
   async function init() {
     renderTopicSeg(); wire(); renderRankNote(); banner();
+    setStage("Loading series…");
     try { await loadSeries(); } catch (e) { /* banner */ }
+    setStage("Loading open events for this topic…");
+    // Safety: never leave the table stuck on a spinner — render empty-state instead.
+    const safety = setTimeout(() => { try { renderTable(); } catch (e) {} }, 8000);
     try {
       await loadTopicEvents(S.topic);
       renderTable();
@@ -291,6 +300,7 @@
       const first = $("top-table").querySelector("tr[data-ticker]");
       if (first) await selectMarket(first.dataset.ticker);
     } catch (e) { renderTable(); }
+    clearTimeout(safety);
     setInterval(banner, 5000);
   }
   init();
