@@ -1,0 +1,78 @@
+name: Kalshi demo data pipeline
+
+# Fetches live market data from the official Kalshi DEMO Trade API
+# (https://external-api.demo.kalshi.co/trade-api/v2) for the five tracked topics,
+# updates docs/data/*.json, and (on main) commits the refreshed data so GitHub
+# Pages serves it. Data commits are path-ignored here to prevent a trigger loop.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: "Smoke test with reduced caps"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/data/**"
+      - "**.md"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kalshi-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch Kalshi demo data (no credentials — public market-data endpoints only)
+        id: fetch
+        run: |
+          set -o pipefail
+          if [ "${{ github.event_name == 'workflow_dispatch' && inputs.quick == true }}" = "true" ]; then
+            python3 scripts/fetch_kalshi_data.py --out docs/data --quick
+          else
+            python3 scripts/fetch_kalshi_data.py --out docs/data
+          fi
+
+      - name: Validate generated JSON
+        run: |
+          python3 - <<'PY'
+          import json, glob
+          for p in sorted(glob.glob("docs/data/*.json")):
+              with open(p) as f:
+                  json.load(f)
+              print("valid:", p)
+          PY
+
+      - name: Upload data artifact (every run, incl. branches/PRs)
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalshi-demo-data
+          path: docs/data/
+          retention-days: 14
+
+      - name: Commit refreshed data (main only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -z "$(git status --porcelain docs/data)" ]; then
+            echo "No data changes."; exit 0
+          fi
+          git config user.name "kalshi-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data
+          git commit -m "data: refresh Kalshi demo snapshot [skip ci]" --no-verify
+          git pull --rebase origin main
+          git push origin HEAD:main

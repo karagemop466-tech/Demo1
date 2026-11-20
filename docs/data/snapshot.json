@@ -1,0 +1,280 @@
+{
+  "generated_at": "2026-11-20",
+  "sample": true,
+  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "env_docs": "https://docs.kalshi.com/getting_started/demo_env.md",
+  "provenance": "Initial seed snapshot: every value below was copied from live responses of the official Kalshi DEMO Trade API (platform page-fetch, 2026-11-20). The scheduled CI pipeline (scripts/fetch_kalshi_data.py) overwrites this file with a full auto-generated snapshot every 15 minutes. Fields not observed in the fetched response are omitted or blank (never inferred).",
+  "methodology": {
+    "est_usd_volume_24h": "volume_24h_fp x last_price_dollars (estimate of traded notional; not an official Kalshi metric)",
+    "est_usd_volume": "volume_fp x last_price_dollars (estimate of traded notional)",
+    "notional_at_stake_usd": "open_interest_fp x $1.00 (each binary contract pays $1 at settlement — https://docs.kalshi.com/getting_started/market_settlement.md)",
+    "ranking": "events ranked by est_usd_volume_24h, then est_usd_volume, then total contracts"
+  },
+  "events_scanned": null,
+  "topics": {
+    "gas": {
+      "open_events_matched": 1,
+      "top_events": [
+        {
+          "event_ticker": "KXAAAGASMIN-26DEC31",
+          "series_ticker": "KXAAAGASMIN",
+          "title": "How low will US gas prices get this year?",
+          "sub_title": "",
+          "topic": "gas",
+          "mutually_exclusive": false,
+          "category_seen": "Economics",
+          "settlement_sources": [{"name": "AAA (settlement source named in market rules)", "url": "https://www.aaa.com/gasprices"}],
+          "markets_count": null,
+          "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASMIN-26DEC31",
+          "markets": [
+            {
+              "ticker": "KXAAAGASMIN-26DEC31-3.80",
+              "title": "Will average **gas prices** be below $3.80 by Dec 31, 2026?",
+              "status": "finalized",
+              "result": "yes",
+              "last_price_dollars": "0.0000",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "0.00", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "settlement_ts": "2026-07-06T19:27:27Z", "settlement_value_dollars": "1.0000",
+              "close_time": "2026-07-06T18:24:34Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.0, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMIN-26DEC31-3.80"
+            },
+            {
+              "ticker": "KXAAAGASMIN-26DEC31-3.60",
+              "title": "Will average **gas prices** be below $3.60 by Dec 31, 2026?",
+              "status": "active",
+              "result": "",
+              "last_price_dollars": "0.9000",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "3.21", "volume_24h_fp": "0.00", "open_interest_fp": "0.05",
+              "close_time": "2026-12-31T06:25:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 2.89, "notional_at_stake_usd": 0.05,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMIN-26DEC31-3.60"
+            },
+            {
+              "ticker": "KXAAAGASMIN-26DEC31-3.40",
+              "title": "Will average **gas prices** be below $3.40 by Dec 31, 2026?",
+              "status": "active",
+              "result": "",
+              "last_price_dollars": "0.0100",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "3.20", "volume_24h_fp": "0.00", "open_interest_fp": "0.01",
+              "close_time": "2026-12-31T06:25:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.03, "notional_at_stake_usd": 0.01,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMIN-26DEC31-3.40"
+            },
+            {
+              "ticker": "KXAAAGASMIN-26DEC31-3.20",
+              "title": "Will average **gas prices** be below $3.20 by Dec 31, 2026?",
+              "status": "active",
+              "result": "",
+              "last_price_dollars": "0.0100",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "3.20", "volume_24h_fp": "0.00", "open_interest_fp": "0.04",
+              "close_time": "2026-12-31T06:25:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.03, "notional_at_stake_usd": 0.04,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMIN-26DEC31-3.20"
+            }
+          ]
+        }
+      ]
+    },
+    "elections": {
+      "open_events_matched": 1,
+      "top_events": [
+        {
+          "event_ticker": "KXNEXTNATOSECGEN-99",
+          "series_ticker": "KXNEXTNATOSECGEN",
+          "title": "Who will be the next Secretary General of NATO?",
+          "sub_title": "Before Jan 1, 2099",
+          "topic": "elections",
+          "mutually_exclusive": true,
+          "category_seen": "Elections",
+          "settlement_sources": [{"name": "North Atlantic Treaty Organization", "url": "https://www.nato.int/"}],
+          "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEXTNATOSECGEN-99",
+          "markets": [],
+          "markets_note": "Nested markets for this event were not captured in the session probe; per-market values are intentionally blank (never inferred). CI snapshot fills them automatically."
+        }
+      ]
+    },
+    "culture": {
+      "open_events_matched": 1,
+      "top_events": [
+        {
+          "event_ticker": "KXOSCARSUPACTO-27",
+          "series_ticker": "KXOSCARSUPACTO",
+          "title": "Oscar for Best Supporting Actor",
+          "sub_title": "",
+          "topic": "culture",
+          "mutually_exclusive": true,
+          "category_seen": "Entertainment",
+          "settlement_sources": [{"name": "Academy of Motion Picture Arts and Sciences", "url": "https://www.oscars.org/oscars"}],
+          "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXOSCARSUPACTO-27",
+          "markets": [
+            {
+              "ticker": "KXOSCARSUPACTO-27-JOH",
+              "title": "Will John Goodman win Best Supporting Actor at the Oscars?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0200",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.16", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2027-12-31T15:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.02, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARSUPACTO-27-JOH"
+            },
+            {
+              "ticker": "KXOSCARSUPACTO-27-CHA",
+              "title": "Will Channing Tatum win Best Supporting Actor at the Oscars?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0200",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.16", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2027-12-31T15:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.02, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARSUPACTO-27-CHA"
+            },
+            {
+              "ticker": "KXOSCARSUPACTO-27-COL",
+              "title": "Will Colman Domingo win Best Supporting Actor at the Oscars?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0200",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.16", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2027-12-31T15:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.02, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARSUPACTO-27-COL"
+            },
+            {
+              "ticker": "KXOSCARSUPACTO-27-CHAR",
+              "title": "Will Charles Melton win Best Supporting Actor at the Oscars?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0200",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.16", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2027-12-31T15:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.02, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARSUPACTO-27-CHAR"
+            },
+            {
+              "ticker": "KXOSCARSUPACTO-27-MIL",
+              "title": "Will Miles Teller win Best Supporting Actor at the Oscars?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0200",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.16", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2027-12-31T15:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.02, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARSUPACTO-27-MIL"
+            }
+          ]
+        }
+      ]
+    },
+    "crypto": {
+      "open_events_matched": 1,
+      "top_events": [
+        {
+          "event_ticker": "KXBTCMINMON-BTC-26NOV30",
+          "series_ticker": "KXBTCMINMON",
+          "title": "BTC min one touch monthly",
+          "sub_title": "",
+          "topic": "crypto",
+          "mutually_exclusive": false,
+          "category_seen": "Crypto",
+          "settlement_sources": [{"name": "CF Benchmarks (BRTI)", "url": "https://www.cfbenchmarks.com/"}],
+          "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINMON-BTC-26NOV30",
+          "markets": [
+            {
+              "ticker": "KXBTCMINMON-BTC-26NOV30-7250000",
+              "title": "Will BTC trimmed mean be below $72500.00 by 11:59 PM ET on Nov 30, 2026?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.7400",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "2345.11", "volume_24h_fp": "0.00", "open_interest_fp": "2332.25",
+              "close_time": "2026-12-01T04:59:59Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 1735.38, "notional_at_stake_usd": 2332.25,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINMON-BTC-26NOV30-7250000"
+            },
+            {
+              "ticker": "KXBTCMINMON-BTC-26NOV30-7000000",
+              "title": "Will BTC trimmed mean be below $70000.00 by 11:59 PM ET on Nov 30, 2026?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.4900",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "1.00", "volume_24h_fp": "0.00", "open_interest_fp": "1.00",
+              "close_time": "2026-12-01T04:59:59Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.49, "notional_at_stake_usd": 1.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINMON-BTC-26NOV30-7000000"
+            },
+            {
+              "ticker": "KXBTCMINMON-BTC-26NOV30-6750000",
+              "title": "Will BTC trimmed mean be below $67500.00 by 11:59 PM ET on Nov 30, 2026?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.2500",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000",
+              "no_bid_dollars": "0.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "", "volume_24h_fp": "", "open_interest_fp": "3439.27",
+              "close_time": "2026-12-01T04:59:59Z",
+              "est_usd_volume_24h": null, "est_usd_volume": null, "notional_at_stake_usd": 3439.27,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINMON-BTC-26NOV30-6750000",
+              "note": "volume fields were cut off in the captured response chunk; left blank rather than inferred"
+            }
+          ]
+        }
+      ]
+    },
+    "golf": {
+      "open_events_matched": 1,
+      "top_events": [
+        {
+          "event_ticker": "KXPGAPLAYOFF-THRC26",
+          "series_ticker": "KXPGAPLAYOFF",
+          "title": "The RSM Classic: Playoff",
+          "sub_title": "2026 The RSM Classic",
+          "topic": "golf",
+          "mutually_exclusive": false,
+          "category_seen": "Sports",
+          "settlement_sources": [{"name": "the Governing League", "url": "https://www.pgatour.com/"}, {"name": "ESPN", "url": "https://www.espn.com/"}],
+          "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAPLAYOFF-THRC26",
+          "markets": [
+            {
+              "ticker": "KXPGAPLAYOFF-THRC26",
+              "title": "Will there be a playoff at the 2026 The RSM Classic?",
+              "status": "active", "result": "",
+              "last_price_dollars": "0.0000",
+              "yes_bid_dollars": "0.0000", "yes_ask_dollars": "0.0000",
+              "no_bid_dollars": "1.0000", "no_ask_dollars": "1.0000",
+              "volume_fp": "0.00", "volume_24h_fp": "0.00", "open_interest_fp": "0.00",
+              "close_time": "2026-12-20T00:00:00Z",
+              "est_usd_volume_24h": 0.0, "est_usd_volume": 0.0, "notional_at_stake_usd": 0.0,
+              "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAPLAYOFF-THRC26"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "orderbooks": {},
+  "orderbooks_note": "Order books were not captured in the manual probe round; CI captures them for the top markets each run.",
+  "errors": [],
+  "sources": [
+    "https://docs.kalshi.com/getting_started/demo_env.md",
+    "https://docs.kalshi.com/api-reference/events/get-events.md",
+    "https://docs.kalshi.com/api-reference/market/get-series-list.md",
+    "https://docs.kalshi.com/getting_started/orderbook_responses.md",
+    "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md",
+    "https://docs.kalshi.com/getting_started/fixed_point_migration.md"
+  ]
+}
