@@ -90,3 +90,31 @@ Open `monitor/index.html`, or enable GitHub Pages for the repository using the G
 7. No Github Pages deployment can be confirmed from this local change alone; publishing requires the repository’s Pages configuration and successful GitHub Actions run.
 
 See [COORDINATION.md](COORDINATION.md) and the site's **Questions & flagged for review** section for the audit trail and missing-information checklist.
+
+
+---
+
+## Live demo desk (added 2026-11-20, session `8c8d4499`)
+
+The earlier pages in this repository could not read the Kalshi demo API from their build
+sandbox, so their tables were blank. That limitation was specific to `bash` egress in the
+sandbox — the API itself is public and answered **19 live requests** during this session, and the
+new pages use it directly from the browser.
+
+| Page | What it does | Data path |
+|---|---|---|
+| `pages/live.html` | Ranks live events by **traded notional (USD)** = `volume_fp × notional_value_dollars`, filtered to gas prices, elections, culture, crypto and golf; price chart (time on X, contract price in USD on Y) with `1m/1h/1d` candles or sub-minute trade ticks; order-book ladder with contracts **and dollars at each price**; watch buttons for resolution tracking; a request log showing the exact URL behind every number | `GET /markets/trades` → `GET /markets?tickers=` → `GET /events?tickers=` → `GET /series?category=…&tags=…` → `GET /markets/{ticker}/orderbook` → `GET /series/{series}/markets/{ticker}/candlesticks` |
+| `pages/resolutions.html` | Tracks each watched event until the API returns `result = "yes"` / `"no"`, records `settlement_ts` / `settlement_value_dollars`, and keeps an append-only, source-linked resolution log in the browser | `GET /markets?event_ticker=…` |
+| `pages/strategy.html` | Fill ledger (official `count_fp` / `yes_price_dollars` / `no_price_dollars` / `fee_cost` / `outcome_side` fields), rule-based strategy tags, realised P&L computed only from resolved markets, CSV/JSON export, and an order **draft** (never a send) | local bridge → `GET /portfolio/balance`, `/positions`, `/fills` |
+| `docs/api-verification.md` | 20-row verification table (claim → official source → observed response), 4 environment statements, 8 repo-review findings, 8 explicitly unverified items | `docs.kalshi.com` + live demo responses |
+| `tools/kalshi-signer.mjs` | Optional local bridge: signs `timestamp + METHOD + path` with RSA-PSS/SHA-256 or Ed25519 (both round-trip verified locally), adds CORS, allowlists paths, and refuses order writes unless started with `ALLOW_ORDERS=1` on a demo host | account owner's machine |
+| `tests/dashboard.test.mjs` | 46 headless checks (jsdom) that the pages call the right endpoints and render only returned values — all passing | — |
+| `tools/check-links.mjs` | Broken-link, secret-material and source-citation audit used by CI | — |
+
+**Honest limits.** No Kalshi credentials exist in this repository, so no order was placed and no
+account balance, position or fill was read; those cells are blank and flagged. Contract *volume*
+is a count, so the dollar column is an explicit `contracts × settlement notional` calculation, not
+a measure of money at risk. Sub-minute price history comes from individual trades because the
+candlestick endpoint only supports 1, 60 and 1440-minute intervals. Browser-side cross-origin access
+to the demo host is detected at view time (see the request log on the page) — if it is blocked, the
+page says so and points at the local bridge instead of substituting values.

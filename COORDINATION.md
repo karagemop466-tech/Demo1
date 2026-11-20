@@ -247,6 +247,30 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - Pending: PR #9 (`arena/7bc11020-demo1` → main) merge; confirm GitHub Pages deploy; record PR link + merge result below.
 - PR #9: https://github.com/karagemop466-tech/Demo1/pull/9 — merge result: PENDING
 
+## Status — session 8c8d4499 (updated 2026-11-20, end of session)
+
+| Task | Status | Owner | File scope | Sources | Verification performed | Irregularities |
+|---|---|---|---|---|---|---|
+| Official API research + verification log | done | 8c8d4499 | `docs/api-verification.md` | 20 official doc URLs listed there (docs.kalshi.com: api_environments, get-markets, get-events, get-market-candlesticks, get-fills, orderbook_responses, quick_start_create_order, quick_start_websockets, search/tags_by_categories, get-series-list) | Each claim cross-checked against the fetched official page **and** a live demo response captured 2026-11-20 11:07–11:25 UTC | `GET /markets/trades` parameter list not read end-to-end (V-3); rate-limit page not read (V-8) |
+| Live demo-data engine + dashboard | done | 8c8d4499 | `assets/js/kalshi-core.js`, `assets/js/kalshi-ui.js`, `assets/js/live.js`, `assets/css/live.css`, `pages/live.html` | Official demo endpoints (19 live reads) + docs above | `node --check` on every file; 46/46 jsdom functional checks pass (`tests/dashboard.test.mjs`), including endpoint paths, dollar math, ladder, ticks mode, watch list | Browser-side CORS from `karagemop466-tech.github.io` cannot be proven from this sandbox (V-1); the page self-detects and offers the local bridge |
+| Resolution tracking (live → yes/no) | done | 8c8d4499 | `pages/resolutions.html` | Get Markets schema (`result` enum, `settlement_ts`, `settlement_value_dollars`) + live settled-market fixture | jsdom test asserts YES/NO rows, settlement fields and source URLs render | Tracking is browser-local (no shared backend); listed as a suggestion for the owner |
+| Portfolio / fills ledger / strategies + order drafting | done (account reads blocked) | 8c8d4499 | `pages/strategy.html`, `tools/kalshi-signer.mjs` | Get Fills schema, Quick Start: Create your first order (`POST /portfolio/events/orders`), API Environments (demo-only hosts) | RSA-PSS/SHA-256 and Ed25519 signature round-trip verified locally; bridge refuses to start without keys; jsdom test proves the page only drafts and never calls `/portfolio/*` on its own | **No credentials exist in this repo, so no balance/position/fill was read and no order was placed.** Flagged, not blocked |
+| Data-pipeline fix (shared file, owner session bc250043 = done) | done | 8c8d4499 | `scripts/fetch_demo_data.py` (8 lines) | Get Events (`maximum: 200`), Get Markets schema (no `series_ticker` field), `data/meta.json` error record | `python3 -m py_compile`; the two failure modes were reproduced in the CI-written snapshot metadata before the fix | Next scheduled CI run must be watched: `events_returned` and `candle_series` should become non-zero |
+| Site integration edits (shared outputs) | done | 8c8d4499 | `index.html` (additive 'Live demo desk' section), `.github/workflows/pages.yml` (two new validation steps), `README.md` (session section) | — | `node tools/check-links.mjs`: 67 files, no broken local links, no secret material, source-citation audit PASS | Four site variants coexist (root, `pages/`, `monitor/`, `live-desk/`); not deleted — consolidation is the owner's call, listed as suggestion S-1 |
+| Questions, suggestions, flagged-for-review content | done | 8c8d4499 | content delivered in `docs/api-verification.md` §4 + live-page flags; the existing `pages/questions.html`, `pages/suggestions.html`, `pages/flagged-review.html` were left untouched (owned by a443fb8f, done) | official docs per item | 8 unverified items and 8 repo findings published with links; nothing filled in by inference | Their "credentials required" framing for *public* market data is now known to be wrong (E-1) — recorded here instead of editing their files |
+
+### Handoff / conflict notes
+- Two `git pull --rebase` conflicts on `COORDINATION.md` while other sessions (`a443fb8f`, `e41f6700`, `175cafdf`, `bc250043`, `0135085b`) merged concurrently. Resolved by keeping every session's section verbatim and appending this one; no other session's text or files were removed or rewritten.
+- Root `app.js` / `styles.css` moved to `monitor/` by another session mid-work; my pages never referenced them, so no rework was needed.
+
+### Sources (this session)
+- https://docs.kalshi.com/getting_started/api_environments.md · /quick_start_market_data.md · /quick_start_create_order.md · /quick_start_websockets.md · /orderbook_responses.md
+- https://docs.kalshi.com/api-reference/market/get-markets.md · /get-series-list.md · /get-market-candlesticks.md · /get-trades.md
+- https://docs.kalshi.com/api-reference/events/get-events.md · /get-event.md
+- https://docs.kalshi.com/api-reference/portfolio/get-fills.md · /get-balance.md · /get-positions.md
+- https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories.md · https://docs.kalshi.com/llms.txt
+- Live demo responses: `https://external-api.demo.kalshi.co/trade-api/v2/{exchange/status, series, markets, markets/trades, markets/{t}/orderbook, series/{s}/markets/{t}/candlesticks, events}` captured 2026-11-20 11:07–11:25 UTC
+
 ---
 
 # Session arena/3c51bb52-demo1 — task board (this session)
