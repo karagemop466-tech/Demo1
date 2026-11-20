@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resolution tracker — Kalshi demo</title>
+<meta name="description" content="Track Kalshi demo events from live until settlement and record how each market resolved (yes/no) with the official API fields.">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/live.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="../index.html">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="executive-summary.html">Executive summary</a>
+      <a href="live.html">Live dashboard</a>
+      <a class="active" href="resolutions.html">Resolutions</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="strategy.html">Trades &amp; strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="flagged-review.html">Flagged</a>
+    </nav>
+    <span class="status-pill" id="conn">Loading watch list…</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Live until settlement · yes / no outcome · stored in this browser</div>
+  <h1>Event resolution tracker</h1>
+  <p class="lede">A tracked event is polled with <code>GET /markets?event_ticker=…</code>. A market counts as <b>resolved</b> only when the API returns
+    <code>result = "yes"</code> or <code>"no"</code> — the official enum for that field. Everything else (empty string, <code>scalar</code>, statuses
+    <code>active</code>/<code>closed</code>/<code>determined</code>) is reported as <i>not yet resolved</i>. First-observed resolutions and their source URLs are stored
+    locally so the history survives page reloads; nothing here is back-filled or estimated.</p>
+
+  <section class="card">
+    <div class="controls">
+      <label>Add event ticker <input id="add" placeholder="e.g. KXPGATOUR-THRC26"></label>
+      <button class="btn primary" id="poll">Poll watch list now</button>
+      <button class="btn" id="seed">Seed from last scan</button>
+      <label>Auto-poll <select id="cadence"><option value="0">Off</option><option value="30000" selected>30 s</option><option value="120000">2 min</option><option value="600000">10 min</option></select></label>
+    </div>
+    <div class="toolbar-meta" id="meta">Watch list is empty — add a ticker, or seed the events captured by the live dashboard scan.</div>
+  </section>
+
+  <section>
+    <h2>Tracked events</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>Topics</th><th>Markets</th><th>Status</th><th>Resolved YES</th><th>Resolved NO</th><th>Settlement fields</th><th>First resolution seen</th><th>Source</th><th></th></tr></thead>
+        <tbody id="rows"><tr><td colspan="10" class="empty">Nothing tracked yet.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="footnote">“Settlement fields” shows <code>settlement_ts</code> / <code>settlement_value_dollars</code> for markets where the API returned them — per the official schema these are only filled after determination, so an empty cell means “not published yet”, not “no settlement”.</p>
+  </section>
+
+  <section>
+    <h2>Market-level resolutions (append-only log)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Market</th><th>Event</th><th>Result</th><th>Market status</th><th>Settlement value (YES)</th><th>Settlement ts</th><th>First seen at</th><th>Source</th></tr></thead>
+        <tbody id="market-rows"><tr><td colspan="8" class="empty">No resolutions observed yet.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="footnote">This log is the evidence base for “how the event resolved”: each row is written the first time the API returned a yes/no result for that market, together with the exact request URL that produced it.</p>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Why tracking is browser-local</h2>
+      <ul class="tight">
+        <li>GitHub Pages serves static files only — there is no server here to own a database.</li>
+        <li>Storing every user's watch list centrally would need a backend plus a privacy policy; that decision is listed on the <a href="suggestions.html">suggestions</a> board.</li>
+        <li>Export below produces a JSON file you can review, keep, or hand to an analyst; it is the same content shown in the tables.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Export / reset</h2>
+      <p><button class="btn" id="export">Download tracking JSON</button> <button class="btn danger" id="reset">Clear local tracking</button></p>
+      <p class="footnote">Export includes the watch list, the resolution log and the last scan metadata, each with its source URL.</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <span>Kalshi demo resolution tracker</span>
+  <span>Field semantics: <a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noreferrer">Get Markets schema</a> · <a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noreferrer">Market settlement</a></span>
+</footer>
+<script src="../assets/js/kalshi-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  const K = window.KalshiDemo;
+  const $ = (id) => document.getElementById(id);
+  let timer = null;
+
+  function render() {
+    const store = K.resolutions(), watch = K.watchList();
+    const keys = Object.keys(watch);
+    $('rows').innerHTML = keys.length ? keys.map((ev) => {
+      const rec = store[ev] || {};
+      const detail = rec.detail || [];
+      const settleFields = detail.filter((m) => m.settlement_ts || m.settlement_value_dollars)
+        .map((m) => '<code>' + K.esc(m.ticker.split('-').slice(-1)[0]) + '</code> ' + K.esc(m.settlement_value_dollars || '') + (m.settlement_ts ? ' @ ' + K.esc(m.settlement_ts) : '')).join('<br>');
+      const status = rec.allResolved ? '<span class="badge-yes">event settled</span>'
+        : (rec.resolved ? '<span class="badge-open">partially resolved</span>' : '<span class="badge-open">live</span>');
+      const topics = (watch[ev].topics || []).map((t) => K.TOPICS[t] ? K.TOPICS[t].label : t).join(', ');
+      return '<tr><td><b>' + K.esc(rec.title || watch[ev].title || '') + '</b><br><code>' + K.esc(ev) + '</code></td>' +
+        '<td>' + K.esc(topics) + '</td>' +
+        '<td class="num">' + (rec.markets === undefined ? '' : rec.markets) + '</td>' +
+        '<td>' + status + '</td>' +
+        '<td>' + (rec.yes && rec.yes.length ? '<span class="badge-yes">YES ×' + rec.yes.length + '</span><br>' + rec.yes.map((t) => '<code>' + K.esc(t) + '</code>').join('<br>') : (rec.markets ? '—' : '')) + '</td>' +
+        '<td>' + (rec.no && rec.no.length ? '<span class="badge-no">NO ×' + rec.no.length + '</span><br>' + rec.no.map((t) => '<code>' + K.esc(t) + '</code>').join('<br>') : (rec.markets ? '—' : '')) + '</td>' +
+        '<td>' + (settleFields || (rec.allResolved ? '—' : '')) + '</td>' +
+        '<td>' + (rec.firstResolvedAt ? K.esc(rec.firstResolvedAt) : '') + '</td>' +
+        '<td class="src">' + (rec.source ? '<a href="' + K.esc(rec.source) + '" target="_blank" rel="noreferrer">API ↗</a>' : '') + '</td>' +
+        '<td><button class="btn tiny danger" data-drop="' + K.esc(ev) + '">remove</button></td></tr>';
+    }).join('') : '<tr><td colspan="10" class="empty">Nothing tracked yet.</td></tr>';
+
+    const marketLog = Object.keys(store).filter((k) => k.indexOf('m:') === 0);
+    $('market-rows').innerHTML = marketLog.length ? marketLog.map((k) => {
+      const m = store[k];
+      return '<tr><td><code>' + K.esc(m.market_ticker) + '</code></td><td><code>' + K.esc(m.event_ticker) + '</code></td>' +
+        '<td>' + (m.result === 'yes' ? '<span class="badge-yes">YES</span>' : '<span class="badge-no">NO</span>') + '</td>' +
+        '<td>' + K.esc(m.status || '') + '</td><td>' + K.esc(m.settlement_value_dollars || '') + '</td>' +
+        '<td>' + K.esc(m.settlement_ts || '') + '</td><td>' + K.esc(m.seenAt) + '</td>' +
+        '<td class="src"><a href="' + K.esc(m.source) + '" target="_blank" rel="noreferrer">API ↗</a></td></tr>';
+    }).join('') : '<tr><td colspan="8" class="empty">No resolutions observed yet.</td></tr>';
+
+    document.querySelectorAll('[data-drop]').forEach((b) => b.addEventListener('click', () => { K.unwatch(b.getAttribute('data-drop')); render(); }));
+  }
+
+  async function poll() {
+    if (!Object.keys(K.watchList()).length) { $('meta').textContent = 'Watch list empty — nothing to poll.'; return; }
+    $('conn').textContent = 'Polling…'; $('conn').className = 'status-pill';
+    const errs = [];
+    try {
+      const upd = await K.trackResolutions();
+      const failed = upd.filter((u) => u.error);
+      $('meta').innerHTML = upd.length + ' tracked event(s) polled at ' + new Date().toLocaleString('en-GB', { hour12: false }) +
+        (failed.length ? ' · <span class="bad">' + failed.length + ' poll error(s): ' + K.esc(failed.map((f) => f.error).join('; ')) + '</span>' : '') +
+        ' · endpoint: <code>' + K.esc(K.state.host + '/markets?event_ticker=…') + '</code>';
+      $('conn').textContent = failed.length ? 'Partial' : 'Live';
+      $('conn').className = 'status-pill ' + (failed.length ? 'unverified' : 'live');
+    } catch (err) { errs.push(err.message); $('conn').textContent = 'Not connected'; $('conn').className = 'status-pill unverified'; }
+    errs.forEach((e) => { $('meta').innerHTML += '<br><span class="bad">' + K.esc(e) + '</span>'; });
+    render();
+  }
+
+  $('poll').addEventListener('click', poll);
+  $('add').addEventListener('change', () => {
+    const t = $('add').value.trim();
+    if (t) { K.watch(t.toUpperCase(), {}); $('add').value = ''; render(); poll(); }
+  });
+  $('seed').addEventListener('click', () => {
+    const raw = localStorage.getItem('kd.lastscan');
+    if (!raw) { $('meta').textContent = 'No scan recorded in this browser yet — run the live dashboard scan first.'; return; }
+    $('meta').textContent = 'Watch list already holds the events you pressed “watch” on in the live dashboard (scan of ' + new Date(JSON.parse(raw).at).toLocaleString('en-GB', { hour12: false }) + ').';
+  });
+  $('cadence').addEventListener('change', () => { if (timer) clearInterval(timer); const ms = Number($('cadence').value); if (ms) timer = setInterval(poll, ms); });
+  $('export').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), apiHost: K.state.host, watchList: K.watchList(), resolutions: K.resolutions(), lastScan: JSON.parse(localStorage.getItem('kd.lastscan') || 'null') }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kalshi-demo-tracking.json'; a.click();
+  });
+  $('reset').addEventListener('click', () => { if (confirm('Clear the locally stored watch list and resolution log?')) { localStorage.removeItem('kd.watchlist'); localStorage.removeItem('kd.resolutions'); render(); } });
+  render();
+  poll();
+})();
+</script>
+</body>
+</html>

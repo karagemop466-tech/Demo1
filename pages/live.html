@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live event dashboard — Kalshi demo</title>
+<meta name="description" content="Live Kalshi demo dashboard: highest-dollar live events by traded notional, price history, order-book liquidity and resolution tracking for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/live.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="../index.html">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="executive-summary.html">Executive summary</a>
+      <a class="active" href="live.html">Live dashboard</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="strategy.html">Trades &amp; strategies</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="flagged-review.html">Flagged</a>
+      <a href="../docs/api-verification.md">Verification</a>
+    </nav>
+    <span class="status-pill" id="conn">Checking demo API…</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Public market data · no login · no orders sent</div>
+  <h1>Live events ranked by dollar size</h1>
+  <p class="lede">Ranking metric is <b>traded notional (USD)</b> = <code>volume_fp × notional_value_dollars</code> summed over every market in an event, using the field definitions published in the
+    <a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noreferrer">official Market schema</a>.
+    It is a dollar figure derived from official fields — it is not “money at risk”, and it counts all lifetime volume, not only the selected window. The window only selects which markets are in scope (those that printed trades inside it).</p>
+
+  <section class="card">
+    <div class="controls">
+      <label>Topic
+        <select id="topic">
+          <option value="all">All five topics</option>
+          <option value="gas">Gas prices</option>
+          <option value="elections">Elections</option>
+          <option value="culture">Culture</option>
+          <option value="crypto">Crypto</option>
+          <option value="golf">Golf</option>
+        </select>
+      </label>
+      <label>Trade window
+        <select id="window">
+          <option value="5">Last 5 minutes</option>
+          <option value="15">Last 15 minutes</option>
+          <option value="60" selected>Last 1 hour</option>
+          <option value="360">Last 6 hours</option>
+          <option value="1440">Last 24 hours</option>
+        </select>
+      </label>
+      <label>Auto-refresh
+        <select id="cadence">
+          <option value="0">Off</option>
+          <option value="15000">15 s</option>
+          <option value="30000" selected>30 s</option>
+          <option value="60000">60 s</option>
+        </select>
+      </label>
+      <label>API host
+        <select id="host">
+          <option value="https://external-api.demo.kalshi.co/trade-api/v2">external-api.demo.kalshi.co (recommended)</option>
+          <option value="https://demo-api.kalshi.co/trade-api/v2">demo-api.kalshi.co (also supported)</option>
+        </select>
+      </label>
+      <button id="scan" class="btn primary">Run scan</button>
+      <button id="deepscan" class="btn" title="Adds the full open-market status of every watched event to the scan">Refresh watch list</button>
+    </div>
+    <div class="toolbar-meta" id="scan-meta">Not scanned yet.</div>
+  </section>
+
+  <section class="kpis" id="kpis">
+    <div class="kpi"><span>Events in scope</span><b id="k-events">—</b><small>live events matched in the window</small></div>
+    <div class="kpi"><span>Largest event</span><b id="k-top">—</b><small>traded notional (USD)</small></div>
+    <div class="kpi"><span>Traded notional total</span><b id="k-total">—</b><small>sum of the table below</small></div>
+    <div class="kpi"><span>Trades seen</span><b id="k-fills">—</b><small>rows returned by GET /markets/trades</small></div>
+    <div class="kpi"><span>Watched / resolved</span><b id="k-watch">0 / 0</b><small>tracked in this browser</small></div>
+  </section>
+
+  <section id="markets">
+    <h2>Highest-dollar live events</h2>
+    <div class="table-wrap">
+      <table id="events-table">
+        <thead><tr>
+          <th>#</th><th>Event (official title)</th><th>Topics</th>
+          <th>Traded notional</th><th>Last 24 h</th><th>Open exposure</th>
+          <th>Markets open / resolved</th><th>Result so far</th>
+          <th>Window trades</th><th>Best YES price</th><th>Track</th><th>Source</th>
+        </tr></thead>
+        <tbody id="event-rows"><tr><td colspan="12" class="empty">Run a scan to load live data from the official demo API.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="footnote">“Open exposure” = <code>open_interest_fp × notional_value_dollars</code> (contracts bought, no netting — per the official schema note). “Result so far” shows a YES only when at least one market in the event returned <code>result = "yes"</code>. Blank means the field was empty in the response, not zero.</p>
+  </section>
+
+  <section class="split" id="inspect">
+    <div class="card">
+      <h2>Price history</h2>
+      <p class="sub" id="chart-title">Select a row above.</p>
+      <div class="controls">
+        <label>Resolution
+          <select id="interval">
+            <option value="ticks">Trades (sub-minute ticks)</option>
+            <option value="1m">1 minute candles</option>
+            <option value="1h" selected>1 hour candles</option>
+            <option value="1d">1 day candles</option>
+          </select>
+        </label>
+        <label>X-axis length
+          <select id="range">
+            <option value="300">5 minutes</option>
+            <option value="900">15 minutes</option>
+            <option value="3600">1 hour</option>
+            <option value="21600">6 hours</option>
+            <option value="86400">24 hours</option>
+            <option value="604800">7 days</option>
+          </select>
+        </label>
+        <label>Y axis
+          <select id="yscale">
+            <option value="auto" selected>Auto (fit prices)</option>
+            <option value="full">$0.00 – $1.00</option>
+          </select>
+        </label>
+        <button class="btn" id="reload-chart">Reload</button>
+      </div>
+      <div class="chartbox"><canvas id="price-chart"></canvas></div>
+      <div class="legend"><span><i class="sw line"></i>last traded YES price (USD)</span><span><i class="sw band"></i>period high / low</span><span><i class="sw vol"></i>volume_fp per period</span></div>
+      <p class="footnote">Candlesticks support <code>period_interval</code> of 1, 60 or 1440 minutes only — there is no second-granular candle endpoint, so the seconds view is built from individual trades (<a href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noreferrer">GET /markets/trades</a>). Timestamps are <code>end_period_ts</code> / <code>created_time</code> exactly as returned. Max 5,000 periods per request.</p>
+    </div>
+    <div class="card" id="book-card">
+      <h2>Liquidity at price</h2>
+      <p class="sub" id="book-title">No market selected.</p>
+      <div id="book-summary" class="kv"></div>
+      <div id="book-ladder" class="ladder"></div>
+      <p class="footnote">Books return bids only; a NO bid at price <i>p</i> is the YES ask at $1.00 − <i>p</i> (<a href="https://docs.kalshi.com/getting_started/orderbook_responses.md" target="_blank" rel="noreferrer">official order-book doc</a>). Dollars at a level = contracts × price. Displayed size is not a guarantee of execution.</p>
+    </div>
+  </section>
+
+  <section class="card" id="evidence">
+    <h2>Request log (evidence for every number on this page)</h2>
+    <div class="table-wrap">
+      <table><thead><tr><th>Time</th><th>Endpoint called by this page</th><th>HTTP</th><th>ms</th><th>Records</th><th>Result</th></tr></thead>
+      <tbody id="req-log"><tr><td colspan="6" class="empty">No requests yet.</td></tr></tbody></table>
+    </div>
+    <p class="footnote">Each row is an actual HTTP call this browser made to the official demo host. Rows with <code>0</code> mean the request never completed (blocked by network/CORS or timed out) — the dashboard shows blanks instead of data.</p>
+  </section>
+
+  <div id="blocked" class="callout warn" hidden>
+    <b>Live calls did not complete from this browser.</b> The page is on
+    <code id="blocked-origin"></code>; the API is on <code id="blocked-host"></code>. If the response is blocked by cross-origin policy, run the
+    bundled local bridge (<a href="https://github.com/karagemop466-tech/Demo1/blob/main/tools/kalshi-signer.mjs">tools/kalshi-signer.mjs</a>) and pick
+    <code>http://localhost:8787/trade-api/v2</code> as the API host — the same page then works, and it is also the only safe way to add the authenticated
+    portfolio/order endpoints, which must never hold a private key in a static site.
+  </div>
+</main>
+<footer>
+  <span>Kalshi demo live dashboard · public market data only</span>
+  <span>Endpoints: <a href="https://docs.kalshi.com/getting_started/api_environments.md" target="_blank" rel="noreferrer">API environments</a> · <a href="../docs/api-verification.md">verification log</a></span>
+</footer>
+<script src="../assets/js/kalshi-core.js"></script>
+<script src="../assets/js/kalshi-ui.js"></script>
+<script src="../assets/js/live.js"></script>
+</body>
+</html>
