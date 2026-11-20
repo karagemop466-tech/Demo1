@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='flagged.html' class='on'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Known gaps, disclosed with sources</p>
+    <h1>Flagged for review</h1>
+  </div>
+  
+<div class="callout warn">
+  <b>Flagged for review.</b> These are known gaps and irregularities, published deliberately with their sources.
+  None of them block the site from being useful; all of them should be read before acting on a number.
+</div>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Irregularity</th><th>What the site shows</th><th>Why it happens</th><th>Official source</th><th>Status</th></tr></thead><tbody><tr><td>Demo exchange values are not production values</td><td>Every price, depth level and volume figure comes from external-api.demo.kalshi.co.</td><td>The demo environment is Kalshi&#x27;s test venue with separate credentials and books.</td><td><a href='https://docs.kalshi.com/getting_started/api_environments' target='_blank' rel='noreferrer'>official ↗</a></td><td>By design — disclosed in the footer and every table</td></tr><tr><td>No portfolio, fills or settlement data</td><td>The portfolio page shows endpoints and methodology but no figures.</td><td>No Kalshi demo API key exists in the repo or environment; a static site cannot hold one.</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_authenticated_requests' target='_blank' rel='noreferrer'>official ↗</a></td><td>Blocked on the user (Q1)</td></tr><tr><td>No trades executed</td><td>No order has been submitted; the order form is documentation only.</td><td>Execution needs a signed server-side service and explicit risk limits.</td><td><a href='https://docs.kalshi.com/api-reference/orders/create-order-v2' target='_blank' rel='noreferrer'>official ↗</a></td><td>Blocked on the user (Q2)</td></tr><tr><td>“Highest dollar amount” is an interpretation</td><td>Ranking uses a computed 24 h traded notional with the trade count shown.</td><td>The brief does not define the metric; alternatives are listed in Q3.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-trades' target='_blank' rel='noreferrer'>official ↗</a></td><td>Needs a definition</td></tr><tr><td>Topic assignment is heuristic</td><td>Each series records why it matched, and rules are published per topic page.</td><td>There is no official Kalshi taxonomy mapping to these five topics.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-series-list' target='_blank' rel='noreferrer'>official ↗</a></td><td>Needs an approved allowlist (Q5)</td></tr><tr><td>Fee-adjusted edge is not shown</td><td>Spreads are labelled pre-fee.</td><td>The fee formula has not been verified against the official fee schedule in this session.</td><td><a href='https://kalshi.com/docs/kalshi-fee-schedule.pdf' target='_blank' rel='noreferrer'>official ↗</a></td><td>Needs verification (Q6)</td></tr><tr><td>Charts are bucketed, not tick-level</td><td>Candlesticks use the documented 1 / 60 / 1440-minute intervals.</td><td>Sub-minute history requires the authenticated WebSocket stream.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noreferrer'>official ↗</a></td><td>Design limit</td></tr><tr><td>Some markets return empty quote fields</td><td>A quote with zero size behind it is displayed but marked as not tradeable in the market view.</td><td>The API can return a 0.0000 bid with 0.00 size; that is not a real level.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-markets' target='_blank' rel='noreferrer'>official ↗</a></td><td>Displayed, not silently dropped</td></tr></tbody></table></div>
+
+<h2>Open markets whose YES bid is not a live level</h2>
+<p class="fine">These markets were returned with no size behind the YES bid (or no bid at all), so no tradeable
+price is implied. They are listed here rather than hidden. Showing the first 0 of 0.</p>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Market</th><th>Ticker</th><th>YES bid ¢</th><th>Contracts at YES bid</th><th>Source</th></tr></thead><tbody><tr><td colspan='5' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Data snapshot: <b>not collected yet</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

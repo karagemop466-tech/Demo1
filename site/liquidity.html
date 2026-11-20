@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidity, depth and price movement · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html' class='on'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Order-book depth · candlestick history</p>
+    <h1>Liquidity, depth and price movement</h1>
+  </div>
+  
+<div class="callout">
+  <b>What the order book really is.</b> Kalshi returns <i>bids only</i>. A YES bid at price X equals a NO ask at
+  1.00 − X, so the ask side is derived, never quoted from a separate field
+  (<a href="https://docs.kalshi.com/getting_started/orderbook_responses">Orderbook Responses</a>). Every level below is a live resting
+  bid with the contract count available at that price. Prices are dollars; 0.42 = 42¢.
+</div>
+
+<h2>Price movement — time on X, contract price on Y</h2>
+<p>Choose a market, a bucket size and a window. Data comes from
+<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks</a>, which only supports
+1, 60 and 1440-minute periods — the seconds/minutes/hours choice below maps onto those documented intervals
+(a finer “seconds” resolution does not exist on the REST candlestick endpoint and is not fabricated).</p>
+<div class="controls card">
+  <label>Market<select id="chartMarket"></select></label>
+  <label>Bucket<select id="chartBucket">
+    <option value="1m/6h">1 minute (last 6 h)</option>
+    <option value="1h/7d" selected>1 hour (last 7 days)</option>
+    <option value="1d/90d">1 day (last 90 days)</option>
+  </select></label>
+  <label>Y axis<select id="chartSeries">
+    <option value="price_close">Traded price (close)</option>
+    <option value="yes_bid_close">YES bid (close)</option>
+    <option value="yes_ask_close">YES ask (close)</option>
+  </select></label>
+</div>
+<div class="card chartcard">
+  <svg id="chart" viewBox="0 0 900 340" role="img" aria-label="Contract price over time"></svg>
+  <p class="fine" id="chartNote">Loading price history…</p>
+</div>
+<div id="chartTable"></div>
+
+<h2>Liquidity at each price (best level per market)</h2>
+<p class="fine">From <a href="https://docs.kalshi.com/api-reference/market/get-market-order-book">Get Market Order Book</a>.
+Only markets whose books were requested in this snapshot appear. “Levels” is how many distinct prices were returned.</p>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Market</th><th>Side</th><th>Best price ¢</th><th>Contracts at best price</th><th>Levels returned</th><th>Source</th></tr></thead><tbody><tr><td colspan='6' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+
+<h2>Full bid ladders (top markets)</h2>
+<p class='empty'>No order-book levels were returned in this snapshot.</p>
+
+<script id="chartData" type="application/json">[]</script>
+<script src="assets/chart.js"></script>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Data snapshot: <b>not collected yet</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

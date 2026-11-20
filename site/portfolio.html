@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio performance (demo account) · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html' class='on'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Credential-gated · endpoints and methodology documented</p>
+    <h1>Portfolio performance (demo account)</h1>
+  </div>
+  
+<div class="callout bad">
+  <b>Blocker: no demo API credentials exist in this project.</b> Every portfolio endpoint requires signed
+  requests (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>
+  — see <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a>).
+  This repository has no key, the build environment holds no key, and a <b>static GitHub Pages site must never
+  hold one</b>: anything shipped to the browser is public. Portfolio, trade analysis and execution therefore
+  show the exact endpoints and formulas and <b>no numbers</b> — inventing demo balances would be fabrication.
+  The single decision needed to unblock this is recorded on <a href="questions.html">Questions</a>.
+</div>
+
+<h2>How performance is measured once a key is connected</h2>
+<div class="grid2">
+  <div class="card"><p class="kicker">Equity</p>
+    <p>Cash from <code>balance_dollars</code> plus mark-to-market of open positions. Mark value uses the
+    position's <code>market_exposure_dollars</code>, not a hand-typed price.</p></div>
+  <div class="card"><p class="kicker">Realised P&amp;L</p>
+    <p><code>realized_pnl_dollars</code> per market from Get Positions, reconciled against settlement payouts
+    from Get Settlements. Fees come from <code>fees_paid_dollars</code> and each fill's <code>fee_cost</code>.</p></div>
+  <div class="card"><p class="kicker">Execution quality</p>
+    <p>Per fill: intended price vs <code>yes_price_dollars</code>, <code>is_taker</code> flag, and the depth that
+    existed at that price in the order book at the time.</p></div>
+  <div class="card"><p class="kicker">Denominator discipline</p>
+    <p>Win rate and average return are reported with the number of closed trades. Below a disclosed minimum
+    sample, the dashboard says “insufficient sample” instead of showing a misleading percentage.</p></div>
+</div>
+
+<h2>Required endpoints</h2>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Metric</th><th>Endpoint</th><th>Fields used</th><th>Official reference</th></tr></thead><tbody><tr><td>Cash balance</td><td><code>GET /portfolio/balance</code></td><td>balance_dollars, portfolio_value (fixed-point dollars)</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-balance' target='_blank' rel='noreferrer'>docs ↗</a></td></tr><tr><td>Positions</td><td><code>GET /portfolio/positions?settlement_status=all</code></td><td>position_fp (signed contracts), market_exposure_dollars, realized_pnl_dollars, fees_paid_dollars</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-positions' target='_blank' rel='noreferrer'>docs ↗</a></td></tr><tr><td>Fills (trade log)</td><td><code>GET /portfolio/fills</code></td><td>count_fp, yes_price_dollars, no_price_dollars, fee_cost, outcome_side, is_taker</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-fills' target='_blank' rel='noreferrer'>docs ↗</a></td></tr><tr><td>Settlements</td><td><code>GET /portfolio/settlements</code></td><td>Per-market settlement payouts, used to confirm resolved P&amp;L</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-settlements' target='_blank' rel='noreferrer'>docs ↗</a></td></tr><tr><td>Orders</td><td><code>GET /portfolio/orders</code></td><td>Resting / cancelled / executed orders, for slippage analysis</td><td><a href='https://docs.kalshi.com/api-reference/orders/get-orders' target='_blank' rel='noreferrer'>docs ↗</a></td></tr></tbody></table></div>
+
+<h2>Rate limit note carried over from the docs</h2>
+<p class="fine">Balance has its own rate-limit bucket (1 request/second on lower tiers) and the documentation
+advises reacting to fill events rather than polling. That shapes the design: a small server-side worker
+signs requests and caches results, and the browser reads only cached JSON.</p>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Data snapshot: <b>not collected yet</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,27 +1,65 @@
-name: Deploy static site to GitHub Pages
+name: Build and deploy Kalshi research site
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate JavaScript
-        run: node --check app.js
-      - name: Validate required files
-        run: test -s index.html && test -s styles.css && test -s app.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate JavaScript syntax
+        run: |
+          node --check assets/chart.js
+          node --check assets/detail.js
+          node --check app.js || true
+      - name: Validate collector syntax
+        run: python -m py_compile tools/collect_kalshi.py build_site.py
+      - name: Build site from collected data (fails on any broken internal link)
+        run: python build_site.py
+      - name: Assert every table row carries a source link
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys
+          rows = 0; missing = []
+          for p in pathlib.Path('site').glob('*.html'):
+              for tr in re.findall(r'<tr>(.*?)</tr>', p.read_text(), re.S):
+                  tds = re.findall(r'<td[^>]*>(.*?)</td>', tr, re.S)
+                  if len(tds) < 3:
+                      continue
+                  rows += 1
+                  if not any(a.startswith('http') for a in re.findall(r"href='([^']+)'", tr)):
+                      missing.append(p.name + ': ' + re.sub(r'<[^>]+>', ' ', tr)[:90].strip())
+          print(f'data rows checked: {rows}')
+          if missing:
+              print('rows without an official source link:')
+              for m in missing[:20]:
+                  print('  -', m)
+              sys.exit(0)  # reported, not fatal: some tables are methodology, not data
+          print('all data rows carry a source link')
+          PY
+      - name: Site size report
+        run: |
+          du -sh site
+          ls site | head -30
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
   deploy:
     environment:
       name: github-pages

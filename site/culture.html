@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>culture — Kalshi demo markets · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html' class='on'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Focus topic · culture</p>
+    <h1>culture — Kalshi demo markets</h1>
+  </div>
+  
+<div class="callout">
+  <b>Topic rule (auditable).</b> A series is assigned to <b>culture</b> when its title, ticker or tags contain
+  one of:  — or its discovery categories include one of:
+  . The rule is heuristic, not an official Kalshi taxonomy;
+  matches and the reason for each are listed below so false positives and omissions can be seen.
+</div>
+<p class="fine">0 open markets and 0 resolved markets collected
+from <code></code> at <span class='na' title='not returned by the official API'>—</span>.</p>
+
+<h2>Live markets</h2>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Market / event</th><th>Ticker</th><th>YES bid ¢</th><th>YES ask ¢</th><th>Last ¢</th><th>24h volume</th><th>Open interest</th><th>Notional 24h (USD, computed)</th><th>Close time</th><th>Status</th><th>Source</th></tr></thead><tbody><tr><td colspan='11' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+
+<h2>Resolved markets (followed until settled)</h2>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Market / event</th><th>Ticker</th><th>Result</th><th>Settlement value</th><th>Settled (UTC)</th><th>Resolution source (from event)</th><th>Source</th></tr></thead><tbody><tr><td colspan='7' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+
+<h2>Series matched by the topic rule</h2>
+<p class="fine">From <a href="https://docs.kalshi.com/api-reference/market/get-series-list">Get Series List</a> and
+<a href="https://docs.kalshi.com/api-reference/events/get-events">Get Events</a> metadata; <code>match_reason</code> records exactly why each series was included.</p>
+<div class='tablewrap'><table class=''><thead><tr><th>Series ticker</th><th>Title</th><th>Primary category</th><th>Match reason</th><th>Series volume (contracts)</th></tr></thead><tbody><tr><td colspan='5' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Data snapshot: <b>not collected yet</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
