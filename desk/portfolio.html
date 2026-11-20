@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio · Kalshi Demo Desk</title>
+<meta name="description" content="Why the Kalshi demo portfolio is blank without a key, and what is needed to fill it.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="index.html"><span class="mark">K</span>Kalshi <b>Demo Desk</b></a>
+    <nav class="main"><a href="index.html">Overview</a><a href="live.html">Live dashboard</a><a href="markets.html">Markets</a><a href="gas-prices.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="resolutions.html">Resolutions</a><a href="strategy.html">Strategies &amp; paper trades</a><a href="portfolio.html" aria-current="page">Portfolio</a><a href="requirements.html">Requirements</a><a href="sources.html">Sources</a><a href="flagged.html">Flagged for review</a></nav>
+  </div>
+  <div class="wrap statusbar">
+    <span data-live-status><span class="dot"></span>checking the official demo API…</span>
+    <span class="fine">Public market data only · no keys · values are demo-venue values
+    (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official warning</a>)</span>
+  </div>
+</header>
+<main id="main" class="wrap">
+
+<section>
+  <p class="kicker">Demo account · credentialed surface</p>
+  <h1>Portfolio</h1>
+  <p class="lead">Balances, positions and fills on the Kalshi demo account are real API objects — and they
+  are all behind request signing. This page shows exactly which calls produce them, why they are blank
+  here, and what you would need to supply to fill them in.</p>
+  <div class="banner bad"><b>Blank on purpose.</b> No demo API key exists in this repository, and a
+  public static site must never carry one: anyone who can read the page can read the key. The tables below
+  are therefore empty rather than estimated.</div>
+</section>
+
+<h2>Account surfaces and their state</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Surface</th><th>Endpoint</th><th>Auth</th><th>Value shown</th><th>Official source</th></tr></thead>
+<tbody>
+<tr><td>Cash balance</td><td><code>GET /portfolio/balance</code></td><td>Signed (key id + timestamp + signature)</td>
+  <td class="blank">— unverified, no key</td><td><a class="src" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" title="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">↗ Get balance</a></td></tr>
+<tr><td>Positions</td><td><code>GET /portfolio/positions</code></td><td>Signed</td>
+  <td class="blank">— unverified, no key</td><td><a class="src" href="https://docs.kalshi.com/api-reference/portfolio/get-positions" title="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">↗ Get positions</a></td></tr>
+<tr><td>Fills</td><td><code>GET /portfolio/fills</code></td><td>Signed</td>
+  <td class="blank">— unverified, no key</td><td><a class="src" href="https://docs.kalshi.com/api-reference/portfolio/get-fills" title="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">↗ Get fills</a></td></tr>
+<tr><td>Order entry</td><td><code>POST /portfolio/events/orders</code> (v2)</td><td>Signed</td>
+  <td class="blank">— intentionally not called</td><td><a class="src" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" title="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">↗ Create order</a></td></tr>
+</tbody></table></div>
+
+<h2>Signing, as documented</h2>
+<ol class="tight">
+<li>Create a demo key pair on the demo exchange
+  (<a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">official tutorial</a>); downloads the private key once.</li>
+<li>Sign <code>timestamp + METHOD + path</code> with Ed25519 or RSA-PSS/SHA-256
+  (<a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">signing guide</a>).</li>
+<li>Send <code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>,
+  <code>KALSHI-ACCESS-SIGNATURE</code> headers. No header, no data.</li>
+</ol>
+
+<h2>Paper portfolio (this repository's simulation)</h2>
+<p class="fine">The only performance numbers that exist without a key are the simulated ones. They are
+real arithmetic on real demo prices, with fees, but they are not an account.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Measure</th><th>Value</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td>Paper bankroll</td><td class="num">$10000.00</td>
+  <td>Declaration, not an account balance.</td></tr>
+<tr><td>Paper trades</td><td class="num">16</td>
+  <td><a href="strategy.html">Strategy ledger</a></td></tr>
+<tr><td>Graded trades</td><td class="num">0</td>
+  <td>Exchange <code>result</code> present</td></tr>
+<tr><td>Realised P&amp;L</td><td class="num">$0.00</td>
+  <td>Payout − premium − fees</td></tr>
+</tbody></table></div>
+
+<h2>What would unblock the real account</h2>
+<ul class="tight">
+<li>A demo key pair, stored as repository <b>Actions secrets</b> and used only inside a workflow — never
+  committed, never shipped to the browser.</li>
+<li>A read-only workflow that calls <code>/portfolio/balance</code>, <code>/positions</code> and
+  <code>/fills</code>, writes a JSON snapshot, and lets this page render it (the repo already has an
+  example pattern in <code>tools/account_worker.py</code>).</li>
+<li>For real orders, an explicit decision on risk limits and an auditable order log — see
+  <a href="flagged.html">FL-02</a>.</li>
+</ul>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p><b>Data:</b> official Kalshi demo Trade API
+      <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>
+      · endpoint documentation <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com</a>.
+      Values in the tables are the exchange's own numbers; anything the API does not return is
+      left blank and listed on the <a href="flagged.html">Flagged for review</a> page.</p>
+    <p class="fine">The demo environment uses mock funds and Kalshi states that its prices and behaviour
+      may not reflect real markets. Nothing here is investment advice. Page built 2026-11-20 13:05Z ·
+      sources and verification: <a href="sources.html">Sources</a> · <a href="flagged.html">Flagged</a>.</p>
+  </div>
+</footer>
+<script src="assets/core.js"></script>
+</body>
+</html>

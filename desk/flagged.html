@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review · Kalshi Demo Desk</title>
+<meta name="description" content="Unverified values, data irregularities and improvement proposals for the Kalshi demo desk.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="index.html"><span class="mark">K</span>Kalshi <b>Demo Desk</b></a>
+    <nav class="main"><a href="index.html">Overview</a><a href="live.html">Live dashboard</a><a href="markets.html">Markets</a><a href="gas-prices.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="resolutions.html">Resolutions</a><a href="strategy.html">Strategies &amp; paper trades</a><a href="portfolio.html">Portfolio</a><a href="requirements.html">Requirements</a><a href="sources.html">Sources</a><a href="flagged.html" aria-current="page">Flagged for review</a></nav>
+  </div>
+  <div class="wrap statusbar">
+    <span data-live-status><span class="dot"></span>checking the official demo API…</span>
+    <span class="fine">Public market data only · no keys · values are demo-venue values
+    (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official warning</a>)</span>
+  </div>
+</header>
+<main id="main" class="wrap">
+
+<section>
+  <p class="kicker">Everything that is not clean, in one place</p>
+  <h1>Flagged for review</h1>
+  <p class="lead">Nothing on this page blocks the site: each item is either a documented limit, a data
+  irregularity in an earlier snapshot, or a value deliberately left blank rather than guessed. Every item
+  names the evidence and the one check that would settle it.</p>
+  <div class="grid g4">
+    <div class="kpi "><div class="n">12</div><div class="l">Open flags</div></div>
+    <div class="kpi warn"><div class="n">2</div><div class="l">Blocked on credentials</div></div>
+    <div class="kpi no"><div class="n">3</div><div class="l">Data irregularities</div></div>
+    <div class="kpi "><div class="n">12</div><div class="l">Improvement proposals</div></div>
+  </div>
+</section>
+
+<h2>Flags</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>Flag</th><th>Type</th><th>Evidence and detail</th><th>Source</th>
+<th>How to resolve</th></tr></thead>
+<tbody><tr id='fl-01'><td class='mono'>FL-01</td><td><b>Portfolio, positions and fills are blank</b></td><td><span class="badge warn">blocked</span></td><td class='fine'>Reading account data requires a signed request with a demo API key. A static GitHub Pages site cannot hold a secret: anyone can read the JavaScript, and a committed key is a leaked key.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" title="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Add the demo key as repository Actions secrets and run a read-only job that writes a JSON snapshot (the repo already has tools/account_worker.py as a starting point).</td></tr><tr id='fl-02'><td class='mono'>FL-02</td><td><b>No order was ever sent to the exchange</b></td><td><span class="badge warn">not executed</span></td><td class='fine'>Every performance number here comes from a paper ledger. The order endpoint is documented and the payload is shown, but submitting it needs credentials plus an agreed risk policy.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" title="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Decide limits and an audit trail, then enable a single order path with a kill switch.</td></tr><tr id='fl-03'><td class='mono'>FL-03</td><td><b>“Highest dollar amount” is not an API field</b></td><td><span class="badge info">disclosed proxy</span></td><td class='fine'>Kalshi's market object has contract counts, not traded dollars. The desk computes 24 h traded notional as Σ(price × contracts) from public trades where it measures them, and labels the fallback (24 h contracts) per row.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-trades" title="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Treat the ranking as “most traded by dollars”, not as an official liquidity measure.</td></tr><tr id='fl-04'><td class='mono'>FL-04</td><td><b>Topic classification is keyword-based</b></td><td><span class="badge info">limitation</span></td><td class='fine'>Series are matched to the five topics by ticker/title keywords, not by an exchange taxonomy. The rules are published in desk/assets/core.js and desk/tools/collect.py so a misclassification is visible and fixable; the count of weak matches is shown below.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-markets" title="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Use /series tags per market when available, and keep a reviewed allow-list per topic.</td></tr><tr id='fl-05'><td class='mono'>FL-05</td><td><b>An earlier snapshot filed crude oil (KXWTI) under Elections</b></td><td><span class="badge bad">data irregularity</span></td><td class='fine'>snapshot/markets.json contains 60 KXWTI markets tagged topic=elections (“Oil Price (WTI) on Friday?”). It is an oil market, so the desk excludes the series from election tables and from every strategy, and records the exclusion in the paper ledger.</td><td><a class="src" href="https://github.com/karagemop466-tech/Demo1/blob/main/desk/tools/paper_trader.py" title="https://github.com/karagemop466-tech/Demo1/blob/main/desk/tools/paper_trader.py" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Correct the topic rules in the older collector, or keep the exclusion list.</td></tr><tr id='fl-06'><td class='mono'>FL-06</td><td><b>Fee rounding: the schedule&#x27;s prose and its table disagree</b></td><td><span class="badge bad">documented ambiguity</span></td><td class='fine'>The fee schedule says fees are rounded up “to a centicent” (0.0001) but its own 21-row table only reproduces with a round-up to a whole cent. This desk reproduces all 21 published rows with the cent rule and publishes the discrepancy instead of guessing silently.</td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" title="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Confirm with Kalshi support; the difference is sub-cent per order.</td></tr><tr id='fl-07'><td class='mono'>FL-07</td><td><b>Demo venue, not production</b></td><td><span class="badge info">caveat</span></td><td class='fine'>Kalshi states demo prices and behaviour may not reflect real markets. Every depth, price and result on this site is demo data, and demo books are thin.</td><td><a class="src" href="https://docs.kalshi.com/getting_started/demo_env" title="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Nothing to fix — read the numbers as functional evidence, not as a market view.</td></tr><tr id='fl-08'><td class='mono'>FL-08</td><td><b>Sub-minute history is not available from REST</b></td><td><span class="badge info">constraint</span></td><td class='fine'>Candlesticks support 1, 60 and 1440 minute intervals only. The “live ticks” chart polls the single market endpoint every few seconds and plots exactly what returns; it is not an official sub-minute series.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" title="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Stream the documented WebSocket channels, which require a signed session.</td></tr><tr id='fl-09'><td class='mono'>FL-09</td><td><b>Some markets quote a $0.00 yes ask or a $1.00 no ask</b></td><td><span class="badge bad">data quirk</span></td><td class='fine'>When the opposite side of the book is empty, the exchange can report a 0.00 ask. Those rows cannot be bought at that price. The desk excludes them from strategy entry and does not compute a spread from them.</td><td><a class="src" href="https://docs.kalshi.com/getting_started/orderbook_responses" title="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Read the book endpoint before trading a one-sided quote.</td></tr><tr id='fl-10'><td class='mono'>FL-10</td><td><b>Long-dated markets will not grade for months</b></td><td><span class="badge info">sampling limit</span></td><td class='fine'>Many tracked markets close in 2027-2029. Paper trades on them stay OPEN and are excluded from win rate and ROI until the exchange resolves them.</td><td><a class="src" href="https://docs.kalshi.com/getting_started/market_lifecycle" title="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Nothing to fix; sample size grows automatically as short-dated markets settle.</td></tr><tr id='fl-11'><td class='mono'>FL-11</td><td><b>Several earlier desks in this repository overlap</b></td><td><span class="badge bad">repo finding</span></td><td class='fine'>The repository also contains site/, docs/, exec-desk/, decision/, verified-desk/, pages/ and monitor/ with duplicate dashboards, and one of them labels all closed records “Resolved” (2,469) when only 2,117 carry a YES/NO result (the rest are closed and awaiting determination).</td><td><a class="src" href="https://github.com/karagemop466-tech/Demo1/blob/main/site/resolved.html" title="https://github.com/karagemop466-tech/Demo1/blob/main/site/resolved.html" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>This desk is a single consolidated view; retire or archive the duplicates, or fix the label in build_site.py.</td></tr><tr id='fl-12'><td class='mono'>FL-12</td><td><b>Snapshot freshness vs live API</b></td><td><span class="badge info">caveat</span></td><td class='fine'>Committed tables are a point-in-time collection. The header badge and live tables fetch the API at view time, so a difference between the two is expected, not a bug.</td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-markets" title="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">↗ source</a></td><td class='fine'>Switch to WebSocket streaming for tick-level freshness.</td></tr></tbody></table></div>
+
+<h2>Unverified values on this site</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Value</th><th>Status</th><th>What would verify it</th></tr></thead>
+<tbody>
+<tr><td>Account balance, positions, fills</td><td><span class="badge warn">unverified</span></td>
+  <td>A signed read on a demo account (<a class="src" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" title="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">↗ docs</a>).</td></tr>
+<tr><td>Real (non-paper) P&amp;L</td><td><span class="badge warn">unverified</span></td>
+  <td>Fills joined to settlements from the account.</td></tr>
+<tr><td>Per-series fee multiplier for most series</td><td><span class="badge warn">unverified</span></td>
+  <td><code>GET /series</code> <code>fee_multiplier</code> per series; the published table lists only some.</td></tr>
+<tr><td>Whether a price jump's news story <i>caused</i> it</td><td><span class="badge warn">unverified</span></td>
+  <td>Nothing here claims causality; the link is a research starting point only.</td></tr>
+<tr><td>Topic membership for short titles</td><td><span class="badge info">partial</span></td>
+  <td>A reviewed allow-list per topic (see FL-04).</td></tr>
+</tbody></table></div>
+
+<h2>Data-quality counts from the committed snapshot</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Check</th><th class="num">Count</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Open markets collected</td><td class="num">1,399</td>
+  <td>status=active across the five topics</td></tr>
+<tr><td>Closed markets with a YES/NO result</td><td class="num">2,117</td>
+  <td>status=finalized with result set</td></tr>
+<tr><td>Closed markets awaiting a result</td><td class="num">352</td>
+  <td>status=closed, result null — not scored as losses</td></tr>
+<tr><td>Excluded series (wrong topic in earlier snapshot)</td><td class="num">1</td>
+  <td>KXWTI — crude oil, not an election (FL-05)</td></tr>
+<tr><td>Paper trades excluded for one-sided quotes</td><td class="num">n/a</td>
+  <td>Such rows are never entered (FL-09)</td></tr>
+<tr><td>Live collection status</td><td class="num">—</td><td>collected None · 0 requests · 0 errors</td></tr>
+</tbody></table></div>
+
+<h2>Suggestions: making the site more live and interactive</h2>
+<p class="fine">Ordered by impact per unit of work. Each names the documented API the feature would use, so
+nothing here depends on fabricating data.</p>
+<div class="tablewrap"><table>
+<thead><tr><th class="num">#</th><th>Proposal</th><th>Priority</th><th>API / mechanism</th><th>Why it helps a trader</th></tr></thead>
+<tbody><tr><td class='num'>1</td><td>Auto-refresh the live tables every 15 s with a diff highlight</td><td><span class="badge bad">high</span></td><td class='fine mono'>GET /markets (2 pages)</td><td class='fine'>Makes the dashboard feel live without a websocket or a key.</td></tr><tr><td class='num'>2</td><td>Sparkline column on every market row</td><td><span class="badge bad">high</span></td><td class='fine mono'>GET candlesticks (1-min, last 2 h)</td><td class='fine'>One glance per row beats a click into a chart.</td></tr><tr><td class='num'>3</td><td>WebSocket ticker + orderbook channels</td><td><span class="badge bad">high</span></td><td class='fine mono'>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</td><td class='fine'>True sub-second prices; needs a signed session.</td></tr><tr><td class='num'>4</td><td>Jump alerts with an in-page cause timeline</td><td><span class="badge warn">medium</span></td><td class='fine mono'>GET trades + candle window</td><td class='fine'>Timestamped trades around the jump make the news link checkable.</td></tr><tr><td class='num'>5</td><td>Saved watchlist with browser-local resolution tracking</td><td><span class="badge warn">medium</span></td><td class='fine mono'>localStorage + GET /markets/{ticker}</td><td class='fine'>Lets a trader follow three markets instead of forty.</td></tr><tr><td class='num'>6</td><td>Ratio screens across a topic (e.g. threshold ladder)</td><td><span class="badge warn">medium</span></td><td class='fine mono'>GET markets (same event)</td><td class='fine'>Gas and crypto ladders are monotone; a ladder view shows mispricing fast.</td></tr><tr><td class='num'>7</td><td>Fee-adjust every quoted edge</td><td><span class="badge warn">medium</span></td><td class='fine mono'>GET /series fee_multiplier + fee schedule</td><td class='fine'>A 2¢ spread is not edge once fees are paid.</td></tr><tr><td class='num'>8</td><td>Settlement countdown and “resolves tonight” filter</td><td><span class="badge warn">medium</span></td><td class='fine mono'>close_time / expected_expiration_time</td><td class='fine'>Traders pick markets by when the answer arrives.</td></tr><tr><td class='num'>9</td><td>Export the ledger and the market table to CSV</td><td><span class="badge info">low</span></td><td class='fine mono'>client-side only</td><td class='fine'>Removes the copy-paste step for anyone analysing offline.</td></tr><tr><td class='num'>10</td><td>Keyboard-first navigation and a compact mode</td><td><span class="badge info">low</span></td><td class='fine mono'>CSS only</td><td class='fine'>Faster scanning on a laptop.</td></tr><tr><td class='num'>11</td><td>Liquidity heat map across topics</td><td><span class="badge info">low</span></td><td class='fine mono'>GET orderbook per top market</td><td class='fine'>Shows where the demo book is too thin to trade.</td></tr><tr><td class='num'>12</td><td>One-click replay of the exact API request for any row</td><td><span class="badge info">low</span></td><td class='fine mono'>the URL already stored per row</td><td class='fine'>Turns every number into a reproducible check.</td></tr></tbody></table></div>
+
+<h2>What this desk does not do</h2>
+<ul class="tight">
+<li>It does not place orders, hold keys, or read an account.</li>
+<li>It does not claim any price move was caused by a news story.</li>
+<li>It does not extrapolate, interpolate or back-fill a missing value — a blank stays blank.</li>
+<li>It does not treat a closed-but-undetermined market as a NO.</li>
+</ul>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p><b>Data:</b> official Kalshi demo Trade API
+      <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>
+      · endpoint documentation <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com</a>.
+      Values in the tables are the exchange's own numbers; anything the API does not return is
+      left blank and listed on the <a href="flagged.html">Flagged for review</a> page.</p>
+    <p class="fine">The demo environment uses mock funds and Kalshi states that its prices and behaviour
+      may not reflect real markets. Nothing here is investment advice. Page built 2026-11-20 13:05Z ·
+      sources and verification: <a href="sources.html">Sources</a> · <a href="flagged.html">Flagged</a>.</p>
+  </div>
+</footer>
+<script src="assets/core.js"></script>
+</body>
+</html>

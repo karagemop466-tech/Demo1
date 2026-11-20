@@ -1,0 +1,5 @@
+{
+ "_placeholder": true,
+ "generated_utc": null,
+ "note": "No runner collection has been committed yet. desk/tools/collect.py writes this file on a GitHub runner; until then every table comes from the committed snapshot and the live views fetch the API in the browser."
+}
