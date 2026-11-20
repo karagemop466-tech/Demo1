@@ -51,7 +51,7 @@
     </div>
   </div>
 </main>
-<footer>Live requests go from your browser to Kalshi's public market-data endpoints (no key needed). CORS from the browser was not verified from the build environment. Not investment advice.</footer>
+<footer>Live requests go from your browser to Kalshi’s public market-data endpoints (no key needed). Browser CORS was confirmed from the deployed origin: the CI header probe in <a href="data/cors.json">data/cors.json</a> records <code>access-control-allow-origin</code> reflecting this site, and a post-deploy check of the live desk reported “LIVE official demo API reachable directly” (board records for sessions 3a5f6f1d and 5487be47). REST reads are cached for a short time per <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>, so treat a line as a demo-data observation, not a fill. Not investment advice.</footer>
 <script src="assets/common.js"></script>
 <script src="assets/dashboard.js"></script>
 </body></html>
