@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Root landing verification · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../site/assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
+    <nav class="nav"><a href="../index.html">Home</a><a href="../site/flagged.html">Flagged for review</a><a href="../site/sources.html">Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Line-by-line check · 2026-11-20 (UTC) · session arena/3c2c8403-demo1</p>
+    <h1>Verification of the root landing page</h1>
+    <p class="lede">Each claim on <a href="../index.html">the landing page</a> is listed with the official source that was checked and the result. Values that could not be confirmed are marked UNVERIFIED.</p>
+  </div>
+
+  <h2>1. Official documentation and live API checks</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Claim</th><th>Result</th><th>Official source (checked)</th></tr></thead>
+    <tbody>
+      <tr><td>Demo REST Trade API base is <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (recommended demo endpoint)</td><td>Confirmed</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">docs.kalshi.com · API environments ↗</a>; <a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com · demo environment ↗</a></td></tr>
+      <tr><td>Demo uses mock funds; prices and behavior may not reflect real markets</td><td>Confirmed (official caveat)</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com · demo environment ↗</a></td></tr>
+      <tr><td>The demo exchange is active and trading (checked live)</td><td>Confirmed: <code>exchange_active: true</code>, <code>trading_active: true</code></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">GET /exchange/status (demo) ↗</a></td></tr>
+      <tr><td><code>status=open</code> filter returns <code>active</code> markets; <code>settled</code> maps to <code>finalized</code></td><td>Confirmed</td><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle">docs.kalshi.com · market lifecycle ↗</a></td></tr>
+      <tr><td><code>result</code> is <code>yes</code>, <code>no</code> or <code>scalar</code>; closed markets may have an empty result</td><td>Confirmed</td><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle">docs.kalshi.com · market lifecycle ↗</a></td></tr>
+      <tr><td>Market list endpoint <code>GET /markets</code> with status filter</td><td>Confirmed</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">docs.kalshi.com · GET /markets ↗</a></td></tr>
+      <tr><td>KXRT-FUR-85 (culture) is an open market: <code>status: active</code>, closes 2026-11-30T15:00:00Z</td><td>Confirmed live</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85">GET /markets/KXRT-FUR-85 (demo) ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>2. Counts on the landing page (re-derived from the committed snapshot)</h2>
+  <p>The counts were re-derived from <code>snapshot/markets.json</code> (open, 1,399) and <code>snapshot/resolved.json</code> (2,469 records) with a script. The collection itself (494 requests, 0 failed) is logged in <a href="../snapshot/collect-log.txt">snapshot/collect-log.txt</a>. The collection was not re-run for this check.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Topic</th><th>Open</th><th>Resolved (yes/no)</th><th>Closed, no result</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Gas prices</td><td>116</td><td>350</td><td>17</td><td><a href="../snapshot/markets.json">snapshot/markets.json ↗</a></td></tr>
+      <tr><td>Elections</td><td>255</td><td>131</td><td>1</td><td><a href="../snapshot/markets.json">snapshot/markets.json ↗</a></td></tr>
+      <tr><td>Culture</td><td>191</td><td>368</td><td>60</td><td><a href="../snapshot/markets.json">snapshot/markets.json ↗</a></td></tr>
+      <tr><td>Crypto</td><td>474</td><td>668</td><td>232</td><td><a href="../snapshot/markets.json">snapshot/markets.json ↗</a></td></tr>
+      <tr><td>Golf</td><td>363</td><td>600</td><td>42</td><td><a href="../snapshot/markets.json">snapshot/markets.json ↗</a></td></tr>
+      <tr><td><b>Total</b></td><td><b>1,399</b></td><td><b>2,117</b></td><td><b>352</b></td><td><a href="../snapshot/resolved.json">snapshot/resolved.json ↗</a></td></tr>
+    </tbody>
+  </table></div>
+  <p>Resolved = <code>status</code> finalized (1,914), determined (182) or disputed (21), each with <code>result</code> yes or no. Closed = <code>status: closed</code> with no result (352). Together these are the 2,469 records in <code>resolved.json</code>. Open = <code>status: active</code> for all 1,399 records.</p>
+
+  <h2>3. Irregularities found (for review)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>Irregularity</th><th>Evidence</th><th>Action on this page</th></tr></thead>
+    <tbody>
+      <tr><td>V-1</td><td>The previous landing said culture had no verified open market. The official API has open culture markets.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85">KXRT-FUR-85 ↗</a>; snapshot has 191 open culture markets</td><td>Corrected on the landing page.</td></tr>
+      <tr><td>V-2</td><td>The previous 15-row table was labelled &quot;production API&quot;. The requested endpoint is the demo host.</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">API environments ↗</a></td><td>Landing page now uses the demo host only. Older desks still show production data (see V-6).</td></tr>
+      <tr><td>V-3</td><td>&quot;Resolved&quot; was overstated. 352 closed markets have no result yet but were counted as resolved (site/index.html reads &quot;Resolved markets collected 2469&quot;).</td><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle ↗</a>; <a href="../snapshot/resolved.json">resolved.json ↗</a></td><td>Landing page separates the groups. The generated <code>site/</code> pages still use the old label; see V-7.</td></tr>
+      <tr><td>V-4</td><td>Snapshot values are time-stamped and drift from live values. Example: KXRT-FUR-85 yes ask size is 883.21 in the 11:43:59 UTC snapshot and 715.65 in the live check later the same day.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85">live market ↗</a></td><td>Not an error. Every snapshot figure carries its timestamp.</td></tr>
+      <tr><td>V-5</td><td>The &quot;24 h notional (USD, computed)&quot; figure is a computed proxy, not a field returned by the API. The market object returns <code>volume_24h_fp</code> and <code>notional_value_dollars</code>, which are different quantities.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets fields ↗</a></td><td>Labelled as computed on the topic pages. Not used as an official figure on the landing page.</td></tr>
+      <tr><td>V-6</td><td>Older root and desk pages still show production or stale values (for example root <code>markets.html</code> and <code>data/</code>, which the 15-minute cron updates from a different schema).</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">API environments ↗</a></td><td>Left unchanged: owned by other sessions. Listed under Earlier desks.</td></tr>
+      <tr><td>V-7</td><td>Generated pages (<code>site/*.html</code>, built by <code>build_site.py</code>) still use the &quot;Resolved&quot; label for all 2,469 records, and topic membership is keyword-based.</td><td><a href="../site/index.html">site/index.html ↗</a></td><td><b>Open request for the integration owner:</b> change the label in <code>build_site.py</code> to the 2,117 / 352 split.</td></tr>
+      <tr><td>V-8</td><td>Demo prices and behavior may not reflect real markets.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo environment ↗</a></td><td>Stated on the landing page footer.</td></tr>
+      <tr><td>V-9</td><td>Trading and portfolio are not verified: there is no demo API key in this repository.</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">API environments ↗</a></td><td>UNVERIFIED. Shown as blocked on the landing page.</td></tr>
+    </tbody>
+  </table></div>
+</main>
+<footer class="wrap small">Not investment advice. Checked by a logged, single pass on 2026-11-20 (UTC).</footer>
+</body>
+</html>
