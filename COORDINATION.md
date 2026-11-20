@@ -188,3 +188,40 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - Root `index.html` is this session's landing page. The a443fb8f multi-page site under `pages/` is kept and linked from the landing page.
 - `pages.yml` path checks updated to the `monitor/` files; the workflow still validates `app.js` and uploads the repo.
 - Overlap status: PRs #1, #2, #4, #6 merged; PR #3 (`arena/ff423a65-demo1`) still open; `arena/0135085b-demo1` and `arena/0cc392e4-demo1` have no PR. Those two branches still hold unmerged claims for the same dashboard task.
+
+---
+
+# Session arena/bc250043-demo1 — task board (this session)
+
+## Session claim
+
+- Session ID: `arena/bc250043-demo1`
+- Branch: `arena/bc250043-demo1`
+- Claimed at: 2026-11-20, commit `38e4d37` (pushed before any work started)
+- File scope claimed: `scripts/`, `data/`, `.github/workflows/fetch-data.yml`, `assets/js/`,
+  `index.html`, `pages/`, `assets/`, `README.md`, `COORDINATION.md`, and the final integration of `main`.
+
+## Task board
+
+| # | Task | Status | Sources | Verification | Irregularities |
+|---|------|--------|---------|--------------|----------------|
+| 1 | Coordination board setup | done | — | Self-verified | — |
+| 2 | Live demo-data ingestion pipeline | done | https://docs.kalshi.com/getting_started/api_environments ; https://docs.kalshi.com/api-reference/market/get-market-candlesticks ; https://docs.kalshi.com/api-reference/market/get-trades ; https://docs.kalshi.com/api-reference/market/get-market-orderbook | Script is stdlib-only; every written value is copied from an official response; failures recorded in `data/meta.json` and never replaced with invented values | Sandbox has no egress to `kalshi.co`, so ingestion runs in GitHub Actions |
+| 3 | Data-driven rendering of every table (categories, dashboard, depth, resolution, analysis) | done | `data/*.json` files carry the `source` URL of the endpoint that produced each value | Every rendered row links to the official endpoint that produced its values | — |
+| 4 | Interactive price chart (time on X, contract price on Y, second/minute/hour windows) + live liquidity depth | done | https://docs.kalshi.com/api-reference/market/get-market-candlesticks ; https://docs.kalshi.com/api-reference/market/get-trades | Chart renders only points present in an official payload | REST candle intervals are 1/60/1440 minutes; sub-minute points come from the official trades feed |
+| 5 | Demo-account portfolio + order entry (credential-gated) | done | https://docs.kalshi.com/getting_started/quick_start_authenticated_requests ; https://docs.kalshi.com/api-reference/portfolio/get-balance ; https://docs.kalshi.com/api-reference/portfolio/get-positions ; https://docs.kalshi.com/api-reference/portfolio/get-fills | Client implements the documented signed-request scheme; nothing executes without repository secrets | No Kalshi credentials exist in this repo or environment, so account values stay blank and flagged |
+| 6 | Executive summary, questions/answers register, suggestions register, flagged-for-review page | done | https://docs.kalshi.com/llms.txt | Every row carries an official source link | — |
+| 7 | Final integration, re-verification, PR to main, Pages publish | done | — | See integration status below | — |
+
+## Merge / conflict log for this session
+
+| Date (UTC) | What happened | Resolution |
+|---|---|---|
+| 2026-11-20 | PR #7 (`arena/bc250043-demo1` → `main`) could not merge cleanly: content conflict on `COORDINATION.md` (both sessions rewrote the board). | Resolved by merging `origin/main` into the feature branch and keeping `main`'s board content, appending this session's board instead of overwriting it. No work from any session was discarded. |
+| 2026-11-20 | `main` advanced twice while this session worked (PR #5 merged `arena/175cafdf-demo1`, which moved the site files to the repository root). | Merged again, keeping `main`'s root site (`index.html`, `markets.html`, `dashboard.html`, `portfolio.html`, `analysis.html`, `questions.html`, `suggestions.html`, `flagged.html`, `sources.html`, `assets/`, `data/markets.json`) as the canonical structure and extending it rather than replacing it. |
+
+## Notes for this session
+
+- The `pages/` and `monitor/` directories are earlier sessions' site copies, superseded by the root site. During final integration they were consolidated into the root pages and their findings were carried across; the mapping is recorded in the integration log.
+- No Kalshi API credentials exist in this repository or environment and none were added. The repository ships a credential-gated client and workflow; the site documents the official endpoints and leaves account values blank and flagged.
+
