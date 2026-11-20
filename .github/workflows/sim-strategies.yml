@@ -15,6 +15,9 @@ on:
     paths:
       - "sim-desk/**"
       - ".github/workflows/sim-strategies.yml"
+  # Best-effort 30-minute cadence, offset away from the top of the hour per GitHub guidance.
+  schedule:
+    - cron: "5,35 * * * *"
   workflow_dispatch:
     inputs:
       branch:
@@ -62,6 +65,10 @@ jobs:
             echo "code changes: $CHANGED"
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Verify the best-effort schedule configuration
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: python3 sim-desk/tests/test_schedule.py
 
       - uses: actions/setup-python@v5
         if: ${{ steps.guard.outputs.skip != 'true' }}
