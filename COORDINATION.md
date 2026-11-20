@@ -1645,3 +1645,26 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 - The PR check **`alert-desk check` fails**, but it fails for **every branch since it was introduced** — all 10 runs of `alert-desk-check.yml` are failures, including run #4 on `main` itself (push of merge of PR #59), runs #5–#7 on sibling branches `arena/87015421-demo1`, `arena/91fc2cc7-demo1`, `arena/fe12c4c4-demo1`, and runs #9–#10 on the owner's own fix branch. Evidence: <https://github.com/karagemop466-tech/Demo1/actions/workflows/alert-desk-check.yml?query=is%3Afailure>.
 - This PR does not touch `alert-desk/**`; locally, `node --check alert-desk/app.js alert-desk/test_boot.mjs` passes and `node alert-desk/test_boot.mjs` passes 35/35 on the identical committed files — the CI failure is runner-environment/timing, not content.
 - Owner `0ad208bf`'s fix (PR #67 "alert-desk: timing-deterministic boot test + CI failure annotations") has since **merged to `main`** (merge commit `8090cd0`). Per coordination rules this session does not edit `alert-desk/**`; the incident is published here as a flagged irregularity and does not block this PR per the brief (flagged items do not block merge; the Pages site build/deploy checks are green). The re-run of `alert-desk check` on post-fix pushes should confirm the fix.
+
+
+| Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
+| Merge result | pending |
+| Pages state after merge | pending |
+
+---
+
+# Session arena/d3e2b301-demo1 — simulated-trading schedule repair
+
+## Session claim
+- **Session ID:** `arena/d3e2b301-demo1` — working on the platform-fixed current branch `arena/d3e2b301-demo1`, based on `6aa1ed559afb8a1a6eda445b43b6fefd2156cf35`. No branch switch or rename.
+- **Claimed at:** 2026-11-20 UTC, before implementation.
+- **Overlap check:** read this board and checked open PRs #61–#63. Those PRs touch `COORDINATION.md` append-only but do not modify `.github/workflows/sim-strategies.yml` or `sim-desk/tests/test_schedule.py`. PR #63 reports OPS-01: the shipped sim-strategies workflow has no `schedule` trigger although the completed S-4 record claims a 30-minute schedule. This task addresses only that specific automation gap; the ops-desk audit remains owned by PR #63.
+
+## Task board
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| SD-5 | Restore and regression-test the unattended 30-minute simulated-strategy schedule already claimed by S-4; document GitHub's schedule reliability caveat | in progress | arena/d3e2b301-demo1 | `.github/workflows/sim-strategies.yml`, `sim-desk/tests/test_schedule.py`, this section of `COORDINATION.md` | https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule; existing S-4 record above | Pending implementation and official-doc re-check | GitHub scheduled runs are best-effort and may be delayed/dropped; the schedule is not a timing SLA. The run remains paper-only and makes no exchange orders. |
+
+### Claim log
+- 2026-11-20 UTC — session `arena/d3e2b301-demo1` claimed SD-5; overlap checked against open PRs #61–#63. Claim committed and pushed before implementation.
