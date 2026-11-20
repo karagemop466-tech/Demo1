@@ -57,6 +57,15 @@
   </div>
 </header>
 <main class="wrap">
+  <div class="callout" style="border-left:4px solid var(--brand);background:#f2f7fb">
+    <b>This page is preserved as built by session <code class="key">d973ced5</code>.</b> A second implementation of the same
+    requirement now lives at <a href="alerts.html"><b>Live alert tapes</b></a>: it polls the official demo API in the browser
+    (<code class="key">GET /markets</code> + <code class="key">GET /markets/orderbooks</code> + <code class="key">GET /markets/trades</code> every 15&nbsp;s)
+    instead of reading only the committed candlestick capture, and its high-ROI filter is a documented five-gate screen
+    (<a href="docs/alerts-model.html">model spec</a>, <a href="tests/alerts.test.mjs">test suite</a>). Both feeds use the same
+    $0.10 rule; nothing on either page is inferred, and neither places an order. Board record: COORDINATION.md, sessions
+    <code class="key">d973ced5</code> (I-1…I-4) and <code class="key">65df996f</code> (N-1…N-4).
+  </div>
   <div class="pagehead">
     <p class="kicker">Price swing alerts · official Kalshi demo candlesticks</p>
     <h1>Price swing alerts (≥ $0.10)</h1>
