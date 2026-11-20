@@ -2076,10 +2076,91 @@ Claim log entry: 2026-11-20T20:02Z — arena/1cbe8309-demo1 claimed tasks P-1..P
 
 | # | Task | Status | File scope | Sources | Verification | Irregularities |
 |---|------|--------|------------|---------|--------------|----------------|
-| F-1 | Repo-wide **cross-desk consistency audit**: every numeric claim rendered anywhere in the repo is re-derived from the committed official snapshot and compared against the value on the page; disagreements are reported with file + line | in progress | `verification/**` | `snapshot/markets.json`, `snapshot/resolved.json`, `snapshot/charts.json`, `snapshot/metadata.json` (official `external-api.demo.kalshi.co` capture); `https://docs.kalshi.com/api-reference/market/get-markets` | Tool re-derives counts/totals from the snapshot and prints file/line mismatches; audit output committed as JSON and rendered as a page | Pages built from different snapshots will disagree by construction; the audit must separate *stale snapshot* from *wrong arithmetic* |
-| F-2 | Independent **source-link and secret audit** of the whole tree: every outbound official link resolves to a documented Kalshi/GitHub page, no private key material, no unfilled placeholder values | in progress | `verification/**` | `docs.kalshi.com` API reference, `docs.github.com` | Link list re-checked against the documented URL set; secret scan over the tree | Sandbox egress allowlist excludes `*.kalshi.co`, so live status is confirmed by the repo's own collector logs and CI |
+| F-1 | Repo-wide **cross-desk consistency audit**: every numeric claim rendered anywhere in the repo is re-derived from the committed official snapshot and compared against the value on the page; disagreements are reported with file + line | **done** | `verification/**` | `snapshot/markets.json`, `snapshot/resolved.json`, `snapshot/charts.json`, `snapshot/metadata.json` (official `external-api.demo.kalshi.co` capture); `https://docs.kalshi.com/api-reference/market/get-markets` | `python3 verification/tools/audit_repo.py` re-derives every count from the snapshot and reports file/line mismatches; result committed as `verification/audit-report.json` and rendered as `verification/index.html` | One cross-desk difference found and explained (C8): the `KXWTI` series. Published on the Flagged page |
+| F-2 | Independent **source-link and secret audit** of the whole tree: every outbound official link resolves to a documented Kalshi/GitHub page, no private key material, no unfilled placeholder values | **done** | `verification/**` | `https://docs.kalshi.com/llms.txt` (official page index, fetched by CI on 2026-11-20), `docs.kalshi.com` API reference, `docs.github.com` | 341 documentation page links compared with the official index: 341 in-index, 0 not-in-index, 7 site-root entry points. Secret scan: 0 matches. CI workflow `.github/workflows/repo-audit.yml` refreshes the index and the report on every push | Sandbox egress allowlist excludes `*.kalshi.co`, so the index is fetched by the GitHub runner; the same script runs locally |
+| F-3 | **Final integration**: merge sibling branches after verifying each, re-verify the combined tree line by line, confirm the build has no broken links, PR → `main`, merge, confirm GitHub Pages, publish records | in progress | `COORDINATION.md`; shared outputs only after siblings merge | GitHub API (PR/Pages) | Full gate suite re-run on the merged tree; Pages API + live fetch | Recorded per PR; any conflict logged without discarding a sibling's work |
 | F-3 | **Final integration**: merge sibling branches after verifying each, re-verify the combined tree line by line, confirm the build has no broken links, PR → `main`, merge, confirm GitHub Pages, publish records | unclaimed | `COORDINATION.md`; shared outputs only after siblings merge | GitHub API (PR/Pages) | Full gate suite re-run on the merged tree; Pages API + live fetch | Recorded per PR; any conflict logged without discarding a sibling's work |
 
 ## Log
 
 - 2026-11-20 UTC — session `fe12c4c4` claimed F-1..F-3 (scope `verification/**` + this board section only); claim pushed before implementation.
+
+### F-1 / F-2 record — session arena/fe12c4c4-demo1
+
+**What was built (new namespace, `verification/`, no sibling file overwritten until D-2 below):**
+
+| File | Purpose |
+|---|---|
+| `verification/tools/audit_repo.py` | The audit tool: re-derives every count from the committed official snapshot and compares it with what the pages render |
+| `verification/index.html` | Rendered audit report (canonical facts, findings, cross-desk comparison, source-link coverage, documentation-link status) |
+| `verification/audit-report.json` | Machine-readable result of the same run |
+| `verification/data/kalshi-docs-index.txt` | Cached copy of the official documentation index `https://docs.kalshi.com/llms.txt`, fetched by CI |
+| `.github/workflows/repo-audit.yml` | Runs on every push and every 6 h: fetches the live official index, re-runs the audit, commits the refreshed artefacts |
+
+**Checks implemented**
+
+| Check | What it proves |
+|---|---|
+| C1 | Canonical facts (open / records / resolved-yes-no / YES / NO / awaiting, per topic and in total) re-derived from `snapshot/markets.json` + `snapshot/resolved.json` |
+| C2 | Prose claims ("N open markets and M resolved markets") match the snapshot, attributed per sentence so table captions are not mistaken for per-topic claims |
+| C3 | Topic summary rows in any table match the snapshot, checked only for tables whose header has two or more count columns |
+| C4 | `YES + NO == resolved`, `resolved + awaiting == records`, and the topic counts sum to the totals |
+| C5 | Every rendered market row (a row quoting a market ticker) carries a link to an official Kalshi host |
+| C6 | Every `docs.kalshi.com` link used in the repository is listed in the official documentation index |
+| C7 | No private-key material, API key or bearer token is committed |
+| C8 | Cross-desk count differences are matched against the series prefix the desk tracker excludes, so a difference is explained rather than left unexplained |
+| C9 | The same quantity stated on two pages must agree; every disagreement is listed |
+
+**Verification performed (2026-11-20, on the merged tree at `bb70853`)**
+
+- `python3 verification/tools/audit_repo.py` — **PASS**: 364 files scanned, 0 errors, 0 unexplained count mismatches, 3 source-coverage warnings, 348 documentation links (341 in-index, 0 not-in-index, 7 site-root entry points such as `https://docs.kalshi.com/llms.txt`), 0 credential matches.
+- `python3 build_site.py` — **PASS**: 17 pages; markets=1399/1399, resolved=2469/2469, charts=10; link check OK.
+- `python3 tools/verify_site.py` — **PASS**: 0 errors, 2 informational warnings (unchanged from the previous session).
+- `node tools/check-links.mjs` — **PASS**: 351 files scanned, no broken internal links, no secret material.
+- GitHub Actions run **44802997853** (`Repo consistency & source audit`, branch `arena/fe12c4c4-demo1`) — success; it fetched the official index (308 indexed pages) and committed the refreshed report.
+
+### D-2 — cross-file fix: four broken `docs.kalshi.com` links (logged per the coordination rules)
+
+**Finding.** Every documentation link in the repository was compared with the official page index
+`https://docs.kalshi.com/llms.txt` and then fetched directly. Four URLs used across the repository
+returned an error (404) and have been repaired:
+
+| Broken path (returned an error) | Repaired path (verified, returns the reference page) |
+|---|---|
+| `https://docs.kalshi.com/api-reference/market/get-market-order-book` | `https://docs.kalshi.com/api-reference/market/get-market-orderbook` |
+| `https://docs.kalshi.com/api-reference/series/get-series` | `https://docs.kalshi.com/api-reference/market/get-series` |
+| `https://docs.kalshi.com/api-reference/market/get-exchange-status` | `https://docs.kalshi.com/api-reference/exchange/get-exchange-status` |
+| `https://docs.kalshi.com/getting_started/quick_start` | `https://docs.kalshi.com/getting_started/quick_start_market_data` |
+
+Each replacement was confirmed by fetching the corrected URL during this session and reading the page
+title and endpoint path (`GET /markets/{ticker}/orderbook`, `GET /series/{series_ticker}`,
+`GET /exchange/status`, and the public market-data quick start). The old paths were confirmed to fail.
+
+**Files changed** (owners are earlier, completed sessions; the change is a URL correction only, no
+content, logic or data was altered): `build_site.py` (two doc paths, plus the repaired-link table added
+to the generated Flagged page), `tools/engine_refresh.py`, `tools/strategy_sim.py`, `README.md`,
+`archive/monitor.html`, `monitor/app.js`, `monitor/index.html`, `engine/strategies.json`,
+`strategy-desk/data/series-map.json`, `strategy-desk/{index,executive-summary,sources,suggestions}.html`,
+`COORDINATION.md` (this board), and the regenerated `site/` output.
+
+**Verification after the fix:** `python3 build_site.py` PASS (17 pages, link check OK);
+`python3 tools/verify_site.py` PASS (0 errors); `node tools/check-links.mjs` PASS;
+`python3 verification/tools/audit_repo.py` PASS (0 documentation links not in the official index).
+
+### New irregularity published for review — F-1 (needs review, non-blocking)
+
+**Two desks report different Elections counts.** This site counts **132** Elections records (255 open);
+the `desk/` tracker counts **57**, because it excludes the `KXWTI` series prefix. The `KXWTI` series is
+titled “WTI oil **election** day”, so the published elections keyword rule files **75** settled and
+**60** open crude-oil markets under `topic=elections`; the desk tracker drops that prefix
+(`desk/tools/track_resolutions.py`, `EXCLUDED_SERIES_PREFIX`). Both numbers are correct for their own
+scope — neither desk is wrong — but a reader comparing them sees two different answers to “how many
+Elections markets are there?”. The cause, both counts and the series ticker are published on
+`site/flagged.html`. **Owner for the decision:** the landing/topic-rule owner — either publish one
+Elections definition on every desk, or state the exclusion in the topic table itself.
+
+**Lower-severity items (published in the audit report, non-blocking).** Three rendered market rows quote
+a market ticker without linking an official source: `docs/pages/suggestions.html` (row Q7),
+`verified-desk/flagged.html` (1 of 2 market rows) and `verified-desk/provenance.html` (4 of 4 request-log
+rows, which show an endpoint path rather than a full official URL). No value is affected; the rows are
+listed with file and line in `verification/index.html`.

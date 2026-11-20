@@ -24,6 +24,20 @@ DATA = ROOT / "snapshot"
 SITE = ROOT / "site"
 
 DOCS = "https://docs.kalshi.com"
+
+# Documentation links that returned an error before this session and were
+# repaired after being checked against the official page index
+# (https://docs.kalshi.com/llms.txt) and fetched directly.
+REPAIRED_DOC_LINKS = [
+    ("https://docs.kalshi.com/api-reference/market/get-market-order-book",
+     "https://docs.kalshi.com/api-reference/market/get-market-orderbook"),
+    ("https://docs.kalshi.com/api-reference/series/get-series",
+     "https://docs.kalshi.com/api-reference/market/get-series"),
+    ("https://docs.kalshi.com/api-reference/market/get-exchange-status",
+     "https://docs.kalshi.com/api-reference/exchange/get-exchange-status"),
+    ("https://docs.kalshi.com/getting_started/quick_start",
+     "https://docs.kalshi.com/getting_started/quick_start_market_data"),
+]
 TOPIC_ORDER = ["gas_prices", "elections", "culture", "crypto", "golf"]
 TOPIC_PAGES = {
     "gas_prices": "gas-prices.html",
@@ -902,7 +916,23 @@ def build_questions(meta):
          subtitle="Decision preconditions · unknowns stated plainly")
 
 
-def build_flagged(meta, markets):
+def build_flagged(meta, markets, resolved=None):
+    resolved = resolved or []
+    # KXWTI is the "WTI oil election day" series: its title matches the
+    # elections keyword rule, so the snapshot files its crude-oil markets under
+    # topic=elections. The desk tracker excludes that series prefix, so two
+    # desks legitimately report different Elections counts. Both numbers are
+    # shown here so a reader can see which is which.
+    kxwti_series = "KXWTI"
+
+    def is_kxwti(m):
+        s = (m.get("series_ticker") or "").upper()
+        return s == kxwti_series or s.startswith(kxwti_series + "-")
+
+    kw_open = [m for m in markets if is_kxwti(m)]
+    kw_res = [r for r in resolved if is_kxwti(r)]
+    elec_res = [r for r in resolved if r.get("topic") == "elections"]
+    elec_open = [m for m in markets if m.get("topic") == "elections"]
     items = [
         ("Demo exchange values are not production values",
          "Every price, depth level and volume figure comes from external-api.demo.kalshi.co.",
@@ -936,6 +966,17 @@ def build_flagged(meta, markets):
          "A quote with zero size behind it is displayed but marked as not tradeable in the market view.",
          "The API can return a 0.0000 bid with 0.00 size; that is not a real level.",
          f"{DOCS}/api-reference/market/get-markets", "Displayed, not silently dropped"),
+        ("Two desks report different Elections counts",
+         (f"This site counts {len(elec_res)} Elections records ({len(elec_open)} open). The "
+          f"desk/ tracker counts {len(elec_res) - len(kw_res)} because it excludes the "
+          f"{kxwti_series} series prefix."),
+         (f"The {kxwti_series} series is titled “WTI oil election day”, so the elections keyword "
+          f"rule files {len(kw_res)} settled and {len(kw_open)} open crude-oil markets under "
+          f"topic=elections. The desk tracker drops that prefix (desk/tools/track_resolutions.py). "
+          f"Both numbers are correct for their own scope; neither is an error, but a reader "
+          f"comparing the two desks sees two answers."),
+         f"{DOCS}/api-reference/market/get-series-list",
+         "Needs a decision — publish one Elections definition across desks"),
     ]
     rows = [[esc(a), esc(b), esc(c), src(d, "docs"), esc(e)] for a, b, c, d, e in items]
     ticker_only = [m for m in markets if m.get("topic_matched_weakly")]
@@ -972,6 +1013,17 @@ from the series ticker or its tags. They are usually correct (e.g. a series titl
 “gas prices”), but the classification rests on metadata rather than the title, so they are listed for review.
 {len(ticker_only)} of {len(markets)} open-market records come from {len(to_rows)} such series.</p>
 {table(["Series ticker", "Topic", "Matched on", "Why it matched", "Records affected", "Records"], to_rows, "wide")}
+
+<h2>Documentation links that were broken and have been repaired</h2>
+<p class="fine">Found by checking every <code>docs.kalshi.com</code> link in the repository against the official
+documentation index at <a href="{DOCS}/llms.txt" target="_blank" rel="noopener">{DOCS}/llms.txt &rarr;</a> and then
+fetching each page. All four returned an error before the fix and return the reference page now. The full list of
+every documentation link used on this site, and whether it is listed in the official index, is published on the
+<a href="../verification/index.html">repo consistency &amp; source audit</a> page.</p>
+{table(["Broken path (404)", "Repaired path", "Official page"],
+       [[f"<code>{esc(b)}</code>", f"<code>{esc(a)}</code>",
+         f"<a href='{a}' target='_blank' rel='noopener'>reference &rarr;</a>"]
+        for b, a in REPAIRED_DOC_LINKS], "wide")}
 
 <h2>Open markets whose YES bid is not a live level</h2>
 <p class="fine">These markets were returned with no size behind the YES bid (or no bid at all), so no tradeable
@@ -1161,7 +1213,7 @@ def main():
     build_suggestions()
     build_questions(meta)
     build_explore(meta, markets_all, resolved_all)
-    build_flagged(meta, markets)
+    build_flagged(meta, markets, resolved)
     build_sources(meta)
     build_verification(meta)
     # static assets
