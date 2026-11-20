@@ -2,27 +2,46 @@
 (function () {
   var pages = [
     ["index.html", "Home"],
-    ["executive-summary.html", "Executive summary"],
-    ["markets.html", "Markets by category"],
-    ["dashboard.html", "Live dashboard"],
-    ["portfolio.html", "Portfolio & trades"],
+    ["exec-desk/dashboard.html", "Live desk"],
+    ["site/index.html", "Topic snapshots"],
+    ["exec-desk/jumps.html", "Price jumps"],
+    ["exec-desk/markets.html", "Resolutions"],
+    ["pages/paper-trading.html", "Paper strategies"],
+    ["integration/executive-summary.html", "Executive summary"],
+    ["exec-desk/sources.html", "Sources"],
+    ["integration/flagged-review.html", "Flagged for Review"],
+    ["pages/price-jumps.html", "Earlier jump scan"],
+    ["executive-summary.html", "Earlier summary"],
+    ["markets.html", "Earlier markets"],
+    ["dashboard.html", "Earlier dashboard"],
+    ["portfolio.html", "Earlier portfolio"],
     ["analysis.html", "Analysis"],
     ["questions.html", "Questions & gaps"],
     ["suggestions.html", "Suggestions"],
-    ["flagged.html", "Flagged for Review"],
-    ["sources.html", "Sources"],
+    ["flagged.html", "Earlier review"],
+    ["sources.html", "Earlier sources"],
     ["monitor/index.html", "Monitor (single page)"],
-    ["pages/landing-executive-summary.html", "Multi-page site"],
-    ["pages/price-jumps.html", "Sharp moves (≥$0.10)"]
+    ["pages/landing-executive-summary.html", "Multi-page site"]
   ];
-  var here = (location.pathname.split("/").pop() || "index.html");
+  var script = document.currentScript;
+  var siteRoot = new URL("../", script && script.src ? script.src : location.href);
+  var path = location.pathname || "";
+  if (siteRoot.pathname.length > 1 && path === siteRoot.pathname.slice(0, -1)) {
+    path = siteRoot.pathname;
+  }
+  var here = path.indexOf(siteRoot.pathname) === 0
+    ? path.slice(siteRoot.pathname.length)
+    : path.replace(/^\/+/, "");
+  if (!here || here.slice(-1) === "/") here += "index.html";
   var nav = document.getElementById("site-nav");
   if (nav) {
-    var html = '<header class="top"><span class="brand">Kalshi Demo Dashboard</span>';
+    var html = '<header class="top"><a class="brand" href="' + siteRoot.href + '">Kalshi Demo Desk</a>' +
+      '<nav aria-label="Main navigation" style="display:flex;flex-wrap:wrap;gap:12px">';
     pages.forEach(function (p) {
-      html += '<a href="' + p[0] + '"' + (p[0] === here ? ' class="active"' : "") + ">" + p[1] + "</a>";
+      var href = new URL(p[0], siteRoot).href;
+      html += '<a href="' + href + '"' + (p[0] === here ? ' class="active" aria-current="page"' : "") + ">" + p[1] + "</a>";
     });
-    html += "</header>";
+    html += "</nav></header>";
     nav.outerHTML = html;
   }
 })();

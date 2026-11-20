@@ -27,14 +27,18 @@
     <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
     <nav class="nav">
       <a href="index.html" class="on">Home</a>
+      <a href="exec-desk/dashboard.html">Live desk</a>
       <a href="site/gas-prices.html">Gas prices</a>
       <a href="site/elections.html">Elections</a>
       <a href="site/culture.html">Culture</a>
       <a href="site/crypto.html">Crypto</a>
       <a href="site/golf.html">Golf</a>
+      <a href="exec-desk/jumps.html">Price jumps</a>
       <a href="site/liquidity.html">Liquidity &amp; chart</a>
       <a href="site/resolved.html">Resolved</a>
       <a href="site/flagged.html">Flagged for review</a>
+      <a href="integration/executive-summary.html">Executive summary</a>
+      <a href="integration/flagged-review.html">Integration review</a>
       <a href="site/sources.html">Sources</a>
     </nav>
   </div>
@@ -47,7 +51,7 @@
   </div>
 
   <div class="callout warn">
-    <b>Trading and portfolio are not connected.</b> This site has no Kalshi API key. It places no orders and shows no portfolio figures.
+    <b>No credentials were provided or used for this integration.</b> Authenticated account figures are blank and no orders were placed. Some older pages contain experimental local-key/order flows; do not enter a private key in this public site. See <a href="integration/flagged-review.html">Flagged for Review</a>.
   </div>
   <div class="kpis">
     <div class="kpi"><div class="n">1,399</div><div class="l">Open markets collected (five topics)</div><a href="snapshot/markets.json">snapshot/markets.json ↗</a></div>
@@ -56,13 +60,26 @@
     <div class="kpi"><div class="n">494 / 0</div><div class="l">API requests / failed requests in the snapshot</div><a href="snapshot/collect-log.txt">collection log ↗</a></div>
   </div>
 
-  <h2>Live demo desk (session 8c8d4499)</h2>
-  <div class="grid">
-    <a class="tile" href="pages/live.html"><b>Live dashboard</b><span>Highest-dollar live events by traded notional (volume_fp × notional_value_dollars), gas/elections/culture/crypto/golf, price chart with candle or sub-minute tick resolution, order-book contracts and dollars at each price, and a per-request evidence log. Public demo API, no keys.</span></a>
-    <a class="tile" href="pages/price-jumps.html"><b>Sharp moves (≥$0.10)</b><span>Scans the five topics for contract-price jumps of at least $0.10 in either direction between official candlestick closes; each jump links the official API request and the official venue event page. Simplified jump chart included.</span></a>
-    <a class="tile" href="pages/resolutions.html"><b>Resolution tracker</b><span>Watches tracked events until the API returns result = yes/no, with settlement fields and the source URL of every observation.</span></a>
-    <a class="tile" href="pages/strategy.html"><b>Trades &amp; strategies</b><span>Fill ledger, rule-based strategy tags, realised P&amp;L joined to resolutions, order drafting, and the optional local signing bridge for the demo account.</span></a>
-    <a class="tile" href="docs/api-verification.md"><b>Verification log</b><span>Line-by-line: each claim, the official source, the live demo response that evidenced it, and what remains unverified.</span></a>
+  <div class="callout">
+    <b>Ranking definitions differ by desk.</b> The snapshot pages rank on computed public-trade notional; the exec-desk default “24h $ volume” uses contract volume times a price input and can fall back to quote-derived prices if the last trade is absent. It is an estimate, not an official dollar-volume field. Topic matching and live scan coverage are bounded; details are on <a href="integration/executive-summary.html">Executive Summary</a> and <a href="integration/flagged-review.html#rank-01">RANK-01</a>.
+  </div>
+
+  <h2>Live dashboards and analysis</h2>
+  <div class="tiles">
+    <a class="tile" href="exec-desk/dashboard.html"><b>Primary live market desk</b><span>Five-topic demo-market scan, price-history views, reported order-book liquidity and market-resolution status from the official API.</span></a>
+    <a class="tile" href="pages/live.html"><b>Additional live dashboard</b><span>Event scan, candle/sub-minute chart, order-book contracts and dollars, and per-request evidence log. Its deterministic mocked integration test currently needs follow-up; see TEST-01.</span></a>
+    <a class="tile" href="pages/price-jumps.html"><b>Candlestick jump detector (≥$0.10)</b><span>Flags moves between official candle closes and links each row to its API request and venue event page; no cause is asserted.</span></a>
+    <a class="tile" href="exec-desk/jumps.html"><b>Jump scanner with news-search leads</b><span>Selected high-volume markets, one-minute changes and potential-source searches. A search result is a lead, not proof of cause.</span></a>
+    <a class="tile" href="exec-desk/markets.html"><b>Live resolution tracker</b><span>Follow open markets until Kalshi returns a YES/NO result; the browser-local watch log is not a server archive.</span></a>
+    <a class="tile" href="pages/resolutions.html"><b>Additional resolution tracker</b><span>Track events and see returned settlement fields with a source URL for each observation.</span></a>
+    <a class="tile" href="pages/paper-trading.html"><b>Paper-strategy runner</b><span>On-demand simulated rules and strategy/category analysis; trades remain in this browser and no exchange orders are sent.</span></a>
+    <a class="tile" href="exec-desk/portfolio.html"><b>Portfolio &amp; demo-account reporting</b><span>Paper-ledger analytics are available; authenticated balance, positions and fills remain blank without a secure credential service.</span></a>
+    <a class="tile" href="pages/strategy.html"><b>Experimental trade ledger &amp; order drafts</b><span>Contains a browser-local signing path that is not safe for a public static site. Do not enter credentials; review SEC-01, AUTH-01, KEY-01 and FILL-01 first.</span></a>
+    <a class="tile" href="docs/api-verification.md"><b>Verification log</b><span>Line-by-line source notes, demo response evidence and remaining unknowns.</span></a>
+  </div>
+
+  <div class="callout bad">
+    <b>Credential safety:</b> do not paste a private key into this public GitHub Pages site. An experimental trade page stores a key in browser local storage, and integration review found signing, RSA-key import and zero/partial-fill ledger issues. Use simulated mode only until those are fixed and secured. See <a href="integration/flagged-review.html#sec-01">SEC-01</a>, <a href="integration/flagged-review.html#auth-01">AUTH-01</a>, <a href="integration/flagged-review.html#key-01">KEY-01</a>, <a href="integration/flagged-review.html#fill-01">FILL-01</a> and Kalshi’s <a href="https://docs.kalshi.com/getting_started/api_keys">API-key guidance ↗</a>.
   </div>
 
   <h2>Topics</h2>
@@ -78,7 +95,7 @@
       <tr><td><b>Culture</b></td><td>191</td><td>368</td><td>60</td><td><a href="site/culture.html">Culture ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets (docs) ↗</a></td></tr>
       <tr><td><b>Crypto</b></td><td>474</td><td>668</td><td>232</td><td><a href="site/crypto.html">Crypto ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets (docs) ↗</a></td></tr>
       <tr><td><b>Golf</b></td><td>363</td><td>600</td><td>42</td><td><a href="site/golf.html">Golf ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets (docs) ↗</a></td></tr>
-      <tr><td><b>Total</b></td><td>1,399</td><td>2,117</td><td>352</td><td><a href="site/markets.html">All open markets ↗</a></td><td><a href="snapshot/collect-log.txt">collection log ↗</a></td></tr>
+      <tr><td><b>Total</b></td><td>1,399</td><td>2,117</td><td>352</td><td><a href="site/markets.html">All open markets ↗</a></td><td><a href="snapshot/collect-log.txt">collection log ↗</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets docs ↗</a></td></tr>
     </tbody>
   </table>
   </div>
@@ -98,6 +115,8 @@
     <a class="tile" href="docs/verification-3c2c8403.html"><b>Flagged for Review: landing check</b><span>Irregularities found while verifying this landing page, with official source links, and the line-by-line claim record.</span></a>
     <a class="tile" href="site/index.html"><b>Overview &amp; executive summary</b><span>What the snapshot shows, how it was collected, and its limits.</span></a>
     <a class="tile" href="site/verification.html"><b>Line-by-line verification</b><span>Automated re-check: every rendered value re-derived from the official snapshot and every row's source link audited.</span></a>
+    <a class="tile" href="integration/executive-summary.html"><b>Integrated executive summary</b><span>Verified capabilities, coverage limits, source methodology and credential-dependent features across the primary desk.</span></a>
+    <a class="tile" href="integration/flagged-review.html"><b>Integration findings</b><span>Code-review findings with repository evidence, official sources and ownership-aware follow-up requests.</span></a>
   </div>
 
   <h2>What changed on this page</h2>
