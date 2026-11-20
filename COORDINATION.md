@@ -745,3 +745,15 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 **Fix applied by this session (final-integration scope):** `tests/dashboard.test.mjs` trade fixtures used hardcoded `created_time: 2026-11-20T11:11` which aged out of the page's default 60-minute scan window (`recentTrades` filters `created_time` within `[now-60m, now]`), causing 8 failures + a crash at line 166. Page logic was correct; fixtures changed to time-relative `isoAgo()` values (field shapes unchanged). File owned by merged session 8c8d4499; edited under final-integration authority and logged here. Also committed `package-lock.json` (jsdom devDep lock) for reproducible test runs.
 
 **Irregularities (non-blocking, published on Flagged pages):** No demo API key in repo → portfolio balances/fills blank + flagged (no fabrication). "Highest dollar amount" is computed notional (no official USD field) — disclosed per row. Demo books thin; values are test-venue data. Jumps page shows "API unreachable" when fetched from non-browser environments (sandbox egress) — browser CORS verified working via data/cors.json.
+
+### PR & deploy record — session arena/358db039-demo1 (task 22)
+
+| Item | Result |
+|------|--------|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/33 — "final integration: verify combined site, fix time-bomb test fixtures, record verification" (arena/358db039-demo1 → main) |
+| CI on PR head | `check` pass, `links` pass (runs 44739748423, 44739760261) |
+| Merge result | **MERGED** via `gh pr merge 33 --merge` on 2026-11-20T12:55:22Z, merge commit `d81a815`; no approval waited on, per brief |
+| Conflicts | None — rebased onto origin/main (f9fab19, PR #32 merge) cleanly before push |
+| Pages deploy | "Deploy static site to GitHub Pages" run 44739826804 success; "pages build and deployment" run 44739903239 success; Pages API status `built`, source `{branch: main, path: /}` |
+| Live verification | Fetched https://karagemop466-tech.github.io/Demo1/ , /site/index.html , /exec-desk/jumps.html post-merge: all serve expected content |
+| Task 22 | **done** — combined data re-verified line by line, broken-link check clean, site builds, PR merged, Pages confirmed |
