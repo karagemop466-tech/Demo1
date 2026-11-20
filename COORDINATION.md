@@ -2016,3 +2016,23 @@ overwrote the `pending` merge/Pages rows of the d973ced5, 91fc2cc7 and b62e8188 
 this session's text. Those three rows were restored verbatim to `pending` in the commit that adds
 this note; owners of those sessions should re-fill their own records. No other session's content was
 touched, and this is why board edits from now on are line-indexed splices, not replaces.*
+
+---
+
+# Session arena/1cbe8309-demo1 — GitHub Pages deploy health + closing verification
+
+## Session claim
+- **Session ID:** `1cbe8309` — branch `arena/1cbe8309-demo1` (platform-fixed name; `session-<id>/<task>` naming not possible, recorded as the same deviation every prior session logged).
+- **Claimed at:** 2026-11-20T20:02Z (UTC); claim committed and pushed **before** any implementation work.
+- **Basis / gap found:** board read end-to-end; `gh pr list`, `gh api .../pages/builds` reviewed. Every brief content area already has a published counterpart from earlier sessions (exec summary, topic pages, alert chats, charts/depth, resolutions, sim strategies, flagged registers, trader guide). The one live problem nobody owns: **GitHub Pages deploys to `main` have been failing** — the Pages API reported consecutive `errored` builds (`70690b17`, `971d8191`, `696c9454`, `8db5749f`, `6aa1ed55`, `97262eb6`, each `error: "Page build failed."`, `duration: 0`) between 19:36Z and 19:44Z while the site kept serving the last good deploy. Session `d372e97e` flagged this read-only (D-3 irregularity 1: "root cause is not visible from the sandbox") but no session claims the diagnosis/fix. This session claims it, plus the closing publish record for its own branch.
+- **Overlap check (done before claiming):** open PRs at claim time: #61 `65df996f` (alert tapes + hub reconciliation; owns shared `index.html`/`assets/common.js`/`EXECUTIVE_SUMMARY.md`/`README.md` in N-3/N-4), #62 `fe12c4c4` (consistency audit; owns `verification/**`, F-3 final integration), #66 `d3e2b301` (sim-strategies cron fix; owns `.github/workflows/sim-strategies.yml`). Merged while this claim was prepared: #63 `54a39029` (ops-desk), #67 `0ad208bf` (alert-desk CI fix), #68 `d372e97e` (board). No session owns `.github/workflows/pages.yml` (its author session `e41f6700` finished with PRs #1–#2, long stale) or the Pages-deploy diagnosis itself. This session does not edit any sibling's scope.
+
+## Task board (this session)
+
+| # | Task | Status | Owner | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------------------|---------|--------------|----------------|
+| P-1 | Diagnose the failing GitHub Pages builds on `main` (root cause with official evidence), apply the minimal repo-side fix if the cause is in this repo, otherwise publish the diagnosis as a flagged irregularity with the official doc links | in progress | arena/1cbe8309-demo1 | `.github/workflows/pages.yml` (takeover: author session `e41f6700` finished/stale), this section | docs.github.com Pages (builds, rate limits, troubleshooting), GitHub REST `/pages` + `/pages/builds` responses captured verbatim | Latest build after fix reports `built`; `gh api .../pages` reports `status: built`; live landing fetched via page-fetch tool | To be recorded |
+| P-2 | Closing verification of the merged tree: full local gate suite (build_site.py, check-links, desk/engine/alert-desk/trade-desk tests), live-site spot checks of every nav destination, confirm the deploy that carries the newest merges is green | in progress | arena/1cbe8309-demo1 | none (read-only gates) | repo tooling + live Pages fetch | Results recorded below | — |
+| P-3 | Publish: this session's PR → `main`, merge without waiting for approval, confirm GitHub Pages deploys, record PR link + merge result here | in progress | arena/1cbe8309-demo1 | this section + P-1 scope | docs.github.com Pages | Recorded in the publish record below | — |
+
+Claim log entry: 2026-11-20T20:02Z — arena/1cbe8309-demo1 claimed tasks P-1..P-3 (file scope above only; no sibling-owned file edited).
