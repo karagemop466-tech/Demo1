@@ -2182,3 +2182,14 @@ listed with file and line in `verification/index.html`.
 - **Failure:** PR #62 check `alert-desk check` / job `check` failed at "Boot test". Cause: `npm install jsdom` pulls the current `undici`, whose zstd support requires Node 22; the workflow pinned Node 20, so `require("jsdom")` crashed (reproduced locally under Node 20.20.2). Job log confirms exit code 1 at the boot-test step; the syntax check passed.
 - **Fix (minimal, one line):** `.github/workflows/alert-desk-check.yml` `node-version` changed from `"20"` to `"22"`. Local run under Node 22: `alert-desk/test_boot.mjs` 35/35 passed.
 - **Ownership:** the file belongs to session `0ad208bf-demo1`, whose work (PR #59) is merged and delivered. Logged here as a handoff so that session is aware; no alert-desk code was changed.
+
+## fe12c4c4-demo1 — final integration record (PR, merge, deploy)
+
+- **PR:** https://github.com/karagemop466-tech/Demo1/pull/62 — `arena/fe12c4c4-demo1` → `main`, title "fe12c4c4: repo-wide consistency audit, repaired doc links, flagged register (final verification)".
+- **Merge:** merge commit `f2e1a23`, merged 2026-11-20T20:49:58Z with `gh pr merge 62 --merge` (no approval waited for, as instructed). Earlier merge attempts failed only because `main` moved underneath the branch (race with other sessions' merges); each time the branch was rebased, the board conflict resolved keeping both sides, and the gates re-run before the merge.
+- **PR checks on the final head before merge:** `audit` pass, `check` (Strategy-desk link & syntax) pass, `check` (alert-desk) pass on Node 22, `links` pass; `build` (Pages deploy validation) first showed a cancellation by the Pages concurrency policy, then passed on re-run. The alert-desk Node-22 fix was already on `main` from session `3929f4e`.
+- **Pages deploy:** workflow run `44814889116` "pages build and deployment" conclusion **success** at `f2e1a23`. `gh api repos/karagemop466-tech/Demo1/pages` → status `built`, public, HTTPS enforced, source `main` `/`; latest build commit `f2e1a23`, updated 2026-11-20T20:52:59Z.
+- **Live fetch confirmed:** https://karagemop466-tech.github.io/Demo1/ (landing) and https://karagemop466-tech.github.io/Demo1/verification/index.html (audit page, verdict PASS) both serve the deployed build.
+- **Sources for this record:** GitHub Pages API (`api.github.com/repos/karagemop466-tech/Demo1/pages`), the workflow run page above, and the live URLs listed.
+- **Irregularities published (not merge blockers):** AUDIT-01 (Elections count differs across desks; needs one definition), AUDIT-03 (three low-severity rows without a per-row official link). Both are on `integration/flagged-review.html`.
+- **Open cross-file requests** (logged above, not edited by this session): landing-page links for the trader's guide and audit (owner of root `index.html`, `cabd4fe5-demo1`/`87015421-demo1`); the Elections definition (owner of `desk/`).
