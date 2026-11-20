@@ -155,7 +155,7 @@ Session arena/e41f6700-demo1:
 - https://docs.kalshi.com/getting_started/quick_start_market_data
 - https://docs.kalshi.com/api-reference/portfolio/get-balance
 - https://docs.kalshi.com/api-reference/market/get-markets (page fetch failed in that session — linked for manual review)
-- https://docs.kalshi.com/api-reference/market/get-market-order-book
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
 - https://docs.kalshi.com/api-reference/portfolio/get-positions
 - https://docs.kalshi.com/api-reference/portfolio/get-fills
 
@@ -390,12 +390,12 @@ Status values: `unclaimed`, `in progress`, `done`, `needs review` (published on 
 ## Sources (this session)
 
 - https://docs.kalshi.com/getting_started/api_environments (demo REST/WS endpoints)
-- https://docs.kalshi.com/getting_started/quick_start + /getting_started/quick_start_authenticated_requests (no-key public data; signed auth for orders)
+- https://docs.kalshi.com/getting_started/quick_start_market_data + /getting_started/quick_start_authenticated_requests (no-key public data; signed auth for orders)
 - https://docs.kalshi.com/getting_started/market_settlement (YES/NO resolution, $1 payouts)
 - https://docs.kalshi.com/getting_started/demo_env (demo environment)
 - https://docs.kalshi.com/api-reference/market/get-market-orderbook (bids-only convention)
 - https://docs.kalshi.com/api-reference/market/get-market-candlesticks (candlesticks)
-- https://docs.kalshi.com/api-reference/series/get-series (runtime series verification)
+- https://docs.kalshi.com/api-reference/market/get-series (runtime series verification)
 - https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site (Pages source)
 - Canonical repo data: `data/meta.json`, `data/markets.json`, `data/series.json` (archived official demo API responses)
 

@@ -549,6 +549,28 @@ def normalise_doc_url(url: str) -> str:
     return f"{parsed.netloc.lower()}{path}"
 
 
+def clean_url(url: str) -> str:
+    """Strip quoting artefacts so a URL found in prose matches the real link."""
+    url = url.replace("\\/", "/")
+    url = url.replace("\\\\", "\\")
+    url = url.rstrip("\\")
+    url = url.rstrip("`\"'.,;:)]}>")
+    return url
+
+
+# Endpoints that are part of the documentation site but are not pages listed in
+# the page index (llms.txt). They are checked separately.
+SITE_ROOT_PATHS = {
+    "",
+    "/api-reference",
+    "/changelog",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/welcome",
+    "/welcome/index",
+}
+
+
 def load_doc_index(path: str):
     if not path or not os.path.exists(path):
         return None
@@ -556,8 +578,24 @@ def load_doc_index(path: str):
     with open(path, encoding="utf-8", errors="ignore") as handle:
         for line in handle:
             for url in re.findall(r"https://[^\s)\]]+", line):
-                urls.add(normalise_doc_url(url))
+                urls.add(normalise_doc_url(clean_url(url)))
     return urls
+
+
+def extract_doc_urls(text: str):
+    """Documentation URLs from real links, not from prose fragments."""
+    found = set()
+    for match in re.finditer(r"(?:href|src)\s*=\s*[\"']([^\"']+)[\"']", text, re.I):
+        url = clean_url(match.group(1))
+        if url.startswith("https://docs.kalshi.com"):
+            found.add(url)
+    for match in re.finditer(r"\]\((https://docs\.kalshi\.com[^)\s]*)\)", text):
+        found.add(clean_url(match.group(1)))
+    for match in re.finditer(r"https://docs\.kalshi\.com[^\s\"'<>)\(\]]*", text):
+        url = clean_url(match.group(0))
+        if url.startswith("https://docs.kalshi.com"):
+            found.add(url)
+    return found
 
 
 def check_doc_links(files: list, index_path: str):
@@ -565,23 +603,32 @@ def check_doc_links(files: list, index_path: str):
     used = collections.Counter()
     where = collections.defaultdict(set)
     for path in files:
-        text = read(path)
-        for url in re.findall(r"https://docs\.kalshi\.com[^\s\"'<>)\]]*", text):
-            used[url.rstrip('.,);"')] += 1
-            where[url.rstrip('.,);"')].add(rel(path))
+        page = rel(path)
+        if page in ("verification/audit-report.json", "verification/index.html"):
+            # The audit's own outputs repeat the URLs it found; scanning them
+            # again would only measure self-reference.
+            continue
+        for url in extract_doc_urls(read(path)):
+            used[url] += 1
+            where[url].add(page)
     index = load_doc_index(index_path)
     rows = []
     for url in sorted(used):
         key = normalise_doc_url(url)
+        parsed = urllib.parse.urlparse(url)
+        site_root = parsed.path.rstrip("/") in SITE_ROOT_PATHS
         if index is None:
             status = "unverified"
             note = "official doc index not available in this sandbox"
         elif key in index:
             status = "in-index"
             note = "listed in https://docs.kalshi.com/llms.txt"
+        elif site_root:
+            status = "site-root"
+            note = "documentation site entry point, not a page listed in llms.txt"
         else:
             status = "not-in-index"
-            note = "not listed in the official doc index - review before relying on it"
+            note = "not listed in the official doc index - verify before relying on it"
         rows.append({
             "url": url, "uses": used[url], "status": status, "note": note,
             "files": sorted(where[url])[:4],
@@ -768,7 +815,8 @@ def render_html(report: dict) -> str:
             "<td><span class='badge {cls}'>{st}</span></td><td class='fine'>{note}</td>"
             "<td class='fine mono'>{f}</td></tr>".format(
                 u=esc(doc["url"]), n=esc(doc["uses"]),
-                cls={"in-index": "ok", "not-in-index": "bad", "unverified": "warn"}[doc["status"]],
+                cls={"in-index": "ok", "not-in-index": "bad", "unverified": "warn",
+                     "site-root": "warn"}[doc["status"]],
                 st=esc(doc["status"]), note=esc(doc["note"]),
                 f=esc(", ".join(doc["files"]) or "-"),
             )

@@ -594,7 +594,7 @@ def build_liquidity(meta, markets, charts):
 <div id="chartTable"></div>
 
 <h2>Liquidity at each price (best level per market)</h2>
-<p class="fine">From <a href="{DOCS}/api-reference/market/get-market-order-book">Get Market Order Book</a>.
+<p class="fine">From <a href="{DOCS}/api-reference/market/get-market-orderbook">Get Market Order Book</a>.
 Only markets whose books were requested in this snapshot appear. “Levels” is how many distinct prices were returned.</p>
 {table(["Market", "Side", "Best price ¢", "Contracts at best price", "Levels returned", "Source"], depth_rows, "wide")}
 
@@ -992,7 +992,7 @@ def build_sources(meta):
         ("Quick start: WebSockets (signed handshake)", f"{DOCS}/getting_started/quick_start_websockets"),
         ("Get Markets", f"{DOCS}/api-reference/market/get-markets"),
         ("Get Market", f"{DOCS}/api-reference/market/get-market"),
-        ("Get Market Order Book", f"{DOCS}/api-reference/market/get-market-order-book"),
+        ("Get Market Order Book", f"{DOCS}/api-reference/market/get-market-orderbook"),
         ("Get Market Candlesticks (1 / 60 / 1440 min)", f"{DOCS}/api-reference/market/get-market-candlesticks"),
         ("Get Trades", f"{DOCS}/api-reference/market/get-trades"),
         ("Get Series List (categories, fee_type)", f"{DOCS}/api-reference/market/get-series-list"),
