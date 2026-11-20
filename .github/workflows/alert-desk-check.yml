@@ -13,6 +13,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,4 +24,12 @@ jobs:
       - name: Syntax check
         run: node --check alert-desk/app.js && node --check alert-desk/test_boot.mjs
       - name: Boot test (offline + live-tape paths)
-        run: node alert-desk/test_boot.mjs
+        run: |
+          set -o pipefail
+          node alert-desk/test_boot.mjs 2>&1 | tee /tmp/boot-test.log
+      - name: Surface test output as run annotations (log endpoint can be unavailable)
+        if: failure()
+        run: |
+          tail -c 3500 /tmp/boot-test.log | fold -w 850 | while IFS= read -r line; do
+            echo "::error::${line}"
+          done

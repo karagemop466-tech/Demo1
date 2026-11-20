@@ -90,14 +90,33 @@ function makeDom({ live, tape }) {
 
 async function bootIn(dom) {
   const { window } = dom;
-  await window.__alertDesk.boot();
-  await new Promise((r) => setTimeout(r, 40));
-  // NOTE on timers: jsdom does not reliably fire timers the page scheduled from an async
-  // continuation (the boot-scheduled 0 ms tape poll never runs here), while real browsers
-  // do. The tests therefore drive probeLive/pollTape directly and clear the pending
-  // interval so nothing fires mid-assertion. This is a jsdom artifact, not app logic.
   const A = window.__alertDesk;
+  await A.boot();
+  // Let the boot probe settle: wait until the badge leaves "BOOT…" (max ~2 s), so the
+  // assertions below are independent of runner speed.
+  let i = 0;
+  while (window.document.getElementById("badge").textContent.startsWith("BOOT") && i++ < 80) {
+    await new Promise((r) => setTimeout(r, 25));
+  }
+  // NOTE on timers: jsdom timing of page-scheduled timers differs across environments
+  // (a 0 ms poll scheduled from an async continuation may or may not fire), and CI runners
+  // are slower than workstations. The tests therefore wait for the boot probe to settle,
+  // clear any pending interval, and reset the tape state so every direct poll below starts
+  // from a known point. This tests the page logic, not event-loop scheduling.
+  if (A.S.net === "live" && A.S.lastPollUtc == null && A.S.errors === 0) {
+    // a boot-scheduled poll may still be in flight — wait for it to finish (max ~2 s)
+    let j = 0;
+    while (A.S.lastPollUtc == null && A.S.errors === 0 && j++ < 80) {
+      await new Promise((r) => setTimeout(r, 25));
+    }
+  }
   if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
+  resetTape(A);
+}
+
+function resetTape(A) {
+  A.S.tradesSeen = 0; A.S.lastTs = null; A.S.swingCount = 0;
+  A.S.lastPrice.clear(); A.S.seenIds.clear();
 }
 
 /* ------------------------------------------------------------ offline */
@@ -186,16 +205,17 @@ async function bootIn(dom) {
   await A.probeLive();   // re-probe: must schedule the tape poll timer
   ok("probe schedules the tape poll", A.S.timer != null);
   if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
+  resetTape(A);   // deterministic starting point for the direct polls below
   ok("no bubbles before a swing",
     window.document.querySelectorAll("#chatAll .bubble.live").length === 0);
 
   // Poll 1 (driven directly — see the timer note in bootIn): seeds prices, no bubbles.
   await A.pollTape();
+  if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
   ok("first tape poll seeds prices without bubbles",
     window.document.querySelectorAll("#chatAll .bubble.live").length === 0
     && A.S.tradesSeen === 2 && A.S.lastPrice.get("KXTESTLIVE-A") === 0.42,
     JSON.stringify({ seen: A.S.tradesSeen, price: A.S.lastPrice.get("KXTESTLIVE-A") }));
-  if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
 
   // Poll 2: a $0.26 up-move on KXTESTLIVE-A -> live bubble in Chat 1; also seeds the
   // ledger market's tape price (a first observation never emits — no previous price).
@@ -212,8 +232,8 @@ async function bootIn(dom) {
     return { ok: true, status: 200, json: async () => ({ exchange: { status: "active" } }) };
   };
   await A.pollTape();
-  await new Promise((r) => setTimeout(r, 40));
   if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
+  await new Promise((r) => setTimeout(r, 40));
 
   const liveAll = window.document.querySelectorAll("#chatAll .bubble.live");
   ok("live bubble after >= $0.10 tape move", liveAll.length === 1, String(liveAll.length));
@@ -240,8 +260,8 @@ async function bootIn(dom) {
     return { ok: true, status: 200, json: async () => ({ exchange: { status: "active" } }) };
   };
   await A.pollTape();
-  await new Promise((r) => setTimeout(r, 40));
   if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
+  await new Promise((r) => setTimeout(r, 40));
 
   const modelBubbles = Array.from(window.document.querySelectorAll("#chatModel .bubble.live"));
   ok("ledger-market swing reaches Chat 2 via rule P", modelBubbles.length === 1, String(modelBubbles.length));
@@ -264,8 +284,8 @@ async function bootIn(dom) {
   const liveAllBefore = window.document.querySelectorAll("#chatAll .bubble.live").length;
   A.S.paused = true;
   await A.pollTape();
-  await new Promise((r) => setTimeout(r, 40));
   if (A.S.timer) { clearTimeout(A.S.timer); A.S.timer = null; }
+  await new Promise((r) => setTimeout(r, 40));
   ok("pause holds new bubbles (counted, not rendered)", A.S.held > heldBefore
     && window.document.querySelectorAll("#chatAll .bubble.live").length === liveAllBefore,
     JSON.stringify({ held: A.S.held, before: liveAllBefore }));
