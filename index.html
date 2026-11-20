@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#047857">
+  <meta name="description" content="A read-only Kalshi demo dashboard for gas prices, elections, culture, crypto, and golf markets.">
+  <title>Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Kalshi demo dashboard home">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span class="brand-copy"><strong>Kalshi demo</strong><small>Market signal board</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Dashboard</a>
+      <a href="gas-prices.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="analysis.html">Trade analysis</a>
+      <a href="requirements.html">Executive summary</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="review.html">Flagged for review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </header>
+
+  <main class="page-wrap" data-view="markets" data-topic="all">
+    <section class="page-intro">
+      <span class="eyebrow">Demo environment · read-only market data</span>
+      <h1>Follow the events with the deepest visible bid books.</h1>
+      <p class="lede">A live, source-linked view of Kalshi demo events matching gas prices, elections, culture, crypto, and golf. The ranking is explicitly based on visible bid notional from current YES and NO order-book levels—not a claim about total market volume.</p>
+      <div class="intro-meta">
+        <span class="badge">Five requested topics</span>
+        <span class="badge">No sample prices or synthetic markets</span>
+        <a href="requirements.html">Read the executive summary and open decisions →</a>
+      </div>
+    </section>
+
+    <div class="banner banner-warning" role="note">
+      <div>
+        <strong>Demo data is not production data.</strong>
+        <p>Kalshi documents separate demo credentials and notes that demo market prices and behavior may not reflect real markets. Account-specific portfolio data and order entry are not connected on this static site; see <a href="portfolio.html">Portfolio</a> and <a href="review.html">Flagged for review</a>.</p>
+      </div>
+      <a class="button" href="sources.html">Official sources</a>
+    </div>
+
+    <div id="markets-app" aria-live="polite"></div>
+  </main>
+
+  <footer class="site-footer page-wrap">
+    <div class="footer-row">
+      <span>Public Kalshi demo market data only. Not investment advice.</span>
+      <span><a href="requirements.html">Method and open questions</a> · <a href="review.html">Known limitations</a></span>
+    </div>
+  </footer>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>

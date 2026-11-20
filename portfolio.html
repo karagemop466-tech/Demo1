@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#047857"><meta name="description" content="Kalshi demo portfolio connection status and data requirements.">
+  <title>Portfolio · Kalshi Demo</title><link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Kalshi demo dashboard home"><span class="brand-mark" aria-hidden="true">K</span><span class="brand-copy"><strong>Kalshi demo</strong><small>Market signal board</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Dashboard</a><a href="gas-prices.html">Gas prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html" aria-current="page">Portfolio</a><a href="analysis.html">Trade analysis</a><a href="requirements.html">Executive summary</a><a href="suggestions.html">Suggestions</a><a href="review.html">Flagged for review</a><a href="sources.html">Sources</a></nav>
+  </header>
+  <main class="page-wrap">
+    <section class="page-intro"><span class="eyebrow">Private account data · unavailable</span><h1>Demo portfolio</h1><p class="lede">This page does not invent account values, trades, returns, or outcomes. All account-specific fields remain blank until authenticated demo responses are available.</p></section>
+    <div class="banner banner-warning" role="note"><div><strong>Portfolio and order execution are not connected.</strong><p>Kalshi documents that private API calls use an API key ID and a signature from the corresponding private key. A GitHub Pages client has no secure server-side signing boundary, and no demo account credentials or signing service were provided. No credential entry or browser-side private-key storage has been added, and this site has not submitted any orders. <a href="https://docs.kalshi.com/getting_started/api_keys">Read Kalshi's API key security guide</a>.</p></div></div>
+
+    <section class="metric-grid" aria-label="Account performance summary">
+      <article class="metric-card"><span class="metric-label">Demo balance</span><strong class="metric-value">—</strong><span class="metric-note">No signed account response</span></article>
+      <article class="metric-card"><span class="metric-label">Portfolio value</span><strong class="metric-value">—</strong><span class="metric-note">No signed account response</span></article>
+      <article class="metric-card"><span class="metric-label">Realized P&amp;L</span><strong class="metric-value">—</strong><span class="metric-note">No positions or settlement history</span></article>
+      <article class="metric-card"><span class="metric-label">Demo orders placed here</span><strong class="metric-value">0</strong><span class="metric-note">This dashboard has not sent an order</span></article>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><div><h2>Account data availability</h2><p>Blank means unavailable—not zero. Each row links to the official endpoint or authentication documentation.</p></div><span class="status-pill status-pending">Not connected</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Current value</th><th>Why blank / required source</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr><td>Demo account authorization</td><td>Not configured</td><td>No account key or secure signing service was supplied. Demo credentials are separate from production credentials.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a> · <a class="source-link" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td></tr>
+          <tr><td>Cash balance</td><td><span aria-label="blank">—</span></td><td>Requires an authenticated balance response; this site has not called it.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr>
+          <tr><td>Portfolio value</td><td><span aria-label="blank">—</span></td><td>Requires an authenticated balance response; no historical baseline is available for a return calculation.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr>
+          <tr><td>Positions and exposure</td><td><span aria-label="blank">—</span></td><td>Requires authenticated position data. A missing position is not treated as a zero position.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr>
+          <tr><td>Fills, trade count, and fees</td><td><span aria-label="blank">—</span></td><td>Requires authenticated fill history; no fill has been observed or analyzed by this site.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td></tr>
+          <tr><td>Resolved YES/NO results</td><td><span aria-label="blank">—</span></td><td>For market tracking, the public view displays only the API's explicit market result. No account-linked settlement history is available here.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market</a> · <a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr>
+          <tr><td>Order submission</td><td>Disabled / not implemented</td><td>No trade request has been made. A signed demo request needs a private key and an explicit order policy; neither is available to this static site.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a> · <a class="source-link" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Signing</a></td></tr>
+        </tbody>
+      </table></div>
+      <p class="table-note">No private key, API key ID, balance, portfolio value, trade history, or order result is stored in this repository. The site will not prompt for or keep a private key in the browser.</p>
+    </section>
+
+    <section class="section split-layout">
+      <article class="card card-pad"><span class="kicker">Before portfolio analysis</span><h2>Information still needed</h2><ul class="content-prose"><li>A demo-only API key configured in a secure server-side signer.</li><li>Authorization to access the desired demo account and subaccount.</li><li>Baseline date / opening balance, and treatment of deposits, withdrawals, fees, and settlements.</li><li>Risk limits and an order-approval policy before any trade endpoint is enabled.</li></ul></article>
+      <aside class="callout warning"><strong>Safe next step</strong><p>Keep public market data on GitHub Pages. If account integration is later approved, use a separately deployed server-side service that signs only allowlisted demo requests, stores secrets outside Git and the browser, and enforces explicit size and loss limits. Review this proposal on the <a href="suggestions.html">Suggestions</a> page.</p></aside>
+    </section>
+  </main>
+  <footer class="site-footer page-wrap"><div class="footer-row"><span>Public market data can work without signing; account data and orders are private operations.</span><span><a href="requirements.html">Executive summary</a> · <a href="review.html">Flagged items</a></span></div></footer>
+</body>
+</html>
