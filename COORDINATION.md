@@ -425,3 +425,14 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 - **CORS resolved:** `data/cors.json` (CI header test, 2026-11-20T11:22:36Z) shows the official demo API reflecting `access-control-allow-origin: https://karagemop466-tech.github.io` — browser fetches from this site work. My F1 flag closed with that evidence; third-party 403 reports superseded.
 - Unique contributions vs merged main: server-persisted candlestick history, resolution/outcome history in JSON, verified taxonomy driving topic mapping, USD ranking methodology (volume×price + OI×$1), CI-runnable Python demo trader (browser clients cannot hold keys), deep verification/review/source registers.
 - Live probes this session: demo books thin (BTC ladder most active: OI 3,439.27 on KXBTCMINMON-BTC-26NOV30-6750000); gas KXAAAGASMIN-26DEC31-3.80 settled YES $1.00 (resolution mechanics verified end-to-end).
+
+## Integration record — session arena-288e8741-demo1 (task 17 done)
+
+| Item | Value |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/17 — "Demo live tracker, paper-trading SIM engine, verified demo-API snapshots + verification log" |
+| Merge result | MERGED via `gh pr merge 17 --merge` on 2026-11-20; merge commit `a7c09ea996ee3b179f14afd9ca6e97e5bc05bede` |
+| Pages deploy | Workflow "Deploy static site to GitHub Pages" run 44730026825: success; "pages build and deployment" run 44730025601: success; repo "Strategy-desk link & syntax check" run 44730026977: success |
+| Live verification | https://karagemop466-tech.github.io/Demo1/pages/demo-live.html fetched post-deploy: LIVE mode active (browser reading official demo API), 10 tracked events, 666 markets, resolution tracker showing "50 finalized: 23 yes / 27 no" for KXDPWTTOP20-DPWTC26; data/demo-snapshot.json served correctly |
+| Post-merge fixes | data/demo-snapshot.json timestamp typo corrected (11:33:00Z), shipped in this record commit |
+| Tasks 13–17 | All done. Sources, verification and irregularities recorded in the session section above and docs/demo-data-verification.md |
