@@ -1,26 +1,26 @@
 # Demo1 — Kalshi Demo Dashboard
 
-A static GitHub Pages site (folder `docs/`) that tracks Kalshi prediction markets in five categories (gas prices, golf, crypto, elections, culture), with a source-linked table, a live price chart, an orderbook liquidity view, analysis, open questions, suggestions, and a Flagged for Review page.
+A static GitHub Pages site (repository root, served from `main` at `/`) that tracks Kalshi prediction markets in five categories (gas prices, golf, crypto, elections, culture), with a source-linked table, a live price chart, an orderbook liquidity view, analysis, open questions, suggestions, and a Flagged for Review page.
 
-- **Live site:** GitHub Pages for this repository, served from the `main` branch, folder `/docs`.
+- **Live site:** GitHub Pages for this repository, served from the `main` branch, root folder (`/`).
 - **Coordination:** see [COORDINATION.md](COORDINATION.md) for task status, sources, verification, and irregularities.
 
 ## Structure
 
 | Path | Purpose |
 |---|---|
-| `docs/index.html` | Landing page |
-| `docs/executive-summary.html` | Executive summary, blocked items, decisions needed |
-| `docs/markets.html` | Verified market rows, each linked to its API source |
-| `docs/dashboard.html` | Live chart (seconds / minutes / hours) and orderbook liquidity |
-| `docs/portfolio.html` | Demo-account portfolio and trade log (blocked: no API key) |
-| `docs/analysis.html` | Snapshot findings and trade-categorization framework |
-| `docs/questions.html` | Questions, answers so far, and missing information |
-| `docs/suggestions.html` | Improvement proposals (none implemented; choose first) |
-| `docs/flagged.html` | Flagged for Review: unverified items, irregularities, repo findings |
-| `docs/sources.html` | Official sources and whether each was read |
-| `docs/data/markets.json` | The verified market table (source of truth for the site) |
-| `docs/assets/` | Shared CSS, navigation, and dashboard script (no external dependencies) |
+| `index.html` | Landing page |
+| `executive-summary.html` | Executive summary, blocked items, decisions needed |
+| `markets.html` | Verified market rows, each linked to its API source |
+| `dashboard.html` | Live chart (seconds / minutes / hours) and orderbook liquidity |
+| `portfolio.html` | Demo-account portfolio and trade log (blocked: no API key) |
+| `analysis.html` | Snapshot findings and trade-categorization framework |
+| `questions.html` | Questions, answers so far, and missing information |
+| `suggestions.html` | Improvement proposals (none implemented; choose first) |
+| `flagged.html` | Flagged for Review: unverified items, irregularities, repo findings |
+| `sources.html` | Official sources and whether each was read |
+| `data/markets.json` | The verified market table (source of truth for the site) |
+| `assets/` | Shared CSS, navigation, and dashboard script (no external dependencies) |
 
 ## Data sources
 
@@ -43,7 +43,7 @@ Documentation: <https://docs.kalshi.com/llms.txt>. Gas settlement input: <https:
 No build step. Serve the folder with any static server:
 
 ```
-cd docs && python3 -m http.server 8000
+python3 -m http.server 8000
 ```
 
 Then open <http://localhost:8000/>.

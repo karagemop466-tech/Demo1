@@ -7,7 +7,7 @@ Shared board for parallel agent sessions. Status values: `unclaimed`, `in progre
 
 - **Session ID:** `175cafdf` — branch `arena/175cafdf-demo1` (fixed for this session; the branch name is not changed).
 - **Claimed at:** 2026-11-20 (UTC), before any implementation commit.
-- **Scope:** all tasks in the Kalshi demo request, on this branch only. Files: `README.md`, `COORDINATION.md`, `docs/**` (GitHub Pages site and data), `.nojekyll`.
+- **Scope:** all tasks in the Kalshi demo request, on this branch only. Files: `README.md`, `COORDINATION.md`, `site files (root)` (GitHub Pages site and data), `.nojekyll`.
 
 ## Overlap notice (read before merging)
 
@@ -28,16 +28,16 @@ Result: the same task is claimed on up to six branches. Merging all of them to `
 | # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
 |---|---|---|---|---|---|---|---|
 | 1 | Repo review (line by line) | done | 175cafdf | README.md, COORDINATION.md | See "Repo review" below | Checked `git ls-files`, branches, `.gitignore`/LICENSE presence | Listed below |
-| 2 | Executive summary | done | 175cafdf | docs/executive-summary.html | Kalshi API docs + API responses (see Sources) | Each figure taken from a fetched API response | Listed below |
-| 3 | Category markets table (gas, golf, crypto, elections, culture) | needs review (partial: 15 verified rows; culture unverified) | 175cafdf | docs/markets.html, docs/data/markets.json | Kalshi production REST API (links per row) | Field-by-field from API JSON; culture unverified | Partial sample only; see Flagged |
-| 4 | Live interactive dashboard (price chart, seconds/minutes/hours, orderbook liquidity) | done (browser-side; live feed unverified) | 175cafdf | docs/dashboard.html, docs/assets/dashboard.js | Kalshi candlesticks + orderbook + market endpoints (docs links) | Rendering tested in jsdom with mocked responses (chart, summary, orderbook); live browser CORS not tested | CORS from browser unverified; real-time polling rate limits not read |
-| 5 | Portfolio performance (demo account) | needs review (blocked: no API key) | 175cafdf | docs/portfolio.html | Kalshi docs (auth) | Portfolio endpoint returned an error without credentials | No API key available |
-| 6 | Trade execution + performance tracking | needs review (blocked: no API key; nothing traded) | 175cafdf | docs/portfolio.html | — | Not executed | No credentials; no trades placed |
-| 7 | Trade analysis / categorization / strategies | done (framework only) | 175cafdf | docs/analysis.html | — | No trade data exists to categorize | Blocked by task 5/6 |
-| 8 | Suggestions section (review before change) | done | 175cafdf | docs/suggestions.html | — | Proposals only; nothing implemented | — |
-| 9 | Questions / information / answers | done | 175cafdf | docs/questions.html | Kalshi docs | Mapped to sources | — |
-| 10 | Flagged for Review page | done | 175cafdf | docs/flagged.html | All links listed there | Each item links its source | — |
-| 11 | Integration: site build check, links, GitHub Pages, PR + merge | in progress (link check + jsdom render tests passed; PR/merge next) | 175cafdf | docs/**, .nojekyll | — | — | — |
+| 2 | Executive summary | done | 175cafdf | executive-summary.html | Kalshi API docs + API responses (see Sources) | Each figure taken from a fetched API response | Listed below |
+| 3 | Category markets table (gas, golf, crypto, elections, culture) | needs review (partial: 15 verified rows; culture unverified) | 175cafdf | markets.html, data/markets.json | Kalshi production REST API (links per row) | Field-by-field from API JSON; culture unverified | Partial sample only; see Flagged |
+| 4 | Live interactive dashboard (price chart, seconds/minutes/hours, orderbook liquidity) | done (browser-side; live feed unverified) | 175cafdf | dashboard.html, assets/dashboard.js | Kalshi candlesticks + orderbook + market endpoints (docs links) | Rendering tested in jsdom with mocked responses (chart, summary, orderbook); live browser CORS not tested | CORS from browser unverified; real-time polling rate limits not read |
+| 5 | Portfolio performance (demo account) | needs review (blocked: no API key) | 175cafdf | portfolio.html | Kalshi docs (auth) | Portfolio endpoint returned an error without credentials | No API key available |
+| 6 | Trade execution + performance tracking | needs review (blocked: no API key; nothing traded) | 175cafdf | portfolio.html | — | Not executed | No credentials; no trades placed |
+| 7 | Trade analysis / categorization / strategies | done (framework only) | 175cafdf | analysis.html | — | No trade data exists to categorize | Blocked by task 5/6 |
+| 8 | Suggestions section (review before change) | done | 175cafdf | suggestions.html | — | Proposals only; nothing implemented | — |
+| 9 | Questions / information / answers | done | 175cafdf | questions.html | Kalshi docs | Mapped to sources | — |
+| 10 | Flagged for Review page | done | 175cafdf | flagged.html | All links listed there | Each item links its source | — |
+| 11 | Integration: site build check, links, GitHub Pages, PR + merge | in progress (link check + jsdom render tests passed; PR/merge next) | 175cafdf | site files (root), .nojekyll | — | — | — |
 
 ## Repo review (task 1)
 
@@ -62,13 +62,13 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 
 ## Sources and verification (per task)
 
-- **Tasks 2, 3, 9, 10:** Kalshi REST API responses (production `external-api.kalshi.com`, demo `external-api.demo.kalshi.co`) and docs.kalshi.com pages. Every verified row on `docs/markets.html` links to its API response. Field-by-field check: each value in `docs/data/markets.json` was copied from the API JSON listed in its `source_url`.
+- **Tasks 2, 3, 9, 10:** Kalshi REST API responses (production `external-api.kalshi.com`, demo `external-api.demo.kalshi.co`) and docs.kalshi.com pages. Every verified row on `markets.html` links to its API response. Field-by-field check: each value in `data/markets.json` was copied from the API JSON listed in its `source_url`.
 - **Task 3 (gas):** AAA national average $3.6898 on 11/20/26 from gasprices.aaa.com (read in this session).
 - **Task 4 (dashboard):** documented endpoints: candlesticks (`period_interval` 1, 60, 1440), orderbook (`depth` 0–100; NO bid at p = YES ask at 1−p, per docs.kalshi.com/getting_started/orderbook_responses).
 - **Secondary web articles** were used only to locate series tickers; each ticker was checked against the API.
 - **Tests run:** all 10 pages return HTTP 200 from a local static server; `node --check` passes for both JS files; all internal links and asset paths resolve; markets, analysis, and dashboard render in jsdom (mocked network). A headless browser could not be installed (Chromium download is outside the sandbox allowlist).
 
-## Irregularities (all listed on `docs/flagged.html`)
+## Irregularities (all listed on `flagged.html`)
 
 - Culture: no verified open market (row blank).
 - Coverage: 15 verified rows; no full market list; the events endpoint ignored its `category` parameter in tests.
@@ -86,9 +86,9 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 
 - Branch: `arena/175cafdf-demo1` → `main`.
 - PR: https://github.com/karagemop466-tech/Demo1/pull/5 (base `main`, head `arena/175cafdf-demo1`). Merge method: merge commit, after the Pages build check.
-- GitHub Pages: source `main` branch, folder `/docs`.
+- GitHub Pages: source `main` branch, root folder (`/`). The Pages source path cannot be changed with this session's token (API returned 403), so the site files live at the repository root.
 
 ## Log
 
 - 2026-11-20 — Session `175cafdf` claimed all tasks on `arena/175cafdf-demo1` and recorded the overlap with five other branches.
-- 2026-11-20 — Built `docs/` site (10 pages + `markets.json`), committed as `ebc8ba0`. Fixed a dashboard bug (unhandled rejection) and a summary-format bug found in jsdom tests.
+- 2026-11-20 — Built `` site (10 pages + `markets.json`), committed as `ebc8ba0`. Fixed a dashboard bug (unhandled rejection) and a summary-format bug found in jsdom tests.
