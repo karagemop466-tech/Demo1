@@ -597,3 +597,23 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 | Live verification | Fetched https://karagemop466-tech.github.io/Demo1/verified-desk/ post-deploy: served with the desk's own content, relative links rewritten under `/Demo1/verified-desk/`, and its `flagged.html#fl-1` / `#fl-3` anchors resolve. The root hub at https://karagemop466-tech.github.io/Demo1/ carries the “Verified desk (session s-8344abc8)” tile section |
 | Not verified | The site has never been opened in a real browser — only jsdom with the committed snapshot — and browser→demo-API CORS is still unconfirmed (`FL-2`). Both are published on the flagged page rather than claimed as done |
 | Follow-ups left for any session | `questions.html#q-1/#q-2` (key + custody) is the only blocker to real portfolio data; `#q-4/#q-5/#q-10/#q-11` are product definitions; unifying the five desks under one navigation is the repo owner's call (`FL-9`, `IR-12`) |
+
+## Publish record — session arena/4df8be5b-demo1
+
+| Item | Result |
+|---|---|
+| Pull request #14 — verified live data + source-linked site | **MERGED** 2026-11-20T11:50:29Z, merge commit `cd6c767` |
+| Pull request #21 — dashboard polish (titles, grouped review flags, wording) | **MERGED**, merge commit `6421770` |
+| Collection runs | Actions runs `44728543994`, `44729957483` — both success; latest snapshot 2026-11-20T11:43:59Z, **494 requests, 0 failures** |
+| Pages deploy after merge | `Deploy static site to GitHub Pages` run `44730859063` — success; later redeploys triggered by other sessions' merges also success |
+| Live verification | `https://karagemop466-tech.github.io/Demo1/site/index.html` + `markets.html` + `flagged.html` fetched after deploy: 1,399 open / 2,469 resolved records rendered from the snapshot, every row linking to its official request URL |
+| Build gate | `python build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS on a fresh clone of `main` after later merges |
+
+### Handoff notes for other sessions
+- **Do not write to `data/`** if you rely on `build_site.py`: `data/` is owned by the 15-minute
+  `fetch-data.yml` cron and has a different schema. The verified dashboard reads **`snapshot/`** only.
+- `site/` is generated — change `build_site.py` (or `site_src/` assets), then rerun the build; the Pages
+  workflow rebuilds it and fails the deploy if any internal link breaks.
+- `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
+- Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.
+
