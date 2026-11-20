@@ -7,12 +7,32 @@
 (function () {
   "use strict";
   var KD = window.KD;
-  if (!KD) return;
+  if (!KD) {
+    /* core.js must be evaluated first; if it is not, retry once the document is ready. */
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.KD) {
+        var s = document.createElement("script");
+        s.src = "assets/live.js";
+        document.body.appendChild(s);
+      }
+    });
+    return;
+  }
 
   var state = { window: "1m", market: null, series: null, timer: null, tickTimer: null, ticks: [] };
 
   function $(id) { return document.getElementById(id); }
-  function fmtPx(v) { return KD.money(v, 2); }
+  function fmtPx(v) {
+    var n = KD.num(v);
+    if (n === null) return "—";
+    if (n <= 0) return "<span class='blank' title='no resting order on the opposite side'>—</span>";
+    return KD.money(n, 2);
+  }
+  function fmtAsk(v) {   /* an ask of 0.00 means an empty opposite side, not a free contract */
+    var n = KD.num(v);
+    if (n === null || n <= 0) return "<span class='blank' title='no resting order on the opposite side'>—</span>";
+    return KD.money(n, 2);
+  }
 
   /* ---------------------------------------------------------------- live market table */
   function renderLiveTable(markets, opts) {
@@ -55,7 +75,7 @@
         "' target='_blank' rel='noopener'>" + KD.esc((m.title || m.ticker || "").slice(0, 90)) + "</a>" +
         "<div class='src'>" + KD.esc(m.ticker) + "</div></td>" +
         "<td class='num'>" + fmtPx(m.yes_bid_dollars) + "</td>" +
-        "<td class='num'>" + fmtPx(m.yes_ask_dollars) + "</td>" +
+        "<td class='num'>" + fmtAsk(m.yes_ask_dollars) + "</td>" +
         "<td class='num'>" + fmtPx(m.no_bid_dollars) + "</td>" +
         "<td class='num'>" + (r.dollars === null ? "—" : "$" + r.dollars.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
         "<td class='num'>" + (r.oi === null ? "—" : r.oi.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
@@ -97,7 +117,7 @@
 
   /* ---------------------------------------------------------------- chart */
   function drawSeries(points, opts) {
-    var canvas = $("chart");
+    var canvas = $("price-chart");
     if (!canvas) return;
     var jumps = KD.findJumps(points, 0.10);
     KD.drawChart(canvas, points, Object.assign({ jumps: jumps }, opts || {}));
@@ -109,7 +129,7 @@
 
   function loadChart() {
     var marketSel = $("chart-market");
-    var canvas = $("chart");
+    var canvas = $("price-chart");
     if (!marketSel || !canvas) return;
     var ticker = marketSel.value;
     var series = ticker.split("-")[0];
@@ -188,11 +208,14 @@
       }).join("") : "<tr><td colspan='4' class='blank'>No resting bids returned.</td></tr>";
       var best = levels.length ? levels[0] : null;
       var implied = best ? (1 - best.price) : null;
+      var impliedTxt = implied === null ? "—"
+        : (implied >= 1 ? "—" : KD.cents(implied)) +
+          (implied !== null && implied >= 1 ? " <span class='fine'>(no resting order on the other side)</span>" : "");
       return "<div class='panel'><div class='side-h'>" + title + " (bids)</div>" +
         "<table><thead><tr><th class='num'>Price</th><th class='num'>Contracts</th>" +
         "<th class='num'>Dollars at this price</th><th>Depth</th></tr></thead><tbody>" + body + "</tbody></table>" +
         "<p class='fine' style='margin-top:8px'>Best " + title.toLowerCase() + " bid " +
-        (best ? KD.cents(best.price) + " → implied " + otherLabel + " ask " + KD.cents(implied) : "—") + "</p></div>";
+        (best ? KD.cents(best.price) + " → implied " + otherLabel + " ask " + impliedTxt : "—") + "</p></div>";
     }
     el.innerHTML = side("YES", yes, "", "NO") + side("NO", no, "no", "YES");
     var note = $("book-note");
@@ -216,7 +239,7 @@
 
   /* ---------------------------------------------------------------- jumps from snapshot */
   function renderJumps() {
-    var el = $("jumps");
+    var el = $("jumps-list");
     if (!el) return;
     var data = window.KD_SNAPSHOT || null;
     var rows = [];

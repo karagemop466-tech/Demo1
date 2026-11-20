@@ -95,6 +95,22 @@ def read_json(path: Path, default):
     return default
 
 
+def clean_title(t: str) -> str:
+    """Kalshi titles can contain **markdown bold**; render the words, not the markers."""
+    return e((t or "").replace("**", ""))
+
+
+def display_px(v):
+    """A quoted ask of 0.0000 means the opposite side of the book is empty, not a real ask."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return '<span class="blank">—</span>'
+    if f <= 0:
+        return '<span class="blank" title="no resting order on the opposite side">—</span>'
+    return f"${f:.2f}"
+
+
 def dash(v, suffix=""):
     if v is None or v == "":
         return '<span class="blank">—</span>'
@@ -111,7 +127,7 @@ def badge(text, kind="info"):
     return f'<span class="badge {kind}">{e(text)}</span>'
 
 
-def page(title: str, current: str, body: str, description: str = "") -> str:
+def page(title: str, current: str, body: str, description: str = "", scripts: str = "") -> str:
     AC = ' aria-current="page"'
     nav = "".join(
         '<a href="%s"%s>%s</a>' % (href, AC if href == current else "", e(label))
@@ -156,6 +172,7 @@ def page(title: str, current: str, body: str, description: str = "") -> str:
   </div>
 </footer>
 <script src="assets/core.js"></script>
+{scripts}
 </body>
 </html>
 """
@@ -198,7 +215,7 @@ def topic_tiles(data, prefix=""):
         out.append(
             f'<a class="tile" href="{prefix}{slug}.html"><b>{e(label)}</b>'
             f"<span>{e(brief)}</span>"
-            f'<span class="cnt">{open_n:,} open · {res:,} resolved YES/NO</span></a>')
+            f'<span class="cnt">{open_n:,} open markets · {res:,} with a YES/NO result</span></a>')
     return '<div class="tiles">' + "".join(out) + "</div>"
 
 
@@ -246,7 +263,9 @@ def market_row(m: dict, data: dict, show_topic: bool = False) -> str:
         f'target="_blank" rel="noopener">{e((title or "")[:96])}</a>'
         f'<div class="src">{e(m.get("market_ticker"))}</div></td>')
     cells.append(cell_num(y.get("bid"), lambda v: f"${float(v):.2f}"))
-    cells.append(cell_num(y.get("ask"), lambda v: f"${float(v):.2f}"))
+    cells.append(f'<td class="num">{display_px(y.get("ask"))}</td>'
+                 if (y.get("ask") is None or float(y.get("ask") or 0) <= 0) else
+                 cell_num(y.get("ask"), lambda v: f"${float(v):.2f}"))
     cells.append(cell_num(n.get("bid"), lambda v: f"${float(v):.2f}"))
     cells.append(cell_num(notional, lambda v: f"${float(v):,.0f}"))
     cells.append(cell_num(m.get("open_interest_contracts"),
@@ -279,7 +298,7 @@ def resolved_rows(rows, show_topic=False):
             cells.append(f'<td><a href="{SLUG.get(r.get("topic"), "index.html")}.html">'
                          f'{e(LABEL.get(r.get("topic"), "—"))}</a></td>')
         title = r.get("title") or r.get("event_title") or r.get("market_ticker")
-        cells.append(f'<td>{e((title or "")[:92])}'
+        cells.append(f'<td>{clean_title((title or "")[:92])}'
                      f'<div class="src">{e(r.get("market_ticker"))}</div></td>')
         res = (r.get("result") or "").lower()
         cls = "pill-yes" if res == "yes" else ("pill-no" if res == "no" else "")
@@ -488,7 +507,7 @@ seconds-resolution view is possible without inventing data.</p>
       <button data-w="ticks" aria-pressed="false">Live ticks</button>
     </div>
   </div>
-  <canvas id="chart" width="900" height="280" aria-label="YES price over time"></canvas>
+  <canvas id="price-chart" width="900" height="280" aria-label="YES price over time"></canvas>
   <div class="chart-legend"><span><i style="background:#22d3ee"></i>YES price</span>
     <span><i style="background:#22c55e"></i>jump up ≥ $0.10</span>
     <span><i style="background:#ef4444"></i>jump down ≥ $0.10</span>
@@ -510,7 +529,12 @@ this price” = price × contracts and is a computed column, not an exchange fie
 <p class="fine">Detected from consecutive official 1-minute closes in the committed snapshot. The
 “possible cause” links go to the Kalshi market page and to a news search for the event — they are
 <i>pointers for your own check</i>, not verified causes. Nothing here claims why a price moved.</p>
-<div id="jumps"><p class="loading">Scanning candle series…</p></div>
+<div id="jumps-list"><p class="loading">Scanning candle series…</p></div>
+
+<h2 id="requests">Request log</h2>
+<p class="fine">Every call this page makes to the official API, newest first, with its exact URL — so any
+number on screen can be re-fetched and compared. Empty until the page runs in a browser.</p>
+<div id="request-log"></div>
 
 <h2 id="method">How each number is produced</h2>
 <div class="tablewrap"><table>
@@ -536,11 +560,10 @@ this price” = price × contracts and is a computed column, not an exchange fie
 
 <h2>Snapshot ranking (all five topics)</h2>
 {open_table(data, [m for m, _ in rows], show_topic=True, limit=30)}
-
-<script src="assets/live.js"></script>
 """
     return page("Live dashboard", "live.html", body,
-                "Live Kalshi demo markets ranked by traded dollars, with price chart, depth ladder and jump alerts.")
+                "Live Kalshi demo markets ranked by traded dollars, with price chart, depth ladder and jump alerts.",
+                '<script src="assets/live.js"></script>')
 
 
 # ---------------------------------------------------------------- page: markets + topics
@@ -615,10 +638,12 @@ def build_topic(data: dict, reslog: dict, key: str) -> str:
                 depth.append("NO " + book["no_bids"][0]["price"] + "×" + book["no_bids"][0]["contracts"])
             rows.append(
                 "<tr>"
-                f"<td>{e((m.get('title') or m.get('market_ticker') or '')[:110])}"
+                f"<td>{clean_title((m.get('title') or m.get('market_ticker') or '')[:110])}"
                 f"<div class='src'>{e(m.get('market_ticker'))}</div></td>"
                 + cell_num(y.get("bid"), lambda v: f"${float(v):.2f}")
-                + cell_num(y.get("ask"), lambda v: f"${float(v):.2f}")
+                + (f'<td class="num">{display_px(y.get("ask"))}</td>'
+                   if (y.get("ask") is None or float(y.get("ask") or 0) <= 0) else
+                   cell_num(y.get("ask"), lambda v: f"${float(v):.2f}"))
                 + cell_num(n.get("bid"), lambda v: f"${float(v):.2f}")
                 + cell_num((m.get("dollar_notional_24h") or {}).get("value"),
                            lambda v: f"${float(v):,.0f}")
@@ -651,11 +676,10 @@ Y. Series are also available live on the <a href="live.html#chart">dashboard</a>
       <button data-w="1d" aria-pressed="false">Days (90 d)</button>
     </div>
   </div>
-  <canvas id="chart" width="900" height="270" aria-label="YES price over time"></canvas>
+  <canvas id="price-chart" width="900" height="270" aria-label="YES price over time"></canvas>
   <div class="chart-legend"><span><i style="background:#22d3ee"></i>YES price</span>
     <span id="chart-note" class="fine">—</span></div>
 </div>
-<script src="assets/live.js"></script>
 """
 
     body = f"""
@@ -690,7 +714,8 @@ They are tracked — never assumed to be NO.</p>
 {resolved_table(awaiting, empty="Nothing awaiting a result for this topic.")}
 """
     return page(f"{label}", slug + ".html", body,
-                f"Kalshi demo {label.lower()} markets: open events, resolved outcomes and pending results.")
+                f"Kalshi demo {label.lower()} markets: open events, resolved outcomes and pending results.",
+                '<script src="assets/live.js"></script>' if chart_opts else "")
 
 
 # ---------------------------------------------------------------- page: resolutions
@@ -846,9 +871,12 @@ def build_strategy(data: dict, ledger: dict) -> str:
   <div class="grid g4">
     {kpi(f"{len(trades)}", "Paper trades opened", f"{len(open_tr)} still open")}
     {kpi(f"{len(settled)}", "Graded against a result")}
-    {kpi(f"{(wins / len(settled) * 100) if settled else 0:.0f}%", "Win rate", f"{wins} of {len(settled)}")}
-    {kpi(f"${total_pnl:,.2f}", "Realised P&amp;L", f"on ${total_prem:,.2f} premium, ${total_fee:,.2f} fees",
-         "yes" if total_pnl >= 0 else "no")}
+    {kpi(("%.0f%%" % (wins / len(settled) * 100)) if settled else "—", "Win rate",
+         f"{wins} of {len(settled)} graded trades" if settled else "no trade has settled yet")}
+    {kpi(("$%s" % format(total_pnl, ",.2f")) if settled else "—", "Realised P&amp;L",
+         (f"on ${total_prem:,.2f} premium, ${total_fee:,.2f} fees" if settled
+          else "waiting for the first resolution"),
+         ("yes" if total_pnl >= 0 else "no") if settled else "")}
   </div>
   <div class="banner"><b>Why so few graded trades.</b> The demo snapshot was taken once, and a trade can
   only be graded when a <i>later</i> observation shows the market finalised. Long-dated markets (2028
