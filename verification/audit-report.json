@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 454,
+    "files_scanned": 460,
     "findings": 6,
     "errors": 0,
     "warnings": 4,
@@ -382,14 +382,14 @@
     },
     {
       "url": "https://docs.kalshi.com/",
-      "uses": 12,
+      "uses": 13,
       "status": "site-root",
       "note": "documentation site entry point, not a page listed in llms.txt",
       "files": [
         "COORDINATION.md",
+        "alert-desk/test_alert_desk.mjs",
         "archive/monitor.html",
-        "audit/build_audit.py",
-        "decision/index.html"
+        "audit/build_audit.py"
       ]
     },
     {
@@ -1314,14 +1314,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market",
-      "uses": 15,
+      "uses": 17,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "decision/js/api-notes.js",
-        "decision/js/kalshi.js",
-        "live-desk/app.js"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html",
+        "decision/js/api-notes.js"
       ]
     },
     {
@@ -1393,14 +1393,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 92,
+      "uses": 94,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "README.md",
-        "alerts-live.html",
-        "alerts/README.md"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html"
       ]
     },
     {
@@ -2361,14 +2361,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_environments",
-      "uses": 75,
+      "uses": 77,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts-live.html",
-        "alerts/README.md",
-        "alerts/audit.html"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html",
+        "alerts-live.html"
       ]
     },
     {
@@ -2418,14 +2418,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 108,
+      "uses": 110,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "alert-desk/README.md",
-        "alert-desk/index.html",
-        "alerts-live.html"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html"
       ]
     },
     {
@@ -2550,14 +2550,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
-      "uses": 56,
+      "uses": 58,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts/README.md",
-        "alerts/data/feed.json",
-        "alerts/index.html"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html",
+        "alerts/README.md"
       ]
     },
     {
@@ -2571,14 +2571,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_settlement",
-      "uses": 55,
+      "uses": 56,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "alert-desk/README.md",
-        "alert-desk/index.html",
-        "alerts-live.html"
+        "alert-desk/chat.html",
+        "alert-desk/index.html"
       ]
     },
     {
@@ -2785,14 +2785,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
-      "uses": 36,
+      "uses": 38,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts-live.html",
-        "app.js",
-        "assets/alerts.js"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html",
+        "alerts-live.html"
       ]
     },
     {
@@ -2809,14 +2809,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/rate_limits",
-      "uses": 35,
+      "uses": 37,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts-live.html",
-        "assets/alerts.js",
-        "decision/js/api-notes.js"
+        "alert-desk/assets/alert.js",
+        "alert-desk/chat.html",
+        "alerts-live.html"
       ]
     },
     {
