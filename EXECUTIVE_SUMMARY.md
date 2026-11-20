@@ -102,8 +102,8 @@ This session performed final integration on the merged tree: line-by-line review
 re-verification against the official Kalshi sources, one missing feature, and the publish step.
 
 - **Sharp-move feature (implemented).** The brief required live charts to flag contract-price moves
-  of **≥ $0.10 in either direction** with the associated event and source links. This was **not present**
-  anywhere in the repo, so it was added to the canonical live dashboard
+  of **≥ $0.10 in either direction** with the associated event and source links. A concurrent session had shipped an equivalent page on `exec-desk`; this session added an
+  independent implementation to the canonical live dashboard
   ([`dashboard.html`](dashboard.html) + [`assets/dashboard.js`](assets/dashboard.js)): consecutive price
   changes ≥ $0.10 are marked with dashed vertical markers on the price chart and listed in a
   "Sharp moves (≥ $0.10)" table with the time (UTC), direction, before→after price, magnitude, and a
@@ -117,12 +117,13 @@ re-verification against the official Kalshi sources, one missing feature, and th
 - **Official docs re-verified.** Demo REST/WS base URLs, the bids-only orderbook + YES-bid/NO-ask
   reciprocity rule, the 1/60/1440-minute candlestick constraint, and the demo = mock-funds warning all
   match [docs.kalshi.com](https://docs.kalshi.com/llms.txt) as documented in section 1.
-- **Build & audit green.** `python3 build_site.py` → 16 pages, `link check: OK`; `node tools/check-links.mjs`
-  → PASS (238 files, no broken links, no secret material, source-citation audit clean);
-  `node --check` clean on all JS.
-- **Pre-existing irregularity (not introduced here).** `tests/dashboard.test.mjs` is time-sensitive: its
-  fixtures use fixed trade timestamps (2026-11-20 11:11 UTC) that fall outside the page's dynamically
-  computed 1-hour window when the suite is run later, so the `pages/live.html` section reports "No trades
-  matched." Confirmed it fails identically on the pristine tree; it is not run by the Pages workflow.
-  Flagged, not fixed (test owned by an earlier session; left untouched per the coordination protocol).
-- **Publish.** PR from `arena/5487be47-demo1` → `main`, merged, GitHub Pages redeploy confirmed.
+- **Build & audit green.** `python3 build_site.py` → 17 pages, `link check: OK`; `node tools/check-links.mjs`
+  → PASS (no broken links, no secret material, source-citation audit clean); `node --check` clean on all JS.
+- **Pre-existing irregularity (not introduced here).** `tests/dashboard.test.mjs` was time-sensitive: its
+  fixtures used fixed trade timestamps (2026-11-20 11:11 UTC) that fell outside the page's dynamically
+  computed 1-hour window when the suite was run later, so the `pages/live.html` section reported "No trades
+  matched." A concurrent session (`arena/358db039-demo1`) fixed the fixtures to be time-relative; on the
+  final rebased tree the suite passes **46/46**. Not run by the Pages workflow.
+- **Publish.** PR #44 (`arena/5487be47-demo1` → `main`) **MERGED** (merge commit `e13037e`,
+  2026-11-20T13:12:45Z); GitHub Pages redeployed, `status: built`, and the deployed `dashboard.html`
+  (Sharp moves card) + `assets/dashboard.js` (jump logic) verified present on the live site.

@@ -1005,7 +1005,7 @@ The user's requirement "Live charts should include events and website links that
 | F-4 | Sharp-move (≥ $0.10) feature on canonical dashboard | done | arena/5487be47-demo1 | `dashboard.html`, `assets/dashboard.js`, `assets/style.css`, `tests/dashboard-jumps.test.mjs` | docs.kalshi.com candlesticks/orderbook | New headless test 9/9 PASS: detects ≥ $0.10 moves, marks chart, table lists time/direction/before→after/magnitude + official market-page & API-source links; no cause asserted | Was absent everywhere before this session (the brief required it) |
 | F-5 | Build + link/secret/source-citation audit gate | done | arena/5487be47-demo1 | whole tree | — | `python3 build_site.py` → 16 pages, "link check: OK"; `node tools/check-links.mjs` → PASS (238 files); `node --check` clean on all JS | — |
 | F-6 | Docs updated (exec summary, README) | done | arena/5487be47-demo1 | `EXECUTIVE_SUMMARY.md`, `README.md` | — | Section 8 added; structure table updated | — |
-| F-7 | PR → main, merge, Pages deploy confirmation | in progress | arena/5487be47-demo1 | `.github/workflows/pages.yml` (unchanged), Pages API | docs.github.com | — | — |
+| F-7 | PR → main, merge, Pages deploy confirmation | done | arena/5487be47-demo1 | `.github/workflows/pages.yml` (unchanged), Pages API | docs.github.com | PR #44 MERGED (merge commit `e13037e`, 2026-11-20T13:12:45Z); Pages API status `built`; deployed `dashboard.html` (Sharp moves card, `id="jumps"`) and `assets/dashboard.js` (jump logic) verified present on the live site | Two rebase rounds vs concurrently-advancing `main`; COORDINATION.md conflicts resolved keeping both sessions' sections verbatim |
 
 ## Sources (this session)
 
@@ -1027,3 +1027,15 @@ The user's requirement "Live charts should include events and website links that
    tree; not run by the Pages workflow. Flagged, left untouched (owned by an earlier session).
 3. **Site fragmentation** — ~7 dashboard variants coexist; the root hub links to all. Consolidation is
    recommended but was not forced (each is a prior session's deliverable). Logged for the owner.
+
+## Publish record — session arena/5487be47-demo1 (final integration)
+
+| Item | Value |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/44 — "Final integration: >= $0.10 sharp-move alerts on the live dashboard + verification" |
+| Merge result | MERGED via `gh pr merge 44 --merge`; merge commit `e13037ed2e3db4938f98e22caa0fc2e865c0b683`, merged 2026-11-20T13:12:45Z |
+| Rebase conflicts | Two rounds vs concurrently-advancing `main` (PRs #39–#41). Both were COORDINATION.md add/add conflicts; resolved by keeping every session's section verbatim (no content discarded). Final branch commit `6a98596`, pushed with `--force-with-lease`. |
+| GitHub Pages | `status: built`, source `{branch: main, path: /}`; "Deploy static site to GitHub Pages" workflow succeeded after merge |
+| Live verification | https://karagemop466-tech.github.io/Demo1/dashboard.html serves the market dropdown from `data/markets.json`; deployed `dashboard.html` contains the **Sharp moves (≥ $0.10)** card (`id="jumps"`) and deployed `assets/dashboard.js` contains the jump logic (`detectJumps`/`JUMP_THRESHOLD`) |
+| Final gates (rebased tree) | `node --check` clean; `python3 build_site.py` → 17 pages, "link check: OK"; `node tools/check-links.mjs` → PASS; `tests/dashboard-jumps.test.mjs` → 9/9; `tests/dashboard.test.mjs` → 46/46; exec-desk DOM tests pass; verified-desk `node --test` → 0 fail |
+| All F-1..F-7 | done |
