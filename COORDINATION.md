@@ -865,3 +865,16 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 - CR-4 → final integration (shared root hub): add a tile linking `audit/index.html` and `audit/flagged.html`. Not edited in this session.
 
 **A-4 (integration):** PR from `arena/ca4f2da1-demo1` to `main`, merge, Pages deploy check — recorded below when done.
+
+### Integration record — session arena/ca4f2da1-demo1 (A-4 done)
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/36 — "audit: official-source check of Kalshi API claims + Flagged for Review (session ca4f2da1)" |
+| Checks before merge | `check` and `links` both SUCCESS; mergeStateStatus CLEAN, mergeable MERGEABLE |
+| Merge result | MERGED via `gh pr merge 36 --merge` on 2026-11-20T12:58:08Z; merge commit `e529fed58ac3559fbeadcf1c05186f9125e5804f`. No approval waited on, per the brief. |
+| Conflicts | One rebase conflict on this board (main advanced via PR #34). Resolved by keeping main's sections and this session's section; nothing dropped. A stale earlier claim commit on the branch was kept as an ancestor by an "ours" merge (tree unchanged), so the push was a fast-forward. |
+| Pages deploy | `pages build and deployment` and `Deploy static site to GitHub Pages` for `e529fed`: both success. API `status: built`, `error: null`. |
+| Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
+| Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
+| Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
