@@ -715,3 +715,17 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Session arena/3602732c-demo1 — final verification close-out
+
+- **Session ID:** `arena/3602732c-demo1` — branch `arena/3602732c-demo1`, branched from commit `f9fab19ffc9aeb7f74eae7f3177d2cb4d3c705d5` of `main` (== current `main`). Status: active.
+- **Scope:** Final verification + session close-out. No code changes required — all requirements from the brief (executive summary, 5-topic dashboard: gas/elections/culture/crypto/golf, resolution YES/NO tracking, simulated trades, demo-account portfolio gating, trade execution, live price graph with seconds/minutes/hours windows, liquidity-at-price, suggestions, questions, flagged-for-review, GitHub Pages live site, line-by-line source-linked verification) were already implemented and merged into `main` via PRs #1–#32. This session's work is limited to re-verifying the combined state on a fresh checkout and recording the result.
+- **Verification performed (this session, fresh checkout @ f9fab19):**
+  - `python3 build_site.py` → "built 16 pages; markets=1399/1399 resolved=2469/2469 charts=10 pruned=0; link check: OK"
+  - `node tools/check-links.mjs` → result: PASS (238 files scanned, html links checked, source-link audit on 11 pages)
+  - GitHub Pages API → status: `built`, source `{branch: main, path: /}`, URL https://karagemop466-tech.github.io/Demo1/
+  - Last Pages deploy on `main`: success (run 44739421132, 2026-11-20T12:52:28Z); all recent CI runs success
+  - Open PRs: none (all PRs #1–#32 merged into `main`)
+- **Sources:** https://docs.kalshi.com/ (api_environments, quick_start_market_data, get-markets, get-market-orderbook, get-market-candlesticks, get-trades, get-series-list, get-events, portfolio get-balance/positions/fills, orders create-order-v2, market_lifecycle, demo_env), https://external-api.demo.kalshi.co/trade-api/v2 (recommended demo REST), https://gasprices.aaa.com/ (gas settlement input).
+- **Irregularities:** none new. Pre-existing non-blocking flags remain published on the site's Flagged for Review page: demo venue only (mock funds, thin books), no demo API key stored (portfolio/fills blank by design), "highest dollar amount" is a computed 24h traded notional (no official USD field), topic matching via ticker/tags regexes, fee formula not yet verified against official fee schedule, sub-minute chart resolution not offered by REST candlesticks.
+- **Result:** All requirements met and verified. Site live at https://karagemop466-tech.github.io/Demo1/. No PR/merge required beyond this session's COORDINATION.md record (branch already == main); this record is committed and pushed to `arena/3602732c-demo1` only.
