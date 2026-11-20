@@ -1549,3 +1549,15 @@ All live values in the site are drawn from the committed snapshot collected from
 | EX-1 | Refresh the linked executive summary so its requirement/status table points to the current live trade desk, states exact demo API behavior and clearly separates verified capability, computed estimates and blocked account operations | in progress | arena/5520a397-demo1 | `integration/executive-summary.html`; this append-only claim/result in `COORDINATION.md` | Official Kalshi docs: demo environment, API environments, markets, candlesticks, trades, order book, settlement, API keys; full URLs in result below | To be recorded after page/source/link checks | No credentials or order authority in this session; keep account values blank and preserve all security and data-scope caveats |
 
 - **Claim log:** `2026-11-20` — claimed EX-1; no implementation work begins outside the above scope.
+
+## Additional claim — scheduled paper-strategy runner
+
+- **Session / branch:** `arena/5520a397-demo1` (same platform-fixed current branch).
+- **Claimed:** 2026-11-20 UTC. The read-only audit found that `sim-desk/README.md` and `sim-desk/index.html` say the engine runs every 30 minutes, while `.github/workflows/sim-strategies.yml` currently has only `push` and `workflow_dispatch` triggers. A different `desk.yml` does have a schedule, but it is a separate pipeline and does not make the sim-desk claim true.
+- **Overlap check:** earlier sim-desk task S-4 is recorded done; current open PRs #61–#64 do not edit `.github/workflows/sim-strategies.yml`. This scope is just the sim-desk workflow trigger and this board record; no ledger, strategy, page or other pipeline changes.
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| AUTO-1 | Make the documented unattended sim-desk runner actually run on an approximately 30-minute schedule, preserving push/manual triggers and existing loop guard | in progress | arena/5520a397-demo1 | `.github/workflows/sim-strategies.yml`; this append-only claim/result in `COORDINATION.md` | GitHub Actions workflow syntax and scheduled-trigger docs: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax and https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule; Kalshi demo environment: https://docs.kalshi.com/getting_started/demo_env | To be recorded | GitHub scheduled runs are best-effort; no exact execution time is promised. All trades remain simulated; this adds no API credentials or order writes. |
+
+- **Claim log:** `2026-11-20` — AUTO-1 claimed before modifying the workflow.
