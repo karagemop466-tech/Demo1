@@ -410,7 +410,7 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 | 5 | Demo trading scaffold (Python, signed; order V2; strategies disabled) | done | create-order-v2, cancel-order-v2, get-balance, auth quick start | Refuses without creds + KALSHI_ALLOW_TRADING=1 | Blocked on demo credentials (F4) |
 | 6 | docs/ data hub: live dashboard (chart windows seconds→7d, depth, liquidity), resolutions (YES/NO), portfolio, suggestions+questions, flagged, verification, review, sources | done | per-row official links | node --check pass; JSON validity pass; internal link audit pass | Seed snapshot sample:true until first CI run (F7) |
 | 7 | Executive summary + SOURCES.md + REVIEW.md | done | see files | — | — |
-| 8 | Final integration (nav/README tiles + PR #16 + merge + Pages confirm) | in progress | — | PR #16: https://github.com/karagemop466-tech/Demo1/pull/16 | — |
+| 8 | Final integration (nav/README tiles + PR #16 + merge + Pages confirm) | done (follow-up fix PR also records board) | — | PR #16: https://github.com/karagemop466-tech/Demo1/pull/16 | — |
 
 ## Cross-file requests (not applied to owned files)
 

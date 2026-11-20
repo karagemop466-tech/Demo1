@@ -35,7 +35,7 @@ function buildNav() {
     const url = href(K.depth);
     const on = url.endsWith(here) ? ' class="on"' : "";
     return `<a href="${url}"${on}>${label}</a>`;
-  }).join("") + `<a href="${K.up ? K.up + "../index.html" : "index.html"}">v1 monitor ↗</a>`;
+  }).join("") + `<a href="${(K.depth ? K.up : "../") + "../index.html"}">v1 monitor ↗</a>`;
 }
 
 function buildFooter() {
