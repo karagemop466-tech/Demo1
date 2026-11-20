@@ -35,15 +35,17 @@
   }
   async function loadMarkets(topic, seriesByTopic) {
     const top = (seriesByTopic[topic] || []).slice(0, 6);
+    // Parallel: one round trip per series instead of serial waits (first paint sooner).
+    const results = await Promise.all(top.map(s =>
+      K.get("/events", { series_ticker: s.ticker, status: "open", with_nested_markets: "true", limit: 200 })
+        .catch(() => null)
+    ));
     const out = [];
-    for (const s of top) {
-      try {
-        const d = await K.get("/events", { series_ticker: s.ticker, status: "open", with_nested_markets: "true", limit: 200 });
-        (d.events || []).forEach(e => (e.markets || []).forEach(m => out.push({
-          m, e, seriesTicker: e.series_ticker, topic
-        })));
-      } catch (err) {}
-    }
+    results.forEach(d => {
+      if (d) (d.events || []).forEach(e => (e.markets || []).forEach(m => out.push({
+        m, e, seriesTicker: e.series_ticker, topic
+      })));
+    });
     out.sort((a, b) => (K.num(b.m.volume_24h_fp) || 0) - (K.num(a.m.volume_24h_fp) || 0));
     return out;
   }

@@ -58,15 +58,13 @@
   async function loadTopicEvents(topic) {
     const series = (S.seriesByTopic || {})[topic] || [];
     const top = series.slice(0, 6);
+    // Parallel: one round trip per series instead of serial waits (first paint sooner).
+    const results = await Promise.all(top.map(s =>
+      K.get("/events", { series_ticker: s.ticker, status: "open", with_nested_markets: "true", limit: 200 })
+        .catch(() => null) // keep partial results; banner already reflects transport
+    ));
     const events = [];
-    for (const s of top) {
-      try {
-        const data = await K.get("/events", {
-          series_ticker: s.ticker, status: "open", with_nested_markets: "true", limit: 200
-        });
-        (data.events || []).forEach(e => events.push(e));
-      } catch (e) { /* keep partial results; banner already reflects transport */ }
-    }
+    results.forEach(d => { if (d) (d.events || []).forEach(e => events.push(e)); });
     S.eventsCache[topic] = { ts: Date.now(), events, series };
   }
 

@@ -56,7 +56,7 @@ window.KALSHI_CONFIG = {
   },
   flags: [
     { id:"UNVERIFIED-01", title:"Browser CORS behavior — now evidenced for github.io, still unverified for other origins",
-      detail:"Official docs do not document CORS. However, session arena-6aa291e9 recorded live response headers from the official demo API on 2026-11-20: Access-Control-Allow-Origin=https://karagemop466-tech.github.io (evidence file data/cors.json on main). Direct browser calls from this GitHub Pages origin are therefore expected to work; this site still detects and reports failures at runtime instead of assuming.",
+      detail:"Official docs do not document CORS. However, session arena-6aa291e9 recorded live response headers from the official demo API on 2026-11-20: Access-Control-Allow-Origin=https://karagemop466-tech.github.io (evidence file data/cors.json on main), and the deployed exec-desk confirmed it end-to-end: the connection badge read 'LIVE · official API' at https://karagemop466-tech.github.io/Demo1/exec-desk/ after the PR #25 merge. Direct browser calls from this GitHub Pages origin work; this site still detects and reports failures at runtime instead of assuming.",
       check:"Open exec-desk/dashboard.html: connection badge should read 'LIVE · official API'. If it ever reads BLOCKED, re-run the header check and update this entry.",
       src:"https://docs.kalshi.com/getting_started/quick_start_market_data" },
     { id:"UNVERIFIED-02", title:"No demo API credentials are present in this repository",

@@ -45,13 +45,13 @@
   async function loadTopic(status) {
     const series = (S.seriesByTopic || {})[S.topic] || [];
     const top = series.slice(0, 6);
+    // Parallel: one round trip per series instead of serial waits (first paint sooner).
+    const results = await Promise.all(top.map(s =>
+      K.get("/events", { series_ticker: s.ticker, status, with_nested_markets: "true", limit: status === "settled" ? 50 : 200 })
+        .catch(() => null)
+    ));
     const events = [];
-    for (const s of top) {
-      try {
-        const d = await K.get("/events", { series_ticker: s.ticker, status, with_nested_markets: "true", limit: status === "settled" ? 50 : 200 });
-        (d.events || []).forEach(e => events.push(e));
-      } catch (e) {}
-    }
+    results.forEach(d => { if (d) (d.events || []).forEach(e => events.push(e)); });
     S.cache[S.topic + ":" + status] = { ts: Date.now(), events, series };
     return S.cache[S.topic + ":" + status];
   }
