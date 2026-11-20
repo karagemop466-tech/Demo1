@@ -21,9 +21,9 @@
   </div>
   
 <div class="callout">
-  <b>Resolution tracking.</b> Markets are collected with <code>status=settled</code>, which the official
-  <a href="https://docs.kalshi.com/getting_started/market_lifecycle">Market Lifecycle</a> page maps to the <code>finalized</code>
-  state. The outcome is the API's own <code>result</code> field (documented values: yes / no / scalar); the
+  <b>Resolution tracking.</b> Markets are collected twice: with <code>status=settled</code> (which the official
+  <a href="https://docs.kalshi.com/getting_started/market_lifecycle">Market Lifecycle</a> page maps to <code>finalized</code>) and with
+  <code>status=closed</code> (past the close time but not yet finalized, so still tracking). The outcome is the API's own <code>result</code> field (documented values: yes / no / scalar); the
   event's <code>settlement_sources</code> give the official outside source used to determine the market.
   A market with an empty <code>result</code> is shown as “no result field” rather than guessed.
 </div>
@@ -42,7 +42,7 @@
     <p class="fine"><a href="../index.html">Repository home</a> ·
     <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
     <a href="../archive/monitor.html">Archived single-page monitor</a></p>
-    <p>Data snapshot: <b>2026-11-20T11:33:23Z</b> · Source: official Kalshi demo Trade API
+    <p>Data snapshot: <b>2026-11-20T11:37:43Z</b> · Source: official Kalshi demo Trade API
     (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
     Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
     <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.

@@ -29,13 +29,13 @@
   Setup is documented in <a href="sources.html">Sources</a> and on <a href="questions.html">Questions (Q1)</a>.
 </div>
 <div class="callout bad">
-  <b>Blocker: no demo API credentials exist in this project.</b> Every portfolio endpoint requires signed
-  requests (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>
-  — see <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a>).
-  This repository has no key, the build environment holds no key, and a <b>static GitHub Pages site must never
-  hold one</b>: anything shipped to the browser is public. Portfolio, trade analysis and execution therefore
-  show the exact endpoints and formulas and <b>no numbers</b> — inventing demo balances would be fabrication.
-  The single decision needed to unblock this is recorded on <a href="questions.html">Questions</a>.
+  <b>Why there are no numbers here.</b> Every portfolio endpoint requires signed requests
+  (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code> — see
+  <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a>).
+  This repository has no key and the build environment holds none, and a public static site must never hold one:
+  anything shipped to the browser is public. Inventing demo balances would be fabrication, so the page shows the
+  exact endpoints, fields and formulas instead. The single decision needed to unblock it is
+  <a href="questions.html">Question Q1</a>.
 </div>
 
 <h2>How performance is measured once a key is connected</h2>
@@ -68,7 +68,7 @@ signs requests and caches results, and the browser reads only cached JSON.</p>
     <p class="fine"><a href="../index.html">Repository home</a> ·
     <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
     <a href="../archive/monitor.html">Archived single-page monitor</a></p>
-    <p>Data snapshot: <b>2026-11-20T11:33:23Z</b> · Source: official Kalshi demo Trade API
+    <p>Data snapshot: <b>2026-11-20T11:37:43Z</b> · Source: official Kalshi demo Trade API
     (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
     Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
     <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.

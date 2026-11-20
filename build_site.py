@@ -443,9 +443,9 @@ def build_resolved(meta, resolved, total_records=None):
         ])
     body = f"""
 <div class="callout">
-  <b>Resolution tracking.</b> Markets are collected with <code>status=settled</code>, which the official
-  <a href="{DOCS}/getting_started/market_lifecycle">Market Lifecycle</a> page maps to the <code>finalized</code>
-  state. The outcome is the API's own <code>result</code> field (documented values: yes / no / scalar); the
+  <b>Resolution tracking.</b> Markets are collected twice: with <code>status=settled</code> (which the official
+  <a href="{DOCS}/getting_started/market_lifecycle">Market Lifecycle</a> page maps to <code>finalized</code>) and with
+  <code>status=closed</code> (past the close time but not yet finalized, so still tracking). The outcome is the API's own <code>result</code> field (documented values: yes / no / scalar); the
   event's <code>settlement_sources</code> give the official outside source used to determine the market.
   A market with an empty <code>result</code> is shown as “no result field” rather than guessed.
 </div>
@@ -607,13 +607,13 @@ Request URLs: {esc(json.dumps(acct.get('sources', {})))}</p>"""
     body = f"""
 {connected}
 <div class="callout bad">
-  <b>Blocker: no demo API credentials exist in this project.</b> Every portfolio endpoint requires signed
-  requests (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>
-  — see <a href="{DOCS}/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a>).
-  This repository has no key, the build environment holds no key, and a <b>static GitHub Pages site must never
-  hold one</b>: anything shipped to the browser is public. Portfolio, trade analysis and execution therefore
-  show the exact endpoints and formulas and <b>no numbers</b> — inventing demo balances would be fabrication.
-  The single decision needed to unblock this is recorded on <a href="questions.html">Questions</a>.
+  <b>Why there are no numbers here.</b> Every portfolio endpoint requires signed requests
+  (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code> — see
+  <a href="{DOCS}/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a>).
+  This repository has no key and the build environment holds none, and a public static site must never hold one:
+  anything shipped to the browser is public. Inventing demo balances would be fabrication, so the page shows the
+  exact endpoints, fields and formulas instead. The single decision needed to unblock it is
+  <a href="questions.html">Question Q1</a>.
 </div>
 
 <h2>How performance is measured once a key is connected</h2>
@@ -880,7 +880,7 @@ def build_flagged(meta, markets):
          "The API can return a 0.0000 bid with 0.00 size; that is not a real level.",
          f"{DOCS}/api-reference/market/get-markets", "Displayed, not silently dropped"),
     ]
-    rows = [[esc(a), esc(b), esc(c), src(d, "official"), esc(e)] for a, b, c, d, e in items]
+    rows = [[esc(a), esc(b), esc(c), src(d, "docs"), esc(e)] for a, b, c, d, e in items]
     ticker_only = [m for m in markets if m.get("topic_matched_weakly")]
     to_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
                 esc(m.get("topic_match_reason")), esc((m.get("title") or "")[:70])]
