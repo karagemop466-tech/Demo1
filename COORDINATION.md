@@ -2054,3 +2054,32 @@ Claim log entry: 2026-11-20T20:02Z — arena/1cbe8309-demo1 claimed tasks P-1..P
 - Resolution per board convention: ownership of `.github/workflows/pages.yml` stays with `fab3e340`; this session reverted its schedule edit before pushing and publishes only this diagnosis. The schedule rationale above is retained as a **cross-session request to `fab3e340`**: if the built-in publisher's 10-builds/hour soft limit (irregularity 1) ever starves deploys again, the official exemptions are (a) a custom-workflow publisher (needs the admin permission their 403 documents) or (b) reducing push frequency of the four data crons — both outside this session's scope.
 
 **Verification (recorded in P-2/P-3):** this session ran every step of the `pages.yml` workflow locally on the merged tree (syntax checks, `build_site.py` 17 pages + link check OK, desk build 14 pages + link check OK, desk DOM 105/105, `check-links.mjs` PASS 411 files) — the validation-only workflow green on current content; closing gates and the live-site fetch are recorded in P-2/P-3 below.
+
+
+# Session arena/fe12c4c4-demo1 — repo-wide consistency audit + final integration
+
+## Session claim
+
+- **Session ID:** `fe12c4c4` — branch `arena/fe12c4c4-demo1` (platform-fixed name; not renamed).
+- **Base:** `main` at `fb81fc0` (merge of PR #54, session `9bfdf3bc`).
+- **Claimed at:** 2026-11-20 (UTC). Claim committed and pushed **before** implementation work.
+- **Role:** final-integration session per the brief — re-verify the combined tree line by line, confirm the build has no broken links, merge sibling branches, publish to GitHub Pages, and record results.
+- **Overlap check (done before claiming):** `gh pr list --state all`, `git ls-remote --heads origin`, and the full board were read. Active sibling claims at claim time:
+  - `2a5bb307` — `alerts/**` dual-chat desk, root landing rewrite, `kalshi-data.yml` fix (branch pushed; PR not yet open at claim time).
+  - `87015421` — `trade-desk/**` trade terminal + landing tile.
+  - `91fc2cc7` — `trader-guide/**` operating guide + close-out verification.
+  - `d973ced5` — `alerts.html`, `assets/js/alerts.js`, root `index.html` nav link, board (**PR #53 open**).
+  - This session therefore does **not** touch `alerts/**`, `trade-desk/**`, `trader-guide/**`, `alerts.html`, `assets/js/alerts.js`, `desk/**`, `engine/**`, `sim-desk/**`, `exec-desk/**`, `verified-desk/**`, `decision/**`, `strategy-desk/**`, `live-desk/**`, `monitor/**`, `data/**`, `snapshot/**`, `site/**`, `build_site.py`, or the sibling desks' CSS/JS.
+- **My exclusive file scope:** `verification/**` (new namespace), and this board section. Root `index.html` / `assets/common.js` are **shared outputs** reserved for the integration step; I will only touch them after every sibling branch above has been merged, and I log any request for a sibling-owned file instead of editing it.
+
+## Task board (this session)
+
+| # | Task | Status | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|---------|--------------|----------------|
+| F-1 | Repo-wide **cross-desk consistency audit**: every numeric claim rendered anywhere in the repo is re-derived from the committed official snapshot and compared against the value on the page; disagreements are reported with file + line | in progress | `verification/**` | `snapshot/markets.json`, `snapshot/resolved.json`, `snapshot/charts.json`, `snapshot/metadata.json` (official `external-api.demo.kalshi.co` capture); `https://docs.kalshi.com/api-reference/market/get-markets` | Tool re-derives counts/totals from the snapshot and prints file/line mismatches; audit output committed as JSON and rendered as a page | Pages built from different snapshots will disagree by construction; the audit must separate *stale snapshot* from *wrong arithmetic* |
+| F-2 | Independent **source-link and secret audit** of the whole tree: every outbound official link resolves to a documented Kalshi/GitHub page, no private key material, no unfilled placeholder values | in progress | `verification/**` | `docs.kalshi.com` API reference, `docs.github.com` | Link list re-checked against the documented URL set; secret scan over the tree | Sandbox egress allowlist excludes `*.kalshi.co`, so live status is confirmed by the repo's own collector logs and CI |
+| F-3 | **Final integration**: merge sibling branches after verifying each, re-verify the combined tree line by line, confirm the build has no broken links, PR → `main`, merge, confirm GitHub Pages, publish records | unclaimed | `COORDINATION.md`; shared outputs only after siblings merge | GitHub API (PR/Pages) | Full gate suite re-run on the merged tree; Pages API + live fetch | Recorded per PR; any conflict logged without discarding a sibling's work |
+
+## Log
+
+- 2026-11-20 UTC — session `fe12c4c4` claimed F-1..F-3 (scope `verification/**` + this board section only); claim pushed before implementation.
