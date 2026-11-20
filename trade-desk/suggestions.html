@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — making the desk more live, interactive and simple</title>
+<meta name="description" content="Concrete, prioritised suggestions for making the Kalshi demo trade desk more live and interactive, each marked as implemented, ready, or blocked with the reason.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html" class="active" aria-current="page">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Suggestions — and what was actually done</h1>
+  <p class="lede">
+    Each suggestion says whether it is <b>implemented</b> here, <b>ready</b> to do next, or <b>blocked</b> and
+    by exactly what. Nothing is listed as available when it is not, and nothing is implemented silently: the
+    trade desk only ships what it can verify against the official API.
+  </p>
+
+  <div class="statusbar">
+    <span class="pill">implemented <b id="n-impl">0</b></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">ready <b id="n-ready">0</b></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">blocked <b id="n-block">0</b></span>
+  </div>
+
+  <div class="panel" style="margin-top:12px">
+    <div class="body tight">
+      <table id="sug-table">
+        <thead><tr><th style="width:42%">Suggestion</th><th>Why it helps a trader</th><th>Status</th><th>Evidence / blocker</th></tr></thead>
+        <tbody id="sug-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2 class="section">Kept simple on purpose</h2>
+  <div class="grid cols-2">
+    <div class="panel"><div class="body">
+      <h3 style="margin-top:0;font-size:14px">What was deliberately left out</h3>
+      <ul class="small" style="margin:0 0 0 18px;padding:0">
+        <li><b>No order entry at all.</b> Placing orders from a public static page requires holding an API private key in the browser, which is unsafe. Simulated only.</li>
+        <li><b>No logged-in portfolio.</b> The demo portfolio endpoints need a signed key. Rather than fake balances, those panels are absent and the reason is written on the page.</li>
+        <li><b>No causal claims.</b> Alert rows link the venue's own settlement sources plus a news search. No headline is ever asserted as the cause of a move.</li>
+        <li><b>No auto-refresh loop that never stops.</b> Polling has a minimum gap, backoff on 429/5xx, and stops after repeated failures instead of hammering the venue.</li>
+        <li><b>No second charting library.</b> One ~300-line SVG chart keeps the page fast, printable and auditable.</li>
+      </ul>
+    </div></div>
+    <div class="panel"><div class="body">
+      <h3 style="margin-top:0;font-size:14px">Next steps, in priority order</h3>
+      <ol class="small" style="margin:0 0 0 18px;padding:0">
+        <li>Move the poll loop to a server-side collector with an API key, then stream to the page over Server-Sent Events; the official WebSocket remains the lowest-latency option but needs that signed connection.</li>
+        <li>Persist every jump and resolution server-side so history survives a browser reset (today the ledger is local).</li>
+        <li>Extend calibration to entry-to-settlement paths from the trades tape, so the screen can be scored on realised returns instead of base rates.</li>
+        <li>Add per-series fee overrides from the schedule, which the current fee function does not model.</li>
+      </ol>
+    </div></div>
+  </div>
+</main>
+
+<footer class="foot"><p>Statuses are checked by a test: <span class="mono">node trade-desk/tests/links.test.mjs</span> verifies every implemented suggestion links to a page that exists.</p></footer>
+
+<script>
+window.TD_SUGGESTIONS = [
+  ["Two scrolling alert chats: every ≥ $0.10 move, and the model-filtered high-ROI subset",
+   "The core decision surface: what moved, and what is worth a look.",
+   "implemented", '<a href="index.html">Dashboard</a> · feeds A and B'],
+  ["Time-axis chart with seconds / minutes / hours windows",
+   "The brief's x-axis requirement; seconds use trade prints because no seconds candle exists.",
+   "implemented", '<a href="chart.html">Chart &amp; depth</a> · <a href="flagged.html#td-03">TD-03</a>'],
+  ["Order-book depth as contracts at each price, plus the cost to buy a size",
+   "Answers the liquidity question directly instead of implying it from volume.",
+   "implemented", '<a href="chart.html">Chart &amp; depth</a> · <a href="flagged.html#td-06">TD-06</a>'],
+  ["Resolution tracking to YES / NO with settlement fields",
+   "The brief's follow-to-resolution requirement, without guessing a result.",
+   "implemented", '<a href="resolutions.html">Resolutions</a> · <a href="flagged.html#td-08">TD-08</a>'],
+  ["Automated simulated trades with an append-only ledger and fee-accurate P&amp;L",
+   "Tests strategy rules without risking money or a key.",
+   "implemented", '<a href="strategies.html">Paper trades</a>'],
+  ["Performance analysis by strategy, topic, side and entry-price band",
+   "Turns a pile of trades into a decision about which rule to keep.",
+   "implemented", '<a href="strategies.html">Paper trades · analysis tables</a>'],
+  ["Published, auditable screen with measured calibration",
+   "A filter nobody can inspect is a black box; this one can be recomputed by hand.",
+   "implemented", '<a href="model.html">Model</a> · <a href="flagged.html#td-12">TD-12</a>'],
+  ["Every alert row links the API request that produced it",
+   "A trader can check any number against the venue in one click.",
+   "implemented", '<a href="index.html">Dashboard</a> · every feed row carries an API, venue or source link'],
+  ["Venue settlement sources attached to each market",
+   "The only cause-adjacent evidence the API itself provides.",
+   "implemented", '<a href="sources.html">Sources</a>'],
+  ["Polling with minimum gap, exponential backoff and a hard stop on repeated failures",
+   "Respects the venue's unauthenticated limits and keeps a background tab harmless.",
+   "implemented", '<a href="sources.html">Sources</a> · <a href="index.html">Dashboard</a> status bar shows the real interval'],
+  ["Sub-second alerts from the official WebSocket",
+   "Real-time push instead of 5–30 s polls.",
+   "blocked", "The WebSocket handshake requires a signed API key, which a public page cannot safely hold. <a href=\"flagged.html#td-01\">TD-01</a>"],
+  ["Authenticated demo portfolio, balances and fills",
+   "Reconciles paper results against the actual demo account.",
+   "blocked", "Needs a demo API key and a secure signing service. No key exists in this repository."],
+  ["Server-side history of jumps and resolutions",
+   "Survives a browser reset and supports multi-day analysis.",
+   "ready", "Needs a small backend or a scheduled collector workflow; the browser ledger is local only today."],
+  ["Slippage and queue modelling in paper fills",
+   "Makes paper P&amp;L closer to a real fill.",
+   "ready", "Needs trade-size and queue data the public endpoints do not return. <a href=\"flagged.html#td-06\">TD-06</a>"],
+  ["Per-series fee overrides",
+   "Some products carry different multipliers in the schedule.",
+   "ready", "Requires parsing the non-standard fee table per series. <a href=\"flagged.html#td-13\">TD-13</a>"]
+];
+(function () {
+  var esc = function (s) { return String(s == null ? "" : s); };
+  var body = document.getElementById("sug-body");
+  var counts = { implemented: 0, ready: 0, blocked: 0 };
+  body.innerHTML = window.TD_SUGGESTIONS.map(function (s) {
+    counts[s[2]] = (counts[s[2]] || 0) + 1;
+    var chip = s[2] === "implemented" ? '<span class="chip up">implemented</span>'
+      : s[2] === "ready" ? '<span class="chip score">ready</span>'
+      : '<span class="chip down">blocked</span>';
+    return "<tr><td><b>" + esc(s[0]) + "</b></td><td class='small'>" + esc(s[1]) + "</td><td>" + chip +
+      "</td><td class='small'>" + s[3] + "</td></tr>";
+  }).join("");
+  document.getElementById("n-impl").textContent = counts.implemented;
+  document.getElementById("n-ready").textContent = counts.ready;
+  document.getElementById("n-block").textContent = counts.blocked;
+  window.__suggestions = counts;
+})();
+</script>
+</body>
+</html>
