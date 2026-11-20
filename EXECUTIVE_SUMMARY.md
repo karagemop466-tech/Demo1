@@ -95,3 +95,34 @@ Every table row on the site carries a source link to the official API response o
 Values that could not be confirmed from official sources are **blank and flagged** — never inferred.
 Full evidence: [Verification log](https://karagemop466-tech.github.io/Demo1/docs/pages/verification.html),
 [SOURCES.md](SOURCES.md), [REVIEW.md](REVIEW.md).
+
+## 8. Final integration session — `arena/5487be47-demo1` (2026-11-20)
+
+This session performed final integration on the merged tree: line-by-line review, empirical
+re-verification against the official Kalshi sources, one missing feature, and the publish step.
+
+- **Sharp-move feature (implemented).** The brief required live charts to flag contract-price moves
+  of **≥ $0.10 in either direction** with the associated event and source links. This was **not present**
+  anywhere in the repo, so it was added to the canonical live dashboard
+  ([`dashboard.html`](dashboard.html) + [`assets/dashboard.js`](assets/dashboard.js)): consecutive price
+  changes ≥ $0.10 are marked with dashed vertical markers on the price chart and listed in a
+  "Sharp moves (≥ $0.10)" table with the time (UTC), direction, before→after price, magnitude, and a
+  link to the market's official Kalshi page plus the exact API request URL. Kalshi does not report a
+  *cause*, so no cause is asserted — only the official event/source links are shown. Verified by a
+  new headless test ([`tests/dashboard-jumps.test.mjs`](tests/dashboard-jumps.test.mjs), 9/9 checks).
+- **Live data path re-verified (empirical).** Against `https://external-api.demo.kalshi.co/trade-api/v2`
+  on 2026-11-20: `GET /exchange/status`, `GET /markets/{ticker}`, `GET /markets/{ticker}/orderbook`,
+  and `GET /series/{series}/markets/{ticker}/candlesticks?period_interval=60` all returned valid
+  responses matching the documented schemas (bids-only orderbook; candlestick intervals 1/60/1440).
+- **Official docs re-verified.** Demo REST/WS base URLs, the bids-only orderbook + YES-bid/NO-ask
+  reciprocity rule, the 1/60/1440-minute candlestick constraint, and the demo = mock-funds warning all
+  match [docs.kalshi.com](https://docs.kalshi.com/llms.txt) as documented in section 1.
+- **Build & audit green.** `python3 build_site.py` → 16 pages, `link check: OK`; `node tools/check-links.mjs`
+  → PASS (238 files, no broken links, no secret material, source-citation audit clean);
+  `node --check` clean on all JS.
+- **Pre-existing irregularity (not introduced here).** `tests/dashboard.test.mjs` is time-sensitive: its
+  fixtures use fixed trade timestamps (2026-11-20 11:11 UTC) that fall outside the page's dynamically
+  computed 1-hour window when the suite is run later, so the `pages/live.html` section reports "No trades
+  matched." Confirmed it fails identically on the pristine tree; it is not run by the Pages workflow.
+  Flagged, not fixed (test owned by an earlier session; left untouched per the coordination protocol).
+- **Publish.** PR from `arena/5487be47-demo1` → `main`, merged, GitHub Pages redeploy confirmed.
