@@ -1,0 +1,74 @@
+name: Engine live-snapshot refresh (demo API)
+
+# Fetches the public Kalshi demo Trade API on GitHub-hosted runners (which have
+# internet) and commits ONE small file under engine/data/, which only this workflow
+# writes. It is deliberately separate from `data/` (owned by "Refresh Kalshi demo
+# data snapshot") so two crons can never fight over the same path.
+#
+# Read-only by construction: tools/engine_refresh.py has no signing key handling and
+# calls only the four documented public endpoints.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to read and write engine/data to"
+        required: false
+        default: main
+      publish:
+        description: "true = commit the refreshed file; false = artifact only"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: engine-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.event.repository.default_branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Engine arithmetic tests (fee schedule, jump rule, fills, provenance)
+        run: python3 engine/test_engine.py
+      - name: Fetch demo market data for the engine
+        run: python3 tools/engine_refresh.py --out engine/data/live-snapshot.json
+      - name: Recompute jumps and strategy results from the refreshed data
+        run: |
+          python3 tools/jump_scan.py --charts engine/data/live-snapshot.json \
+            --markets engine/data/live-snapshot.json --resolved engine/data/live-snapshot.json \
+            --out engine/data/jumps.json || python3 tools/jump_scan.py --out engine/data/jumps.json
+          python3 tools/strategy_sim.py --live engine/data/live-snapshot.json \
+            --out engine/data/strategies.json || python3 tools/strategy_sim.py --out engine/data/strategies.json
+      - name: Refuse to publish data that fails the self-consistency tests
+        run: python3 engine/test_engine.py
+      - name: Upload artifact (always)
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-snapshot
+          path: engine/data
+      - name: Commit refreshed engine data
+        if: ${{ github.event_name == 'schedule' || inputs.publish == 'true' }}
+        run: |
+          set -euo pipefail
+          BR="${{ inputs.branch || github.event.repository.default_branch }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add engine/data || true
+          if git diff --cached --quiet; then
+            echo "::notice::engine refresh: no byte changes in engine/data (API returned identical books)"
+            exit 0
+          fi
+          git commit -m "chore(engine): refresh demo snapshot $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+          git pull --rebase origin "$BR"
+          git push origin "HEAD:$BR"
