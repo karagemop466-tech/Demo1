@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ops Health — live pipeline &amp; data-freshness monitor</title>
+<style>
+  :root { --ink:#12212e; --muted:#5b6b7a; --line:#d9e1e8; --bg:#f4f7f9; --card:#ffffff;
+          --ok:#1a7f37; --bad:#b42318; --warn:#9a6700; --accent:#0b5394; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         color:var(--ink); background:var(--bg); }
+  header, main, footer { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 26px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 30px 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+  .kpis { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 18px 0 8px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .kpi .n { font-size: 26px; font-weight: 650; }
+  .kpi .l { color: var(--muted); font-size: 13px; }
+  .kpi .n .bad { color: var(--bad); } .kpi .n .ok { color: var(--ok); } .kpi .n .warn { color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line);
+          border-radius: 10px; overflow: hidden; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #eef3f6; font-weight: 600; color: var(--ink); }
+  tr:last-child td { border-bottom: none; }
+  td a, p a { color: var(--accent); }
+  .pill { display:inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); background:#f0f4f7; }
+  .pill.ok { color: var(--ok); border-color:#b7dfc2; background:#eaf6ee; }
+  .pill.bad { color: var(--bad); border-color:#efc2bd; background:#fdeeea; }
+  .pill.warn { color: var(--warn); border-color:#e6d3a3; background:#fdf6e3; }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  button { font: inherit; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--accent);
+           background: var(--accent); color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: var(--accent); }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  label.chk { display:inline-flex; align-items:center; gap:6px; margin-left: 14px; color: var(--muted); }
+  #liveStatus, #rateStatus { color: var(--muted); font-size: 13px; margin: 8px 0; }
+  #degrade { display:none; background:#fdf6e3; border:1px solid #e6d3a3; color:#6a5310;
+             border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+  .small { font-size: 12.5px; }
+  footer { margin: 34px 0 40px; color: var(--muted); font-size: 13px; }
+  code { background:#eef2f5; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+  .flag-note { color: var(--bad); font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ops Health — pipeline &amp; data-freshness monitor</h1>
+  <p class="sub">Session <code>54a39029</code> · task O-1 · Monitors the monitors: this page inventories every
+     GitHub&nbsp;Actions workflow that feeds the Kalshi demo dashboard, audits what actually ran (from the
+     official GitHub REST API), measures how fresh the committed data trees are, and flags reliability
+     irregularities. Committed evidence is authoritative; the live re-check below queries the same official
+     endpoints from your browser.</p>
+  <div class="kpis" id="kpis"></div>
+</header>
+<main>
+  <h2>Workflow inventory &amp; observed runs</h2>
+  <p class="muted small">Declared triggers are read from the workflow files as shipped on <code>main</code>
+     (linked in each row). Run evidence is a sample of the 30 most recent runs per workflow, fetched from the
+     official API; every row links the exact request URL. “No runs observed” is recorded verbatim — nothing is inferred.</p>
+  <table id="wfTable">
+    <thead><tr>
+      <th>Workflow</th><th>Declared triggers (as shipped)</th><th>Crons</th>
+      <th>Runs in sample (by event)</th><th>Last run (UTC)</th><th>Schedule runs in sample</th><th>Recent failures</th><th>Source</th>
+    </tr></thead>
+    <tbody id="wfBody"><tr><td colspan="8" class="muted">Loading committed evidence…</td></tr></tbody>
+  </table>
+
+  <h2>Committed data freshness</h2>
+  <p class="muted small">Last commit touching each monitored data tree (official commits API; age recomputed
+     in your browser at page load from the recorded commit timestamps — never filled in).</p>
+  <table id="dataTable">
+    <thead><tr><th>Data path</th><th>Last commit (UTC)</th><th>Age</th><th>Commit</th><th>Message (first line)</th><th>Source</th></tr></thead>
+    <tbody id="dataBody"><tr><td colspan="6" class="muted">Loading committed evidence…</td></tr></tbody>
+  </table>
+
+  <h2>Flagged irregularities</h2>
+  <p class="muted small">Published here per the Flagged-for-Review convention; non-blocking. Change requests
+     are logged on the board (COORDINATION.md) for the owning session — files owned by others are not edited by this session.</p>
+  <div id="flags"></div>
+
+  <h2>Live re-check (browser)</h2>
+  <div class="card">
+    <p class="small muted">Queries the same official GitHub REST API endpoints from your browser
+      (unauthenticated; the repository is public). Results appear in a separate section below and never
+      overwrite the committed evidence. If the live check cannot run (rate limit or network), the
+      committed evidence above remains the record.</p>
+    <button id="liveBtn">Re-check live now</button>
+    <label class="chk"><input type="checkbox" id="autoChk"> auto-refresh every 120 s</label>
+    <div id="rateStatus"></div>
+    <div id="degrade">Live re-check unavailable right now (rate limit or network). The committed evidence above
+      (generated <span id="degradeTs"></span>) remains the authoritative record — nothing live is shown or inferred.</div>
+    <div id="liveStatus" class="small"></div>
+    <div id="liveResults"></div>
+  </div>
+
+  <h2>Method &amp; verification</h2>
+  <div class="card small">
+    <ul>
+      <li>Evidence generator: <code>ops-desk/tools/build_health.py</code> (stdlib only, unauthenticated) —
+          re-run to refresh <code>ops-desk/data/health.json</code>. CORS probe: <code>ops-desk/tools/cors_probe.py</code>.</li>
+      <li>Official trigger semantics (<code>schedule</code> delays/drops under load, default-branch-only, minimum 5-minute interval):
+          <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule">docs.github.com — Events that trigger workflows (schedule)</a>.</li>
+      <li>Official run-evidence endpoints (usable without authentication for public resources):
+          <a href="https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28">docs.github.com — REST API endpoints for workflow runs</a>.</li>
+      <li>Observed cross-origin behaviour for the browser re-check: committed header probe
+          <code>ops-desk/data/cors-probe.json</code> (observed evidence, not a docs citation).</li>
+      <li>Verification performed for this page: schema + boot tests in <code>ops-desk/test_ops_desk.mjs</code>;
+          repository link checker (<code>node tools/check-links.mjs</code>); Python syntax checks. Every table row
+          carries a link to its official source.</li>
+    </ul>
+  </div>
+</main>
+<footer>
+  ops-desk · session <code>54a39029</code> · branch <code>arena/54a39029-demo1</code> ·
+  board section in <a href="../COORDINATION.md">COORDINATION.md</a> ·
+  Kalshi demo endpoint facts are out of scope here (see the board's O-1 record).
+</footer>
+<script>
+"use strict";
+const API_BASE = "https://api.github.com/repos/karagemop466-tech/Demo1";
+
+function esc(s) { const d = document.createElement("div"); d.textContent = String(s); return d.innerHTML; }
+function fmtAge(min) {
+  if (min == null || isNaN(min)) return "";
+  if (min < 1) return "just now";
+  if (min < 120) return Math.round(min) + " min";
+  const h = min / 60; if (h < 48) return h.toFixed(1) + " h";
+  return (h / 24).toFixed(1) + " d";
+}
+function ageFrom(ts) { return fmtAge((Date.now() - Date.parse(ts)) / 60000); }
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function link(href, text) { const a = el("a", "", text); a.href = href; a.target = "_blank"; a.rel = "noopener"; return a; }
+function pill(text, cls) { const p = el("span", "pill" + (cls ? " " + cls : ""), text); return p; }
+
+let HEALTH = null;
+let liveTimer = null;
+let liveInFlight = false;
+
+async function loadHealth() {
+  const resp = await fetch("data/health.json", { cache: "no-store" });
+  if (!resp.ok) throw new Error("health.json HTTP " + resp.status);
+  return resp.json();
+}
+
+function renderKpis(h) {
+  const k = el("div"); k.className = "kpis"; k.id = "kpis";
+  const scheduled = Object.values(h.workflow_files_declared_triggers).filter(t => t.crons.length > 0).length;
+  const obs = h.repo_sample.schedule_runs_observed.length;
+  const exp = Object.values(h.repo_sample.expected_schedule_starts_in_window_computed || {}).reduce((a, b) => a + b, 0);
+  const ages = h.data_paths.filter(d => d.last_commit).map(d => d.age_minutes_at_build);
+  const oldest = ages.length ? Math.max.apply(null, ages) : null;
+  const items = [
+    ["n", String(h.workflows.length) + " workflows", "inventoried (official workflows API)"],
+    ["n", String(scheduled) + " workflows", "declare a schedule cron (as shipped)"],
+    ["n warn", obs + " observed", "schedule runs in the " + h.repo_sample.count + "-run sample · " + exp + " expected (computed)"],
+    ["n" + (oldest && oldest > 360 ? " warn" : ""), oldest ? fmtAge(oldest) + " oldest" : "no data", "committed data tree at build time"],
+  ];
+  for (const [cls, big, label] of items) {
+    const c = el("div", "kpi"); const n = el("div", cls); n.textContent = big.split(" ")[0];
+    n.appendChild(document.createTextNode(" " + big.split(" ").slice(1).join(" ")));
+    c.appendChild(n); c.appendChild(el("div", "l", label)); k.appendChild(c);
+  }
+  document.getElementById("kpis").replaceWith(k);
+}
+
+function triggerCell(t) {
+  const wrap = el("div");
+  if (!t || !t.triggers || t.triggers.length === 0) { wrap.appendChild(el("span", "muted", "none declared")); return wrap; }
+  wrap.appendChild(el("span", "", t.triggers.join(", ")));
+  return wrap;
+}
+
+function runPill(r) {
+  if (!r) return el("span", "muted", "no runs observed");
+  const wrap = el("div");
+  const conc = r.conclusion || r.status || "unknown";
+  const cls = conc === "success" ? "ok" : (conc === "failure" || conc === "timed_out" ? "bad" : "warn");
+  const p = pill(conc, cls); wrap.appendChild(p);
+  const a = link(r.html_url, r.created_at); a.style.marginLeft = "6px"; wrap.appendChild(a);
+  const meta = el("div", "small muted", r.event + " · run #" + (r.id || "")); wrap.appendChild(meta);
+  return wrap;
+}
+
+function renderWorkflows(h) {
+  const body = document.getElementById("wfBody");
+  body.textContent = "";
+  for (const w of h.workflows) {
+    const tr = el("tr");
+    // Workflow name + file link (declared triggers source of truth = the file itself)
+    const tdName = el("td");
+    const nameDiv = el("div", "", w.name); tdName.appendChild(nameDiv);
+    const fileLink = link("https://github.com/" + h.repo + "/blob/main/" + w.path, w.path);
+    const fileDiv = el("div", "small muted"); fileDiv.appendChild(fileLink); tdName.appendChild(fileDiv);
+    if (w.state !== "active") tdName.appendChild(pill(w.state, "warn"));
+    tr.appendChild(tdName);
+    // Declared triggers
+    const t = h.workflow_files_declared_triggers[w.path] || null;
+    const tdTrig = el("td"); tdTrig.appendChild(triggerCell(t)); tr.appendChild(tdTrig);
+    // Crons
+    const tdCron = el("td");
+    if (t && t.crons.length) { for (const c of t.crons) tdCron.appendChild(el("code", "", c)); }
+    else tdCron.appendChild(el("span", "muted", "—"));
+    tr.appendChild(tdCron);
+    // Runs sample
+    const tdRuns = el("td");
+    if (w.runs_sample) {
+      const parts = Object.entries(w.runs_sample.by_event).map(([k, v]) => k + ": " + v).join(" · ") || "none in sample";
+      tdRuns.appendChild(el("span", "", parts));
+      tdRuns.appendChild(el("div", "small muted", "sample of " + w.runs_sample.count + " most recent"));
+    } else if (w.runs_error) {
+      tdRuns.appendChild(el("span", "muted", "sample unavailable: " + w.runs_error));
+    } else {
+      tdRuns.appendChild(el("span", "muted", "no runs observed"));
+    }
+    tr.appendChild(tdRuns);
+    // Last run
+    const tdLast = el("td"); tdLast.appendChild(runPill(w.runs_sample ? w.runs_sample.last_run : null)); tr.appendChild(tdLast);
+    // Schedule runs
+    const tdSched = el("td");
+    const schedRuns = w.runs_sample ? w.runs_sample.schedule_runs : [];
+    if (schedRuns.length) { for (const s of schedRuns.slice(0, 3)) { const div = el("div", "small"); div.appendChild(link(s.html_url, s.created_at + " · " + (s.conclusion || "in progress"))); tdSched.appendChild(div); } }
+    else tdSched.appendChild(el("span", "muted", "0 in sample"));
+    tr.appendChild(tdSched);
+    // Failures
+    const tdFail = el("td");
+    const fails = w.runs_sample ? w.runs_sample.recent_failures : [];
+    tdFail.appendChild(el("span", fails.length ? "flag-note" : "muted", String(fails.length) + " in sample"));
+    for (const f of fails.slice(0, 2)) { const div = el("div", "small"); div.appendChild(link(f.html_url, f.created_at)); tdFail.appendChild(div); }
+    tr.appendChild(tdFail);
+    // Source: API URL + docs
+    const tdSrc = el("td");
+    tdSrc.appendChild(link(w.runs_api_url, "runs API"));
+    tdSrc.appendChild(el("div", "small muted"));
+    tdSrc.appendChild(link("https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28", "endpoint docs"));
+    tr.appendChild(tdSrc);
+    body.appendChild(tr);
+  }
+}
+
+function renderData(h) {
+  const body = document.getElementById("dataBody");
+  body.textContent = "";
+  for (const d of h.data_paths) {
+    const tr = el("tr");
+    tr.appendChild(el("td", "", d.path));
+    const tdDate = el("td");
+    if (d.last_commit) {
+      tdDate.appendChild(el("span", "", d.last_commit.date));
+      tdDate.appendChild(el("div", "small muted", "age at build: " + fmtAge(d.age_minutes_at_build)));
+    } else {
+      tdDate.appendChild(el("span", "muted", d.note || d.error || "no commits found"));
+    }
+    tr.appendChild(tdDate);
+    const tdAge = el("td");
+    tdAge.appendChild(d.last_commit ? el("span", "", ageFrom(d.last_commit.date)) : el("span", "muted", "—"));
+    tr.appendChild(tdAge);
+    const tdSha = el("td");
+    if (d.last_commit) tdSha.appendChild(link(d.last_commit.html_url, d.last_commit.sha_short));
+    else tdSha.appendChild(el("span", "muted", "—"));
+    tr.appendChild(tdSha);
+    tr.appendChild(el("td", "small muted", d.last_commit ? d.last_commit.message_first_line : "—"));
+    const tdSrc = el("td");
+    tdSrc.appendChild(link(d.api_url, "commits API"));
+    tdSrc.appendChild(el("div", "small muted"));
+    tdSrc.appendChild(link("https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28", "endpoint docs"));
+    tr.appendChild(tdSrc);
+    body.appendChild(tr);
+  }
+}
+
+function renderFlags(h) {
+  const wrap = document.getElementById("flags");
+  wrap.textContent = "";
+  for (const [id, flag] of Object.entries(h.irregularities || {})) {
+    const c = el("div", "card");
+    c.appendChild(el("div", "flag-note", id + " — " + flag.title));
+    const ev = el("div", "small");
+    const e = flag.evidence || {};
+    if (e.board_claim && e.board_claim.matches) {
+      for (const m of e.board_claim.matches) {
+        const div = el("div");
+        div.appendChild(link("https://github.com/" + h.repo + "/blob/main/COORDINATION.md#L" + m.line, "board claim — COORDINATION.md line " + m.line));
+        div.appendChild(el("span", "muted", ": “" + m.excerpt.slice(0, 120) + "…”"));
+        ev.appendChild(div);
+      }
+    }
+    if (e.shipped_triggers) {
+      ev.appendChild(el("div", "", "Shipped triggers: " + (e.shipped_triggers.triggers || []).join(", ") +
+        (e.shipped_triggers.crons.length ? " · crons: " + e.shipped_triggers.crons.join(", ") : " · crons: none")));
+    }
+    if (e.git_history) {
+      ev.appendChild(el("div", "", "Git history of the file: " + e.git_history.commits_examined + " commit(s) examined, " +
+        e.git_history.cron_lines_total + " cron lines total — " + e.verdict));
+    }
+    if (e.schedule_runs_observed_in_sample != null) {
+      ev.appendChild(el("div", "", "Schedule runs observed in the " + h.repo_sample.count + "-run sample: " +
+        e.schedule_runs_observed_in_sample + " · expected starts in window (computed): " +
+        JSON.stringify(e.expected_schedule_starts_in_window_computed)));
+      for (const r of (h.repo_sample.schedule_runs_observed || [])) {
+        const div = el("div", "small"); div.appendChild(link(r.html_url, "run " + r.id + " — " + r.name + " — " + r.created_at + " · " + (r.conclusion || "in progress"))); ev.appendChild(div);
+      }
+    }
+    if (e.note) ev.appendChild(el("div", "small muted", e.note));
+    c.appendChild(ev);
+    c.appendChild(el("div", "small muted", "Change request logged on the board for the owning session; not applied by 54a39029."));
+    wrap.appendChild(c);
+  }
+}
+
+/* ---------- live re-check (browser; official public API) ---------- */
+function setRate(headers) {
+  const rem = headers.get("x-ratelimit-remaining"), lim = headers.get("x-ratelimit-limit");
+  document.getElementById("rateStatus").textContent =
+    rem != null ? ("GitHub API rate limit remaining this hour (unauthenticated): " + rem + " / " + lim) : "";
+  return rem != null ? parseInt(rem, 10) : null;
+}
+
+async function liveCheck() {
+  if (liveInFlight) return;
+  liveInFlight = true;
+  const btn = document.getElementById("liveBtn"); btn.disabled = true;
+  const status = document.getElementById("liveStatus");
+  const results = document.getElementById("liveResults");
+  status.textContent = "Checking…";
+  try {
+    const checks = [];
+    // 1. repo-wide runs: event distribution of the most recent 100 runs
+    const runsUrl = API_BASE + "/actions/runs?per_page=100";
+    const runsResp = await fetch(runsUrl, { headers: { Accept: "application/vnd.github+json" }, cache: "no-store" });
+    const rem = setRate(runsResp.headers);
+    if (!runsResp.ok) throw new Error("runs HTTP " + runsResp.status);
+    const runsJson = await runsResp.json();
+    const byEvent = {};
+    for (const r of runsJson.workflow_runs || []) byEvent[r.event] = (byEvent[r.event] || 0) + 1;
+    checks.push({ label: "Repo-wide last 100 runs by event", api_url: runsUrl, value: JSON.stringify(byEvent),
+                  link: (runsJson.workflow_runs && runsJson.workflow_runs[0] && runsJson.workflow_runs[0].html_url) || runsUrl });
+    // 2. freshness of data/ (most-recent commit per path)
+    for (const p of ["data", "sim-desk/data", "engine"]) {
+      const url = API_BASE + "/commits?path=" + encodeURIComponent(p) + "&per_page=1";
+      const resp = await fetch(url, { headers: { Accept: "application/vnd.github+json" }, cache: "no-store" });
+      setRate(resp.headers);
+      if (!resp.ok) throw new Error("commits HTTP " + resp.status);
+      const arr = await resp.json();
+      const c = arr && arr[0];
+      checks.push({ label: "Last commit on " + p + "/", api_url: url,
+                    value: c ? (c.commit.committer.date + " · " + c.commit.message.split("\n")[0]) : "no commits found",
+                    link: c ? c.html_url : url });
+    }
+    renderLive(checks);
+    document.getElementById("degrade").style.display = "none";
+    status.textContent = "Live check completed at " + new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC (page clock). Committed evidence above is unchanged.";
+  } catch (err) {
+    document.getElementById("degradeTs").textContent = HEALTH ? HEALTH.generated_at_utc : "unknown";
+    document.getElementById("degrade").style.display = "block";
+    status.textContent = "Live check failed: " + err.message;
+    if (rem_ok() === false) document.getElementById("autoChk").checked = false;
+  } finally {
+    liveInFlight = false; btn.disabled = false;
+  }
+}
+function rem_ok() { const t = document.getElementById("rateStatus").textContent; const m = t.match(/remaining[^:]*: (\d+)/); return m ? parseInt(m[1], 10) > 20 : true; }
+
+function renderLive(checks) {
+  const results = document.getElementById("liveResults");
+  results.textContent = "";
+  const table = el("table");
+  const thead = el("thead"); const hr = el("tr");
+  for (const htxt of ["Check", "Result (live, at page clock)", "Source"]) { const th = el("th", "", htxt); hr.appendChild(th); }
+  thead.appendChild(hr); table.appendChild(thead);
+  const tbody = el("tbody");
+  for (const c of checks) {
+    const tr = el("tr");
+    tr.appendChild(el("td", "", c.label));
+    tr.appendChild(el("td", "", c.value));
+    const td = el("td"); td.appendChild(link(c.api_url, "API request")); tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody); results.appendChild(table);
+}
+
+function setAuto(on) {
+  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+  if (on) {
+    if (!rem_ok()) { document.getElementById("autoChk").checked = false; return; }
+    liveTimer = setInterval(liveCheck, 120000);
+  }
+}
+
+async function boot() {
+  try {
+    HEALTH = await loadHealth();
+    renderKpis(HEALTH);
+    renderWorkflows(HEALTH);
+    renderData(HEALTH);
+    renderFlags(HEALTH);
+  } catch (err) {
+    document.getElementById("kpis").textContent = "";
+    const c = el("div", "card");
+    c.appendChild(el("span", "flag-note", "Committed evidence could not be loaded: " + err.message + " — no values are shown rather than guessed."));
+    document.getElementById("kpis").appendChild(c);
+    document.getElementById("liveBtn").disabled = true;
+  }
+  document.getElementById("liveBtn").addEventListener("click", liveCheck);
+  document.getElementById("autoChk").addEventListener("change", (e) => setAuto(e.target.checked));
+}
+
+if (typeof window !== "undefined" && typeof document !== "undefined" && document.getElementById("kpis")) {
+  boot();
+}
+window.__opsDesk = { loadHealth, renderKpis, renderWorkflows, renderData, renderFlags, liveCheck, boot, getHealth: () => HEALTH };
+</script>
+</body>
+</html>

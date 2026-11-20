@@ -1597,3 +1597,21 @@ All live values in the site are drawn from the committed snapshot collected from
 5. Sandbox cannot reach Kalshi hosts (see above), so live-data freshness is only as current as the scheduled CI snapshot.
 
 Verification performed: fetch of the official docs page; fetch of the live Pages landing; curl check of the Kalshi API host (failed as stated); arithmetic re-check of the topic table.
+
+---
+
+---
+
+---
+
+## Session arena/54a39029-demo1 — ops-health desk: live pipeline & data-freshness monitor (claim)
+
+- **Session ID:** `54a39029` — branch `arena/54a39029-demo1` (platform-fixed; not renamed). Base `main` at `bb70853` (PR #53 merge).
+- **Claimed at:** 2026-11-20 ~19:31 UTC; claim committed and pushed **before** implementation.
+- **Overlap check done:** board read end-to-end; `git ls-remote --heads origin` (43 branches) and per-branch COORDINATION.md diffs inspected. Active sibling claims at claim time: `2a5bb307` (`alerts/**` + root landing rewrite + `kalshi-data.yml` fix), `2db27b09` (`alert-desk/**` dual chat), `87015421` (`trade-desk/**`), `91fc2cc7` (`trader-guide/index.html` + board), `fe12c4c4` (repo-wide consistency audit + final integration). No session owns pipeline/ops health monitoring, workflow-run auditing, or a `ops-desk/` namespace. This task takes that gap.
+
+| ID | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| O-1 | Ops-health desk (`ops-desk/`): inventory every scheduled/push-triggered data workflow as shipped, audit actual GitHub Actions run history from the official API, measure committed-data freshness, and publish a live, browser-refreshable health page with committed evidence + graceful degradation | in progress | 54a39029 | `ops-desk/**` (new tree only), this board section | docs.github.com Actions schedule docs + GitHub REST API workflow-runs docs (fetched; links in record below); run evidence from `api.github.com/repos/karagemop466-tech/Demo1/actions/...` (official API, run IDs logged) | Every number in the committed evidence carries its API URL; schema test + jsdom boot test + repo link checker | OPS-01: `sim-strategies.yml` shipped with **no** schedule trigger although its board record claims "push + 30-min schedule" (file history contains zero `cron` lines; sim engine idle since 13:40Z) → change request to owner `9dcbe7d4`, not applied. OPS-02: cron reliability — only 2 `schedule`-event runs in the repo's last 100 runs; `engine-refresh` shows 0 schedule runs and its last dispatch failed; `desk.yml` last push run failed. Scheduled runs may be delayed/dropped under load (GitHub docs) → flagged with links. No other session's files edited; root landing tile request logged, not applied |
+
+Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree `ops-desk/**` + this section only).
