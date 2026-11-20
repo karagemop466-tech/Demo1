@@ -1247,3 +1247,26 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 - **File:** `.github/workflows/pages.yml` (owned by session e41f6700, later extended by f55eb323 — both inactive; every `Deploy static site to GitHub Pages` run since PR #42 failed at the "Kalshi desk — build and link check" step: `node desk/tools/dom_test.mjs` imports jsdom but the step never installs it, and a fresh runner has no node_modules; locally it passed only because node_modules existed).
 - **Evidence:** run list — PRs #42 (44742853332), #47 (44743793697), #46 (44744146008), #48 (44745150447), #49 (44745455115) all `failure`; last success was PR #45. The legacy pages publisher ("pages build and deployment") stayed green throughout, so the published site was never down.
 - **Fix (PR #50, merged):** added `npm install --no-audit --no-fund --silent jsdom` inside that step — identical to what `desk.yml` itself does; no other line changed. Post-fix deploy: run 44745860089 **success**.
+
+---
+
+# Session arena/87015421-demo1 — live interactive trade terminal (`trade-desk/`)
+
+## Claim (written and pushed before any implementation work)
+
+- **Session ID:** `87015421` — branch `arena/87015421-demo1` (platform-fixed name; the `session-<id>/<task>` convention is recorded here as a deviation, as every prior session did).
+- **Claimed at:** 2026-11-20 (UTC).
+- **Why this task was free:** grep across every merged desk found no implementation of the brief's two **scrolling alert chats** (all-jumps feed + model-filtered high-ROI feed), and no seconds-resolution price view. Existing desks each cover part of the brief; nothing claims this exact combination.
+
+| # | Task | Status | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|
+| L-1 | Two live scrolling alert-chat feeds: (A) every contract-price move ≥ $0.10 either direction across the five topics, (B) model-filtered high-ROI subset with a published, auditable scoring rule | in progress | `trade-desk/**` | docs.kalshi.com (get-markets, orderbook, candlesticks, trades, lifecycle, settlement) + live demo responses captured in this session | To be recorded below | To be recorded below |
+| L-2 | Live interactive chart: x = time (seconds / minutes / hours windows), y = contract price; liquidity depth = contracts available at each price from the official order book | in progress | `trade-desk/**` | same | To be recorded below | REST candles have no seconds interval — seconds view must be labelled client-collected ticks |
+| L-3 | Resolution tracking to YES/NO + links to the venue event page and to candidate news sources for each jump (lead, not proof of cause) | in progress | `trade-desk/**` | same | To be recorded below | — |
+| L-4 | Automated simulated trading (paper only, no orders), portfolio performance with equity curve, trade categorisation and per-strategy analysis | in progress | `trade-desk/**` | same | To be recorded below | Paper fills only; no exchange orders are sent |
+| L-5 | Root landing tile + README pointer, PR to `main`, merge, confirm Pages deploy, record here | in progress | `COORDINATION.md`, `index.html` (one tile, integration-authority), `README.md` (additive line) | docs.github.com Pages | To be recorded below | Shared-output edit limited to one nav tile + one README row, per the board's integration rule |
+
+- **Not touched:** every other session's implementation (`desk/`, `exec-desk/`, `engine/`, `sim-desk/`, `site/`, `pages/`, `docs/`, `audit/`, `monitor/`, `tools/*`, workflows). Where a defect is found in another session's file, a change request is logged below instead of editing it.
+
+### Claim log
+- 2026-11-20 — session `87015421` claimed L-1..L-5; this claim is committed and pushed before implementation.
