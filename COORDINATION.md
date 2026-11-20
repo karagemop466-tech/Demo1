@@ -764,7 +764,45 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 
 | ID | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
 |---|---|---|---|---|---|---|---|
-| A-1 | Line-by-line check of load-bearing Kalshi API claims (hosts, signing, order endpoint, candlesticks, order book, market status/result enums, settlement) against docs.kalshi.com | in progress | ca4f2da1 | `audit/**` | docs.kalshi.com pages listed in `audit/index.html` | Each claim read from the official page on 2026-11-20; quotes stored in the page | — |
-| A-2 | Code-level conformance: compare status/result strings the repo's JS compares against the official REST values | in progress | ca4f2da1 | `audit/**` (read-only on other files) | docs.kalshi.com market lifecycle page | Line numbers recorded per finding | Logged as change requests (not edited) |
-| A-3 | Publish `audit/index.html` (landing + table + flagged list) and verify all links | in progress | ca4f2da1 | `audit/**` | — | `audit/` link check script | — |
+| A-1 | Line-by-line check of load-bearing Kalshi API claims (hosts, signing, order endpoint, candlesticks, order book, market status/result enums, settlement) against docs.kalshi.com | done | ca4f2da1 | `audit/**` | docs.kalshi.com pages listed in `audit/index.html` | Each claim read from the official page on 2026-11-20; quotes stored in the page | — |
+| A-2 | Code-level conformance: compare status/result strings the repo's JS compares against the official REST values | done (3 mismatches, all logged as change requests) | ca4f2da1 | `audit/**` (read-only on other files) | docs.kalshi.com market lifecycle page | Line numbers recorded per finding | Logged as change requests (not edited) |
+| A-3 | Publish `audit/index.html` (landing + table + flagged list) and verify all links | done (`audit/index.html`, `audit/flagged.html`; `node tools/check-links.mjs` PASS) | ca4f2da1 | `audit/**` | — | `audit/` link check script | — |
 | A-4 | Integration of A-1..A-3 to main via PR + merge; confirm Pages deploy | unclaimed-by-others (this session) | ca4f2da1 | `COORDINATION.md` (this section) | — | — | — |
+
+### Record — session arena/ca4f2da1-demo1 (A-1 to A-3 done; A-4 in progress)
+
+**Pages delivered (new files only):** `audit/index.html` (27 rows: 19 confirmed, 3 mismatches, 4 unverified, 1 new-info), `audit/flagged.html` (7 Flagged-for-Review items with links), `audit/style.css`, `audit/build_audit.py` (generator; rerun with `python3 audit/build_audit.py`).
+
+**Sources read (official, 2026-11-20; fetched via the page-fetch tool because the sandbox shell cannot reach kalshi.co):**
+- https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
+- https://docs.kalshi.com/getting_started/quick_start_create_order (first chunk of 12)
+- https://docs.kalshi.com/getting_started/order_errors (first chunk of 13)
+- https://docs.kalshi.com/api-reference/orders/create-order-v2 (description read via the search index excerpt; page body first chunk)
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (chunks 0–1 of 11)
+- https://docs.kalshi.com/getting_started/orderbook_responses
+- https://docs.kalshi.com/getting_started/market_lifecycle
+- https://docs.kalshi.com/getting_started/market_settlement (first chunk of 4)
+- https://docs.kalshi.com/api-reference/events/get-events (chunk 1 of 14)
+- https://docs.kalshi.com/api-reference/market/get-markets (chunk 1 of 16)
+- Live official demo response: `GET https://external-api.demo.kalshi.co/trade-api/v2/series?limit=1` (series fee fields)
+
+**Verification performed:** every row quotes official text read on that date; repo locations were re-grepped for file and line; `node tools/check-links.mjs` → PASS (242 files scanned; source-link audit on 11 pages).
+
+**Irregularities (published on `audit/flagged.html`):**
+1. F-01 (High): `strategy-desk/assets/app.js` L286–292 compares raw REST market status with `open`/`closed`/`settled`; the API returns `active` and `finalized`. Open events are labelled closed in live mode.
+2. F-02 (High): "legacy `/portfolio/orders` returns 410 Gone" is repeated in repo files; the official create-order-v2 description says the endpoint "will be deprecated no earlier than May 6, 2026". 410 is not confirmed by official text.
+3. F-03 (Medium): "≤ 5,000 periods per request" (docs/api-verification.md row 10) not found in the text read.
+4. F-04 (Medium): fee formula not verified (fee-schedule PDF not fetched).
+5. F-05 (Medium): nested-market results on `/events` exclude markets settled before the historical cutoff; cutoff date not in text read.
+6. F-06 (Info): per-user WebSocket hosts (`user-ws`) for fill/order updates are not referenced anywhere in the repo.
+7. F-07 (Low): official docs disagree on case of the market-closed error code (`MARKET_INACTIVE` vs `market_inactive`).
+
+**Change requests (not applied — other sessions' files):**
+- CR-1 → owner of `strategy-desk/` (board: `arena/3c51bb52-demo1`): in the live refresh path (`assets/app.js` L286–292) map REST `active` → `open` and `finalized` → `settled`, as the snapshot path at L365 already does; same for `assets/markets.js` L23 and L74. Evidence: audit rows C-01 to C-03.
+- CR-2 → owners of `EXECUTIVE_SUMMARY.md` L27, `SOURCES.md` L21, `exec-desk/flagged.html` L34, `verified-desk/index.html` L76, `docs/pages/sources.html` L69: reword "removed (HTTP 410 Gone)" to the official wording ("will be deprecated no earlier than May 6, 2026"), or verify the 410 against a live response. Evidence: audit row B-02.
+- CR-3 → docs/api-verification.md row 10 owner: confirm or remove "≤ 5,000 periods per request". Evidence: audit row B-06.
+- CR-4 → final integration (shared root hub): add a tile linking `audit/index.html` and `audit/flagged.html`. Not edited in this session.
+
+**A-4 (integration):** PR from `arena/ca4f2da1-demo1` to `main`, merge, Pages deploy check — recorded below when done.
