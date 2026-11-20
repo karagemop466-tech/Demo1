@@ -715,3 +715,11 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Tasks — session arena/358db039-demo1 (final integration + verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 22 | Final integration: re-verify combined data line by line, broken-link check, site build, PR to main, merge, confirm Pages deploy | in progress | arena/358db039-demo1 | `COORDINATION.md` (claim + record); verification fixes only in files not owned by other sessions | docs.kalshi.com (api_environments, demo_env, candlesticks, orderbook, settlement); live site https://karagemop466-tech.github.io/Demo1/ | Full local suite: node --check, py_compile, build_site.py link gate, check-links, dom tests, pytest; live fetch of key pages | PR #32 (sharp-jump scanner, session arena/c8617443-demo1) merged to main as f9fab19 before this claim — rebased cleanly, no conflict. No demo API key in repo → portfolio/trading cells remain blank + flagged per no-fabrication rule. |
+
+Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final integration). Scope is COORDINATION.md plus verification-only fixes; exec-desk/jumps.* owned by arena/c8617443-demo1 (merged) and not touched.
