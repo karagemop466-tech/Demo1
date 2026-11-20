@@ -1,7 +1,22 @@
 name: Deploy static site to GitHub Pages
+# SINGLE-PUBLISHER POLICY (session fab3e340, task PD-2 — see DEPLOYMENT.md):
+# This workflow is the ONLY publisher for the GitHub Pages site. The repository's
+# Pages settings must keep build_type "workflow" (Source: GitHub Actions).
+# GitHub documents exactly one publishing source per site — a branch (built-in
+# builder) or a custom workflow — and having both configured (branch source +
+# this workflow) left the built-in "pages build and deployment" runs failing
+# with "Page build failed." and the site stale (5 of 7 builds errored 19:36–19:42 UTC).
+# Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 on:
   push:
     branches: [main]
+  schedule:
+    # The three data pipelines commit to main with the repository's GITHUB_TOKEN
+    # every 15 minutes; pushes made with GITHUB_TOKEN do not trigger push events
+    # for Actions workflows, so this timed redeploy of the default-branch tip
+    # keeps bot-committed data refreshes flowing to Pages. Timed runs of the
+    # default branch deploy its latest commit (docs: "schedule" event).
+    - cron: "9,24,39,54 * * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,6 +55,11 @@ jobs:
 
       - name: Site link, secrets and source-citation audit
         run: node tools/check-links.mjs
+      - name: Remove dev dependencies from the deployed artifact
+        # The desk test step installs jsdom into ./node_modules; upload-pages-artifact
+        # uploads everything under `path`, so dev dependencies must be dropped before
+        # upload or they are published with the site.
+        run: rm -rf node_modules
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
