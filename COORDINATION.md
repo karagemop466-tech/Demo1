@@ -1882,3 +1882,17 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 | Evidence | pages.yml run history + `/pages/builds` snapshots regenerated into `ops-desk/data/health.json` at ~20:25Z by `tools/build_health.py` (14/14 test assertions green after making OPS-01/expectation assertions evidence-driven rather than frozen; `node tools/check-links.mjs` PASS). |
 
 - 2026-11-20 ~20:35 UTC — PD-3 deploy verification: Pages builds API shows `built bb67820a` at 20:22:39Z — **first successful build since 19:37:57Z**. Live-site fetches after that build: `trade-desk/index.html` renders fully (browser-side polling live: connected, 7 markets, 0 errors at 20:26:52Z) and `alert-desk/index.html` renders both scrolling chats (662 bubbles, per-bubble API request links) — the two pages that had been missing from the live site since PRs #59/#60. Superseded-build `errored` rows after 20:22 are the built-in workflow's normal newer-push behavior (only newest tip builds), not the dual-publisher bug. Remaining gap recorded honestly: no "Pages deploy validation" run has COMPLETED yet — continuous pushes (~60-90 s cadence from 5+ concurrent sessions) supersede runs under `cancel-in-progress`; pre-merge gating is meanwhile carried by the per-desk CI that ran on each PR. Final commit also keys the validation concurrency group per event (`pages-validation-${{ github.event_name }}`) so push and pull-request validations cannot cancel each other.
+
+## dbe9aa36 — close-out record (2026-11-20 ~20:40 UTC)
+
+| Item | Result |
+|---|---|
+| Claim | None. Overlap audit found every brief item claimed by open sessions (PR #61 `65df996f`, PR #62 `fe12c4c4` F-3, PR #63 `54a39029` done). This session merged nothing. |
+| Local gates on the tree | `node tools/check-links.mjs` PASS (391 files); `python3 tools/verify_site.py` errors=0 warnings=2; `python3 build_site.py` reproduces committed `site/`; `node alert-desk/test_boot.mjs` 35/35 PASS. |
+| Pages — last successful deploy | Legacy build for **`bb67820`** finished **built** (20:22:39Z). Live landing https://karagemop466-tech.github.io/Demo1/ fetched via the page-fetch tool: renders; counts 1,399 open / 2,117 resolved / 352 awaiting; snapshot 2026-11-20 11:43:59 UTC. |
+| Pages — current | API `status: errored` on the latest builds (`263da10`, `956bb2e`, `6e24e78`: "Page build failed."). Build for `e3ab0a6` was building at 20:29:37Z. The live site is the `bb67820` build until a later build succeeds. |
+| Cause | Pages is `build_type: legacy`. Pushes to `main` arrive every 1–3 min from parallel sessions; each starts a legacy build and cancels the in-flight `pages.yml` deploy (concurrency `pages`, cancel-in-progress). |
+| Blocked action | `PUT /repos/karagemop466-tech/Demo1/pages build_type=workflow` returned **HTTP 403** to this session. A repo admin needs to switch Pages source to GitHub Actions, or accept the legacy path. |
+| Board hygiene | An earlier rebase left conflict markers in intermediate commit `6231658`. Final tree on this branch verified to have 0 markers. Resolved by a normal merge of `origin/main` (both sides kept). No other session's content removed. |
+| Open items for owners | PR #61 and PR #63 `alert-desk check` boot test red in CI; did not reproduce locally (35/35). Re-run requested. |
+| Status | Site **live on `bb67820`** (verified). Latest-commit Pages state **not confirmed**. Final integration PR → main not performed by this session (no claim; owners of #61/#62 still in progress). |
