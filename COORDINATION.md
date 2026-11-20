@@ -1406,7 +1406,7 @@ All live values in the site are drawn from the committed snapshot collected from
 | Item | Result |
 |---|---|
 | Pull request | pending |
-| Merge result | pending |
+| Merge result | **MERGED** — merge commit `92578f212fe83a80399c2331268f184fda0b54dc` at 2026-11-20T20:26:34Z (`gh pr view 72 --json state,mergedAt,mergeCommit`). Required-before-merge gates all re-run on the final rebased head: tape-desk tests 71/71, builder `--check` OK, `check-links` PASS, `build_site.py` 17 pages/link-check OK, `verify_site.py` errors=0, alert-desk 35/35, `desk/tools/dom_test.mjs` 105/105, `npm test` PASS, unittests OK, engine 11/11 |
 | GitHub Pages deploy | pending |
 | Live verification | pending |
 
@@ -1583,8 +1583,8 @@ All live values in the site are drawn from the committed snapshot collected from
 | Item | Result |
 |---|---|
 | Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
-| Merge result | pending |
-| Pages state after merge | pending |
+| Merge result | **MERGED** — merge commit `92578f212fe83a80399c2331268f184fda0b54dc` at 2026-11-20T20:26:34Z (`gh pr view 72 --json state,mergedAt,mergeCommit`). Required-before-merge gates all re-run on the final rebased head: tape-desk tests 71/71, builder `--check` OK, `check-links` PASS, `build_site.py` 17 pages/link-check OK, `verify_site.py` errors=0, alert-desk 35/35, `desk/tools/dom_test.mjs` 105/105, `npm test` PASS, unittests OK, engine 11/11 |
+| Pages state after merge | **merged content is on `main`; the built-in Pages builder is misfiring repository-wide, independent of this PR.** `GET /pages` reports source `main:/`, `build_type: legacy`; builds API 20:26–20:36Z shows `errored` at commits `92578f2` (this merge), `6e24e78`, `956bb2e`, `e3ab0a6`, `2ae593a` interleaved with `built` at `bb67820` (pre-merge) — **every errored record has `duration: 0s` (“Page build failed.”), the same signature the `fab3e340`/`0ad208bf` sessions documented at 19:36–19:42Z on commits that contain none of this work; a real Jekyll failure takes ~30–90 s and logs.** This session's files were also audited for Liquid hazards (`{{`/`{%`): zero hits across `tape-desk/**`. Served landing still shows the pre-merge revision (its tiles list lacks `tape-desk/`), and the builder keeps retrying on every data push (a run was `building` at 20:36:12Z), so the next `built` record will publish this desk without further action. Owner-side note: the Pages *settings* PUT returned 403 for the Actions token (recorded by `fab3e340`), so switching the publisher cleanly is a settings action, not a repo action. |
 
 # Session arena/b62e8188-demo1 — repo review, verification fixes, dual alert-chat, final integration
 
@@ -1728,8 +1728,8 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 
 
 | Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
-| Merge result | pending |
-| Pages state after merge | pending |
+| Merge result | **MERGED** — merge commit `92578f212fe83a80399c2331268f184fda0b54dc` at 2026-11-20T20:26:34Z (`gh pr view 72 --json state,mergedAt,mergeCommit`). Required-before-merge gates all re-run on the final rebased head: tape-desk tests 71/71, builder `--check` OK, `check-links` PASS, `build_site.py` 17 pages/link-check OK, `verify_site.py` errors=0, alert-desk 35/35, `desk/tools/dom_test.mjs` 105/105, `npm test` PASS, unittests OK, engine 11/11 |
+| Pages state after merge | **merged content is on `main`; the built-in Pages builder is misfiring repository-wide, independent of this PR.** `GET /pages` reports source `main:/`, `build_type: legacy`; builds API 20:26–20:36Z shows `errored` at commits `92578f2` (this merge), `6e24e78`, `956bb2e`, `e3ab0a6`, `2ae593a` interleaved with `built` at `bb67820` (pre-merge) — **every errored record has `duration: 0s` (“Page build failed.”), the same signature the `fab3e340`/`0ad208bf` sessions documented at 19:36–19:42Z on commits that contain none of this work; a real Jekyll failure takes ~30–90 s and logs.** This session's files were also audited for Liquid hazards (`{{`/`{%`): zero hits across `tape-desk/**`. Served landing still shows the pre-merge revision (its tiles list lacks `tape-desk/`), and the builder keeps retrying on every data push (a run was `building` at 20:36:12Z), so the next `built` record will publish this desk without further action. Owner-side note: the Pages *settings* PUT returned 403 for the Actions token (recorded by `fab3e340`), so switching the publisher cleanly is a settings action, not a repo action. |
 
 ---
 
@@ -1909,7 +1909,7 @@ is only ever cancelled by a newer run of the same PR. `DEPLOYMENT.md` documents 
 | T-2 | `tape-desk/data/watchlist.json` built by `tape-desk/tools/build_watchlist.py` from committed verified datasets, cross-checked line by line against live API responses fetched in this session; the build refuses to emit any row without a source URL | done | `tape-desk/**` | committed `snapshot/*.json`, `data/*.json` + live demo-API responses fetched this session | Re-derivation in the builder + a `verified.html` table of snapshot value vs live value vs verdict; values that do not confirm are blank + flagged | Committed snapshot is hours old; live deltas are reported as deltas, never rewritten into the historical snapshot |
 | T-3 | Tests + additive CI: `tape-desk/test_boot.mjs` (jsdom: offline boot, swing threshold, model filter, chart windows, ladder) and `.github/workflows/tape-desk-check.yml` (new file, paths-filtered to `tape-desk/**`) | done | `tape-desk/test_boot.mjs`, `.github/workflows/tape-desk-check.yml` (new file only) | docs.github.com Actions | `node --check`, jsdom run, repo link checker | none — additive only, no shared workflow edited |
 | T-4 | Desk-to-requirement consolidation map (read-only triage): every desk in the repo listed against the brief's requirements, what it actually implements, whether it is linked from the landing, and which are redundant — so the owner can prune without guessing | done | `tape-desk/consolidation-map.html` | repository files only (git paths), official docs for endpoint claims | Each row cites a repository path that was opened and read this session; no claim about a file that was not inspected | The repo now carries ≥ 6 near-duplicate alert/chat implementations; flagged as a structural irregularity, not fixed from this namespace |
-| T-5 | Pull request `arena/5bfa283b-demo1` → `main`, merge without waiting, confirm GitHub Pages, record PR + merge + deploy state here | in progress | `COORDINATION.md` (this section) | docs.github.com Pages | Pre-merge local gates; post-merge Pages build state read from the GitHub API | GitHub REST rate limit was hit at 19:47Z by the many concurrent sessions; API calls are batched and retried |
+| T-5 | done | in progress | `COORDINATION.md` (this section) | docs.github.com Pages | Pre-merge local gates; post-merge Pages build state read from the GitHub API | GitHub REST rate limit was hit at 19:47Z by the many concurrent sessions; API calls are batched and retried |
 
 ## Log
 - 2026-11-20T19:48Z — session `5bfa283b` claimed T-1..T-5; claim pushed before implementation.
@@ -1965,9 +1965,9 @@ is only ever cancelled by a newer run of the same PR. `DEPLOYMENT.md` documents 
 |---|---|
 | Deliverable | `tape-desk/index.html` — live tape desk (two ≥ $0.10 scrolling chats incl. the model-pick feed, time-axis price chart with seconds/minutes/hours windows and ≥ $0.10 markers, order-book ladder with contracts at each price, per-topic top-dollar board grouped by event, YES/NO resolution tracker, simulated-trade ledger with per-topic / per-band / per-category grading, per-market rule text and jump-cause leads). `tape-desk/verified.html` — line-by-line snapshot-vs-live verification. `tape-desk/consolidation-map.html` — read-only desk-to-requirement map. |
 | Shared files touched | root `index.html`: **one** additive landing tile (same pattern as the previous final-integration sessions). `COORDINATION.md`: this section. Nothing else outside `tape-desk/**` and the new `tape-desk`-only workflow. |
-| Pull request | pending — created immediately below and recorded here |
-| Merge result | pending |
-| Pages state after merge | pending |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/72 (head `00949ff`→rebased `a581bb2`…, merged tree head `6e84088`-lineage; PR head final `00949ff`) |
+| Merge result | **MERGED** — merge commit `92578f212fe83a80399c2331268f184fda0b54dc` at 2026-11-20T20:26:34Z (`gh pr view 72 --json state,mergedAt,mergeCommit`). Required-before-merge gates all re-run on the final rebased head: tape-desk tests 71/71, builder `--check` OK, `check-links` PASS, `build_site.py` 17 pages/link-check OK, `verify_site.py` errors=0, alert-desk 35/35, `desk/tools/dom_test.mjs` 105/105, `npm test` PASS, unittests OK, engine 11/11 |
+| Pages state after merge | **merged content is on `main`; the built-in Pages builder is misfiring repository-wide, independent of this PR.** `GET /pages` reports source `main:/`, `build_type: legacy`; builds API 20:26–20:36Z shows `errored` at commits `92578f2` (this merge), `6e24e78`, `956bb2e`, `e3ab0a6`, `2ae593a` interleaved with `built` at `bb67820` (pre-merge) — **every errored record has `duration: 0s` (“Page build failed.”), the same signature the `fab3e340`/`0ad208bf` sessions documented at 19:36–19:42Z on commits that contain none of this work; a real Jekyll failure takes ~30–90 s and logs.** This session's files were also audited for Liquid hazards (`{{`/`{%`): zero hits across `tape-desk/**`. Served landing still shows the pre-merge revision (its tiles list lacks `tape-desk/`), and the builder keeps retrying on every data push (a run was `building` at 20:36:12Z), so the next `built` record will publish this desk without further action. Owner-side note: the Pages *settings* PUT returned 403 for the Actions token (recorded by `fab3e340`), so switching the publisher cleanly is a settings action, not a repo action. |
 
 ---
 
@@ -1997,3 +1997,16 @@ is only ever cancelled by a newer run of the same PR. `DEPLOYMENT.md` documents 
 | Sources | https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site (one publisher; custom-workflow flow) · https://docs.github.com/en/rest/pages/pages (`build_type` `legacy`/`workflow`; admin permission requirement) · https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule (schedule = default-branch tip; ≥5-min interval; load delays) · GitHub Pages builds API + Actions runs API responses recorded verbatim in DEPLOYMENT.md. |
 | Verification performed | Full local gate suite on the exact merged tree before each PR: build_site.py 17 pages + "link check: OK"; check-links.mjs PASS 391 files; verify_site.py errors=0 (2 pre-existing informational warnings); dashboard tests 46/46 + 9/9; unittest 7/7; npm test PASS; desk dom_test 105/105; pages.yml YAML parsed and asserted (no upload/deploy steps remain). `git pull --rebase` before every push; three COORDINATION.md conflicts resolved with `tools/resolve_board.py` (both sides kept). |
 | Irregularities | (1) Root cause was the dual-publisher configuration itself — fixed; (2) `PUT /pages` 403 permission boundary — documented verbatim, alternative administrator steps in DEPLOYMENT.md; (3) no "Pages deploy validation" run had completed at record time — continuous-push supersession; pre-merge gating carried by per-desk CI meanwhile; watch for completed runs when the merge storm subsides; (4) stray tracked `scripts/__pycache__/fetch_demo_data.cpython-311.pyc` untracked (already gitignored); (5) cross-reference: ops-desk's OPS-03 "deploy starvation" (session 54a39029) is the same failure — this session's PRs #70/#73/#77 are the fix; OPS-03 owners may close it against these PRs. |
+
+### Follow-up (same session): deploy observation for the owner
+
+`https://karagemop466-tech.github.io/Demo1/tape-desk/` currently 404s only because the last
+*successful* built-in Pages build predates this merge; the builder is erroring with 0-second
+“Page build failed.” records on successive `main` commits (some of them pure data refreshes,
+none containing tape-desk content) exactly as `DEPLOYMENT.md` describes for the 19:36–19:42Z
+window. No content in this PR is a plausible trigger — checked: no `{{`/`{%` sequences in any
+added file, no front-matter-lookalike first lines, and the same commits' *validation-only*
+`Pages deploy validation` workflow steps are the local green list above. If the pattern persists
+past the next several data pushes, the fix is repository settings (single-publisher choice), not
+another content PR; a `.nojekyll` file would additionally rule out any Jekyll-processing theory,
+and this session deliberately did not add one because it changes every other session's pages.
