@@ -65,7 +65,7 @@
     <h3>1. Universe and "highest dollar amount" ranking</h3>
     <div class="small">Open markets are listed from <span class="mono">GET /markets?status=open&amp;limit=1000</span> (official limit ≤ 1000). Topic classification uses the transparent keyword rules in
       <a href="https://github.com/karagemop466-tech/Demo1/blob/main/sim-desk/config.json" target="_blank" rel="noreferrer">sim-desk/config.json</a>
-      (first rule wins; matched-by recorded per trade). Candidates need ≥ 100 contracts traded in 24h and ≥ 2h until close, and are ranked by
+      (first rule wins; matched-by recorded per trade). Candidates need ≥ 5 contracts traded in 24h (demo books are extremely thin — disclosed in config.json) and ≥ 2h until close, and are ranked by
       <b>computed 24h traded notional = volume_24h × last_price_dollars</b> — a disclosed estimate, because Kalshi publishes no official dollar-volume field.
       Top 20 candidates (≤ 6 per topic) get signals evaluated.</div>
     <h3>2. Strategies</h3>
