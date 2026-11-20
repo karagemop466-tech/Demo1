@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live alert tapes · Kalshi Demo Dashboard</title>
+<meta name="description" content="Two live scrolling alert chats for the Kalshi demo exchange: every price swing of $0.10 or more across gas prices, elections, culture, crypto and golf, and the subset the high-ROI screen likes. Read-only, auto-starting, every line source-linked.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/alerts.css">
+</head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Live alert tapes</h1>
+  <p class="lead">Two scrolling chats over the official Kalshi <b>demo</b> Trade API. Left: every market on the five tracked
+  topics that moves <b>≥&nbsp;$0.10</b> in either direction. Right: only the swings the ROI screen likes, with the entry,
+  the fee, the payout and the gates that qualified it. The page starts by itself — nothing to fill in.</p>
+
+  <div class="at-status" id="at-status">Loading…</div>
+
+  <div class="at-strip">
+    <div><b id="at-watch">—</b><span>markets watched</span></div>
+    <div id="at-flash"><b id="at-alert-count">0</b><span>swings fired this visit</span></div>
+    <div><b id="at-count-all">0</b><span>lines · all events</span></div>
+    <div><b id="at-count-picks">0</b><span>lines · model picks</span></div>
+    <div><b id="at-trade">0</b><span>public trades seen</span></div>
+    <div><b id="at-vwap">0</b><span>markets with a VWAP</span></div>
+    <div><b id="at-req">0</b><span>API requests</span></div>
+    <div><b id="at-fail">0</b><span>failed requests</span></div>
+    <div><b id="at-latency">—</b><span>last cycle</span></div>
+    <div><b id="at-cycled">—</b><span>cycle finished</span></div>
+  </div>
+
+  <div class="at-controls card">
+    <div class="at-controls-row">
+      <label>Swing threshold $ <input type="number" id="at-threshold" step="0.01" min="0.01" max="0.99" style="width:78px"></label>
+      <span class="note" id="at-threshold-note"></span>
+      <label>Poll every <input type="number" id="at-interval" step="1" min="5" max="300" style="width:64px"> s</label>
+      <span class="note" id="at-interval-note"></span>
+    </div>
+    <div class="at-controls-row">
+      <span class="note">Topics:</span>
+      <label class="at-chk"><input type="checkbox" id="at-topic-gas_prices"> Gas prices</label>
+      <label class="at-chk"><input type="checkbox" id="at-topic-elections"> Elections</label>
+      <label class="at-chk"><input type="checkbox" id="at-topic-culture"> Culture</label>
+      <label class="at-chk"><input type="checkbox" id="at-topic-crypto"> Crypto</label>
+      <label class="at-chk"><input type="checkbox" id="at-topic-golf"> Golf</label>
+      <span class="spacer"></span>
+      <button id="at-pause" type="button">Pause live polling</button>
+      <button id="at-follow" type="button">Auto-scroll: on</button>
+      <button id="at-export" type="button">Export tape (.json)</button>
+      <button id="at-clear" type="button">Clear tapes</button>
+    </div>
+    <p class="note" id="at-seedinfo">Loading the verified snapshot watchlist…</p>
+  </div>
+
+  <div class="at-grid">
+    <section class="at-pane">
+      <header>
+        <h2>Tape A — all events</h2>
+        <span class="note" id="at-offline-note"></span>
+        <button class="at-pill" id="at-newpill" type="button" hidden>new ↓</button>
+      </header>
+      <div class="at-tape" id="at-tape-all" role="log" aria-live="polite" aria-label="Live alerts for every tracked market"></div>
+      <footer class="note">A line is one ≥&nbsp;$0.10 move on one market, detected between two consecutive reads of the
+      market quote (<code>GET /markets</code>) or between two prints on the public tape (<code>GET /markets/trades</code>).
+      “Event / cause” links go to the API record and a news search; the API returns prices only, so no cause is ever asserted.</footer>
+    </section>
+
+    <section class="at-pane pane-picks">
+      <header>
+        <h2>Tape B — model picks (high ROI)</h2>
+        <span class="note">5 gates · <a href="docs/alerts-model.html">model spec</a></span>
+      </header>
+      <div class="at-tape" id="at-tape-picks" role="log" aria-live="polite" aria-label="Live alerts filtered by the high-ROI model"></div>
+      <footer class="note">A swing appears here only when the same market passes all five gates: still in its window, a fillable
+      ask with at least one contract resting, the ask below today's traded VWAP, a fee-adjusted ROI of at least 10&nbsp;% to
+      resolution, and the swing itself. Screen, not forecast — the spec lists what it cannot see.</footer>
+    </section>
+  </div>
+
+  <h2>How this page stays honest</h2>
+  <div class="grid">
+    <div class="card">
+      <h3 style="margin-top:0">Data path</h3>
+      <ul class="plain">
+        <li>Base URL <code>https://external-api.demo.kalshi.co/trade-api/v2</code> — the demo endpoint named in the brief and in
+          <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a> ·
+          <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>.</li>
+        <li>Three requests per cycle, whatever the watchlist size:
+          <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><code>GET /markets?tickers=</code></a> (quotes),
+          <a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener"><code>GET /markets/orderbooks?tickers=</code></a> (depth, ≤100 tickers),
+          <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener"><code>GET /markets/trades?limit=1000</code></a> (print tape).</li>
+        <li>Asks are not returned by the API. A YES ask is derived from the best NO bid as <code>$1.00 − price</code>, exactly as
+          <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">the order-book docs</a> describe; each line says which side it was derived from.</li>
+        <li>Price = YES contract price in dollars, X axis = time (1-minute candles from
+          <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">the candlesticks endpoint</a>; it has no sub-minute period, so “seconds” only exist in this browser between polls).</li>
+        <li>Resolution: a watched market stays on the tape until the API returns <code>result</code>; the line then shows YES / NO (or <code>scalar</code>) with its event record link —
+          <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement docs</a>.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Limits, stated plainly</h3>
+      <ul class="plain">
+        <li><b>This is polling, not streaming.</b> The WebSocket API would stream, but its handshake requires a signed
+          <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">authenticated connection</a>,
+          and a browser cannot set those handshake headers — so a credential-free page cannot use it.</li>
+        <li><b>REST reads are cached.</b> <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>
+          states prices, sizes and status “can lag the exchange by several seconds”. The tape is a demo-data monitor, not a matching engine.</li>
+        <li><b>Unauthenticated traffic is rate-limited separately</b>
+          (<a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits</a>); a
+          <code>429</code> makes this page back off exponentially and say so in the banner.</li>
+        <li><b>No orders are placed.</b> The tape is read-only by construction — there is no key in the page and no write call in the script.
+          Simulated trading lives on <a href="pages/paper-trading.html">paper trading</a>, <a href="engine/index.html">the strategy engine</a>
+          and <a href="sim-desk/index.html">sim-desk</a>, which trades on this same tape shape in CI.</li>
+        <li><b>Demo venue.</b> “The price and behavior of markets in the demo environment may not be reflective of those in real markets”
+          (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs</a>). Thin books, zero volume and
+          placeholder-like values are shown as blanks, never filled in.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Where the rest of the desk is</h2>
+  <p class="note">This page is the <b>live-polling</b> implementation of the brief’s two-chat alert feed. The same $0.10 rule is published by five
+  other sessions and none was edited to match this one: <a href="alerts.html">alerts.html</a> (session d973ced5, official candlestick capture,
+  regression suite <a href="tests/alerts.test.mjs">tests/alerts.test.mjs</a>), <a href="alerts/index.html">alerts/index.html</a> (its own generated
+  <code>alerts/data/feed.json</code> + QLM score), <a href="trade-desk/index.html">trade-desk/</a> (print-to-print, with a documented reason for not
+  using candles), <a href="alert-desk/index.html">alert-desk/</a> (trades tape with a committed-snapshot fallback) and
+  <a href="tape-desk/index.html">tape-desk/</a> (browser-polled tape with a simulated ledger and a
+  <a href="tape-desk/consolidation-map.html">consolidation map</a> of which desk does what). All six apply ≥ $0.10 in either
+  direction, none places an order, and each measures a “move” against a different price — so a flag on this page need not appear on another in the same
+  minute. Picking one survivor is <a href="suggestions.html#s16">S16</a>. Topic tables and per-row sources:
+  <a href="site/index.html">snapshot desks</a>; the model behind Tape B: <a href="docs/alerts-model.html">model spec</a>; candle-level jump scan:
+  <a href="pages/price-jumps.html">price jumps</a>; chart with seconds/minutes/hours and the depth ladder:
+  <a href="dashboard.html">live dashboard</a> and <a href="site/liquidity.html">liquidity</a>; resolutions:
+  <a href="site/resolved.html">resolved outcomes</a> and <a href="exec-desk/markets.html">the live resolution tracker</a>;
+  unverified items: <a href="flagged.html">Flagged for Review</a>; everything on one page: <a href="index.html">home</a>.</p>
+</main>
+<footer class="note">Simulated, read-only analysis of a mock-funds demo exchange. Not investment advice, and not a
+recommendation to trade. Model maths and its five gates: <a href="docs/alerts-model.html">docs/alerts-model.html</a>.</footer>
+<script src="assets/common.js"></script>
+<script src="assets/alerts.js"></script>
+<script src="assets/alerts-app.js"></script>
+</body></html>

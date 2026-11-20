@@ -24,8 +24,8 @@
       <tr><td>F-12</td><td>Placeholder titles in production</td><td>HOUSENJ09 has title "x" in the production elections series list. KXNOMINEECONF title "x" appears in the demo crypto list.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Elections&limit=20" target="_blank" rel="noopener">Production: series Elections</a></td></tr>
       <tr><td>F-13</td><td>Possible broken documentation link</td><td>The orderbook responses page links to <code>/api-reference/market/get-market-order-book</code>. The API reference page we read is <code>get-market-orderbook</code>. The first path was not opened, so it may be broken.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td></tr>
       <tr><td>F-14</td><td>Fees not verified</td><td>Series show <code>fee_type: quadratic</code>. The fee schedule was not read.</td><td><span class="tag t-unv">Open</span></td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding (listed, not read)</a></td></tr>
-      <tr><td>F-15</td><td>Browser CORS not verified</td><td>The dashboard calls Kalshi's public endpoints from the browser. The build environment cannot reach those hosts, so this was not tested.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Environments</a></td></tr>
-      <tr><td>F-16</td><td>Rate limits not read</td><td>The dashboard polls every 5 seconds. Your tier and budget are unknown.</td><td><span class="tag t-unv">Open</span></td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits (listed, not read)</a></td></tr>
+      <tr><td>F-15</td><td>Browser CORS not verified</td><td>The dashboard calls Kalshi's public endpoints from the browser. The build environment cannot reach those hosts, so this was not tested <b>from the sandbox</b>. It has since been verified two ways: the CI header probe records <code>access-control-allow-origin: https://karagemop466-tech.github.io</code> for the demo API (<a href="data/cors.json">data/cors.json</a>, refreshed by the pipeline), and a post-deploy read of the live desk showed “LIVE official demo API reachable directly” (board records for sessions 3a5f6f1d and 5487be47, and again for <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">5487be47</a>).</td><td><span class="tag t-ver">Closed by evidence</span></td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Environments</a> · <a href="https://github.com/karagemop466-tech/Demo1/blob/main/data/cors.json" target="_blank" rel="noopener">data/cors.json in the repo</a></td></tr>
+      <tr><td>F-16</td><td>Rate limits not read</td><td>The dashboard polled every 5 seconds; your tier and budget are unknown. <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a> was read on 2026-11-20: token-bucket budgets apply to authenticated calls and “unauthenticated public requests are subject to separate limits”, with the instruction to back off on 429. The new <a href="alerts.html">alert tapes</a> page therefore spends at most three requests per 15-second cycle whatever the watchlist size and backs off exponentially on 429; the older 5-second pages were left as their owners built them.</td><td><span class="tag t-info">Read; new page complies</span></td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits</a></td></tr>
       <tr><td>F-17</td><td>No official causal field for price jumps (sharp-moves page)</td><td>The Kalshi API returns prices only; nothing identifies what caused a move. The Sharp moves page therefore leaves the "possible cause" website-link column blank and links the official venue event page (which may display related-news digests) plus the exact candlestick API request per row. Causation is never asserted.</td><td><span class="tag t-unv">Blank + flagged</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a> · <a href="https://kalshi.com/events/KXAAAGASM-26NOV30" target="_blank" rel="noopener">Venue event page (link pattern verified)</a></td></tr>
       <tr><td>F-18</td><td>Seconds-level jump detection not offered by the official API</td><td>The official candlestick endpoint only accepts <code>period_interval</code> 1 / 60 / 1440 minutes. The Sharp moves page detects jumps on 1-minute (and longer) closes; sub-minute moves are labeled as not available rather than sampled.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks (period_interval)</a></td></tr>
       <tr><td>F-19</td><td>Demo candle data is thin / synthetic (sharp-moves page)</td><td>The demo venue injects open interest on zero-volume candles and uses placeholder-like values; jump counts on the demo are exercise data, not market signal.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">Demo Trade API</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a></td></tr>
@@ -43,12 +43,118 @@
   <div class="table-wrap"><table>
     <thead><tr><th>#</th><th>Item</th><th>Detail</th><th>Status</th><th>Source</th></tr></thead>
     <tbody>
-      <tr><td>R-01</td><td>README is one line</td><td><code>README.md</code> contains only "# Demo1". No setup or description.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/README.md" target="_blank" rel="noopener">README.md</a></td></tr>
-      <tr><td>R-02</td><td>No license, no .gitignore, no CI</td><td>Only file on <code>main</code> is README.md. No LICENSE, .gitignore, or workflow.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">Repository</a></td></tr>
+      <tr><td>R-01</td><td>README is one line</td><td><code>README.md</code> contained only "# Demo1". No setup or description.</td><td><span class="tag t-ver">Resolved</span> <span class="note">README now documents the pipeline, every surface and the verification gates.</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/README.md" target="_blank" rel="noopener">README.md</a></td></tr>
+      <tr><td>R-02</td><td>No license, no .gitignore, no CI</td><td>At the time, the only file on <code>main</code> was README.md — no LICENSE, .gitignore, or workflow.</td><td><span class="tag t-info">Partly resolved</span> <span class="note">.gitignore and ten workflows now exist; there is still no LICENSE, so nothing in this repository is licensed for reuse.</span></td><td><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">Repository</a></td></tr>
       <tr><td>R-03</td><td>Overlapping session branches</td><td>Five branches claimed the same Kalshi dashboard task. Now merged to main: arena/e41f6700 (PRs #1, #2) and arena/a443fb8f (PRs #4, #6). Still open or unmerged: arena/ff423a65 (PR #3 open) and arena/0135085b and arena/0cc392e4 (no PR).</td><td><span class="tag t-unv">Needs decision</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/pulls?q=is%3Apr" target="_blank" rel="noopener">Pull requests</a></td></tr>
       <tr><td>R-05</td><td>Duplicate site versions on one Pages site</td><td>Three versions now coexist: this landing and category pages (root), the single-page monitor (<code>monitor/</code>, session e41f6700), and the multi-page site (<code>pages/</code>, session a443fb8f). Their category tables and dashboards overlap. All were kept; none deleted.</td><td><span class="tag t-unv">Needs decision</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
       <tr><td>R-06</td><td>Other session pages contain blank or simulated values</td><td>Per their coordination log, <code>pages/</code> category tables are blank and unverified, and its dashboard uses labelled simulated data. This integration did not re-verify those pages.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
       <tr><td>R-04</td><td>Branch naming instructions conflict</td><td>The coordination rules name branches <code>session-&lt;id&gt;/&lt;task&gt;</code>. This session's branch is fixed as <code>arena/175cafdf-demo1</code>; the fixed name was kept.</td><td><span class="tag t-unv">Noted</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/arena/175cafdf-demo1/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
+    </tbody></table></div>
+
+
+  <h2>E. Found by session 65df996f on 2026-11-20 (live tapes + data-pipeline review)</h2>
+  <p class="note">Every row below was read out of committed repository files and cross-checked against the official Kalshi
+  documentation during this session; none of it is inferred. Items marked “fixed here” still need the next scheduled CI run to prove the
+  live effect, because the sandbox this work was written in has no network path to <code>*.kalshi.co</code>.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Item</th><th>Detail and evidence</th><th>Status</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>E-01</td><td>“Gas prices” topic contained a Las Vegas NBA market</td>
+        <td><code>docs/data/snapshot.json</code> (CI run 2026-11-20T13:40:48Z) listed <b>“When will Las Vegas receive a Pro Basketball expansion team?”</b>
+        as the <i>top</i> event of the gas topic. The collector filtered series and event titles with a substring test for the keyword
+        <code>gas</code>, and “ve<strong>gas</strong>” contains it. Word-boundary matching is now used for titles and tags, while the series
+        ticker keeps substring matching (tickers concatenate words, so <code>KXAAAGASW</code> must still match).</td>
+        <td><span class="tag t-ver">Fixed + regression test</span></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/data/snapshot.json" target="_blank" rel="noopener">docs/data/snapshot.json</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/tests/test_topic_classification.py" target="_blank" rel="noopener">tests/test_topic_classification.py</a></td></tr>
+
+      <tr><td>E-02</td><td>The “highest dollar amount” ranking for gas was all $0.00</td>
+        <td>Every gas event in that same snapshot had <code>est_usd_volume_24h: 0.0</code>, so the topic’s top events were ordered by nothing at all.
+        Cause, read from the code: the global <code>GET /events</code> scan is capped (25 pages × 200) and the per-series top-up only ran for topics
+        with <b>fewer than 5</b> matches — gas had 85, so the busiest gas series were never fetched. The pipeline now always fetches the
+        <code>TOP_SERIES_PER_TOPIC</code> highest-volume series per topic, using the volume the API reports for the series itself
+        (<code>include_volume=true</code>: “total volume traded across all events in each series”).</td>
+        <td><span class="tag t-ver">Fixed here; live effect pending the next CI run</span></td>
+        <td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">GET /series (include_volume)</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/scripts/fetch_kalshi_data.py" target="_blank" rel="noopener">scripts/fetch_kalshi_data.py</a></td></tr>
+
+      <tr><td>E-03</td><td>Series tickers appear in two forms, and exact matching silently dropped one</td>
+        <td><code>docs/data/series_map.json</code> lists gas series as <code>AAAGASW</code>, <code>AAAGASD</code> …, while events report
+        <code>series_ticker: "KXAAAGASW"</code> (<code>snapshot/markets.json</code>). Set membership between the two therefore failed. Comparison is now
+        prefix-insensitive. <b>Why this is only “flagged”:</b> the docs define a series ticker but do not promise one canonical prefixed form on both
+        endpoints, so the cause is inferred from the two committed files, not proven against a written rule.</td>
+        <td><span class="tag t-ver">Fixed here</span> + <span class="tag t-unv">cause inferred from repo evidence</span></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/data/series_map.json" target="_blank" rel="noopener">docs/data/series_map.json</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td></tr>
+
+      <tr><td>E-04</td><td>A red check on <code>main</code>: the data bot pushed exactly once</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44746307623" target="_blank" rel="noopener">Run 44746307623</a>
+        (“Kalshi demo data pipeline”, push to main, 2026-11-20) failed in the step <i>Commit refreshed data (main only)</i>. The log body could not be
+        retrieved from this sandbox (the log host is outside the allowlist), so the exact race partner is <b>not proven</b>; what is visible is that four
+        workflows push to <code>main</code> under four independent concurrency groups and this step had no retry. The step now retries the push three
+        times, rebasing with the freshly generated snapshot preferred. <code>desk.yml</code> and <code>account.yml</code> have the same
+        single-push shape and were left alone (owned by other sessions) — a follow-up request is logged on the coordination board.</td>
+        <td><span class="tag t-ver">Retried here</span> + <span class="tag t-unv">other two workflows unchanged</span></td>
+        <td><a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions" target="_blank" rel="noopener">GitHub Actions: on.push concurrency</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/.github/workflows/kalshi-data.yml" target="_blank" rel="noopener">.github/workflows/kalshi-data.yml</a></td></tr>
+
+      <tr><td>E-05</td><td>Streaming is not available to a credential-free page — the tape polls instead</td>
+        <td>The brief asks for a real-time feed. Kalshi’s WebSocket API is the streaming surface, but “WebSocket connections require authentication
+        during the connection handshake”, and a browser cannot attach <code>KALSHI-ACCESS-*</code> headers to a WebSocket upgrade — so this page cannot
+        subscribe without putting a private key in public JavaScript, which it will not do. <a href="alerts.html">alerts.html</a> therefore polls
+        documented public REST reads every 15 s, and the docs’ own caveat is printed on the page: <code>GET /markets</code> responses are cached for a short
+        time, so prices can lag by several seconds. Treat the tape as a demo-data monitor, not a matching engine.</td>
+        <td><span class="tag t-blk">Blocked by design</span></td>
+        <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets (caching note)</a></td></tr>
+
+      <tr><td>E-06</td><td>The high-ROI screen is published with no performance claim</td>
+        <td>Tape B’s five gates (<a href="docs/alerts-model.html">spec</a>) are computed only from fields the API returns: open status and close time,
+        a fillable ask with resting size, the gap to the session VWAP of observed prints, the fee-adjusted payoff, and the swing itself.
+        No win rate, edge or expected value is asserted anywhere, because nothing in this repository measures one for these gates.
+        The two CI engines that <i>do</i> keep simulated ledgers are <a href="sim-desk/index.html">sim-desk</a> and
+        <a href="engine/index.html">the strategy engine</a>; their P&amp;L is demo-venue paper output.</td>
+        <td><span class="tag t-unv">No backtest claimed</span></td>
+        <td><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi fee schedule (PDF)</a> ·
+        <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td></tr>
+
+      <tr><td>E-07</td><td>Neither tape has been opened in a real browser here</td>
+        <td>Behaviour is proven in jsdom against fixtures shaped like verified demo responses (81 checks in
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/tests/alerts.test.mjs" target="_blank" rel="noopener">tests/alerts.test.mjs</a>)
+        — the same standard the rest of the site meets, and the same limitation: a sandbox run is not a person on the deployed page. After this merge,
+        the deployed URL is fetched and the pipeline is re-checked; anything that cannot be observed stays blank on the page rather than being filled in.</td>
+        <td><span class="tag t-unv">Open by nature</span></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/api-verification.md" target="_blank" rel="noopener">docs/api-verification.md</a></td></tr>
+
+      <tr><td>E-08</td><td>Six pages now implement the same $0.10 requirement</td>
+        <td>Six sessions built the brief’s two-chat alert feed in parallel against the same branch and could not see each other; two collided on the
+        filename <code>alerts.html</code>. Nothing was discarded. As merged: <a href="alerts-live.html">alerts-live.html</a> (this session — browser polling every
+        15&nbsp;s, five-gate screen, rule stated in <a href="docs/alerts-model.html">the model spec</a>),
+        <a href="alerts.html">alerts.html</a> (session d973ced5, official candlestick capture; regression suite <code>tests/alerts.test.mjs</code>),
+        <a href="alerts/index.html">alerts/index.html</a> (its own generated <code>alerts/data/feed.json</code>; README: “moves … between two adjacent
+        official candlesticks”), <a href="trade-desk/index.html">trade-desk/</a> (session 87015421, print-to-print on the trades tape, with a documented
+        reason for not using candles: <code>trade-desk/assets/engine.js</code> lines 13–16 record that the demo returned empty candle arrays for the
+        markets it checked on 2026-11-20), and <a href="alert-desk/index.html">alert-desk/</a> (session 0ad208bf, also print-to-print,
+        <code>alert-desk/app.js</code> line 25, with a committed-snapshot fallback), and <a href="tape-desk/index.html">tape-desk/</a>
+        (browser-polled tape, a fee-aware pick list, a simulated ledger and its own <a href="tape-desk/consolidation-map.html">consolidation map</a> of which desk does what).
+        The <code>alerts.html</code> path collision was settled in the root page owner’s favour: this session’s page moved to
+        <code>alerts-live.html</code> rather than overwrite <code>alerts.html</code>, whose DOM is pinned by another session’s regression suite
+        (<code>tests/alerts.test.mjs</code>, 23 checks).</td>
+        <td><span class="tag t-unv">Empty candlesticks reported by one session vs. candle-driven pages by two others — unresolved</span> <span class="note">six feeds, one requirement</span></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/tree/main/trade-desk/assets/engine.js" target="_blank" rel="noopener">trade-desk/assets/engine.js</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/data/history.json" target="_blank" rel="noopener">docs/data/history.json (candles: [] in the CI capture)</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
+      <tr><td>E-09</td><td>“Which markets are in a topic” has two answers in this repo</td>
+        <td>The site pages (<code>site/gas-prices.html</code> …) count <b>116 open gas markets</b> because their collector,
+        <code>tools/collect_kalshi.py</code>, classifies by the series’ <i>published Kalshi categories</i>. The data pipeline behind the live desk and the
+        alert watchlist counts <b>85 matched gas events</b> because <code>scripts/fetch_kalshi_data.py</code> uses this project’s keyword rules and the
+        <code>category</code> filter. Neither is wrong — the docs say category matching is exact and that a series’ primary <code>category</code> may differ
+        from the value you filtered on — but the same word names two populations, so a number must always be read with its source. Nothing was unified here;
+        the two collectors are owned by different sessions and their outputs are both consumed.</td>
+        <td><span class="tag t-unv">Unreconciled by design</span></td>
+        <td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">GET /series (category, categories)</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/tools/collect_kalshi.py" target="_blank" rel="noopener">tools/collect_kalshi.py</a> ·
+        <a href="https://github.com/karagemop466-tech/Demo1/blob/main/index.html" target="_blank" rel="noopener">home topic table</a></td></tr>
     </tbody></table></div>
 
   <h2>D. Decisions that can change this site</h2>

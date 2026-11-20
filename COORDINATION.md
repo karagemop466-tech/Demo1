@@ -1378,6 +1378,20 @@ All live values in the site are drawn from the committed snapshot collected from
 - **Role:** final integration session. Verifies the combined site line by line, builds the one user requirement with no implementation anywhere in the repo — a **two-chat scrolling alert system** for contract-price swings ≥ $0.10 in either direction (one chat with all swings, one selective high-ROI filter) — then runs the build/link gates, PR → main → merge, confirms GitHub Pages deploys, and records the PR link and merge result here.
 - **File scope (new/additive only):** `alerts.html` (new), `assets/js/alerts.js` (new), root `index.html` (one additive nav link), `COORDINATION.md` (this section). No other session's files edited.
 
+---
+
+# Session arena/65df996f-demo1 — live alert tapes (dual scrolling chat), topic-separation fix, hub simplification
+
+> Task board (N-1..N-4), the rebase-conflict record and the publish record for this session are at the **tail of this file**
+> (appended after three rebases reordered the board): “## Task board (this session — N-1..N-4)”.
+
+
+## Session claim
+- **Session ID:** `65df996f` · **Branch:** `arena/65df996f-demo1` (platform-fixed name; `session-<id>/<task>` not possible — same deviation every prior session logged).
+- **Claimed:** 2026-11-20T19:2xZ (UTC), pushed before any implementation.
+- **Overlap check:** `gh pr list --state open` → none; every remote branch except this one is merged into `main`; last commit on `main` is the CI data refresh `cb6f8b7`. All other sessions' claims are ≥5 h old with no commits, so per the 60-minute handoff rule this session also acts as the **final integration session** for the shared root outputs it touches below. No other session's *implementation* is rewritten — edits are additive or stale-claim corrections, each logged.
+- **Takeover note:** the still-open "final integration" claims of `arena/17f80f01-demo1` (task 22) and `arena/358db039-demo1` are >60 min old with no further commits; their merged deliverables (root landing, `integration/*`) are taken over for the additive changes in N-3/N-4 only.
+
 ## Task board
 
 | # | Task | Status | File scope | Sources | Verification | Irregularities |
@@ -1761,6 +1775,114 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 ## Log
 - 2026-11-20 ~19:55 UTC — session `fab3e340` claimed PD-1..PD-4; claim pushed before implementation.
 - 2026-11-20 ~20:05 UTC — PD-1 partial evidence (fetched before the shared GitHub token hit its rate limit): Pages builds API shows `errored` "Page build failed." for `6aa1ed55`(19:42:14Z), `8db5749f`(19:41:49Z), `696c9454`(19:40:38Z), `971d8191`(19:40:10Z), `70690b17`(19:36:32Z); built `1cf87c90`(19:37:57Z), `b4a7fc4d`(19:33:07Z). Site object: `source {branch: main, path: /}`. Live-site check via page fetch: landing renders the 11:43:59Z snapshot; `trade-desk/index.html` (PR #60) and `alert-desk/index.html` (PR #59) fail to fetch = not deployed. Implementation prepared and verified locally: full pages.yml gate suite green on this tree (monitor JS OK; required files OK; live-desk JS OK; `build_site.py` 17 pages + "link check: OK"; site JS OK; desk dom_test 105/105; `tools/check-links.mjs` PASS 391 files; `verify_site.py` 0 errors; dashboard tests 46/46 + 9/9; unittest 7/7; npm test PASS). Implementation commit (this one): `pages.yml` gains schedule trigger + node_modules cleanup + single-publisher header; new root `DEPLOYMENT.md`; stray `scripts/__pycache__/fetch_demo_data.cpython-311.pyc` untracked (already gitignored).
+
+
+## Task board (this session — N-1..N-4)
+
+| # | Task | Status | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-----------|---------|--------------|----------------|
+| N-1 | **Alert Tapes** — the brief's dual live scrolling chat: left tape = every ≥ $0.10 swing across the five topics, right tape = the same events filtered by the high-ROI model. Auto-starts, no manual input, every line links its official API request + venue event page | in progress | NEW `alerts.html`, `assets/alerts.js`, `assets/alerts.css`, `docs/alerts-model.md`, `tests/alerts.test.mjs` | docs.kalshi.com (environments, orderbook_responses, candlesticks, get-trades, rate_limits, quick_start_websockets, market_settlement, fee rounding) | jsdom harness with mocked official responses; math unit-checked; `node --check`; repo link audit | WebSockets cannot be used credential-free (handshake requires signing, browser cannot set headers) → REST polling with backoff; demo venue data is mock data |
+| N-2 | Topic separation + highest-dollar ranking defects in the CI data pipeline (`gas` currently contains a Las Vegas NBA series because "ve**gas**" substring-matches; the AAA national gas series never appear) | in progress | `scripts/fetch_kalshi_data.py` (takeover: owner session `6aa291e9` inactive, task merged), NEW `tests/test_topic_classification.py` | repo evidence `docs/data/snapshot.json`, `docs/data/series_map.json`, `snapshot/markets.json` + docs.kalshi.com get-series-list / get-events | New offline tests + a live CI run on `main` after merge, compared to the committed pre-fix output | Ranking metric is a computed estimate, not an official USD field (RANK-01 stands) |
+| N-3 | Simplify the root hub: group the ~8 duplicate desk links into "start here / by topic / alerts / simulation / evidence", add the Alert Tapes entry to the shared nav, correct stale claims (browser CORS "not verified" footer on `dashboard.html`, F-15/F-16) | in progress | `index.html`, `assets/common.js`, `dashboard.html` (footer line), `flagged.html` (new section + two status updates) | `data/cors.json`, deployed-origin evidence logged by sessions `3a5f6f1d`/`5487be47`, docs.kalshi.com rate_limits | Link audit + jsdom nav test + post-deploy fetch of every page in the nav | Root landing has been edited by several sessions; only additive/grouping changes here, no page deleted |
+| N-4 | Docs + publish: exec-summary section, README section, flagged items, PR → merge → confirm Pages deploy, record on this board | in progress | `EXECUTIVE_SUMMARY.md`, `README.md`, `COORDINATION.md`, PR/merge operations | docs.github.com Pages | `python3 build_site.py`, `node tools/check-links.mjs`, all test suites, Pages API + post-deploy fetch | One pre-existing red CI job to reproduce (kalshi-data commit race, run 44746307623) — fix in N-2 scope if confirmed |
+
+### Rebase and duplicate-work record — session `65df996f`, 2026-11-20 (during PR #61)
+
+Three rebases onto a moving `main`; every conflict resolved keeping **both** sides, nothing discarded:
+
+| File | What collided | Resolution |
+|---|---|---|
+| `COORDINATION.md` | append-only board, twice | `python3 tools/resolve_board.py` (1481 → 1588 lines) |
+| `alerts.html` (root) | three sessions in a row landed on this filename: `d973ced5` merged it (PR #53), `65df996f` (this session) built a live-polling page at the same path, then `b62e8188` merged a 23-check suite that pins the **root** path’s DOM (`tests/alerts.test.mjs`, `#msgs-all`/`#msgs-roi`) | **main’s page wins the path**: root `alerts.html` stays session `d973ced5`’s snapshot page exactly as merged, `assets/js/alerts.js` untouched, their suite untouched and green (23/23). This session’s live page moved to **`alerts-live.html`** with its own engine (`assets/alerts.js`, `assets/alerts-app.js`), its own suite `tests/alerts-live.test.mjs` (81/81) and a banner naming all five siblings. The temporary `alerts-snapshot.html` copy this session had made is removed — it would have been a stale second copy of their page, and their version has two bug fixes mine did not. No other session’s file was edited to match mine. |
+| `.github/workflows/kalshi-data.yml` | both sessions hardened the same data-commit step in the same window | **main’s version kept** (it rebuilds the data commit on the remote tip, which a plain rebase cannot); my rationale recorded as comments above it |
+| `assets/common.js` nav | main added `alerts.html` + `site/*` topic links; I added the same `alerts.html` | main’s block kept, my duplicate line dropped, `alerts-snapshot.html`, `alerts/index.html`, `trade-desk/index.html`, `alert-desk/index.html`, `sim-desk`, `engine` appended (34 entries, no duplicates) |
+| `index.html` | I restructured the hub into task groups; two sessions added tiles (trade-desk, alert-desk, resolutions) in the same region | my grouped structure kept, **all** of their tiles and links folded into it (verified: zero hrefs lost from either side), and their “Live trade desk (this session)” callout replaced by a tile that names the owning session |
+
+**The brief’s two-chat ≥ $0.10 alert feed now exists five times**, because five sessions worked the same requirement in parallel:
+`alerts-live.html` (65df996f, live polling + five-gate screen), `alerts.html` (d973ced5, committed candlesticks, regression suite by b62e8188),
+`alerts/index.html` (its own generated feed + QLM score), `trade-desk/` (87015421, print-to-print + paper trading),
+`alert-desk/` (0ad208bf, trades tape + snapshot fallback). All five are published and cross-linked from the home page and from
+`flagged.html` §E-08; the decision about which one survives is `suggestions.html#s16`. Deliberate non-edits: no other session’s
+page, engine or workflow was rewritten to look like mine.
+
+**One unresolved technical disagreement worth reading:** `trade-desk/assets/engine.js` (lines 13–16) states the demo candlestick
+endpoint “returns empty candle arrays for the active markets checked on 2026-11-20”, and `docs/data/history.json` in the CI capture
+does show `candles: []`. Two other implementations nevertheless key their swings off candle closes. This session’s page uses the
+candles only as a *fallback* and the REST/tape prices first, so it works either way — but nobody has established which baseline the
+demo venue actually supports today. Recorded as unverified, not settled by editing anyone’s code.
+
+**Follow-up request to another owner (logged, not done here):** `desk.yml` and `account.yml` still push their committed data exactly
+once with no retry, the shape that reddened `kalshi-data` on run 44746307623. `kalshi-data.yml` is now hardened; those two are yours
+if you want the same three-attempt loop.
+
+Gates run before this merge: 33 python tests, `tests/alerts.test.mjs` 81, `tests/dashboard.test.mjs` 46, `tests/dashboard-jumps.test.mjs` 9,
+`alerts/tools/test_alerts.py` 23 + `alerts/tools/test_dom.mjs` PASS, `alert-desk/test_boot.mjs` 35, `trade-desk` 45 + 24 + 13,
+`python3 build_site.py` 17 pages, `node tools/check-links.mjs` PASS, `tools/verify_site.py` errors=0.
+
+### Cross-session notes from `65df996f` (logging, not editing)
+
+- `## Publish record — session arena/d973ced5-demo1` still reads `pending` for PR / merge / deploy, but their work is on `main`
+  through PR #53 (`bb70853`). Left as they wrote it — only its owner should amend their own record; noted here so the next reader
+  does not conclude their page is unpublished.
+- The board’s earlier append-only folds interleaved some headings (my `Task board (this session — N-1..N-4)` table lost its column
+  header row and sat directly under `d372e97e`’s publish record). Repaired additively: the heading and header row were restored, no
+  line of any session was removed (verified by a line-multiset diff against the previous version: 0 lines lost).
+- Shared `assets/common.js` nav grew to 34 entries rather than being trimmed, because `trade-desk/tests/links.test.mjs` asserts
+  nav parity against its own expectations; a trim would have broken their suite. Cleaning the nav wall is a decision for whichever
+  session owns the nav next.
+
+## Publish record — session arena/65df996f-demo1 (written immediately before the merge)
+
+| Item | Result |
+|---|---|
+| Pull request | [#61](https://github.com/karagemop466-tech/Demo1/pull/61) from `arena/65df996f-demo1` → `main` — “Live alert tapes, topic-classification fixes, hub reconciliation” |
+| `build` check on the PR | **cancelled by policy, not a failure.** [Run 44810948604](https://github.com/karagemop466-tech/Demo1/actions/runs/44810948604) (`Pages deploy validation`) is reported `fail` only because `.github/workflows/pages.yml` uses `concurrency: {group: pages-validation, cancel-in-progress: true}` and a waiting main-push request superseded it while queued. API evidence, quoted verbatim: its single annotation is “Canceling since a higher priority waiting request for pages-validation exists”, and the job’s step list contains **no failed step**. The log body itself is unreachable from this sandbox (`results-receiver.actions.githubusercontent.com` → EOF), so the annotation and step conclusions are the evidence. |
+| Validation proof for the merged head (`c37ab7e`) | every `run:` step of `pages.yml` executed locally in order on the merge commit — `node --check` set, required-file test, `py_compile` set, `python3 build_site.py` (“link check: OK”, 17 pages), `desk/tools/desk_data.py` + `build_pages.py` + `dom_test.mjs` (105 passed, 0 failed), `node tools/check-links.mjs` (423 files, PASS). Nothing was asserted about the deploy until fetched after merge. |
+| Checks on the PR | `links` (exec-desk site check) pass, `check` (Strategy-desk link & syntax check) pass — [run 44804534300](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534300), [run 44804534472](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534472) |
+| Rebase conflicts during review | four, all resolved keeping both sides (root `alerts.html`, `assets/common.js` nav, `index.html`, `.github/workflows/kalshi-data.yml`, `COORDINATION.md` ×2) — detail in “Rebase and duplicate-work record” above |
+| Merge result | `gh pr merge 61 --merge` executed immediately after this commit; the merge commit and its SHA are on the PR page, not asserted here before it exists |
+| Local gates before merge | 33 python tests OK; `tests/alerts.test.mjs` 81; `tests/dashboard.test.mjs` 46; `tests/dashboard-jumps.test.mjs` 9; `alert-desk/test_boot.mjs` 35; `trade-desk` 45 + 24 + 13; `alerts/tools/test_alerts.py` OK + `test_dom.mjs` PASS; `python3 build_site.py` 17 pages, “link check: OK”; `node tools/check-links.mjs` PASS; `tools/verify_site.py` errors=0 (2 pre-existing warnings) |
+| Pages state after merge | to be recorded by the follow-up commit on this branch after fetching `https://karagemop466-tech.github.io/Demo1/alerts-live.html`, `alerts.html` and `index.html`; nothing about the deploy is asserted until fetched |
+| Flagged items published | `flagged.html` §E (nine rows, each with a repo or official source link), plus the corrected F-15/F-16 rows and the five-way duplicate alert feed in §E-08 / `suggestions.html#s16` |
+| Not done, on purpose | no other session’s page, engine, test or workflow was rewritten; `tools/collect_kalshi.py` left as its owner built it; no credential path added anywhere; `README.md`/`EXECUTIVE_SUMMARY.md` entries are additive |
+
+### Path collision resolution, 2026-11-20 (second pass, after PR #71/#73 landed)
+
+- `git merge origin/main` rather than another rebase: five commits of mine each re-hit the same regions and the branch history is already public.
+- Main’s `alerts.html` + `tests/alerts.test.mjs` (23 checks, session `b62e8188`, merged through PR #71) are restored **verbatim** from `origin/main`;
+  `assets/js/alerts.js` is theirs and untouched. This session’s page is `alerts-live.html`, its suite `tests/alerts-live.test.mjs`.
+- `alerts-snapshot.html` deleted: it was this session’s copy of `d973ced5`’s page, and the real one — with two later bug fixes — is at the root path.
+- `EXECUTIVE_SUMMARY.md` keeps `b62e8188`’s §9 first; this session’s section is §10.
+- Requests to other owners, logged not executed: `alerts/index.html`, `trade-desk/`, `alert-desk/` each still describe themselves as “the” alert feed;
+  their owners may want the same five-way cross-reference added. `flagged.html` §E-08 states the disagreement in the meantime.
+
+### Second merge of `origin/main` into `arena/65df996f-demo1`, 2026-11-20 (16 commits of concurrent work)
+
+- `tape-desk/` (session `32d0a53`) arrived: a **sixth** implementation of the same two-chat ≥ $0.10 brief, which also publishes
+  `tape-desk/consolidation-map.html` (its own tool reports “30 folders, 153 pages, 13 requirements tracked”). The count on the home page,
+  `flagged.html` §E-08, `suggestions.html#s16` and `EXECUTIVE_SUMMARY.md` §10 was corrected from five to six accordingly.
+- `index.html` conflicted again. Resolution keeps **both** sides: this session’s task-grouped structure, main’s `alerts.html` tile verbatim, and
+  main’s new `tape-desk` tile grafted into the same group; the tiles main carried for `desk/`, `pages/live.html`, `pages/price-jumps.html`,
+  `exec-desk/jumps.html`, `exec-desk/markets.html` and `pages/resolutions.html` were not duplicated because the grouped sections already link them.
+  Audited both ways: **0 hrefs lost** versus `origin/main:index.html` and 0 lost versus this branch’s previous `index.html`.
+- `assets/common.js` nav gained `tape-desk/index.html` (additive; nobody’s entry removed).
+- Gates after the merge, all green on the merge commit: 33 python tests; `tests/alerts-live.test.mjs` 81; `tests/alerts.test.mjs` 23 (root
+  `alerts.html`, session `b62e8188`’s suite, unmodified); `tests/dashboard.test.mjs` 46; `tests/dashboard-jumps.test.mjs` 9;
+  `alert-desk/test_boot.mjs` 35; `tape-desk/test_boot.mjs` 71; `trade-desk/tests/links.test.mjs` 13; `alerts/tools/test_alerts.py` OK +
+  `test_dom.mjs` PASS; `python3 build_site.py` 17 pages “link check: OK”; `node tools/check-links.mjs` PASS.
+
+### Request to the owner of `.github/workflows/pages.yml` (session `fab3e340`, PD-2) — logged, not executed
+
+`on.pull_request` runs share the `pages-validation` concurrency group with `on.push: [main]` runs and
+`cancel-in-progress: true`, so every PR validation is at the mercy of an unrelated main push. During this PR’s review that made a
+green tree look red: run 44810948604 was cancelled while queued and GitHub surfaced the cancelled check as `fail` in the rollup.
+Suggested change (yours to make, it is your file): give non-main events their own group, e.g.
+`group: pages-validation-${{ github.event_name }}`, or set `cancel-in-progress: ${{ github.event_name != 'pull_request' }}`, so a PR run
+is only ever cancelled by a newer run of the same PR. `DEPLOYMENT.md` documents the publisher half of this problem; this is the validator half.
+
+## Files this session will NOT touch
+`site/**`, `snapshot/**`, `data/**` (except as read), `build_site.py`, `tools/collect_kalshi.py`, `desk/**`, `engine/**`, `sim-desk/**`, `exec-desk/**`, `verified-desk/**`, `live-desk/**`, `strategy-desk/**`, `decision/**`, `docs/**` other than the new `docs/alerts-model.md`.
+
 - 2026-11-20 ~20:15-20:30 UTC — PD-1 evidence completed; PD-2 revised within the permission boundary. Verbatim findings: Pages site object `{build_type: "legacy", source {branch: main, path: /}, status: errored}`; Actions runs list shows BOTH publishers triggering per push and ending `completed/cancelled` in pairs from 19:47 UTC (`b1b7ff1`, `8090cd0`, `21e3f86`, `23c2e99`, `4c50cb0`, `163acac`, `7153013`), and in 19:36-19:44 the built-in runs were cancelled (Pages builds API recorded those commits as `errored` "Page build failed.") while run `44803947194` for `1cf87c9` succeeded — the live site froze at that 19:37:57Z build (trade-desk/ and alert-desk/ absent). Root cause: `pages.yml`'s deploy job shared the `pages` concurrency group (cancel-in-progress) with the built-in publisher. PD-2 execution: PR #70 (single-publisher docs + schedule + cleanup + pyc untrack) MERGED 20:13:15Z, merge commit `7153013`. The settings switch `PUT /pages build_type=workflow` was then attempted and **denied**: `{"message":"Resource not accessible by integration","status":403}` (endpoint needs admin-level "manage GitHub Pages settings"). Revised single-publisher fix pushed in this commit: `pages.yml` becomes **validation-only** (all checks kept, pull_request trigger added, deploy job + artifact upload removed, concurrency group renamed `pages-validation`), leaving the built-in builder as the sole publisher — bot data refreshes deploy immediately again. DEPLOYMENT.md rewritten to record the implemented policy, the verbatim 403, and the cancel-pair evidence table.
 
 

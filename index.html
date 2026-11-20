@@ -27,7 +27,7 @@
     <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
     <nav class="nav">
       <a href="index.html" class="on">Home</a>
-      <a href="alerts.html">Price swing alerts</a>
+      <a href="alerts-live.html">Alert tapes</a>
       <a href="exec-desk/dashboard.html">Live desk</a>
       <a href="desk/index.html">Consolidated desk</a>
       <a href="site/gas-prices.html">Gas prices</a>
@@ -66,32 +66,58 @@
     <b>Ranking definitions differ by desk.</b> The snapshot pages rank on computed public-trade notional; the exec-desk default “24h $ volume” uses contract volume times a price input and can fall back to quote-derived prices if the last trade is absent. It is an estimate, not an official dollar-volume field. Topic matching and live scan coverage are bounded; details are on <a href="integration/executive-summary.html">Executive Summary</a> and <a href="integration/flagged-review.html#rank-01">RANK-01</a>.
   </div>
 
-  <h2>Live dashboards and analysis</h2>
-  <div class="callout" style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:10px 12px;border-radius:0 8px 8px 0;font-size:13px;margin:0 0 12px">
-    <b>Live trade desk (this session).</b> Two scrolling alert chats for every contract move of at least $0.10
-    (one unfiltered, one filtered by a published fee-aware screen), a time-axis price chart with seconds / minutes /
-    hours windows, order-book depth, resolution tracking to YES/NO, and automated paper trading with performance
-    analysis. It polls the official demo API in your browser and never uses a key or places an order.
-    <a href="trade-desk/index.html">Open the trade desk ↗</a>
-  </div>
+  <h2>Start here — the trading desk</h2>
   <div class="tiles">
-    <a class="tile" href="trade-desk/index.html"><b>Live trade desk — two alert chats</b><span>Live ≥ $0.10 swing feeds (all, and model-filtered), seconds/minutes/hours price chart, order-book liquidity, resolution tracker and paper-trading analytics. Public endpoints only.</span></a>
+    <a class="tile" href="alerts-live.html"><b>Live alert tapes (two scrolling chats)</b><span>Every swing of ≥ $0.10 in either direction across the five topics, and a second chat with only the high-ROI screen’s picks. Auto-starts, polls the official demo API in your browser every 15&nbsp;s, and never places an order.</span></a>
+    <a class="tile" href="trade-desk/index.html"><b>Live trade desk — alert chats, chart, paper trading</b><span>Two scrolling chats for every move of at least $0.10 (one unfiltered, one filtered by a published fee-aware screen), a seconds/minutes/hours price chart, order-book depth, resolution tracking to YES/NO and simulated-trade analytics. Public endpoints only, no key (session 87015421).</span></a>
+    <a class="tile" href="alert-desk/index.html"><b>Two-chat alert feed with snapshot fallback</b><span>Chat 1 every ≥ $0.10 swing, Chat 2 the markets its simulated model likes by two disclosed rules; fed by the live demo trades tape, falling back to the committed snapshot when the browser cannot reach the API (session 0ad208bf).</span></a>
     <a class="tile" href="exec-desk/dashboard.html"><b>Primary live market desk</b><span>Five-topic demo-market scan, price-history views, reported order-book liquidity and market-resolution status from the official API.</span></a>
-    <a class="tile" href="desk/index.html"><b>Consolidated requirements desk</b><span>Separate session-built dashboard for five topics, resolution tracking, paper simulation and jump alerts. Its requirements matrix and review register are linked from its own navigation; this integration does not change its implementation.</span></a>
-    <a class="tile" href="pages/live.html"><b>Additional live dashboard</b><span>Event scan, candle/sub-minute chart, order-book contracts and dollars, and per-request evidence log. Its mocked regression suite passes 46 checks; that is not a live-API availability test (TEST-01).</span></a>
-    <a class="tile" href="pages/price-jumps.html"><b>Candlestick jump detector (≥$0.10)</b><span>Flags moves between official candle closes and links each row to its API request and venue event page; no cause is asserted.</span></a>
-    <a class="tile" href="alert-desk/index.html"><b>Two-chat alert feed (≥$0.10)</b><span>Scrolling chats of swings: Chat 1 shows every ≥ $0.10 move in either direction, Chat 2 filters to markets the simulated model likes by two disclosed rules; fed by the live demo trades tape with committed-snapshot fallback.</span></a>
-<<<<<<< HEAD
-    <a class="tile" href="alerts.html"><b>Price swing alerts (two scrolling chats)</b><span>Consecutive official candle closes compared at the selected threshold (default ≥ $0.10 either direction); Chat 2 ranks by a disclosed relative-move heuristic. Official API + venue + news-search links per message; cause unverified.</span></a>
-=======
+    <a class="tile" href="site/liquidity.html"><b>Price chart &amp; liquidity</b><span>Price over time from official 1-minute, 1-hour and 1-day candles (no seconds resolution exists on the REST endpoint), and the contracts bid at each price.</span></a>
+    <a class="tile" href="site/markets.html"><b>Live markets table</b><span>Open markets, ranked by computed 24-hour notional. Each topic page shows up to 60 rows, with the API source of each row.</span></a>
+    <a class="tile" href="alerts.html"><b>Price swing alerts (two scrolling chats)</b><span>Consecutive official candle closes compared at the selected threshold (default ≥ $0.10 either direction); Chat 2 ranks by a disclosed relative-move heuristic. Official API + venue + news-search links per message; cause unverified. (page and 23-check regression suite by sessions d973ced5 / b62e8188; the data-pipeline fix behind it is this session’s.)</span></a>
     <a class="tile" href="tape-desk/index.html"><b>Live tape desk (chat + chart + book)</b><span>Browser-polled demo API: two ≥ $0.10 scrolling feeds (all events, then the fee-aware model picks), a time-axis price chart in seconds/minutes/hours, contracts resting at each price, YES/NO tracking at the terminal status only, and a simulated ledger that grades each pick. Degrades to the committed snapshot when the API is unreachable; the map of which desk does what is at <a href="tape-desk/consolidation-map.html">tape-desk/consolidation-map.html</a>.</span></a>
->>>>>>> 32d0a53 (tape-desk: live swing desk — two ≥$0.10 chats, model picks, time-axis chart, book ladder, YES/NO tracking, simulated ledger + consolidation map)
-    <a class="tile" href="exec-desk/jumps.html"><b>Jump scanner with news-search leads</b><span>Selected high-volume markets, one-minute changes and potential-source searches. A search result is a lead, not proof of cause.</span></a>
-    <a class="tile" href="exec-desk/markets.html"><b>Live resolution tracker</b><span>Follow open markets until Kalshi returns a YES/NO result; the browser-local watch log is not a server archive.</span></a>
-    <a class="tile" href="pages/resolutions.html"><b>Additional resolution tracker</b><span>Track events and see returned settlement fields with a source URL for each observation.</span></a>
+  </div>
+  <p class="small">The ≥ $0.10 two-chat requirement is implemented <b>six times</b> on this site, because six sessions built it in
+  parallel against the same brief: <a href="alerts-live.html">alerts-live.html</a> (this session: browser polling, five-gate screen,
+  <a href="docs/alerts-model.html">model spec</a>), <a href="alerts.html">alerts.html</a> (committed candlestick capture, sessions d973ced5 + b62e8188),
+  <a href="alerts/index.html">alerts/index.html</a> (its own generated feed and QLM score), <a href="trade-desk/index.html">trade-desk/</a> and
+  <a href="alert-desk/index.html">alert-desk/</a> and <a href="tape-desk/index.html">tape-desk/</a> (which also keeps a <a href="tape-desk/consolidation-map.html">map of which desk does what</a>). All six share the $0.10 threshold and none places an order — but each measures a “move” against a
+  different price (best ask, last print, candle close), so a flag on one page need not appear on another at the same minute.
+  Nothing was deleted; <a href="suggestions.html#s16">S16</a> asks you to pick the survivor.
+  Data freshness: <code>snapshot/*.json</code> is the source of the counts below (collected 2026-11-20T11:43:59Z), and CI refreshes
+  <code>docs/data/*.json</code> every 15 minutes — its last run and error list are public in <a href="docs/data/run_log.json">docs/data/run_log.json</a>.</p>
+
+  <h2>Simulate trades and measure them</h2>
+  <div class="tiles">
+    <a class="tile" href="sim-desk/index.html"><b>sim-desk — automated simulated strategies</b><span>Three rule-based strategies run by CI on the official trades tape every 30 minutes, with a persistent ledger, fee-aware fills and automatic $1 settlement when a market resolves.</span></a>
+    <a class="tile" href="engine/index.html"><b>Strategy engine</b><span>Computed from the captured candles: jump scan, fee-aware backtests, settlement study and liquidity profile on one trader-facing page.</span></a>
     <a class="tile" href="pages/paper-trading.html"><b>Paper-strategy runner</b><span>On-demand simulated rules and strategy/category analysis; trades remain in this browser and no exchange orders are sent.</span></a>
     <a class="tile" href="exec-desk/portfolio.html"><b>Portfolio &amp; demo-account reporting</b><span>Paper-ledger analytics are available; authenticated balance, positions and fills remain blank without a secure credential service.</span></a>
+    <a class="tile" href="site/strategies.html"><b>Strategy categories</b><span>The categories, the trade logic of each, and the inputs each needs. Performance against real fills is blocked without a key.</span></a>
     <a class="tile" href="pages/strategy.html"><b>Experimental trade ledger &amp; order drafts</b><span>Contains a browser-local signing path that is not safe for a public static site. Do not enter credentials; review SEC-01, AUTH-01, KEY-01 and FILL-01 first.</span></a>
+  </div>
+
+  <h2>Alerts, jumps and resolutions</h2>
+  <div class="tiles">
+    <a class="tile" href="pages/price-jumps.html"><b>Candlestick jump detector (≥ $0.10)</b><span>Flags moves between official candle closes and links each row to its API request and venue event page; no cause is asserted.</span></a>
+    <a class="tile" href="exec-desk/jumps.html"><b>Jump scanner with news-search leads</b><span>Selected high-volume markets, one-minute changes and potential-source searches. A search result is a lead, not proof of cause.</span></a>
+    <a class="tile" href="exec-desk/markets.html"><b>Live resolution tracker</b><span>Follow open markets until Kalshi returns a YES/NO result; the browser-local watch log is not a server archive.</span></a>
+    <a class="tile" href="site/resolved.html"><b>Resolved outcomes</b><span>Markets with a result set by the API (yes or no; scalar results are also possible), with settlement fields.</span></a>
+  </div>
+
+  <h2>Evidence, review and the rest</h2>
+  <div class="tiles">
+    <a class="tile" href="desk/index.html"><b>Consolidated requirements desk</b><span>Another session’s five-topic desk with its own requirements matrix and review register, linked from its navigation; its implementation is unchanged here.</span></a>
+    <a class="tile" href="pages/live.html"><b>Additional live dashboard</b><span>Event scan, candle/sub-minute chart, order-book contracts and dollars, and a per-request evidence log (mocked regression suite: TEST-01).</span></a>
+    <a class="tile" href="site/verification.html"><b>Line-by-line verification</b><span>Automated re-check: every rendered value re-derived from the official snapshot and every row’s source link audited.</span></a>
+    <a class="tile" href="integration/executive-summary.html"><b>Integrated executive summary</b><span>Verified capabilities, coverage limits, source methodology and credential-dependent features across the primary desk.</span></a>
+    <a class="tile" href="integration/flagged-review.html"><b>Integration findings</b><span>Code-review findings with repository evidence, official sources and ownership-aware follow-up requests.</span></a>
+    <a class="tile" href="flagged.html"><b>Flagged for review (root)</b><span>Unverified items, blocked auth features and irregularities found in this repo, each with its source link.</span></a>
+    <a class="tile" href="site/index.html"><b>Overview &amp; executive summary</b><span>What the snapshot shows, how it was collected, and its limits.</span></a>
+    <a class="tile" href="site/explore.html"><b>Data browser</b><span>Search every collected market record and open its source request.</span></a>
+    <a class="tile" href="site/portfolio.html"><b>Portfolio (blocked)</b><span>Needs a Kalshi demo API key. Not connected, so no figures are shown.</span></a>
+    <a class="tile" href="site/suggestions.html"><b>Suggestions</b><span>Proposed improvements, including what was built from them.</span></a>
+    <a class="tile" href="site/questions.html"><b>Questions &amp; gaps</b><span>What is still unknown, and how to find out.</span></a>
     <a class="tile" href="docs/api-verification.md"><b>Verification log</b><span>Line-by-line source notes, demo response evidence and remaining unknowns.</span></a>
   </div>
 
@@ -118,23 +144,16 @@
   </div>
   <p class="small">Source of every count: <code>snapshot/markets.json</code> and <code>snapshot/resolved.json</code>, collected 2026-11-20T11:43:59Z from <code>https://external-api.demo.kalshi.co/trade-api/v2</code>. Resolved = status finalized, determined or disputed with <code>result</code> yes or no (1,914 finalized + 182 determined + 21 disputed = 2,117). Closed = status closed with no result yet (352). Together they make the 2,469 records in <code>resolved.json</code>.</p>
 
-  <h2>Tools</h2>
-  <div class="tiles">
-    <a class="tile" href="site/markets.html"><b>Live markets table</b><span>Open markets, ranked by computed 24-hour notional. Each topic page shows up to 60 rows, with the API source of each row.</span></a>
-    <a class="tile" href="site/liquidity.html"><b>Price chart &amp; liquidity</b><span>Price over time from official 1-minute, 1-hour and 1-day candles (no seconds resolution exists on the REST endpoint), and the contracts bid at each price.</span></a>
-    <a class="tile" href="site/resolved.html"><b>Resolved outcomes</b><span>Markets with a result set by the API (yes or no; scalar results are also possible), with settlement fields.</span></a>
-    <a class="tile" href="site/explore.html"><b>Data browser</b><span>Search every collected market record and open its source request.</span></a>
-    <a class="tile" href="site/strategies.html"><b>Strategies</b><span>Strategy categories, the trade logic of each, and the inputs each needs. Performance needs demo fills, which are blocked without a key.</span></a>
-    <a class="tile" href="site/portfolio.html"><b>Portfolio (blocked)</b><span>Needs a Kalshi demo API key. Not connected, so no figures are shown.</span></a>
-    <a class="tile" href="site/suggestions.html"><b>Suggestions</b><span>Proposed improvements. None are implemented until chosen.</span></a>
-    <a class="tile" href="site/questions.html"><b>Questions &amp; gaps</b><span>What is still unknown, and how to find out.</span></a>
-    <a class="tile" href="site/flagged.html"><b>Flagged for review</b><span>Unverified items and irregularities, each with its source link.</span></a>
-    <a class="tile" href="docs/verification-3c2c8403.html"><b>Flagged for Review: landing check</b><span>Irregularities found while verifying this landing page, with official source links, and the line-by-line claim record.</span></a>
-    <a class="tile" href="site/index.html"><b>Overview &amp; executive summary</b><span>What the snapshot shows, how it was collected, and its limits.</span></a>
-    <a class="tile" href="site/verification.html"><b>Line-by-line verification</b><span>Automated re-check: every rendered value re-derived from the official snapshot and every row's source link audited.</span></a>
-    <a class="tile" href="integration/executive-summary.html"><b>Integrated executive summary</b><span>Verified capabilities, coverage limits, source methodology and credential-dependent features across the primary desk.</span></a>
-    <a class="tile" href="integration/flagged-review.html"><b>Integration findings</b><span>Code-review findings with repository evidence, official sources and ownership-aware follow-up requests.</span></a>
-  </div>
+  <h2>All surfaces, in one list</h2>
+  <p class="small">Every page built for this brief, including the earlier session-built desks kept so no work is lost. The four tiles under
+  “Start here” are the intended daily path; everything else is reference.</p>
+  <ul class="plain">
+    <li><b>Live:</b> <a href="alerts-live.html">alert tapes (this session)</a> · <a href="alerts.html">snapshot alert feed</a> · <a href="alerts/index.html">alert chat (generated feed)</a> · <a href="alerts/verification.html">its verification record</a> · <a href="exec-desk/dashboard.html">exec desk</a> · <a href="pages/live.html">live event scan</a> · <a href="dashboard.html">chart dashboard</a> · <a href="monitor/index.html">single-page monitor</a> · <a href="exec-desk/index.html">exec desk index</a> · <a href="live-desk/index.html">live desk (research)</a></li>
+    <li><b>Topics &amp; data:</b> <a href="site/index.html">overview</a> · <a href="site/markets.html">markets</a> · <a href="site/resolved.html">resolved</a> · <a href="site/liquidity.html">liquidity</a> · <a href="site/explore.html">data browser</a> · <a href="markets.html">earlier markets table</a> · <a href="docs/index.html">data hub &amp; audit</a> · <a href="decision/index.html">decision desk</a> · <a href="verified-desk/index.html">verified desk</a></li>
+    <li><b>Simulation:</b> <a href="sim-desk/index.html">sim-desk</a> · <a href="engine/index.html">strategy engine</a> · <a href="pages/paper-trading.html">paper runner</a> · <a href="pages/strategy.html">trade ledger (unsafe key path — review first)</a> · <a href="exec-desk/portfolio.html">portfolio reporting</a> · <a href="portfolio.html">earlier portfolio</a> · <a href="analysis.html">earlier analysis</a> · <a href="strategy-desk/index.html">strategy desk</a> · <a href="site/strategies.html">strategy categories</a></li>
+    <li><b>Alerts &amp; history:</b> <a href="pages/price-jumps.html">jump detector</a> · <a href="exec-desk/jumps.html">jump scanner</a> · <a href="exec-desk/markets.html">resolution tracker</a> · <a href="pages/resolutions.html">resolution records</a> · <a href="pages/demo-live.html">demo live tracker</a></li>
+    <li><b>Review &amp; docs:</b> <a href="EXECUTIVE_SUMMARY.md">executive summary (repo)</a> · <a href="executive-summary.html">executive summary (page)</a> · <a href="pages/landing-executive-summary.html">multi-page executive summary</a> · <a href="integration/executive-summary.html">integration summary</a> · <a href="flagged.html">flagged for review</a> · <a href="site/flagged.html">flagged (snapshot)</a> · <a href="integration/flagged-review.html">integration findings</a> · <a href="docs/verification-3c2c8403.html">landing check</a> · <a href="questions.html">questions</a> · <a href="suggestions.html">suggestions</a> · <a href="sources.html">sources</a> · <a href="site/sources.html">sources (snapshot)</a> · <a href="desk/requirements.html">requirements matrix</a></li>
+  </ul>
 
   <h2>What changed on this page</h2>
   <p>The previous landing page had hand-typed figures. Checked against the official API on 2026-11-20. Full line-by-line record: <a href="docs/verification-3c2c8403.html">verification page ↗</a>.</p>
@@ -154,12 +173,6 @@
     <li><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">GET /exchange/status (demo, live) ↗</a>: <code>exchange_active: true</code>, <code>trading_active: true</code> on 2026-11-20</li>
   </ul>
 
-  <h2>Earlier desks</h2>
-  <p class="small">These pages were built by earlier sessions. They are kept so no work is lost, but this page is the main view.</p>
-  <ul class="plain">
-    <li><a href="exec-desk/index.html">Exec desk</a> · <a href="desk/index.html">Consolidated desk</a> · <a href="verified-desk/index.html">Verified desk</a> · <a href="decision/index.html">Decision desk</a> · <a href="docs/index.html">Data hub &amp; audit</a> · <a href="live-desk/index.html">Live desk</a> · <a href="monitor/index.html">Single-page monitor</a> · <a href="pages/landing-executive-summary.html">Multi-page site</a></li>
-    <li>Root pages: <a href="executive-summary.html">executive summary</a> · <a href="markets.html">markets</a> · <a href="dashboard.html">dashboard</a> · <a href="portfolio.html">portfolio</a> · <a href="analysis.html">analysis</a> · <a href="questions.html">questions</a> · <a href="suggestions.html">suggestions</a> · <a href="flagged.html">flagged</a> · <a href="sources.html">sources</a></li>
-  </ul>
 </main>
 <footer class="wrap small">
   Not investment advice. The Kalshi demo exchange uses mock funds, and its prices may not reflect real markets. Topic membership uses published keyword rules. Values not confirmed from an official source are left blank and listed on <a href="site/flagged.html">Flagged for review</a>.

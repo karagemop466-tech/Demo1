@@ -47,6 +47,7 @@ Exit codes: 0 ok (even with partial topic errors, logged in run_log.json),
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -79,6 +80,16 @@ KEYWORDS_FOR_TOPIC = {
     "crypto": [],
     "culture": [],
 }
+# Keyword rules match on WORD BOUNDARIES in titles/tags, and as a substring in the series
+# TICKER (tickers concatenate words: KXAAAGASW). Substring matching on titles is what pulled
+# "When will Las Vegas receive a Pro Basketball expansion team?" into the gas topic — "ve**gas**"
+# contains "gas". Found in the committed output docs/data/snapshot.json (topic "gas",
+# top_events[0]) and fixed by session arena/65df996f-demo1 on 2026-11-20; the regression is
+# covered by tests/test_topic_classification.py.
+# Series volume is used only to decide which series to fetch directly; it comes from
+# GET /series?include_volume=true = "total volume traded across all events in each series"
+# (https://docs.kalshi.com/api-reference/market/get-series-list).
+TOP_SERIES_PER_TOPIC = 12      # busiest series per topic, always fetched by series_ticker
 
 MAX_PAGES_EVENTS = 25          # 200 events/page -> up to 5000 open events scanned
 UNDERCOVER_THRESHOLD = 5       # topics with fewer matches get a targeted per-series fetch
@@ -142,6 +153,38 @@ def fetch_all_events(session, status, pages_limit):
     return events, pages
 
 
+def norm_series(ticker):
+    """Compare series tickers with the legacy KX prefix removed and upper-cased.
+
+    The demo /series list returns some series without the KX prefix (AAAGASW) while events
+    report the prefixed form (KXAAAGASW) — both appear in the committed data
+    (docs/data/series_map.json vs snapshot/markets.json). Exact-string membership therefore
+    dropped the busiest gas series from the topic, so membership is tested on this key.
+    """
+    t = (ticker or "").strip().upper()
+    return t[2:] if t.startswith("KX") else t
+
+
+def keyword_in_text(topic, text):
+    """Word-boundary keyword test used for titles and tags (see KEYWORDS_FOR_TOPIC)."""
+    kws = KEYWORDS_FOR_TOPIC.get(topic) or []
+    low = (text or "").lower()
+    return any(re.search(r"(?<![a-z])" + re.escape(k) + r"(?![a-z])", low) for k in kws)
+
+
+def series_keyword_hit(topic, ticker, title, tags):
+    """A series belongs to a keyword-gated topic via its ticker (substring) or its
+    title/tags (word boundaries). Tickers are concatenated, so "gas" must match inside
+    "KXAAAGASW"; prose must not, so "gas" cannot match inside "Las Vegas"."""
+    kws = KEYWORDS_FOR_TOPIC.get(topic) or []
+    if not kws:
+        return True
+    tk = (ticker or "").lower()
+    if any(k in tk for k in kws):
+        return True
+    return keyword_in_text(topic, " ".join([title or "", " ".join(tags or [])]))
+
+
 def build_series_map(session):
     """Map topic -> set of series tickers using the official category filter.
 
@@ -151,31 +194,42 @@ def build_series_map(session):
     """
     mapping = {}
     raw_categories = {}
+    volumes = {}
     for topic, cats in CATEGORY_FOR_TOPIC.items():
         tickers = set()
         raw_categories[topic] = []
         for cat in cats:
-            data = http_get_json(BASE + "/series?category=" + urllib.parse.quote(cat))
+            data = http_get_json(BASE + "/series?category=" + urllib.parse.quote(cat) + "&include_volume=true")
             series = data.get("series") or []
             raw_categories[topic].append({"category": cat, "series_count": len(series)})
             for s in series:
                 st = s.get("ticker") or ""
                 if not st:
                     continue
-                if KEYWORDS_FOR_TOPIC[topic]:
-                    hay = " ".join([s.get("title") or "", st, " ".join(s.get("tags") or [])]).lower()
-                    if not any(k in hay for k in KEYWORDS_FOR_TOPIC[topic]):
-                        continue
+                if not series_keyword_hit(topic, st, s.get("title"), s.get("tags")):
+                    continue
                 tickers.add(st)
+                vol = fnum(s.get("volume_fp"))
+                if vol is not None:
+                    volumes[norm_series(st)] = vol
             time.sleep(REQUEST_GAP_S)
         mapping[topic] = sorted(tickers)
-    return mapping, raw_categories
+    return mapping, raw_categories, volumes
 
 
-def classify_event(event, series_map):
+def classify_event(event, series_map, norm_map=None):
+    """Topic of an event: verified series membership first, then the documented fallbacks.
+
+    `series_map` holds real tickers; `norm_map` (optional) holds the same set keyed without
+    the legacy KX prefix, which is what makes KXAAAGASW match a series listed as AAAGASW.
+    """
     st = event.get("series_ticker") or ""
+    key = norm_series(st)
     for topic in TOPICS:
-        if st in series_map.get(topic, set()):
+        members = norm_map[topic] if norm_map else {norm_series(x) for x in series_map.get(topic, ())}
+        if key and key in members:
+            return topic
+        if st in series_map.get(topic, ()):
             return topic
     # Fallback: event.category (deprecated per docs but still returned; verified live)
     cat = (event.get("category") or "").lower()
@@ -185,9 +239,9 @@ def classify_event(event, series_map):
         return "crypto"
     if cat == "entertainment":
         return "culture"
-    title = (event.get("title") or "").lower()
+    title = event.get("title") or ""
     for topic in ("gas", "golf"):
-        if any(k in title for k in KEYWORDS_FOR_TOPIC[topic]):
+        if keyword_in_text(topic, title):
             return topic
     return None
 
@@ -284,10 +338,22 @@ def fetch_candles(session, series_ticker, market_ticker, span_s, interval):
     data = http_get_json(BASE + q)
     out = []
     for c in data.get("candlesticks") or []:
-        p = c.get("price_open_dollars"), c.get("price_close_dollars"), c.get("price_high_dollars"), c.get("price_low_dollars")
+        # The documented response nests OHLC under `price` (price.close_dollars, …) — see
+        # https://docs.kalshi.com/api-reference/market/get-market-candlesticks — while older
+        # payloads and some tooling expose flat *_dollars keys. Read both, nested first.
+        px = c.get("price") or {}
+        def pick(nested_key, flat_key):
+            if isinstance(px, dict) and px.get(nested_key) is not None:
+                return px.get(nested_key)
+            return c.get(flat_key)
         out.append({
             "end_ts": c.get("end_period_ts") or c.get("end_period_ts_ms"),
-            "o": p[0], "c": p[1], "h": p[2], "l": p[3],
+            "o": pick("open_dollars", "price_open_dollars"),
+            "c": pick("close_dollars", "price_close_dollars"),
+            "h": pick("high_dollars", "price_high_dollars"),
+            "l": pick("low_dollars", "price_low_dollars"),
+            "yes_bid_c": (c.get("yes_bid") or {}).get("close_dollars") if isinstance(c.get("yes_bid"), dict) else c.get("yes_bid_close_dollars"),
+            "yes_ask_c": (c.get("yes_ask") or {}).get("close_dollars") if isinstance(c.get("yes_ask"), dict) else c.get("yes_ask_close_dollars"),
             "vol_fp": c.get("volume_fp"),
         })
     return {"interval_minutes": interval, "candles": out, "api_url": BASE + path}
@@ -325,18 +391,40 @@ def main():
 
     # 1) Series -> topic map (authoritative category taxonomy)
     try:
-        series_map, raw_categories = build_series_map(None)
+        series_map, raw_categories, series_volumes = build_series_map(None)
+        norm_map = {t: {norm_series(x) for x in series_map[t]} for t in TOPICS}
+        top_by_topic = {}
+        for t in TOPICS:
+            ranked = sorted(series_map[t], key=lambda x: -(series_volumes.get(norm_series(x)) or 0))
+            top_by_topic[t] = [{
+                "ticker": x,
+                "volume_contracts": series_volumes.get(norm_series(x)),
+                "volume_field": "volume_fp from GET /series?include_volume=true (total volume across all events in the series)",
+                "api_url": BASE + "/series?category=" + urllib.parse.quote((CATEGORY_FOR_TOPIC[t] or [""])[0]) + "&include_volume=true",
+            } for x in ranked[:TOP_SERIES_PER_TOPIC]]
         save_json(os.path.join(args.out, "series_map.json"), {
             "generated_at": now_iso(),
-            "method": "GET /series?category=<Kalshi category> (exact, case-sensitive); gas/golf further filtered by title/tag keywords",
+            "method": "GET /series?category=<Kalshi category>&include_volume=true (category match is exact and case-sensitive); "
+                      "gas/golf additionally filtered by ticker substring or word-boundary title/tag keywords",
+            "classification_rules": {
+                "note": "Topic membership is this repository's heuristic, not an official Kalshi taxonomy.",
+                "series": "event.series_ticker matched against the category list, comparing tickers with the legacy KX prefix removed",
+                "keywords": KEYWORDS_FOR_TOPIC,
+                "keyword_matching": "word boundaries on titles/tags, substring on the series ticker (tickers concatenate words)",
+                "category_fallback": {"Elections": "elections", "Crypto": "crypto", "Entertainment": "culture"},
+            },
             "categories_by_topic": raw_categories,
             "series_map": {t: sorted(series_map[t]) for t in TOPICS},
+            "top_series_by_topic": top_by_topic,
             "api_url": BASE + "/series",
         })
     except Exception as e:
         errors.append(f"series_map: {e}")
         series_map = {t: set() for t in TOPICS}
+        norm_map = {t: set() for t in TOPICS}
+        series_volumes = {}
         raw_categories = {}
+        top_by_topic = {}
 
     # 2) Scan open events (global pagination, then classify)
     try:
@@ -347,18 +435,28 @@ def main():
 
     by_topic = {t: [] for t in TOPICS}
     for ev in open_events:
-        topic = classify_event(ev, series_map)
+        topic = classify_event(ev, series_map, norm_map)
         if topic:
             by_topic[topic].append(ev)
 
-    # Targeted per-series fetch for under-covered topics: the global scan is alphabetical,
-    # so series late in the alphabet (KXB*, KXS*...) can fall off the page cap. This tops up
-    # those topics directly from their verified series list (bounded, throttled).
+    # Targeted per-series fetch. The global /events scan is bounded by MAX_PAGES_EVENTS, so a
+    # topic can be missing its busiest series (that is how every gas event ended up with
+    # $0.00 estimated volume while KXAAAGASW/KXAAAGASM were never read). Every topic therefore
+    # gets its highest-volume series fetched directly, and an under-covered topic also gets an
+    # alphabetical slice. Bounded and throttled.
     covered = set()
+    fetch_targets = {}
     for topic in TOPICS:
-        if len(by_topic[topic]) >= UNDERCOVER_THRESHOLD or not series_map.get(topic):
+        avail = series_map.get(topic) or []
+        if not avail:
             continue
-        for st in sorted(series_map[topic])[:UNDERCOVER_SERIES_CAP]:
+        ranked = sorted(avail, key=lambda x: (-(series_volumes.get(norm_series(x)) or 0), x))
+        take = ranked[:TOP_SERIES_PER_TOPIC]
+        if len(by_topic[topic]) < UNDERCOVER_THRESHOLD:
+            take = list(dict.fromkeys(take + sorted(avail)[:UNDERCOVER_SERIES_CAP]))
+        fetch_targets[topic] = take
+    for topic in TOPICS:
+        for st in fetch_targets.get(topic, []):
             try:
                 q = f"/events?limit=200&status=open&with_nested_markets=true&series_ticker={urllib.parse.quote(st)}"
                 data = http_get_json(BASE + q)

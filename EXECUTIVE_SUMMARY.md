@@ -172,3 +172,59 @@ implemented. Full evidence: [`docs/verification-b62e8188.html`](docs/verificatio
 - **Note for reviewers:** the earlier `tests/dashboard.test.mjs` time-sensitive fixture issue
   (section 8) was subsequently fixed by session `arena/358db039-demo1` (time-relative fixtures) and
   the suite passes 46/46 on this tree.
+>>>>>>> origin/main
+## 10. Live alert tapes + data-pipeline repair — session `arena/65df996f-demo1` (2026-11-20)
+
+**What the brief asked for that this section covers:** “live alerting on changes in contract prices of at least $0.10 in
+either direction, shown as two scrolling chat feeds — all events, and a selective feed of the events the model likes / high ROI.”
+
+| Deliverable | Path | State |
+|---|---|---|
+| Two live scrolling tapes (all swings / high-ROI screen), auto-start, no key, no orders | [`alerts-live.html`](alerts-live.html), [`assets/alerts.js`](assets/alerts.js), [`assets/alerts-app.js`](assets/alerts-app.js) | built; 81 jsdom checks in [`tests/alerts.test.mjs`](tests/alerts.test.mjs) |
+| The screen as arithmetic, with what it cannot see | [`docs/alerts-model.html`](docs/alerts-model.html) | published; fee maths checked against `t = 0.07·P·(1−P)` and the schedule's round-up-to-a-centicent rule |
+| Preserved sibling implementation (session `d973ced5`, committed candlesticks) | [`alerts.html`](alerts.html) (root) | session `d973ced5`’s page kept at the merged path; this session moved its own page to `alerts-live.html` rather than overwrite it, because `tests/alerts.test.mjs` (23 checks, session `b62e8188`) pins the root path’s DOM |
+| Topic-ranking and mis-categorisation repairs in the CI collector | [`scripts/fetch_kalshi_data.py`](scripts/fetch_kalshi_data.py) | 26 new offline tests (17 classification + 9 full-`main()` against a stubbed transport) |
+| Data-commit step that survives a rejected push | [`.github/workflows/kalshi-data.yml`](.github/workflows/kalshi-data.yml) | main’s harder variant kept after a same-window collision; rationale recorded in comments |
+| Hub reorganisation (task groups, no link dropped, stale claims corrected) | [`index.html`](index.html), [`assets/common.js`](assets/common.js), [`dashboard.html`](dashboard.html) | `node tools/check-links.mjs` PASS, `python3 build_site.py` 17 pages |
+
+### Verified findings this session changed
+
+1. **The gas topic was not gas.** `docs/data/snapshot.json` (CI run `2026-11-20T13:40:48Z`) listed
+   *“When will Las Vegas receive a Pro Basketball expansion team?”* as the top gas event, because the keyword filter was a
+   substring test and “ve**gas**” contains “gas”. Titles and tags now match on word boundaries; series tickers keep substring
+   matching because they concatenate words (`KXAAAGASW`).
+2. **The “highest dollar amount” ranking for gas was all `$0.00`.** Every gas event had `est_usd_volume_24h: 0.0`, so the ordering
+   was noise. Cause, from the code: the global `GET /events` scan is capped (25 pages × 200) and the per-series top-up only ran for
+   topics with fewer than 5 matches — gas had 85, so the busiest gas series were never fetched. The pipeline now always fetches the
+   highest-volume series per topic, ranked by the API’s own `include_volume=true` figure (“total volume traded across all events in
+   each series”), which is used *only* to choose requests, never displayed as a metric.
+3. **Series tickers exist in two forms.** `docs/data/series_map.json` lists `AAAGASW`; events report `KXAAAGASW`
+   (`grep -c KXAAAGASW docs/data/snapshot.json` → 0 before the fix), so exact set membership silently failed. Comparison is
+   prefix-insensitive now. The docs define a series ticker but do not promise one canonical form across endpoints, so the cause is
+   recorded as inferred from two committed files, not from a written rule ([`flagged.html`](flagged.html) §E-03).
+4. **A red check on `main` was a one-attempt push, not bad data.** Run
+   [`44746307623`](https://github.com/karagemop466-tech/Demo1/actions/runs/44746307623) failed at *Commit refreshed data (main only)*;
+   four workflows push to `main` under independent concurrency groups and that step pushed exactly once. The log body is not
+   retrievable from this sandbox, so the winner of that race is not proven — stated as inference, not fact.
+5. **Streaming is not available to a credential-free page.** Kalshi’s WebSocket API needs a signed handshake, and a browser cannot
+   attach `KALSHI-ACCESS-*` headers to a WebSocket upgrade, so the tapes poll documented public REST reads every 15 s (≤3 requests per
+   cycle, exponential backoff on 429) and print the docs’ own caching caveat instead of pretending to be a feed handler.
+
+### Decisions and limits, published rather than hidden
+
+- The `≥ $0.10` two-chat requirement now exists **six times** (`alerts-live.html` this session, plus `alerts.html`, `alerts/`,
+  `trade-desk/`, `alert-desk/` and `tape-desk/`) because six sessions worked the same brief in parallel.
+  Nothing was deleted; all of them are cross-linked from the home
+  page, and [`suggestions.html#s16`](suggestions.html) asks for a survivor. Their baselines differ (best ask, last print, candle close),
+  so identical thresholds do not produce identical tapes — recorded in [`flagged.html`](flagged.html) §E-08.
+- `trade-desk/assets/engine.js` documents that the demo candlestick endpoint returned empty arrays for the markets it checked, and
+  `docs/data/history.json` in the CI capture shows `candles: []`, while two implementations key their swings off candle closes.
+  Unresolved, published as unverified; this session’s page reads prices first and falls back to candles.
+- No win rate, edge or expected value is claimed for the screen anywhere on the site, because nothing in this repository measures one.
+- Nothing here has been opened in a real browser by a person: the sandbox has no egress to `*.kalshi.co`, so behaviour is proven in
+  jsdom against fixtures shaped like verified demo responses, and the live effect of the collector fixes waits for the next CI run.
+
+**Gates run:** 33 python tests (`tests/test_topic_classification.py` 17, `tests/test_pipeline_offline.py` 9, pre-existing 7),
+`tests/alerts.test.mjs` 81, `tests/dashboard.test.mjs` 46, `tests/dashboard-jumps.test.mjs` 9, `alerts/tools/test_alerts.py` 23 +
+`alerts/tools/test_dom.mjs` PASS, `alert-desk/test_boot.mjs` 35, `trade-desk` 45 + 24 + 13, `python3 build_site.py` 17 pages,
+`node tools/check-links.mjs` PASS, `tools/verify_site.py` errors=0 (2 pre-existing warnings).
