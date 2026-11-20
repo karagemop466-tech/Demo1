@@ -1563,6 +1563,11 @@ All live values in the site are drawn from the committed snapshot collected from
 
 | Item | Result |
 |---|---|
-| Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
-| Merge result | pending |
-| Pages state after merge | pending |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/64 — "Board: session d372e97e close-out verification record" |
+| Pre-merge checks | PASS — `check` (run 44804941467) and `links` (run 44804941595) both `pass` |
+| Merge result | **MERGED** 2026-11-20T19:47:37Z via `gh pr merge 64 --merge`; merge commit `b1b7ff12254559c1d7dbab0cc9b861c91872f4ea` (no approval wait, per brief) |
+| Pages state after merge | Not confirmed via the GitHub API: the Pages API and Actions run listing returned HTTP 403 *rate limit exceeded* from 19:47Z to at least 19:55Z. The live URL https://karagemop466-tech.github.io/Demo1/ was fetched after merge and serves the landing page (snapshot 2026-11-20 11:43:59 UTC, "2,117 resolved / 352 awaiting" wording, Flagged for Review link present). Build status for `b1b7ff1` still to be confirmed — see irregularity 6 below |
+
+### Irregularity added after merge
+
+6. **Post-merge Pages build not confirmed.** GitHub API rate limit (HTTP 403) blocked `pages/builds/latest` and the Actions run list; the deploy result for `b1b7ff1` is therefore unconfirmed by this session. The previous build reading (`errored` for `6aa1ed5`) is also unexplained. The next integration session should re-check `gh api repos/karagemop466-tech/Demo1/pages/builds/latest` and the `pages-build-deployment` run and record the result here.
