@@ -940,6 +940,24 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 - `COORDINATION.md` (append-only board sections — shared by convention)
 - **New (additive):** `pages/price-jumps.html`, `assets/js/price-jumps.js`
 - **Integration edits (additive only):** `assets/common.js` (nav entry), `index.html` (hub tile), `flagged.html` (new flagged rows F-17…F-19), `suggestions.html` (mark the jump-alert suggestion as implemented, additive row)
+---
+
+# Session arena/5487be47-demo1 — final integration task board
+
+Status values: `unclaimed`, `in progress`, `done`, `needs review` (published on the Flagged for Review
+page; does not block anything).
+
+## Session claim
+
+- **Session ID:** `arena/5487be47-demo1` — branch `arena/5487be47-demo1` (fixed for this session).
+- **Role:** final integration session. The merged tree (single squashed commit `0ed3ff66`, == `origin/main`)
+  already contained the multi-session work; this session re-verifies it line by line against official
+  sources, fills the one missing required feature, confirms the build/audit gates, and publishes.
+- **Claimed at:** 2026-11-20 (UTC), before implementation.
+- **Scope:** final-integration items only — repo review, official-source re-verification, the ≥ $0.10
+  sharp-move feature on the canonical live dashboard, build/link-audit gate, docs, PR → main, merge,
+  Pages deploy confirmation. Files: `dashboard.html`, `assets/dashboard.js`, `assets/style.css`,
+  `tests/dashboard-jumps.test.mjs`, `EXECUTIVE_SUMMARY.md`, `README.md`, `.gitignore`, `COORDINATION.md`.
 
 ## Task board
 
@@ -981,3 +999,31 @@ The user's requirement "Live charts should include events and website links that
 | 2026-11-20 | PR #39 (`arena/b10c4954-demo1` → `main`) was not mergeable: `main` advanced while the PR was open (PRs #35–#38 merged, including concurrent session `arena/c8617443-demo1`'s jump-alert work, plus a data snapshot refresh). Add/add content conflicts on `COORDINATION.md` and `index.html`. | Merged `origin/main` into the feature branch and kept **both** sides: `index.html` keeps main's KPI block AND this session's Live demo desk section (with the new Sharp moves tile); `COORDINATION.md` keeps main's accumulated board verbatim and re-appends this session's section. No session's work discarded. |
 | 2026-11-20 | Both desks (this session and c8617443) implemented jump/alert features independently; both are additive and cross-linked. | Coordination rule applied: each session owns its files; no shared file was overwritten. The board records both. |
 | 2026-11-20 | Second pre-merge round: `main` advanced again (PR #41, session arena/1e09bd4a-demo1, "automated line-by-line verification of the Kalshi demo site"). Content conflict on `COORDINATION.md` only (`index.html` auto-merged). | Resolved by keeping main's accumulated board verbatim and re-appending this session's section. No session's work discarded. |
+| F-1 | Repo review (line by line) | done | arena/5487be47-demo1 | whole tree | git, docs.kalshi.com | `git ls-files`, branch/status check; 250 files, 7 site variants coexist (root, `site/`, `pages/`, `monitor/`, `live-desk/`, `strategy-desk/`, `exec-desk/`, `verified-desk/`, `decision/`, `docs/`) | Fragmentation: multiple competing dashboards remain; consolidation is the owner's call (logged as a suggestion) |
+| F-2 | Official-source re-verification (endpoints, orderbook, candles, demo caveat) | done | arena/5487be47-demo1 | docs cross-check | docs.kalshi.com (api_environments, orderbook_responses, demo_env, get-market-candlesticks) | Fetched each official page; base URLs, bids-only orderbook + 1−price reciprocity, 1/60/1440-min candles, mock-funds warning all match | — |
+| F-3 | Live demo data path re-verified (empirical) | done | arena/5487be47-demo1 | live API calls | external-api.demo.kalshi.co | `GET /exchange/status`, `/markets/{ticker}`, `/markets/{ticker}/orderbook`, `/series/.../candlesticks?period_interval=60` all returned valid responses matching documented schemas | Demo venue is mock data; some markets closed between snapshot and re-check |
+| F-4 | Sharp-move (≥ $0.10) feature on canonical dashboard | done | arena/5487be47-demo1 | `dashboard.html`, `assets/dashboard.js`, `assets/style.css`, `tests/dashboard-jumps.test.mjs` | docs.kalshi.com candlesticks/orderbook | New headless test 9/9 PASS: detects ≥ $0.10 moves, marks chart, table lists time/direction/before→after/magnitude + official market-page & API-source links; no cause asserted | Was absent everywhere before this session (the brief required it) |
+| F-5 | Build + link/secret/source-citation audit gate | done | arena/5487be47-demo1 | whole tree | — | `python3 build_site.py` → 16 pages, "link check: OK"; `node tools/check-links.mjs` → PASS (238 files); `node --check` clean on all JS | — |
+| F-6 | Docs updated (exec summary, README) | done | arena/5487be47-demo1 | `EXECUTIVE_SUMMARY.md`, `README.md` | — | Section 8 added; structure table updated | — |
+| F-7 | PR → main, merge, Pages deploy confirmation | in progress | arena/5487be47-demo1 | `.github/workflows/pages.yml` (unchanged), Pages API | docs.github.com | — | — |
+
+## Sources (this session)
+
+- https://docs.kalshi.com/getting_started/api_environments — REST/WS base URLs (production + demo)
+- https://docs.kalshi.com/getting_started/orderbook_responses — bids-only; YES bid X = NO ask 1−X; `orderbook_fp` `[price, count]`
+- https://docs.kalshi.com/getting_started/demo_env — demo = mock funds; credentials not shared
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks — `period_interval` ∈ {1, 60, 1440}; series+ticker+start_ts+end_ts required
+- Live demo responses captured 2026-11-20 (UTC): `https://external-api.demo.kalshi.co/trade-api/v2/{exchange/status, markets/KXAAAGASD-26NOV20-3.6900, markets/KXAAAGASD-26NOV20-3.6900/orderbook, series/KXAAAGASD/markets/KXAAAGASD-26NOV20-3.6900/candlesticks}`
+
+## Irregularities (this session)
+
+1. **Sharp-move feature (overlap noted).** The brief required flagging ≥ $0.10 moves with event/source links.
+   Concurrent session `arena/c8617443-demo1` had already shipped an equivalent jump-alert page on `exec-desk`
+   (merged PR #32). This session implemented the same requirement independently on the canonical **root**
+   dashboard (F-4). Both are retained; no conflict — different dashboards, each tested.
+2. **Pre-existing time-sensitive test** — `tests/dashboard.test.mjs` uses fixed trade timestamps
+   (2026-11-20 11:11 UTC) that fall outside the page's dynamic 1-hour window when run later, so its
+   `pages/live.html` section reports "No trades matched." Confirmed it fails identically on the pristine
+   tree; not run by the Pages workflow. Flagged, left untouched (owned by an earlier session).
+3. **Site fragmentation** — ~7 dashboard variants coexist; the root hub links to all. Consolidation is
+   recommended but was not forced (each is a prior session's deliverable). Logged for the owner.
