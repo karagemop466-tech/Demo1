@@ -1,581 +1,584 @@
 {
  "schema": 1,
- "ts": "2026-11-20T13:25:39Z",
+ "ts": "2026-11-20T13:28:14Z",
  "requests": [
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000",
-   "ts": "2026-11-20T13:25:39Z",
-   "status": 200,
-   "ms": 948,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIwO-A2AYQ0N_FaxIpS1hORkxNT1NUUkVDWURTLTI2Tk9WMjJBUklLQy1BUklTRkVIT0tPODA",
-   "ts": "2026-11-20T13:25:41Z",
+   "ts": "2026-11-20T13:28:14Z",
    "status": 200,
    "ms": 857,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIvu-A2AYQkISsPxIeS1hQQUxMQURJVU1ILTI2Tk9WMjMxNi1UOTA0Ljk5",
-   "ts": "2026-11-20T13:25:42Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIwO-A2AYQsOfmrwESF0tYTE9XVFNFQS0yNk5PVjIxLUIyOC41",
+   "ts": "2026-11-20T13:28:15Z",
    "status": 200,
-   "ms": 853,
+   "ms": 831,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI58WA2AYQ4NP3iwISKEtYTkJBUkVCUFJPVC0yNk5PVjIwSU5EQ0xFLUNMRUpIQVJERU4xLTg",
-   "ts": "2026-11-20T13:25:43Z",
-   "status": 200,
-   "ms": 940,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI5MWA2AYQ8Mbn1QESFEtYQk5CLTI2Tk9WMjEwMS1CNTc3",
-   "ts": "2026-11-20T13:25:44Z",
-   "status": 200,
-   "ms": 900,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI48WA2AYQ4M_E1wESGktYSFlQRUQtMjZOT1YyMTAxLVQ2My45OTk5",
-   "ts": "2026-11-20T13:25:45Z",
-   "status": 200,
-   "ms": 842,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI4sWA2AYQmNaTiAESGEtYSFlQRS0yNk5PVjIxMDItQjY3Ljg3NQ",
-   "ts": "2026-11-20T13:25:46Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIvu-A2AYQkISsPxIeS1hQQUxMQURJVU1ILTI2Tk9WMjMxNi1UOTA4Ljk5",
+   "ts": "2026-11-20T13:28:16Z",
    "status": 200,
    "ms": 840,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI4cWA2AYQkK6TGRIZS1hTT0xELTI2Tk9WMjEwMi1UODAuOTk5OQ",
-   "ts": "2026-11-20T13:25:47Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI58WA2AYQ4NP3iwISKktYTkJBUkVCUFJPVC0yNk5PVjIwSU5EQ0xFLUNMRVRQUk9DVE9SMjQtOA",
+   "ts": "2026-11-20T13:28:17Z",
    "status": 200,
-   "ms": 816,
+   "ms": 903,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI38WA2AYQgIasuwMSFktYQlRDLTI2Tk9WMjEwMy1CNTQxNTA",
-   "ts": "2026-11-20T13:25:48Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI5MWA2AYQ8Mbn1QESFEtYQk5CLTI2Tk9WMjEwMS1CNjE3",
+   "ts": "2026-11-20T13:28:18Z",
    "status": 200,
-   "ms": 849,
+   "ms": 840,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI3sWA2AYQ2OSirwISGUtYU09MRC0yNk5PVjIxMDMtVDg5Ljk5OTk",
-   "ts": "2026-11-20T13:25:49Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI48WA2AYQ4M_E1wESGktYSFlQRUQtMjZOT1YyMTAxLVQ2NS45OTk5",
+   "ts": "2026-11-20T13:28:19Z",
    "status": 200,
-   "ms": 818,
+   "ms": 822,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI4sWA2AYQmNaTiAESGEtYSFlQRS0yNk5PVjIxMDItQjY5Ljg3NQ",
+   "ts": "2026-11-20T13:28:20Z",
+   "status": 200,
+   "ms": 833,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI4cWA2AYQkK6TGRIZS1hTT0xELTI2Tk9WMjEwMi1UODIuOTk5OQ",
+   "ts": "2026-11-20T13:28:21Z",
+   "status": 200,
+   "ms": 831,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI38WA2AYQgIasuwMSFktYQlRDLTI2Tk9WMjEwMy1CNTQ5NTA",
+   "ts": "2026-11-20T13:28:22Z",
+   "status": 200,
+   "ms": 824,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI3sWA2AYQ2OSirwISGUtYU09MRC0yNk5PVjIxMDMtVDkxLjk5OTk",
+   "ts": "2026-11-20T13:28:23Z",
+   "status": 200,
+   "ms": 881,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:50Z",
-   "status": 200,
-   "ms": 337,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMIN&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:50Z",
-   "status": 200,
-   "ms": 332,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMAX&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:51Z",
-   "status": 200,
-   "ms": 328,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:51Z",
-   "status": 200,
-   "ms": 394,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:52Z",
-   "status": 200,
-   "ms": 474,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:52Z",
-   "status": 200,
-   "ms": 412,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:53Z",
-   "status": 200,
-   "ms": 391,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXNEXTNATOSECGEN&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:53Z",
+   "ts": "2026-11-20T13:28:24Z",
    "status": 200,
    "ms": 321,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXTIME&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:54Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMIN&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:25Z",
    "status": 200,
-   "ms": 476,
+   "ms": 319,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMAX&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:25Z",
+   "status": 200,
+   "ms": 320,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:25Z",
+   "status": 200,
+   "ms": 467,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:26Z",
+   "status": 200,
+   "ms": 489,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:27Z",
+   "status": 200,
+   "ms": 471,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:27Z",
+   "status": 200,
+   "ms": 393,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXNEXTNATOSECGEN&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:28Z",
+   "status": 200,
+   "ms": 320,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXTIME&status=open&limit=1000",
+   "ts": "2026-11-20T13:28:28Z",
+   "status": 200,
+   "ms": 473,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARSUPACTO&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:54Z",
+   "ts": "2026-11-20T13:28:29Z",
    "status": 200,
-   "ms": 410,
+   "ms": 463,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARSONG&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:55Z",
+   "ts": "2026-11-20T13:28:30Z",
    "status": 200,
-   "ms": 254,
+   "ms": 264,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXEMMYCACTO&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:55Z",
+   "ts": "2026-11-20T13:28:30Z",
    "status": 200,
-   "ms": 251,
+   "ms": 239,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCD&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:56Z",
+   "ts": "2026-11-20T13:28:30Z",
    "status": 200,
-   "ms": 813,
+   "ms": 810,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCMINMON&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:57Z",
+   "ts": "2026-11-20T13:28:31Z",
    "status": 200,
-   "ms": 328,
+   "ms": 317,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETHMINMON&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:57Z",
+   "ts": "2026-11-20T13:28:32Z",
    "status": 200,
-   "ms": 316,
+   "ms": 320,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXSOLMINMON&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:58Z",
+   "ts": "2026-11-20T13:28:32Z",
    "status": 200,
-   "ms": 350,
+   "ms": 318,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:58Z",
+   "ts": "2026-11-20T13:28:33Z",
    "status": 200,
    "ms": 641,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGA&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:59Z",
+   "ts": "2026-11-20T13:28:34Z",
    "status": 200,
-   "ms": 239,
+   "ms": 242,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRYDERCUP&status=open&limit=1000",
-   "ts": "2026-11-20T13:25:59Z",
+   "ts": "2026-11-20T13:28:34Z",
    "status": 200,
-   "ms": 239,
+   "ms": 237,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-GABB/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:34Z",
+   "status": 200,
+   "ms": 236,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESPERSON-28-GABB&limit=200",
+   "ts": "2026-11-20T13:28:35Z",
+   "status": 200,
+   "ms": 416,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:00Z",
+   "ts": "2026-11-20T13:28:35Z",
    "status": 200,
-   "ms": 239,
+   "ms": 237,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-SSTR&limit=200",
-   "ts": "2026-11-20T13:26:00Z",
+   "ts": "2026-11-20T13:28:36Z",
    "status": 200,
-   "ms": 402,
+   "ms": 394,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-JP/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:01Z",
-   "status": 200,
-   "ms": 238,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-JP&limit=200",
-   "ts": "2026-11-20T13:26:01Z",
-   "status": 200,
-   "ms": 411,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MTHO/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:02Z",
-   "status": 200,
-   "ms": 249,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MTHO&limit=200",
-   "ts": "2026-11-20T13:26:02Z",
-   "status": 200,
-   "ms": 408,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MGRE/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:03Z",
-   "status": 200,
-   "ms": 246,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MGRE&limit=200",
-   "ts": "2026-11-20T13:26:03Z",
-   "status": 200,
-   "ms": 402,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-LHOD/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:04Z",
-   "status": 200,
-   "ms": 238,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-LHOD&limit=200",
-   "ts": "2026-11-20T13:26:04Z",
-   "status": 200,
-   "ms": 398,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-RCAS/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:05Z",
-   "status": 200,
-   "ms": 247,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-RCAS&limit=200",
-   "ts": "2026-11-20T13:26:05Z",
-   "status": 200,
-   "ms": 468,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-KMIT/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:06Z",
-   "status": 200,
-   "ms": 240,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-KMIT&limit=200",
-   "ts": "2026-11-20T13:26:06Z",
-   "status": 200,
-   "ms": 405,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:07Z",
-   "status": 200,
-   "ms": 235,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6200&limit=200",
-   "ts": "2026-11-20T13:26:07Z",
-   "status": 200,
-   "ms": 397,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MR/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:08Z",
+   "ts": "2026-11-20T13:28:36Z",
    "status": 200,
    "ms": 241,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-MR&limit=200",
-   "ts": "2026-11-20T13:26:08Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-JP&limit=200",
+   "ts": "2026-11-20T13:28:37Z",
    "status": 200,
-   "ms": 428,
+   "ms": 397,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-JDV/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:09Z",
-   "status": 200,
-   "ms": 239,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-JDV&limit=200",
-   "ts": "2026-11-20T13:26:09Z",
-   "status": 200,
-   "ms": 414,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-JOSS/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:10Z",
-   "status": 200,
-   "ms": 246,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-JOSS&limit=200",
-   "ts": "2026-11-20T13:26:10Z",
-   "status": 200,
-   "ms": 403,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:10Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MTHO/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:37Z",
    "status": 200,
    "ms": 238,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASM-26NOV30-3.50&limit=200",
-   "ts": "2026-11-20T13:26:11Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MTHO&limit=200",
+   "ts": "2026-11-20T13:28:38Z",
    "status": 200,
-   "ms": 398,
+   "ms": 415,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-ZOH/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:11Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MGRE/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:38Z",
    "status": 200,
-   "ms": 311,
+   "ms": 237,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-ZOH&limit=200",
-   "ts": "2026-11-20T13:26:12Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MGRE&limit=200",
+   "ts": "2026-11-20T13:28:39Z",
    "status": 200,
    "ms": 403,
    "ok": true
   },
   {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-LHOD/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:39Z",
+   "status": 200,
+   "ms": 239,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-LHOD&limit=200",
+   "ts": "2026-11-20T13:28:40Z",
+   "status": 200,
+   "ms": 397,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-RCAS/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:40Z",
+   "status": 200,
+   "ms": 257,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-RCAS&limit=200",
+   "ts": "2026-11-20T13:28:41Z",
+   "status": 200,
+   "ms": 391,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-KMIT/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:41Z",
+   "status": 200,
+   "ms": 301,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-KMIT&limit=200",
+   "ts": "2026-11-20T13:28:42Z",
+   "status": 200,
+   "ms": 393,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:42Z",
+   "status": 200,
+   "ms": 236,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6200&limit=200",
+   "ts": "2026-11-20T13:28:42Z",
+   "status": 200,
+   "ms": 409,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MR/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:43Z",
+   "status": 200,
+   "ms": 237,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-MR&limit=200",
+   "ts": "2026-11-20T13:28:43Z",
+   "status": 200,
+   "ms": 392,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-JDV/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:44Z",
+   "status": 200,
+   "ms": 238,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-JDV&limit=200",
+   "ts": "2026-11-20T13:28:44Z",
+   "status": 200,
+   "ms": 398,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:45Z",
+   "status": 200,
+   "ms": 238,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6400&limit=200",
+   "ts": "2026-11-20T13:28:45Z",
+   "status": 200,
+   "ms": 411,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-JOSS/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:46Z",
+   "status": 200,
+   "ms": 238,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-JOSS&limit=200",
+   "ts": "2026-11-20T13:28:46Z",
+   "status": 200,
+   "ms": 392,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:47Z",
+   "status": 200,
+   "ms": 236,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASM-26NOV30-3.50&limit=200",
+   "ts": "2026-11-20T13:28:47Z",
+   "status": 200,
+   "ms": 396,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-ZOH/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:48Z",
+   "status": 200,
+   "ms": 236,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-ZOH&limit=200",
+   "ts": "2026-11-20T13:28:48Z",
+   "status": 200,
+   "ms": 397,
+   "ok": true
+  },
+  {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-MARK/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:12Z",
+   "ts": "2026-11-20T13:28:49Z",
    "status": 200,
    "ms": 239,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-MARK&limit=200",
-   "ts": "2026-11-20T13:26:13Z",
+   "ts": "2026-11-20T13:28:49Z",
    "status": 200,
-   "ms": 406,
+   "ms": 392,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-JON/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:13Z",
-   "status": 200,
-   "ms": 239,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-JON&limit=200",
-   "ts": "2026-11-20T13:26:14Z",
-   "status": 200,
-   "ms": 410,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-WM/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:14Z",
-   "status": 200,
-   "ms": 246,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-WM&limit=200",
-   "ts": "2026-11-20T13:26:15Z",
-   "status": 200,
-   "ms": 404,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-CHR/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:15Z",
+   "ts": "2026-11-20T13:28:50Z",
    "status": 200,
    "ms": 242,
    "ok": true
   },
   {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-JON&limit=200",
+   "ts": "2026-11-20T13:28:50Z",
+   "status": 200,
+   "ms": 397,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-WM/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:51Z",
+   "status": 200,
+   "ms": 237,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-WM&limit=200",
+   "ts": "2026-11-20T13:28:51Z",
+   "status": 200,
+   "ms": 393,
+   "ok": true
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-CHR/orderbook?depth=10",
+   "ts": "2026-11-20T13:28:51Z",
+   "status": 200,
+   "ms": 238,
+   "ok": true
+  },
+  {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-CHR&limit=200",
-   "ts": "2026-11-20T13:26:16Z",
+   "ts": "2026-11-20T13:28:52Z",
    "status": 200,
-   "ms": 402,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-MK/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:16Z",
-   "status": 200,
-   "ms": 236,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-MK&limit=200",
-   "ts": "2026-11-20T13:26:17Z",
-   "status": 200,
-   "ms": 424,
+   "ms": 396,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-JP/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:17Z",
+   "ts": "2026-11-20T13:28:52Z",
    "status": 200,
    "ms": 238,
    "ok": true
   },
   {
    "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-JP&limit=200",
-   "ts": "2026-11-20T13:26:18Z",
+   "ts": "2026-11-20T13:28:53Z",
    "status": 200,
-   "ms": 409,
+   "ms": 395,
    "ok": true
   },
   {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTIME-26-STE/orderbook?depth=10",
-   "ts": "2026-11-20T13:26:18Z",
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXAAAGASW-26NOV23-3.6200&limit=1000",
+   "ts": "2026-11-20T13:28:53Z",
    "status": 200,
-   "ms": 248,
-   "ok": true
-  },
-  {
-   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXTIME-26-STE&limit=200",
-   "ts": "2026-11-20T13:26:19Z",
-   "status": 200,
-   "ms": 401,
+   "ms": 238,
    "ok": true
   }
  ],
  "errors": [],
  "summary": {
-  "run_id": "20261120T132539Z",
-  "api_calls": 69,
+  "run_id": "20261120T132814Z",
+  "api_calls": 70,
   "request_errors": 0,
-  "new_trades": 0,
+  "new_trades": 1,
   "settled": 0,
-  "skips": 20,
-  "equity": 1000.0
+  "skips": 19,
+  "equity": 999.21
  },
  "skips": [
   {
+   "ticker": "KXPRESPERSON-28-GABB",
+   "reason": "momentum-tape: tape trend -0.80 but NO implied ask outside band"
+  },
+  {
    "ticker": "KXPGATOUR-THRC26-SSTR",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPRESNOMD-28-JP",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPGATOUR-THRC26-MTHO",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPGATOUR-THRC26-MGRE",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPGATOUR-THRC26-LHOD",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPGATOUR-THRC26-RCAS",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPGATOUR-THRC26-KMIT",
-   "reason": "insufficient trade history for all strategies"
-  },
-  {
-   "ticker": "KXAAAGASW-26NOV23-3.6200",
-   "reason": "longshot-value: NO implied ask $0.13 but 24h volume below 5000"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPRESNOMR-28-MR",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPRESNOMR-28-JDV",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
+  },
+  {
+   "ticker": "KXAAAGASW-26NOV23-3.6400",
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPRESNOMD-28-JOSS",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXAAAGASM-26NOV30-3.50",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXTIME-26-ZOH",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXTIME-26-MARK",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXTIME-26-JON",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXPRESNOMD-28-WM",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXTIME-26-CHR",
-   "reason": "insufficient trade history for all strategies"
-  },
-  {
-   "ticker": "KXPRESNOMD-28-MK",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   },
   {
    "ticker": "KXTIME-26-JP",
-   "reason": "insufficient trade history for all strategies"
-  },
-  {
-   "ticker": "KXTIME-26-STE",
-   "reason": "insufficient trade history for all strategies"
+   "reason": "no strategy fired: thresholds or entry bands not met on the available tape"
   }
  ]
 }

@@ -1,15 +1,15 @@
 {
  "schema": 1,
- "updated_ts": "2026-11-20T13:26:19Z",
+ "updated_ts": "2026-11-20T13:28:54Z",
  "simulated": true,
  "started_cash_dollars": 1000.0,
- "cash": 1000.0,
- "open_value": 0,
- "equity": 1000.0,
- "open_count": 0,
+ "cash": 998.51,
+ "open_value": 0.7,
+ "equity": 999.21,
+ "open_count": 1,
  "settled_count": 0,
  "realized_pnl": 0,
- "roi_on_started_cash": 0.0,
+ "roi_on_started_cash": -0.0008,
  "equity_curve": [
   {
    "ts": "2026-11-20T13:15:12Z",
@@ -22,12 +22,66 @@
   {
    "ts": "2026-11-20T13:26:19Z",
    "equity": 1000.0
+  },
+  {
+   "ts": "2026-11-20T13:28:54Z",
+   "equity": 999.21
   }
  ],
- "by_strategy": {},
- "by_topic": {},
- "by_band": {},
- "category_matrix": [],
+ "by_strategy": {
+  "longshot-value": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "by_topic": {
+  "gas": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "by_band": {
+  "0.00-0.20": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "category_matrix": [
+  {
+   "topic": "gas",
+   "strategy": "longshot-value",
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ ],
  "result_counts": {
   "yes": 0,
   "no": 0
