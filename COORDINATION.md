@@ -1535,3 +1535,34 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pages state after merge | transient `errored` reading was a superseded build; the build for `1cf87c9` completed **success**, API `status: built` (source `main:/`) |
 | Live verification | https://karagemop466-tech.github.io/Demo1/trader-guide/index.html fetched post-deploy: renders full guide with all tables and source links; landing and exec-desk/dashboard verified live earlier in G-2 |
 | Tasks G-1..G-3 | All done. Sources, verification and irregularities recorded above (Results section) |
+
+## Session arena/d372e97e-demo1 — close-out verification of the brief (claim + record)
+
+- **Session ID:** `d372e97e` — branch `arena/d372e97e-demo1` (platform-fixed name; recorded as deviation like prior sessions).
+- **Basis:** board read end-to-end; `origin/main` at `97262eb`. Every brief area already has a published counterpart from earlier sessions (executive summary, topic pages, two alert chats in `alert-desk/`, chart/depth/resolution in `engine/`, sim/strategy runs in `sim-desk/`, Flagged for Review pages, `trader-guide/`). This session did **not** rebuild those; it verified the riskiest claims and the publish path.
+- **Scope (exclusive):** `COORDINATION.md` (this section only). No other file edited. The build was run read-only; `git status` stayed clean.
+
+### Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| D-1 | Re-verify the taker-fee constant `0.07 × C × P × (1−P)` used in `trader-guide/`, `sim-desk/`, `alert-desk/` against Kalshi's own fee schedule | done (partially; see irregularity 2) | arena/d372e97e-demo1 | this section | https://kalshi.com/regulatory/fee-schedule (official page; PDF link not retrievable by fetch tool) | Official page reached; fee formula text not in the fetched content. Third-party pages (realize.tax, rg.org, rivo.markets) agree on 0.07 and 0.0175 but are **not** official evidence | Constant not confirmed from the official PDF in this session — manual check required |
+| D-2 | Local build gate: `python3 build_site.py` on current tree | done | arena/d372e97e-demo1 | none (read-only) | repo | `built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10`; `link check: OK`; tree clean afterwards | none |
+| D-3 | Live Pages health check via GitHub API (live URL not reachable from the sandbox) | done (see irregularity 1) | arena/d372e97e-demo1 | none | https://docs.github.com/en/rest/pages (API used: `repos/karagemop466-tech/Demo1/pages` and `/pages/builds/latest`) | Pages source `main:/`; latest build at check time `building` for `97262eb`; previous build for `6aa1ed5` reported `errored` | see below |
+| D-4 | Publish: board record, PR → `main`, merge, Pages confirmation | in progress | arena/d372e97e-demo1 | `COORDINATION.md` | — | recorded in the publish record below | — |
+
+### Irregularities flagged this session (non-blocking; for the Flagged for Review pages)
+
+1. **Pages build state.** At check time the Pages API reported the last completed build for `6aa1ed5` as `errored`, and a new build for `97262eb` as `building` (queued 19:44:05Z). The `errored` reading is not explained by anything in the repo; the root cause is not visible from the sandbox. Re-checked after the post-merge build (see publish record).
+2. **Fee constant not confirmed from the official PDF.** `https://kalshi.com/regulatory/fee-schedule` loads, but the fetch tool returned only the page title, not the PDF body. The `0.07` taker and `0.0175` maker coefficients in the repo therefore remain **unverified against the primary document**. Third-party pages state the same values, which is consistent but not verification. Manual check required.
+3. **Sandbox cannot reach `github.io`.** The live site URL returns no response from the sandbox (outbound allowlist), so the landing-page check relies on the Pages API and a clean local build, not a live HTTP fetch.
+4. **Portfolio, fills and settlements for the demo account** still need a demo API key (none in the repo or environment). They are blank and flagged, not inferred.
+5. **Concurrent activity.** Other sessions' PRs #61 and #62 and Pages/data workflow runs were in progress during this session. Board conflicts resolve by keeping both sides in full.
+
+### Publish record — session arena/d372e97e-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
+| Merge result | pending |
+| Pages state after merge | pending |
