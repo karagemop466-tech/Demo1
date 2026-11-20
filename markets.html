@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markets by category · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Markets by category</h1>
+  <p class="lead">Verified rows from Kalshi's production REST API, snapshot 2026-11-20 (UTC). Prices are dollars per $1 contract. Volume and open interest are contract counts. A sample, not the full market list.</p>
+  <div class="banner">Each row links to the API response it came from. A blank cell means the value could not be confirmed, and the row is marked <b>Unverified</b>. Nothing is inferred.</div>
+
+  <div class="filters" id="filters"></div>
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>Category</th><th>Market (ticker)</th><th>Outcome</th>
+      <th class="num">YES bid</th><th class="num">YES ask</th><th class="num">Last trade</th>
+      <th class="num">Volume (contracts)</th><th class="num">Open interest (contracts)</th><th class="num">YES ask size</th>
+      <th>Close (UTC)</th><th>Verification</th><th>Source</th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="12">Loading data/markets.json…</td></tr></tbody>
+  </table></div>
+
+  <h2>Category totals (verified rows only)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Category</th><th class="num">Rows</th><th class="num">Volume (contracts)</th><th class="num">Open interest (contracts)</th><th>Note</th></tr></thead>
+    <tbody id="totals"></tbody>
+  </table></div>
+  <p class="note">Totals sum only the sampled rows. They are not category totals for Kalshi. Golf and gas rows are the sampled strikes or contracts, not every contract in the series.</p>
+</main>
+<footer>Source for every row: Kalshi REST API (production, external-api.kalshi.com) · Field definitions: docs.kalshi.com · See Sources.</footer>
+<script src="assets/common.js"></script>
+<script>
+(function () {
+  var all = [];
+  var cats = ["All"];
+  function num(v) { return v === "" || v == null ? null : Number(v); }
+  function render(filter) {
+    var rows = all.filter(function (m) { return filter === "All" || m.category === filter; });
+    var html = rows.map(function (m) {
+      var blank = m.verification !== "verified";
+      var cell = function (v, isPrice) {
+        if (v === "" || v == null) return '<td class="num"><span class="blank">blank</span></td>';
+        return '<td class="num">' + (isPrice ? "$" + Number(v).toFixed(4) : KD.fmtNum(v)) + "</td>";
+      };
+      var title = m.ticker ? KD.esc(m.title) + '<br><span class="note">' + KD.esc(m.ticker) + "</span>" +
+        (m.rule ? '<details><summary class="note">Rule text (from API)</summary><div class="note">' + KD.esc(m.rule) + "</div></details>" : "") +
+        (m.note ? '<div class="note">' + KD.esc(m.note) + "</div>" : "")
+        : '<span class="blank">No verified open market</span>' + (m.note ? '<div class="note">' + KD.esc(m.note) + "</div>" : "");
+      return "<tr>" +
+        "<td>" + KD.esc(m.category) + "</td>" +
+        "<td>" + title + "</td>" +
+        "<td>" + (m.outcome ? KD.esc(m.outcome) : '<span class="blank">blank</span>') + "</td>" +
+        cell(m.yes_bid, true) + cell(m.yes_ask, true) + cell(m.last_price, true) +
+        cell(m.volume_contracts, false) + cell(m.open_interest_contracts, false) + cell(m.yes_ask_size, false) +
+        "<td>" + (m.close_time ? KD.esc(m.close_time) : '<span class="blank">blank</span>') + "</td>" +
+        "<td>" + (blank ? '<span class="tag t-unv">Unverified</span>' : '<span class="tag t-ver">Verified</span>') + "</td>" +
+        '<td><a href="' + KD.esc(m.source_url) + '" target="_blank" rel="noopener">API response</a></td>' +
+        "</tr>";
+    }).join("");
+    document.getElementById("rows").innerHTML = html || '<tr><td colspan="12">No rows.</td></tr>';
+    Array.prototype.forEach.call(document.querySelectorAll("#filters button"), function (b) {
+      b.className = b.getAttribute("data-c") === filter ? "on" : "";
+    });
+  }
+  function totals() {
+    var byCat = {};
+    all.forEach(function (m) {
+      if (m.verification !== "verified") { byCat[m.category] = byCat[m.category] || { n: 0, v: 0, oi: 0 }; return; }
+      var c = byCat[m.category] = byCat[m.category] || { n: 0, v: 0, oi: 0 };
+      c.n += 1; c.v += num(m.volume_contracts) || 0; c.oi += num(m.open_interest_contracts) || 0;
+    });
+    var notes = {
+      "Gas prices": "Monthly AAA national-average strikes (Nov 30, 2026).",
+      "Golf": "RSM Classic winner contracts, sampled.",
+      "Crypto": "BTC price-range contracts closing Nov 20, 2026 12:00 UTC. All zero volume in this sample.",
+      "Elections": "NATO Secretary General contracts (long-dated, close 2099).",
+      "Culture": "No verified open market found. See Flagged."
+    };
+    document.getElementById("totals").innerHTML = Object.keys(byCat).map(function (k) {
+      var c = byCat[k];
+      return "<tr><td>" + KD.esc(k) + '</td><td class="num">' + c.n + '</td><td class="num">' + KD.fmtNum(c.v) +
+        '</td><td class="num">' + KD.fmtNum(c.oi) + "</td><td class=\"note\">" + KD.esc(notes[k] || "") + "</td></tr>";
+    }).join("");
+  }
+  fetch("data/markets.json").then(function (r) { return r.json(); }).then(function (d) {
+    all = d.markets;
+    var seen = {};
+    all.forEach(function (m) { if (!seen[m.category]) { seen[m.category] = 1; cats.push(m.category); } });
+    document.getElementById("filters").innerHTML = cats.map(function (c) {
+      return '<button data-c="' + KD.esc(c) + '">' + KD.esc(c) + "</button>";
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("#filters button"), function (b) {
+      b.onclick = function () { render(b.getAttribute("data-c")); };
+    });
+    render("All"); totals();
+  }).catch(function (e) {
+    document.getElementById("rows").innerHTML = '<tr><td colspan="12">Could not load data/markets.json: ' + KD.esc(e.message) + "</td></tr>";
+  });
+})();
+</script>
+</body></html>
