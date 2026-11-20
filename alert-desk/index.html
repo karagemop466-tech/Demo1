@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert chats — Kalshi demo swings ≥ $0.10 (all events + model picks)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Alert chats — swings ≥ $0.10</h1>
+    <p class="sub">Kalshi <b>demo</b> Trade API · two scrolling chats: <b>ALL EVENTS</b> and <b>MODEL PICKS · HIGH ROI</b>.
+       Every bubble links the exact API request it came from; a news-search link is a lead, not proof of cause.
+       Demo venue: mock funds — prices may not reflect real markets (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official demo-env note</a>).</p>
+  </div>
+  <div class="status">
+    <span id="badge" class="badge off">BOOT…</span>
+    <span id="stamp" class="stamp"></span>
+    <span id="counts" class="stamp"></span>
+  </div>
+</header>
+
+<nav class="controls" aria-label="feed controls">
+  <div class="chips" id="topicChips"></div>
+  <div class="ctl">
+    <label for="dirSel">direction</label>
+    <select id="dirSel">
+      <option value="both">both</option>
+      <option value="up">up ▲</option>
+      <option value="down">down ▼</option>
+    </select>
+    <label for="basisSel">price basis</label>
+    <select id="basisSel">
+      <option value="all">all</option>
+      <option value="traded">traded</option>
+      <option value="book">book mid</option>
+    </select>
+    <label for="pollSel">live poll</label>
+    <select id="pollSel">
+      <option value="0">off</option>
+      <option value="10">10s</option>
+      <option value="15" selected>15s</option>
+      <option value="30">30s</option>
+      <option value="60">60s</option>
+    </select>
+    <button id="pauseBtn" type="button">⏸ pause feed</button>
+    <button id="clearLiveBtn" type="button" title="remove live-tape bubbles">clear live</button>
+  </div>
+</nav>
+
+<main class="chats">
+  <section class="chat" id="chatAllWrap">
+    <div class="chat-head">
+      <h2>Chat 1 · ALL EVENTS</h2>
+      <p>Every captured move ≥ <b>$0.10</b> in either direction — historical candle-based jumps plus the live demo trades tape. <span id="allCount" class="pill"></span></p>
+    </div>
+    <div class="feed" id="chatAll" role="log" aria-live="polite"></div>
+  </section>
+
+  <section class="chat" id="chatModelWrap">
+    <div class="chat-head">
+      <h2>Chat 2 · MODEL PICKS · HIGH ROI</h2>
+      <p>Selective filter — only swings on markets the model likes, by two disclosed rules:
+         <b>P</b> the automated <a href="../sim-desk/index.html">sim-desk</a> model holds/held a position there, or
+         <b>B</b> the fee-aware <a href="../engine/index.html">settlement study</a> shows positive expected ROI for the jump side at that price band
+         (official taker fee formula). <span id="modelCount" class="pill"></span></p>
+    </div>
+    <div class="feed" id="chatModel" role="log" aria-live="polite"></div>
+  </section>
+</main>
+
+<section class="method">
+  <h2>Method, sources &amp; caveats (read before trading on this)</h2>
+  <ul>
+    <li><b>Threshold.</b> A bubble requires an absolute move ≥ <b>$0.10</b> between the two observed prices, in either direction (brief requirement). Nothing smaller is shown; nothing is inferred.</li>
+    <li><b>Historical bubbles</b> come from committed <a href="../engine/jumps.json" target="_blank" rel="noopener"><code>engine/jumps.json</code></a>: moves between official candle closes / book mids, computed by <a href="../engine/index.html">the engine desk</a> from documented <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlestick endpoint</a> captures. Coverage is the markets the collector captured candles for (see <code>coverage</code> in the file) — uncovered markets are not evidence of no movement.</li>
+    <li><b>Live bubbles</b> come from the browser polling the official public trades tape <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener"><code>GET /trade-api/v2/markets/trades</code></a> (demo base <code>https://external-api.demo.kalshi.co/trade-api/v2</code>). Each new trade is compared with the market's previously observed trade price; a ≥ $0.10 change emits a bubble. The tape is global, so live bubbles are not limited to candle-captured markets. If the browser cannot reach the API (CORS/egress), the page says so and shows the committed snapshot only.</li>
+    <li><b>Chat 2 filter (the "model").</b> Rule <b>P</b>: the market appears in the sim-desk automated ledger (<a href="../sim-desk/data/ledger.json" target="_blank" rel="noopener"><code>positions_open</code>/<code>trades_settled</code></a>). Rule <b>B</b>: side = YES for an up-jump / NO for a down-jump, entry = the post-jump price, probability = the resolved YES-frequency of that price band from the engine settlement study (2,469 resolved demo markets; band sample size <code>n</code> is shown on the badge), cost = entry + taker fee <code>ceil(M×0.07×C×P×(1−P))</code> with M=1 (<a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">official fee schedule</a>; settlement $1 per winning contract per <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">official settlement page</a>). ROI &gt; 0 flags the bubble. Band frequencies are historical counts on demo data, not predictions.</li>
+    <li><b>Honest aggregate.</b> The engine's fee-aware backtest over these strategies currently shows <b>negative</b> net ROI overall (−50.36% on its 16 simulated trades — <a href="../engine/strategies.json" target="_blank" rel="noopener">source</a>). "Model likes" is a transparent rule, not a claim of profit.</li>
+    <li><b>Jump ≠ cause.</b> A news-search link opens a query; it is a lead only. No causal claim is made.</li>
+    <li><b>No credentials, no orders.</b> This page only reads public data. Portfolio/order paths require signing and are intentionally absent here (see <a href="../integration/flagged-review.html">Flagged for Review</a>).</li>
+    <li><b>Topic tags</b> use this repo's published keyword rules (<a href="../tools/collect_kalshi.py" target="_blank" rel="noopener"><code>tools/collect_kalshi.py</code></a> <code>TOPIC_RULES</code>) applied to title/ticker; a market matching no rule shows a blank topic with a reason — never guessed.</li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <a href="../index.html">← repository landing</a> ·
+  <a href="../engine/index.html">engine desk</a> ·
+  <a href="../sim-desk/index.html">sim-desk</a> ·
+  <a href="../desk/requirements.html">requirements matrix</a> ·
+  <a href="../integration/flagged-review.html">flagged for review</a> ·
+  <a href="README.md">how this page is built</a>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+name: alert-desk check
+
+# Session arena/0ad208bf-demo1 (AL-3): additive check for the two-chat alert desk.
+# Only touches alert-desk/**; no shared workflow is modified.
+on:
+  push:
+    paths:
+      - "alert-desk/**"
+  pull_request:
+    paths:
+      - "alert-desk/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install jsdom
+        run: npm install --no-audit --no-fund --silent jsdom
+      - name: Syntax check
+        run: node --check alert-desk/app.js && node --check alert-desk/test_boot.mjs
+      - name: Boot test (offline + live-tape paths)
+        run: node alert-desk/test_boot.mjs
