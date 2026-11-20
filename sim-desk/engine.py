@@ -336,7 +336,9 @@ def evaluate_strategies(config, market, closes, yes_ask, no_ask, volume_24h):
     for name in config["strategy_priority"]:
         if name in outcomes:
             return None, None, f"{name}: {outcomes[name][1]}"
-    return None, None, "insufficient trade history for all strategies"
+    if len(closes) < 3:
+        return None, None, "insufficient trade history for all strategies"
+    return None, None, "no strategy fired: thresholds or entry bands not met on the available tape"
 
 
 # ------------------------------------------------------------------- ledger
@@ -635,7 +637,7 @@ def run(config, ledger, api, run_id):
         yes_ask, no_ask = implied_asks(best_yes_bid, best_no_bid)
         closes, tape_url = trade_closes(api, ticker)
         if not closes:
-            skips.append({"ticker": ticker, "reason": "no trade history returned by the official tape (demo candlesticks also empty — flagged)"})
+            skips.append({"ticker": ticker, "reason": "no trade history returned by the official tape (demo candlesticks also empty — flagged)", "trades_seen": 0})
             continue
         strategy, side, reason = evaluate_strategies(config, c["market"], closes, yes_ask, no_ask, c["volume_24h"])
         if not strategy:
@@ -701,6 +703,11 @@ def run(config, ledger, api, run_id):
         ledger["trades_settled"].extend(settled_now)
 
     # --- 8. run record
+    shortlist_record = [{
+        "ticker": c["market"].get("ticker"), "topic": c["topic"],
+        "notional_24h": round(c["notional_24h"], 2), "volume_24h": round(c["volume_24h"], 2),
+        "matched_by": c["matched_by"],
+    } for c in shortlist]
     open_value = sum(p["contracts"] * p["mark_price"] for p in ledger["positions_open"])
     equity = round(ledger["cash"] + open_value, 2)
     ledger["runs"].append({
@@ -708,6 +715,7 @@ def run(config, ledger, api, run_id):
         "run_id": run_id,
         "universe_markets": len(markets),
         "candidates": len(shortlist),
+        "candidate_list": shortlist_record,
         "new_trades": len(new_trades),
         "settled": len(settled_now),
         "api_calls": api.call_count,

@@ -145,14 +145,19 @@ class TestStrategyRules(unittest.TestCase):
         closes = [0.82] * 8
         strat, side, reason = engine.evaluate_strategies(CONFIG, {}, closes, 0.83, 0.17, 6000)
         self.assertEqual((strat, side), ("longshot-value", "no"))
-        strat, side, reason = engine.evaluate_strategies(CONFIG, {}, closes, 0.83, 0.17, 4000)
+        strat, side, reason = engine.evaluate_strategies(CONFIG, {}, closes, 0.83, 0.17, 400)
         self.assertIsNone(strat)
         self.assertIn("volume", reason)
 
     def test_insufficient_history_skips(self):
+        # 3 trades: enough for the mean-revert window, but thresholds not met
         strat, side, reason = engine.evaluate_strategies(CONFIG, {}, [0.30, 0.31, 0.30], 0.45, 0.55, 1000)
         self.assertIsNone(strat)
-        self.assertIn("insufficient", reason)
+        self.assertIn("no strategy fired", reason)
+        # 2 trades: below every strategy's minimum
+        strat, side, reason = engine.evaluate_strategies(CONFIG, {}, [0.30, 0.31], 0.45, 0.55, 1000)
+        self.assertIsNone(strat)
+        self.assertIn("insufficient trade history", reason)
 
     def test_priority_order(self):
         closes = [0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]  # momentum yes AND mean-revert no (rising)
@@ -270,7 +275,7 @@ class TestIntegrationReplay(unittest.TestCase):
 
             # skipped candidates are logged with reasons; every request URL is recorded
             reasons = " | ".join(s["reason"] for s in runlog["skips"])
-            self.assertIn("insufficient trade history", reasons)
+            self.assertIn("no strategy fired", reasons)
             self.assertIn("no trade history returned by the official tape", reasons)
             self.assertTrue(all(r["url"].startswith(CONFIG["base_url"]) for r in runlog["requests"]))
             self.assertEqual(runlog["summary"]["api_calls"], 31)
