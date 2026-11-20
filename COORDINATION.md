@@ -720,17 +720,17 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 
 - **Session ID:** `639ec37c` — branch `arena/639ec37c-demo1` (fixed). Claimed 2026-11-20 (UTC), before any audit work.
 - **Why this task:** `main` already has the desks, but no independent check that the code's requests (endpoint paths, query parameters, status values, field names) match the official Kalshi docs. Task 22 (final integration) is claimed by `arena/358db039-demo1` and is **not** started here. The dashboard integration claimed on `arena/17f80f01-demo1` is not started here either.
-- **File scope (exclusive):** `audit/**` (new folder only) and this board section. No edits to any other session's files. Any fix needed in another session's file is logged as a change request below, not applied.
+- **File scope (exclusive):** `spec-audit/**` (new folder only) and this board section. No edits to any other session's files. Any fix needed in another session's file is logged as a change request below, not applied.
 
 | ID | Task | Status | Owner | File scope | Sources |
 |---|---|---|---|---|---|
-| 23 | Code-to-official-spec audit: every Kalshi request path, parameter, status value and field the site code uses, checked against docs.kalshi.com; mismatches listed with links | done | arena/639ec37c-demo1 | `audit/**`, this board section | docs.kalshi.com pages + live official demo GETs (sources below; full list in `audit/REPORT.md`) |
+| 23 | Code-to-official-spec audit: every Kalshi request path, parameter, status value and field the site code uses, checked against docs.kalshi.com; mismatches listed with links | done | arena/639ec37c-demo1 | `spec-audit/**`, this board section | docs.kalshi.com pages + live official demo GETs (sources below; full list in `spec-audit/REPORT.md`) |
 
 Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
 
 ### Task 23 record (arena/639ec37c-demo1)
 
-- **Result:** 37 checks — 25 Confirmed, 1 Mismatch, 6 Irregularity, 5 Unverified. Rendered to `audit/REPORT.md` and `audit/index.html` by `audit/build_audit.py` from `audit/register.json`. Every row carries an https link to an official page.
+- **Result:** 37 checks — 25 Confirmed, 1 Mismatch, 6 Irregularity, 5 Unverified. Rendered to `spec-audit/REPORT.md` and `spec-audit/index.html` by `spec-audit/build_audit.py` from `spec-audit/register.json`. Every row carries an https link to an official page.
 - **Sources (official):** https://docs.kalshi.com/getting_started/demo_env · https://docs.kalshi.com/api-reference/market/get-markets · https://docs.kalshi.com/api-reference/market/get-trades · https://docs.kalshi.com/api-reference/market/get-market-candlesticks · https://docs.kalshi.com/api-reference/market/get-series-list · https://docs.kalshi.com/getting_started/orderbook_responses · https://docs.kalshi.com/api-reference/market/get-market-orderbook · https://docs.kalshi.com/api-reference/orders/create-order-v2 · https://docs.kalshi.com/getting_started/market_lifecycle · https://docs.kalshi.com/api-reference/events/get-events · https://docs.kalshi.com/api-reference/portfolio/get-positions · https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
 - **Live official reads (GET only, via the page fetcher; the audit sandbox cannot reach kalshi.co directly):** `external-api.demo.kalshi.co/trade-api/v2/exchange/status`, `/search/tags_by_categories`, `/series?category=Economics|Crypto|Culture`, `/series?tags=Golf`.
 - **Verification performed:** each code path listed in the register was matched to the doc page or the live response; signing rule matched across all five signers in the repo; the order body was checked against the required-field list; the doc links were fetched (two slugs failed, see below). No orders were placed; no credentials used.
@@ -743,8 +743,10 @@ Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
   6. A PEM private key kept in browser localStorage on the public site (`exec-desk/trades.html`) — high-severity review item, not an exploit verified here (C-30).
   7. Mismatch: the exec-desk 'open' view includes `initialized` and `inactive` markets (C-05).
 - **Unverified (left open, not assumed):** `GET /markets?tickers=` (C-22); positions `settlement_status=all` / `count_filter` (C-26); the rate-limit cadence (C-33); browser CORS from the github.io origin (C-34; the sandbox has no browser); `api-reference/series/get-series` slug used by strategy-desk (C-36).
-- **Change requests (owned files — logged here, not applied):** CR-1 to CR-8 in `audit/register.json` / `audit/REPORT.md`. Owners: exec-desk (CR-1, CR-4–CR-7), decision desk (CR-2, CR-3), integration owner for `build_site.py` / `README.md` (CR-8).
+- **Change requests (owned files — logged here, not applied):** CR-1 to CR-8 in `spec-audit/register.json` / `spec-audit/REPORT.md`. Owners: exec-desk (CR-1, CR-4–CR-7), decision desk (CR-2, CR-3), integration owner for `build_site.py` / `README.md` (CR-8).
 - **Overlap note:** task 22 (final integration) stays with `arena/358db039-demo1`, and the dashboard integration with `arena/17f80f01-demo1`. This session did not touch their files.
+- **Scope change (logged):** the claim said `audit/**`; `main` had already taken `audit/` from `arena/ca4f2da1-demo1` (PR #36, its task A-1..A-3). This session moved all output to `spec-audit/**` and did not edit `audit/`.
+- **Overlap (logged):** `ca4f2da1`'s audit covers the same subject (official-source check of Kalshi API claims). This session's 37-check register is additive. Integration owner decides whether to keep both; neither session edits the other's files.
 - **PR:** branch `arena/639ec37c-demo1` → `main` opened for integration. Merge is left to the integration session that holds task 22, so its combined re-verification covers this folder (see Integration log row below).
 
 ### Integration log (arena/639ec37c-demo1)
@@ -753,4 +755,95 @@ Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
 |---|---|---|
 | 2026-11-20 | arena/639ec37c-demo1 | Rebase of the branch's only commit (`0ed3ff6`, a bot data-refresh commit already superseded on `main`) onto `origin/main` hit a conflict in `data/`; the rebase was aborted and the branch was reset (`git reset --hard origin/main`) to `origin/main` f9fab19. No local work was lost: the branch had no other commits and a clean tree. |
 | 2026-11-20 | arena/639ec37c-demo1 | Claimed task 23 (commit `f713e8d`, pushed before audit work). |
-| 2026-11-20 | arena/639ec37c-demo1 | Task 23 done: `audit/` added (new folder only). `node tools/check-links.mjs` → PASS after the change. |
+| 2026-11-20 | arena/639ec37c-demo1 | Task 23 done: `spec-audit/` added (new folder only). `node tools/check-links.mjs` → PASS after the change. |
+
+## Tasks — session arena/3c2c8403-demo1 (category-first landing + root verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| T14 | Replace the nine-desk root hub with a clean category-first landing page (gas, elections, culture, crypto, golf → `site/`), keep every other desk reachable under an "Earlier desks" section, and re-verify every root-page claim against official sources | done | arena/3c2c8403-demo1 | `index.html` (root only), `docs/verification-3c2c8403.html` (new), COORDINATION.md | docs.kalshi.com/getting_started/api_environments, /demo_env, /market_lifecycle, /api-reference/market/get-markets; live demo API: `/exchange/status`, `/markets/KXRT-FUR-85` (all fetched 2026-11-20) | Every landing-page claim listed with its source in `docs/verification-3c2c8403.html`. Counts re-derived from `snapshot/` (1,399 open; 2,117 resolved with yes/no; 352 closed awaiting result). Link check PASS; all 62 relative links resolve | V-1 previous landing said culture had no open market (contradicted: KXRT-FUR-85 active; 191 in snapshot) — corrected. V-2 old 15-row table used production host — landing now demo-only. V-3 "resolved" overstated (352 closed-without-result) — corrected on landing; **generated `site/*.html` still say "Resolved 2469" → open request to integration owner (`build_site.py`)**. V-4 snapshot vs live drift (time-stamped, not an error). V-5 "24h notional" is a computed proxy, not an API field. V-6 older desks still show production/stale values (not edited; other sessions). V-7 request: fix label in `build_site.py`. V-8 demo prices may not reflect real markets. V-9 portfolio/trading unverified (no demo key). |
+
+Claim log entry: 2026-11-20 — arena/3c2c8403-demo1 claimed T14 (root `index.html` + new verification doc only; no edits to `site/`, `snapshot/`, `data/`, or other desks).
+| 2026-11-20 | arena/3c2c8403-demo1 | Claimed T14; root landing rewritten category-first; verification page `docs/verification-3c2c8403.html` added; T14 marked done. Requests logged: V-3 (generated site label) and V-6 (older desks) — not edited (outside claimed scope). |
+| 2026-11-20 | arena/3c2c8403-demo1 | Conflict + push incident: rebase of T14 claim onto main (PR #32 added a section to COORDINATION.md) conflicted; resolved by keeping both sections (no content dropped). A push issued while the rebase was still paused sent three pre-rebase commits to `arena/3c2c8403-demo1` (only this session's commits were on that branch). Replaced them with `git push --force-with-lease` after confirming the remote held nothing else. Lesson recorded: never pipe `git pull --rebase` into `tail` before a push. |
+
+## Tasks — session arena/358db039-demo1 (final integration + verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 22 | Final integration: re-verify combined data line by line, broken-link check, site build, PR to main, merge, confirm Pages deploy | in progress | arena/358db039-demo1 | `COORDINATION.md` (claim + record); verification fixes only in files not owned by other sessions | docs.kalshi.com (api_environments, demo_env, candlesticks, orderbook, settlement); live site https://karagemop466-tech.github.io/Demo1/ | Full local suite: node --check, py_compile, build_site.py link gate, check-links, dom tests, pytest; live fetch of key pages | PR #32 (sharp-jump scanner, session arena/c8617443-demo1) merged to main as f9fab19 before this claim — rebased cleanly, no conflict. No demo API key in repo → portfolio/trading cells remain blank + flagged per no-fabrication rule. |
+
+Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final integration). Scope is COORDINATION.md plus verification-only fixes; exec-desk/jumps.* owned by arena/c8617443-demo1 (merged) and not touched.
+
+### Verification record — session arena/358db039-demo1 (task 22, final integration)
+
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Official endpoints match brief | ✅ | Fetched https://docs.kalshi.com/getting_started/api_environments.md 2026-11-20: demo REST `https://external-api.demo.kalshi.co/trade-api/v2` (recommended) + `https://demo-api.kalshi.co/trade-api/v2`; demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` + `wss://demo-api.kalshi.co/trade-api/ws/v2` — exact match to brief |
+| Live site serves | ✅ | Fetched https://karagemop466-tech.github.io/Demo1/ , /site/index.html , /exec-desk/jumps.html — all 200 with expected content |
+| JS syntax (pages.yml set + jumps) | ✅ | `node --check` pass: monitor/app.js, kalshi-core/ui/live, signer, check-links, dashboard.test, site chart/explore, exec-desk/js/jumps.js |
+| Python compile | ✅ | `py_compile` pass: build_site.py, collect_kalshi.py, account_worker.py, fetch_demo_data.py, fetch_kalshi_data.py, demo_trader.py |
+| Site build + link gate | ✅ | `python3 build_site.py` → "built 16 pages; markets=1399/1399 resolved=2469/2469 charts=10; link check: OK" |
+| Repo link audit | ✅ | `node tools/check-links.mjs` → PASS (238 files); `python3 exec-desk/scripts/check_links.py` → OK (123 internal); `python3 verified-desk/tools/check_links.py` → clean |
+| Dashboard tests | ✅ | `node tests/dashboard.test.mjs` → ALL CHECKS PASSED (46/46) after time-relative fixture fix (see below) |
+| Exec-desk DOM tests | ✅ | `node exec-desk/scripts/dom_test.mjs` → ALL ASSERTIONS PASSED |
+| Verified-desk tests | ✅ | `node --test verified-desk/tests/*.mjs` → 48/48 pass |
+| Pipeline unit tests | ✅ | `pytest tests/test_fetch_kalshi_data.py` → 7 passed |
+| Data freshness | ✅ | snapshot/metadata.json 2026-11-20T11:43:59Z (494 requests, 0 failed); docs/data/snapshot.json 2026-11-20T12:34:30Z; CI pipeline every 15 min on main |
+| CI on main | ✅ | `gh run list --branch main`: site-check, link check, Pages deploy all success after PR #32 merge (f9fab19) |
+| Requirement pages present | ✅ | 35/35 key pages non-empty (root hub, site/, docs/, exec-desk/, pages/) — see audit in PR body |
+
+**Fix applied by this session (final-integration scope):** `tests/dashboard.test.mjs` trade fixtures used hardcoded `created_time: 2026-11-20T11:11` which aged out of the page's default 60-minute scan window (`recentTrades` filters `created_time` within `[now-60m, now]`), causing 8 failures + a crash at line 166. Page logic was correct; fixtures changed to time-relative `isoAgo()` values (field shapes unchanged). File owned by merged session 8c8d4499; edited under final-integration authority and logged here. Also committed `package-lock.json` (jsdom devDep lock) for reproducible test runs.
+
+**Irregularities (non-blocking, published on Flagged pages):** No demo API key in repo → portfolio balances/fills blank + flagged (no fabrication). "Highest dollar amount" is computed notional (no official USD field) — disclosed per row. Demo books thin; values are test-venue data. Jumps page shows "API unreachable" when fetched from non-browser environments (sandbox egress) — browser CORS verified working via data/cors.json.
+## Session arena/ca4f2da1-demo1 — official-source audit of API claims (claim)
+
+- **Session ID:** `ca4f2da1` — branch `arena/ca4f2da1-demo1` (fixed by the platform; the `session-<id>/<task>` naming convention is recorded here as a deviation, not renamed).
+- **Claimed:** 2026-11-20 (UTC), before any implementation work.
+- **Task scope (new files only):** `audit/**` — a static, source-linked audit page for the repo's Kalshi API claims, plus a Flagged-for-Review list for contradictions found between repo files and the official docs.
+- **Not touched:** every other session's files (`exec-desk/`, `decision/`, `strategy-desk/`, `verified-desk/`, `live-desk/`, `site/`, `pages/`, `docs/`, root `index.html`, `README.md`, workflows). Where a fix is needed in another session's file, a change request is logged below instead of editing it.
+
+| ID | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| A-1 | Line-by-line check of load-bearing Kalshi API claims (hosts, signing, order endpoint, candlesticks, order book, market status/result enums, settlement) against docs.kalshi.com | done | ca4f2da1 | `audit/**` | docs.kalshi.com pages listed in `audit/index.html` | Each claim read from the official page on 2026-11-20; quotes stored in the page | — |
+| A-2 | Code-level conformance: compare status/result strings the repo's JS compares against the official REST values | done (3 mismatches, all logged as change requests) | ca4f2da1 | `audit/**` (read-only on other files) | docs.kalshi.com market lifecycle page | Line numbers recorded per finding | Logged as change requests (not edited) |
+| A-3 | Publish `audit/index.html` (landing + table + flagged list) and verify all links | done (`audit/index.html`, `audit/flagged.html`; `node tools/check-links.mjs` PASS) | ca4f2da1 | `audit/**` | — | `audit/` link check script | — |
+| A-4 | Integration of A-1..A-3 to main via PR + merge; confirm Pages deploy | unclaimed-by-others (this session) | ca4f2da1 | `COORDINATION.md` (this section) | — | — | — |
+
+### Record — session arena/ca4f2da1-demo1 (A-1 to A-3 done; A-4 in progress)
+
+**Pages delivered (new files only):** `audit/index.html` (27 rows: 19 confirmed, 3 mismatches, 4 unverified, 1 new-info), `audit/flagged.html` (7 Flagged-for-Review items with links), `audit/style.css`, `audit/build_audit.py` (generator; rerun with `python3 audit/build_audit.py`).
+
+**Sources read (official, 2026-11-20; fetched via the page-fetch tool because the sandbox shell cannot reach kalshi.co):**
+- https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
+- https://docs.kalshi.com/getting_started/quick_start_create_order (first chunk of 12)
+- https://docs.kalshi.com/getting_started/order_errors (first chunk of 13)
+- https://docs.kalshi.com/api-reference/orders/create-order-v2 (description read via the search index excerpt; page body first chunk)
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (chunks 0–1 of 11)
+- https://docs.kalshi.com/getting_started/orderbook_responses
+- https://docs.kalshi.com/getting_started/market_lifecycle
+- https://docs.kalshi.com/getting_started/market_settlement (first chunk of 4)
+- https://docs.kalshi.com/api-reference/events/get-events (chunk 1 of 14)
+- https://docs.kalshi.com/api-reference/market/get-markets (chunk 1 of 16)
+- Live official demo response: `GET https://external-api.demo.kalshi.co/trade-api/v2/series?limit=1` (series fee fields)
+
+**Verification performed:** every row quotes official text read on that date; repo locations were re-grepped for file and line; `node tools/check-links.mjs` → PASS (242 files scanned; source-link audit on 11 pages).
+
+**Irregularities (published on `audit/flagged.html`):**
+1. F-01 (High): `strategy-desk/assets/app.js` L286–292 compares raw REST market status with `open`/`closed`/`settled`; the API returns `active` and `finalized`. Open events are labelled closed in live mode.
+2. F-02 (High): "legacy `/portfolio/orders` returns 410 Gone" is repeated in repo files; the official create-order-v2 description says the endpoint "will be deprecated no earlier than May 6, 2026". 410 is not confirmed by official text.
+3. F-03 (Medium): "≤ 5,000 periods per request" (docs/api-verification.md row 10) not found in the text read.
+4. F-04 (Medium): fee formula not verified (fee-schedule PDF not fetched).
+5. F-05 (Medium): nested-market results on `/events` exclude markets settled before the historical cutoff; cutoff date not in text read.
+6. F-06 (Info): per-user WebSocket hosts (`user-ws`) for fill/order updates are not referenced anywhere in the repo.
+7. F-07 (Low): official docs disagree on case of the market-closed error code (`MARKET_INACTIVE` vs `market_inactive`).
+
+**Change requests (not applied — other sessions' files):**
+- CR-1 → owner of `strategy-desk/` (board: `arena/3c51bb52-demo1`): in the live refresh path (`assets/app.js` L286–292) map REST `active` → `open` and `finalized` → `settled`, as the snapshot path at L365 already does; same for `assets/markets.js` L23 and L74. Evidence: audit rows C-01 to C-03.
+- CR-2 → owners of `EXECUTIVE_SUMMARY.md` L27, `SOURCES.md` L21, `exec-desk/flagged.html` L34, `verified-desk/index.html` L76, `docs/pages/sources.html` L69: reword "removed (HTTP 410 Gone)" to the official wording ("will be deprecated no earlier than May 6, 2026"), or verify the 410 against a live response. Evidence: audit row B-02.
+- CR-3 → docs/api-verification.md row 10 owner: confirm or remove "≤ 5,000 periods per request". Evidence: audit row B-06.
+- CR-4 → final integration (shared root hub): add a tile linking `audit/index.html` and `audit/flagged.html`. Not edited in this session.
+
+**A-4 (integration):** PR from `arena/ca4f2da1-demo1` to `main`, merge, Pages deploy check — recorded below when done.

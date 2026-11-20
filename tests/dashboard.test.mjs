@@ -32,10 +32,15 @@ const electionMarket = {
   no_bid_dollars: '0.9510', no_ask_dollars: '0.9530', volume_fp: '60150347.85', volume_24h_fp: '7647.32',
   open_interest_fp: '18109179.85', notional_value_dollars: '1.0000'
 };
+/* Trade fixtures use time-relative created_time so the scan window filter
+ * (recentTrades: created_time within [now-minutes, now]) always includes them.
+ * Fixed 2026-11-20 by session arena/358db039-demo1: hardcoded 11:11 timestamps
+ * aged out of the default 60-minute window. Field shapes unchanged. */
+const isoAgo = (sec) => new Date(Date.now() - sec * 1000).toISOString();
 const trades = [
-  { ticker: 'KXPGATOUR-THRC26-GHIG', count_fp: '1.42', created_time: '2026-11-20T11:11:02.149142Z', is_block_trade: false, no_price_dollars: '0.9820', taker_book_side: 'bid', taker_outcome_side: 'yes', taker_side: 'yes', yes_price_dollars: '0.0180', trade_id: 't1' },
-  { ticker: 'KXPRESNOMD-28-JS', count_fp: '1.09', created_time: '2026-11-20T11:11:02.136473Z', is_block_trade: false, no_price_dollars: '0.9510', taker_book_side: 'bid', taker_outcome_side: 'yes', taker_side: 'yes', yes_price_dollars: '0.0490', trade_id: 't2' },
-  { ticker: 'KXPGATOUR-THRC26-GHIG', count_fp: '2.00', created_time: '2026-11-20T11:10:02.129257Z', is_block_trade: false, no_price_dollars: '0.9800', taker_book_side: 'ask', taker_outcome_side: 'no', taker_side: 'no', yes_price_dollars: '0.0200', trade_id: 't3' }
+  { ticker: 'KXPGATOUR-THRC26-GHIG', count_fp: '1.42', created_time: isoAgo(120), is_block_trade: false, no_price_dollars: '0.9820', taker_book_side: 'bid', taker_outcome_side: 'yes', taker_side: 'yes', yes_price_dollars: '0.0180', trade_id: 't1' },
+  { ticker: 'KXPRESNOMD-28-JS', count_fp: '1.09', created_time: isoAgo(121), is_block_trade: false, no_price_dollars: '0.9510', taker_book_side: 'bid', taker_outcome_side: 'yes', taker_side: 'yes', yes_price_dollars: '0.0490', trade_id: 't2' },
+  { ticker: 'KXPGATOUR-THRC26-GHIG', count_fp: '2.00', created_time: isoAgo(180), is_block_trade: false, no_price_dollars: '0.9800', taker_book_side: 'ask', taker_outcome_side: 'no', taker_side: 'no', yes_price_dollars: '0.0200', trade_id: 't3' }
 ];
 const events = [
   { event_ticker: 'KXPGATOUR-THRC26', series_ticker: 'KXPGATOUR', title: 'Who wins The RSM Classic?', category: 'Sports', mutually_exclusive: true, collateral_return_type: 'MECNET' },
