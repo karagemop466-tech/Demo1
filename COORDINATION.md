@@ -1,11 +1,19 @@
 # Coordination board
 
-Session: `arena/e41f6700-demo1` (current Arena-managed branch). No other session claims were present when checked.
+Shared task board for all agent sessions working on this repo.
+Read this file before starting. Claim a task by writing your session ID and file scope, then commit and push the claim immediately.
+
+Sessions seen on remote branches: `e41f6700` (prior, done), `bc250043` (this session), plus branches `0135085b`, `0cc392e4`, `175cafdf`, `3a5f6f1d`, `8344abc8`, `a443fb8f`, `ff423a65` (checked at claim time: identical to `origin/main`, i.e. no commits and no claims yet).
 
 | Task | Status | Owner | File scope |
 |---|---|---|---|
 | Kalshi demo research, requirements, dashboard prototype and verification | done | arena/e41f6700-demo1 | `COORDINATION.md`, `README.md`, `index.html`, `styles.css`, `app.js`, `.github/workflows/pages.yml` |
 | GitHub Pages deployment and merge verification | done | arena/e41f6700-demo1 | GitHub repository settings / Actions (external) |
+| Live demo-data ingestion pipeline (REST snapshot + CORS probe) | in progress | arena/bc250043-demo1 | `scripts/fetch_demo_data.py`, `.github/workflows/fetch-data.yml`, `data/` |
+| Multi-page dashboard site (landing + category subpages) | in progress | arena/bc250043-demo1 | `index.html`, `styles.css`, `app.js`, `markets.html`, `chart.html`, `portfolio.html`, `analysis.html`, `suggestions.html`, `review.html`, `sources.html` |
+| Trading / portfolio integration (demo account, order entry, analysis) | in progress | arena/bc250043-demo1 | `scripts/kalshi_client.py`, `scripts/run_demo_trader.py`, `.github/workflows/demo-trader.yml`, `data/portfolio.json`, `data/trades.json`, `data/orders.json` |
+| Executive summary, questions/answers register, suggestions register | in progress | arena/bc250043-demo1 | `README.md`, `review.html`, `suggestions.html`, `sources.html` |
+| Final integration, re-verification, PR to main, Pages publish | pending | arena/bc250043-demo1 (candidate) | `main` |
 
 ## Log
 - 2026-11-20 — Initial repo had only a minimal README. Checked for existing `COORDINATION.md`; none existed. Claimed end-to-end scope and committed/pushed claim. First pull against the not-yet-published remote branch failed because it did not exist; rebased against `origin/main`, then pushed current branch successfully.
@@ -13,6 +21,8 @@ Session: `arena/e41f6700-demo1` (current Arena-managed branch). No other session
 - 2026-11-20 — Get Markets page fetch failed; related references for order book / positions / fills were linked but not all independently fetched. Marked as limitations, not verified claims. User-provided demo endpoint used as configured.
 - 2026-11-20 — Added static dashboard with live API attempts, empty-on-failure behavior, keyword topic filters, contract-volume ranking, order-book request, portfolio/trading safety notice, questions, suggestions and review flags. No credential handling, orders, fabricated prices, history or performance data.
 - 2026-11-20 — Verification: run `node --check app.js`; review HTML/CSS/JS against fetched sources and verify local links/build. External API success and GitHub Pages deployment require online Actions/API validation after push and cannot be asserted without a successful run.
+- 2026-11-20 (session `bc250043`) — Re-read the repo line by line. Prior single-page prototype verified, but it could not satisfy the live/resolved/portfolio/trading requirements: no resolved-market history, no price history, no real dollar metric, no order book depth table, no trade execution. Confirmed `external-api.demo.kalshi.co` is reachable from this session's tooling and returned real demo market payloads (fields `volume_fp`, `open_interest_fp`, `notional_value_dollars`, `yes_bid_dollars`, `yes_ask_dollars`, `status`, `result`). Checked all other remote session branches: they are empty and hold no claims, so scope conflict risk was low at claim time.
+- 2026-11-20 (session `bc250043`) — Claimed the ingestion pipeline, multi-page site, trading/portfolio integration and the final integration role. File scopes are listed above and are non-overlapping with the prior session's published files (which this session will supersede on `main` at integration time).
 
 ## Sources
 - https://docs.kalshi.com/getting_started/quick_start_market_data
