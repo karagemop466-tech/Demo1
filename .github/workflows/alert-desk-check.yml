@@ -6,9 +6,12 @@ on:
   push:
     paths:
       - "alert-desk/**"
+      - ".github/workflows/alert-desk-check.yml"
   pull_request:
     paths:
       - "alert-desk/**"
+      - ".github/workflows/alert-desk-check.yml"
+  workflow_dispatch:
 
 jobs:
   check:

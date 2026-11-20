@@ -74,3 +74,10 @@ back to the committed evidence on failure.
   (concurrency). This matches the official schedule docs' high-load caveat ("some queued
   jobs may be dropped"). Consequence: committed data trees can go stale for hours;
   the freshness table above quantifies it per path.
+- **OPS-03** — Pages deploy starvation: `pages.yml` uses concurrency group `pages` with
+  `cancel-in-progress: true`. During merge storms every new merge cancels the previous
+  deploy, so the published site can stay frozen while merges continue (evidence: the
+  recorded run history — several consecutive `cancelled` runs with the last success lagging
+  the repo state). Change request for the workflow owner: serialize with
+  `cancel-in-progress: false` (queue instead of cancel) or route deploys through a single
+  final integration session, so the site converges to the latest `main`.
