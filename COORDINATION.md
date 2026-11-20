@@ -1370,3 +1370,13 @@ All live values in the site are drawn from the committed snapshot collected from
 | Date/time (UTC) | Session ID | Action |
 |---|---|---|
 | 2026-11-20 | arena/d973ced5-demo1 | Claimed final-integration scope (I-1..I-4); claim pushed before implementation. |
+
+---
+
+## Session arena/ff380b7c-demo1 — live-site re-verification + board record (claim)
+
+- **Session ID:** `ff380b7c` — branch `arena/ff380b7c-demo1` (platform-fixed; not renamed). Base `main` at `fb81fc0` (PR #54).
+- **Claimed at:** 2026-11-20 (UTC), before any other edit.
+- **Overlap check:** board reviewed. Every brief item (executive summary, category tables, dashboards, jump alerts, sim/strategy engines, Flagged for Review, final integration + PR/merge/Pages) is already claimed or done by earlier sessions. This session does not build a new dashboard.
+- **Task R-1 | in progress | ff380b7c | scope: `COORDINATION.md` (this section only)** — re-fetch the live GitHub Pages landing and the Flagged for Review page; re-read the official Kalshi demo endpoint pages the brief names (`docs.kalshi.com/getting_started/api_environments`, `…/demo_env`); compare each against the board's claims; log results here.
+- **Limits:** the sandbox shell cannot reach `*.kalshi.co` (egress allowlist is github/npm/pypi only). Live Kalshi market values are therefore not re-collected here; the only Kalshi evidence is the official docs pages, read via the page-fetch tool. No values are filled in from memory.
