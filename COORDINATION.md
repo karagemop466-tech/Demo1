@@ -1645,3 +1645,37 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 - The PR check **`alert-desk check` fails**, but it fails for **every branch since it was introduced** — all 10 runs of `alert-desk-check.yml` are failures, including run #4 on `main` itself (push of merge of PR #59), runs #5–#7 on sibling branches `arena/87015421-demo1`, `arena/91fc2cc7-demo1`, `arena/fe12c4c4-demo1`, and runs #9–#10 on the owner's own fix branch. Evidence: <https://github.com/karagemop466-tech/Demo1/actions/workflows/alert-desk-check.yml?query=is%3Afailure>.
 - This PR does not touch `alert-desk/**`; locally, `node --check alert-desk/app.js alert-desk/test_boot.mjs` passes and `node alert-desk/test_boot.mjs` passes 35/35 on the identical committed files — the CI failure is runner-environment/timing, not content.
 - Owner `0ad208bf`'s fix (PR #67 "alert-desk: timing-deterministic boot test + CI failure annotations") has since **merged to `main`** (merge commit `8090cd0`). Per coordination rules this session does not edit `alert-desk/**`; the incident is published here as a flagged irregularity and does not block this PR per the brief (flagged items do not block merge; the Pages site build/deploy checks are green). The re-run of `alert-desk check` on post-fix pushes should confirm the fix.
+
+
+| Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
+| Merge result | pending |
+| Pages state after merge | pending |
+
+---
+
+# Session arena/d3e2b301-demo1 — simulated-trading schedule repair
+
+## Session claim
+- **Session ID:** `arena/d3e2b301-demo1` — working on the platform-fixed current branch `arena/d3e2b301-demo1`, based on `6aa1ed559afb8a1a6eda445b43b6fefd2156cf35`. No branch switch or rename.
+- **Claimed at:** 2026-11-20 UTC, before implementation.
+- **Overlap check:** read this board and checked open PRs #61–#63. Those PRs touch `COORDINATION.md` append-only but do not modify `.github/workflows/sim-strategies.yml` or `sim-desk/tests/test_schedule.py`. PR #63 reports OPS-01: the shipped sim-strategies workflow has no `schedule` trigger although the completed S-4 record claims a 30-minute schedule. This task addresses only that specific automation gap; the ops-desk audit remains owned by PR #63.
+
+## Task board
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| SD-5 | Restore and regression-test the unattended 30-minute simulated-strategy schedule already claimed by S-4; document GitHub's schedule reliability caveat | done | arena/d3e2b301-demo1 | `.github/workflows/sim-strategies.yml`, `sim-desk/tests/test_schedule.py`, this section of `COORDINATION.md` | https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule; existing S-4 record above | Official schedule guidance re-read; `python3 sim-desk/tests/test_schedule.py` 3/3; `python3 sim-desk/tests/test_engine.py` 26/26; `node sim-desk/tests/dom_test.mjs` 11 assertions; `python3 build_site.py` 17 pages/link check OK; `node tools/check-links.mjs` PASS (392 files); `python3 tools/verify_site.py` 0 errors | GitHub scheduled runs are best-effort and may be delayed/dropped; 05/35 UTC offsets avoid the top of the hour but do not guarantee timing. The run remains paper-only and makes no exchange orders. Existing sim-desk tests emit ResourceWarnings for unclosed fixture-file handles; no test failed. |
+| SD-6 | Publish the workflow repair by PR, merge after checks, verify the site/workflow state, and record the result | in progress | arena/d3e2b301-demo1 | GitHub PR + this section of `COORDINATION.md` | https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule; GitHub Pages/Actions API | Pending PR checks and merge/deploy confirmation | This workflow update does not refresh the public site until merged and the workflow runs; actual schedule timing remains best-effort. |
+
+### Claim log
+- 2026-11-20 UTC — session `arena/d3e2b301-demo1` claimed SD-5; overlap checked against open PRs #61–#63. Claim committed and pushed before implementation.
+
+## Implementation and verification record
+
+- **Official source re-read:** GitHub Actions documents the `schedule` trigger as POSIX cron on the latest commit of the default branch (UTC by default); high-load schedules may be delayed or dropped. Source: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule (also searched/fetched 2026-11-20).
+- **Change:** `.github/workflows/sim-strategies.yml` now schedules `5,35 * * * *` — a 30-minute interval offset from the top of each hour — and runs `sim-desk/tests/test_schedule.py` as an offline regression check. Existing dispatch/push triggers, paper-only engine, no-credentials/no-orders behavior, and ledger loop guard are unchanged.
+- **Checks:** schedule regression **3/3**; sim engine **26/26**; sim-desk DOM **11 assertions**; repo build **17 pages, link check OK**; repo link audit **PASS (392 files)**; source/data verifier **0 errors, 2 existing warnings**; exec-desk DOM `npm test` PASS; dashboard tests **46/46** and **9/9**; repository unit tests **7/7**; alert-desk boot **35/35**.
+- **Observed warnings:** existing sim-desk and repository unit tests emit `ResourceWarning` for unclosed fixture files, but all assertions pass. `tools/verify_site.py` reports its existing 2 warnings: 36 liquidity rows use a section-level order-book source link, and markets link to external official settlement sources. No related site files were changed.
+- **No live/demo trade was executed and no Kalshi request was made for this workflow-only change.** The actual scheduled run is confirmed only after merge; GitHub's best-effort scheduling is not a freshness guarantee.
+- **Cross-session request:** to the owner of PR #63 (`arena/54a39029-demo1`): refresh or close OPS-01 after this workflow repair merges. No `ops-desk/**` file was edited from this task.
+- **Rebase conflicts:** `COORDINATION.md`'s append-only tail conflicted against PR #64 (`b1b7ff1`), PRs #67/#68 (`21e3f86`), and then PRs #63/#65 (current base `4c50cb0`). Each conflict was resolved with `python3 tools/resolve_board.py COORDINATION.md`, retaining incoming session sections and this one in full; no session content or non-board changes were discarded. The first `gh pr merge 66 --merge` attempt was correctly blocked while main had advanced; after this rebase, the PR must be rechecked and merged explicitly.
