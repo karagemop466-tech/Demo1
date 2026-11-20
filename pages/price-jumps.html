@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sharp price moves · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px}
+  .chips .chip{font:inherit;font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
+  .chips .chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .banner.live{border-left-color:var(--ok);background:#f0faf4}
+  .banner.warn{border-left-color:var(--warn);background:#fff8ee}
+  .btn{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}
+  .btn:hover{background:#eef4f9}
+  .tag.t-up{background:#fde8e8;color:#b91c1c;font-weight:600}
+  .tag.t-down{background:#e3f5ea;color:#15803d;font-weight:600}
+  .tag.t-gas,.tag.t-elections,.tag.t-culture,.tag.t-crypto,.tag.t-golf{background:#e6eef9;color:#174e8c;font-weight:600}
+  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}
+  .numc.up{color:#b91c1c;font-weight:700}
+  .numc.down{color:#15803d;font-weight:700}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+  .blank-note{display:inline-block;margin-left:6px;font-size:10.5px;color:var(--warn);border:1px dashed var(--warn);border-radius:4px;padding:0 4px}
+  .empty{color:var(--muted);padding:10px 4px}
+  #jump-chart{margin-top:8px}
+</style></head>
+<body>
+<header class="top"><span class="brand">Kalshi Demo Dashboard</span>
+  <a href="../index.html">Home</a><a href="../executive-summary.html">Executive summary</a><a href="../markets.html">Markets</a>
+  <a href="../chart.html">Chart</a><a href="demo-live.html">Demo live tracker</a><a href="price-jumps.html">Sharp moves</a>
+  <a href="paper-trading.html">Paper trading (SIM)</a>
+  <a href="../analysis.html">Analysis</a><a href="../questions.html">Questions</a>
+  <a href="../suggestions.html">Suggestions</a><a href="../flagged.html">Flagged</a><a href="../sources.html">Sources</a><a href="../portfolio.html">Portfolio</a>
+</header>
+<main>
+  <h1>Sharp price moves — jumps ≥ $0.10 in either direction</h1>
+  <p class="lead">Scans the five tracked topics (gas prices, elections, culture, crypto, golf) for contract-price jumps of at least
+  <b>$0.10</b> between consecutive <b>official candlestick closes</b>. Every row links the official candlestick API request that produced it
+  and the official venue event page. The Kalshi API has no field identifying what caused a move, so "possible cause" website links are
+  left <b>blank and flagged</b> (F-17) — the venue event page is linked because it may display related-news digests. In LIVE mode the page reads
+  the official Kalshi demo API directly; if that fails it falls back to the verified snapshot captured 2026-11-20 and says so. Nothing is ever invented.</p>
+
+  <div class="banner warn" id="mode-banner">Connecting to the official demo API…</div>
+
+  <div class="kpirow">
+    <div class="card kpi"><div class="n" id="kpi-mode">…</div><div class="l">Data mode (live / snapshot)</div></div>
+    <div class="card kpi"><div class="n" id="kpi-markets">—</div><div class="l">Markets with candle data</div></div>
+    <div class="card kpi"><div class="n" id="kpi-jumps">—</div><div class="l">Jumps ≥ threshold (window)</div></div>
+    <div class="card kpi"><div class="n" id="kpi-updown">—</div><div class="l">Direction split</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <label>Threshold $<input type="number" id="threshold" value="0.10" min="0" step="0.01" style="width:80px"></label>
+      <label>Candle interval
+        <select id="interval">
+          <option value="1">1-minute</option>
+          <option value="60">1-hour</option>
+          <option value="1440">1-day</option>
+        </select>
+      </label>
+      <span class="note">Official <code>period_interval</code> values are 1 / 60 / 1440 minutes (docs.kalshi.com · Get Market Candlesticks). Sub-minute moves are not offered by the official endpoint — see F-18.</span>
+    </div>
+    <div class="filters" style="margin-top:8px">
+      <button class="btn" id="refresh">↻ Refresh now</button>
+      <label><input type="checkbox" id="auto-refresh"> auto-refresh every 2 min</label>
+    </div>
+    <div class="chips" id="cat-filter"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Time (UTC)</th><th>Topic</th><th>Market</th><th>Event</th><th>Close before</th><th>Close after</th><th>Δ</th><th>Direction</th><th>Official links</th></tr></thead>
+      <tbody id="jump-rows"><tr><td colspan="9">Loading…</td></tr></tbody>
+    </table></div>
+    <p class="note">Jump = |close<sub>n</sub> − close<sub>n−1</sub>| ≥ threshold on the official YES-contract close price (dollars per $1 payout).
+    Demo candle books are thin/synthetic; treat counts as exercise data (F-19). Sources:
+    <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a> ·
+    <a href="../flagged.html" target="_blank" rel="noreferrer">Flagged for review</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Simplified price chart <span class="note" id="chart-meta"></span></h2>
+    <div class="filters">
+      <label>Market <select id="chart-market"><option value="">Choose a market to chart…</option></select></label>
+      <span class="note">Blue line = official closes; colored dots = detected jumps (red UP, green DOWN).</span>
+    </div>
+    <div id="jump-chart"></div>
+  </div>
+</main>
+<footer>Official Kalshi demo Trade API data only. Not investment advice.</footer>
+<script src="../assets/js/price-jumps.js"></script>
+</body></html>
