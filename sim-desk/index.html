@@ -22,7 +22,7 @@
     <b>What this is.</b> A rule-based strategy engine runs unattended on GitHub Actions every 30 minutes. Each run
     reads the official Kalshi <b>demo</b> Trade API (public endpoints, no keys), ranks open markets in the five
     tracked topics (gas prices, elections, culture, crypto, golf) by computed 24h traded notional, evaluates three
-    disclosed strategies against official 60-minute candlesticks and the official bids-only orderbook, and
+    disclosed strategies against the official public trades tape (<span class="mono">GET /markets/trades</span>; the demo candlesticks endpoint currently returns empty arrays for most markets — a flagged demo irregularity) and the official bids-only orderbook, and
     <b>simulates</b> fills (entry = implied best ask; fee = official taker formula). Open positions are carried across
     runs, marked to market, and settled automatically with the official $1-per-contract rule when the market resolves
     <span class="pill yes">YES</span> or <span class="pill no">NO</span>. The append-only ledger is committed back to
@@ -84,7 +84,8 @@
     <ul class="src-list">
       <li>Orderbook bids-only rule + implied asks — <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/orderbook_responses</a></li>
       <li>Settlement: $1 per winning contract, YES/NO result — <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/market_settlement</a></li>
-      <li>Candlesticks (period_interval 1/60/1440, price.close_dollars) — <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-market-candlesticks</a></li>
+      <li>Trades tape (public market data) — <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-trades</a></li>
+      <li>Candlesticks (1/60/1440 — currently empty on demo; flagged irregularity) — <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-market-candlesticks</a></li>
       <li>Markets endpoint (status enum, limit ≤ 1000, tickers filter, demo hosts) — <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-markets</a></li>
       <li>Fee schedule: roundup(M × 0.07 × C × P × (1−P)); no settlement fee — <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noreferrer">kalshi.com/docs/kalshi-fee-schedule.pdf</a></li>
       <li>Demo environment (mock funds; prices may not reflect real markets) — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/demo_env</a></li>

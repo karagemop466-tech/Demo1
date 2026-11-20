@@ -23,9 +23,14 @@ performance rollups for categorizing and refining strategies.
 
 ## Strategies (deterministic, in `config.json`)
 
-1. **momentum-1h** — 6-hour trend of official 60-min closes ≥ +$0.05 → buy YES; ≤ −$0.05 → buy NO. Entry band $0.30–$0.85.
-2. **mean-revert-24h** — fade closes ≥ $0.10 away from the mean of available hourly closes. Entry band $0.10–$0.60.
+1. **momentum-tape** — YES trade-price trend over the last 6 trades ≥ +$0.05 → buy YES; ≤ −$0.05 → buy NO. Entry band $0.30–$0.85.
+2. **mean-revert-tape** — fade when the last trade deviates ≥ $0.10 from the mean of the most recent 20 trades. Entry band $0.10–$0.60.
 3. **longshot-value** — buy NO when its implied ask ≤ $0.20 on markets with ≥ 5,000 contracts traded in 24h.
+
+Signals run on the official **public trades tape** (`GET /markets/trades?ticker=…`), because the demo
+candlesticks endpoint currently returns empty arrays for most markets even when trades occurred minutes
+earlier — captured and flagged by this repo's other desks (`decision/data/snapshot-orderbook-candlesticks.json`;
+`docs/data/history.json`: 15/15 markets, zero candles).
 
 Sizing: 10 contracts/trade, max 15 open positions (4 per topic), max 3 new trades per run,
 starting bankroll $1,000 simulated demo dollars. Priority: momentum → mean-revert → longshot.
@@ -47,7 +52,7 @@ starting bankroll $1,000 simulated demo dollars. Priority: momentum → mean-rev
 - Marks use official `last_price_dollars` (API listing responses are cached for a short time).
 - "Highest dollar amount" ranking is computed 24h traded notional (`volume_24h × last_price_dollars`) — Kalshi publishes no official dollar-volume field.
 - Taker multiplier M=1 confirmed for KXAAAGASM / KXBTCMAX150 in the official table; the rest of the non-standard-fee table is not machine-readable from the PDF, so M=1 is assumed and disclosed.
-- Sub-minute data is not used: signals run on official 60-minute candlesticks (REST supports 1/60/1440 only).
+- Candlestick-based signals are not used: the demo candlesticks endpoint currently returns empty arrays (flagged); signals run on the trades tape instead.
 
 ## Run locally
 

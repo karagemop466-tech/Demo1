@@ -162,7 +162,7 @@
         "<td><span class='pill open'>open — awaiting yes/no</span></td>" +
         "<td class='small'><a href='" + apiMarketUrl(p.ticker) + "' target='_blank' rel='noreferrer'>API market ↗</a> · " +
         "<a href='" + esc(p.orderbook_source_url || apiMarketUrl(p.ticker)) + "' target='_blank' rel='noreferrer'>book ↗</a> · " +
-        "<a href='" + esc(p.candlestick_source_url || apiMarketUrl(p.ticker)) + "' target='_blank' rel='noreferrer'>candles ↗</a> · " +
+        "<a href='" + esc(p.trades_tape_source_url || apiMarketUrl(p.ticker)) + "' target='_blank' rel='noreferrer'>trades ↗</a> · " +
         "<a href='" + newsUrl(p.title) + "' target='_blank' rel='noreferrer'>news (cause unverified) ↗</a></td>" +
         "</tr>";
     }).join("");

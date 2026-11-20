@@ -10,9 +10,11 @@ What it does every run:
   3. Ranks candidates by computed 24h traded notional (volume_24h x
      last_price_dollars — a disclosed ESTIMATE; Kalshi publishes no official
      dollar-volume field).
-  4. Evaluates 3 deterministic strategies over official 60-minute candlesticks
-     and the official bids-only orderbook. Entry price = implied best ask of
-     the bought side (1.00 - best opposite bid, per the official orderbook doc).
+  4. Evaluates 3 deterministic strategies over the official public trades tape
+     (GET /markets/trades — the demo candlesticks endpoint currently returns
+     empty arrays for most markets, a flagged demo irregularity) and the
+     official bids-only orderbook. Entry price = implied best ask of the
+     bought side (1.00 - best opposite bid, per the official orderbook doc).
   5. Simulates fills (never places orders), charging the official taker fee
      roundup(M x 0.07 x C x P x (1-P)) with M=1.
   6. Marks open positions to the official last_price_dollars each run.
@@ -27,7 +29,9 @@ Verification sources (official, fetched 2026-11-20):
       https://docs.kalshi.com/getting_started/orderbook_responses
   - Settlement $1 per winning contract:
       https://docs.kalshi.com/getting_started/market_settlement
-  - Candlesticks (period_interval 1|60|1440, OHLC price.close_dollars):
+  - Trades tape (official public endpoint):
+      https://docs.kalshi.com/api-reference/market/get-trades
+  - Candlesticks (1|60|1440 — currently empty on demo, flagged):
       https://docs.kalshi.com/api-reference/market/get-market-candlesticks
   - Markets endpoint (status enum, limit<=1000, tickers filter, demo hosts):
       https://docs.kalshi.com/api-reference/market/get-markets
@@ -254,65 +258,67 @@ def fee_cents(contracts, price, multiplier=1.0):
 
 # ------------------------------------------------------------------ signals
 
-def candle_closes(api, market, window_hours=24):
-    series = market.get("series_ticker")
-    ticker = market.get("ticker")
-    if not series or not ticker:
+def trade_closes(api, ticker):
+    """Public trades tape for one market (official GET /markets/trades).
+    Returns (yes_prices_ascending_by_time, request_url). The demo candlesticks
+    endpoint is unreliable (empty arrays despite recent trades — flagged by this
+    repo's other desks), so signals run on executed-trade prices."""
+    if not ticker:
         return None, None
-    end_ts = int(time.time())
-    start_ts = end_ts - window_hours * 3600
-    body = api.get(f"/series/{series}/markets/{ticker}/candlesticks",
-                   {"start_ts": start_ts, "end_ts": end_ts, "period_interval": 60})
-    if not body:
+    body = api.get("/markets/trades", {"ticker": ticker, "limit": 200})
+    if body is None:
         return None, None
-    candles = body.get("candlesticks") or []
-    closes = []
-    for c in candles:
-        price = (c.get("price") or {})
-        close = to_float(price.get("close_dollars"))
-        if close is not None:
-            closes.append(close)
+    trades = body.get("trades") or []
+    rows = []
+    for t in trades:
+        price = to_float(t.get("yes_price_dollars"))
+        ts = t.get("created_time")
+        if price is None:
+            continue
+        rows.append((ts or "", price))
+    rows.sort(key=lambda r: r[0])
     url = api.run_log["requests"][-1]["url"] if api.run_log["requests"] else None
-    return closes, url
+    return [p for _, p in rows], url
 
 
 def evaluate_strategies(config, market, closes, yes_ask, no_ask, volume_24h):
-    """Returns (strategy_name, side, reason) or (None, None, reason). Deterministic."""
+    """Returns (strategy_name, side, reason) or (None, None, reason). Deterministic.
+    `closes` are YES trade prices from the official tape, ascending by time."""
     outcomes = {}
-    momentum = next(s for s in config["strategies"] if s["name"] == "momentum-1h")
-    revert = next(s for s in config["strategies"] if s["name"] == "mean-revert-24h")
+    momentum = next(s for s in config["strategies"] if s["name"] == "momentum-tape")
+    revert = next(s for s in config["strategies"] if s["name"] == "mean-revert-tape")
     longshot = next(s for s in config["strategies"] if s["name"] == "longshot-value")
 
-    # momentum-1h
-    n = min(len(closes), momentum["trend_candles"])
-    if len(closes) >= momentum["min_candles"] and n >= 2:
+    # momentum-tape
+    n = min(len(closes), momentum["trend_trades"])
+    if len(closes) >= momentum["min_trades"] and n >= 2:
         trend = closes[-1] - closes[-n]
         if trend >= momentum["trend_threshold_dollars"]:
             if yes_ask is not None and momentum["band_min"] <= yes_ask <= momentum["band_max"]:
-                outcomes["momentum-1h"] = ("yes", f"6h trend {trend:+.2f} >= +{momentum['trend_threshold_dollars']:.2f}; YES implied ask ${yes_ask:.2f} in band")
+                outcomes["momentum-tape"] = ("yes", f"tape trend over last {n} trades {trend:+.2f} >= +{momentum['trend_threshold_dollars']:.2f}; YES implied ask ${yes_ask:.2f} in band")
             else:
-                outcomes["momentum-1h"] = (None, f"6h trend {trend:+.2f} but YES implied ask outside band")
+                outcomes["momentum-tape"] = (None, f"tape trend {trend:+.2f} but YES implied ask outside band")
         elif trend <= -momentum["trend_threshold_dollars"]:
             if no_ask is not None and momentum["band_min"] <= no_ask <= momentum["band_max"]:
-                outcomes["momentum-1h"] = ("no", f"6h trend {trend:+.2f} <= -{momentum['trend_threshold_dollars']:.2f}; NO implied ask ${no_ask:.2f} in band")
+                outcomes["momentum-tape"] = ("no", f"tape trend over last {n} trades {trend:+.2f} <= -{momentum['trend_threshold_dollars']:.2f}; NO implied ask ${no_ask:.2f} in band")
             else:
-                outcomes["momentum-1h"] = (None, f"6h trend {trend:+.2f} but NO implied ask outside band")
+                outcomes["momentum-tape"] = (None, f"tape trend {trend:+.2f} but NO implied ask outside band")
 
-    # mean-revert-24h
-    window = closes[-revert["mean_candles"]:]
-    if len(window) >= revert["min_candles"]:
+    # mean-revert-tape
+    window = closes[-revert["mean_trades"]:]
+    if len(window) >= revert["min_trades"]:
         mean = sum(window) / len(window)
         dev = closes[-1] - mean
         if dev <= -revert["deviation_threshold_dollars"]:
             if yes_ask is not None and revert["band_min"] <= yes_ask <= revert["band_max"]:
-                outcomes["mean-revert-24h"] = ("yes", f"close {closes[-1]:.2f} is ${-dev:.2f} below {len(window)}-candle mean {mean:.2f}; YES implied ask ${yes_ask:.2f} in band")
+                outcomes["mean-revert-tape"] = ("yes", f"last trade {closes[-1]:.2f} is ${-dev:.2f} below mean of last {len(window)} trades {mean:.2f}; YES implied ask ${yes_ask:.2f} in band")
             else:
-                outcomes["mean-revert-24h"] = (None, f"close below mean by {-dev:.2f} but YES implied ask outside band")
+                outcomes["mean-revert-tape"] = (None, f"last trade below mean by {-dev:.2f} but YES implied ask outside band")
         elif dev >= revert["deviation_threshold_dollars"]:
             if no_ask is not None and revert["band_min"] <= no_ask <= revert["band_max"]:
-                outcomes["mean-revert-24h"] = ("no", f"close {closes[-1]:.2f} is ${dev:.2f} above {len(window)}-candle mean {mean:.2f}; NO implied ask ${no_ask:.2f} in band")
+                outcomes["mean-revert-tape"] = ("no", f"last trade {closes[-1]:.2f} is ${dev:.2f} above mean of last {len(window)} trades {mean:.2f}; NO implied ask ${no_ask:.2f} in band")
             else:
-                outcomes["mean-revert-24h"] = (None, f"close above mean by {dev:.2f} but NO implied ask outside band")
+                outcomes["mean-revert-tape"] = (None, f"last trade above mean by {dev:.2f} but NO implied ask outside band")
 
     # longshot-value
     if no_ask is not None and no_ask <= longshot["no_ask_max"]:
@@ -326,12 +332,11 @@ def evaluate_strategies(config, market, closes, yes_ask, no_ask, volume_24h):
             side, reason = outcomes[name]
             if side:
                 return name, side, reason
-            skip_reason = reason
     # nothing fired; report the most informative skip reason
     for name in config["strategy_priority"]:
         if name in outcomes:
             return None, None, f"{name}: {outcomes[name][1]}"
-    return None, None, "insufficient candlestick history for all strategies"
+    return None, None, "insufficient trade history for all strategies"
 
 
 # ------------------------------------------------------------------- ledger
@@ -388,7 +393,7 @@ def band_of(price):
 
 
 def build_position(config, market, topic, matched_by, strategy, side, entry_price,
-                   contracts, fee, ob_url, candle_url, run_id, volume_24h):
+                   contracts, fee, ob_url, tape_url, run_id, volume_24h):
     title = market.get("title") or market.get("yes_sub_title") or market.get("custom_strike") or ""
     return {
         "id": "sim-" + uuid.uuid4().hex[:12],
@@ -407,7 +412,7 @@ def build_position(config, market, topic, matched_by, strategy, side, entry_pric
         "entry_run": run_id,
         "entry_source_url": None,  # filled by caller (markets page request)
         "orderbook_source_url": ob_url,
-        "candlestick_source_url": candle_url,
+        "trades_tape_source_url": tape_url,
         "volume_24h_at_entry": volume_24h,
         "band": band_of(entry_price),
         "mark_price": round(entry_price, 4),
@@ -628,9 +633,9 @@ def run(config, ledger, api, run_id):
         ob_url = api.run_log["requests"][-1]["url"]
         best_yes_bid, best_no_bid, yes_levels, no_levels = parse_orderbook_best_bids(book)
         yes_ask, no_ask = implied_asks(best_yes_bid, best_no_bid)
-        closes, candle_url = candle_closes(api, c["market"])
+        closes, tape_url = trade_closes(api, ticker)
         if not closes:
-            skips.append({"ticker": ticker, "reason": "no candlestick history returned"})
+            skips.append({"ticker": ticker, "reason": "no trade history returned by the official tape (demo candlesticks also empty — flagged)"})
             continue
         strategy, side, reason = evaluate_strategies(config, c["market"], closes, yes_ask, no_ask, c["volume_24h"])
         if not strategy:
@@ -651,7 +656,7 @@ def run(config, ledger, api, run_id):
             continue
         markets_url = next((r["url"] for r in reversed(api.run_log["requests"]) if r["ok"] and "/markets?" in r["url"]), None)
         pos = build_position(config, c["market"], c["topic"], c["matched_by"], strategy, side,
-                             entry_price, contracts, fee, ob_url, candle_url, run_id, c["volume_24h"])
+                             entry_price, contracts, fee, ob_url, tape_url, run_id, c["volume_24h"])
         pos["entry_source_url"] = markets_url
         pos["signal_reason"] = reason
         pos["best_opposite_bid"] = best_no_bid if side == "yes" else best_yes_bid

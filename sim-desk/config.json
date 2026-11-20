@@ -35,24 +35,25 @@
       "golf": {"ticker": "KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT", "title": "golf|pga tour|ryder cup|the open championship|masters tournament"}
     }
   },
+  "signal_source": "Public trades tape: GET /markets/trades?ticker=<market>&limit=200 (official public endpoint), sorted by created_time ascending. The demo candlesticks endpoint currently returns empty arrays for most markets even when trades occurred minutes earlier — captured and flagged by this repo's other desks (decision/data/snapshot-orderbook-candlesticks.json; docs/data/history.json: 15/15 markets with zero candles) — so signals run on executed-trade prices, not candles.",
   "strategies": [
     {
-      "name": "momentum-1h",
-      "desc": "If the 6-hour YES price trend (last 60-min close minus the close 6 candles back) is >= +$0.05, buy YES; if <= -$0.05, buy NO. Entry only if the implied ask of that side is within the entry band.",
+      "name": "momentum-tape",
+      "desc": "If the YES trade-price trend over the recent tape (last trade minus the trade 6 trades back) is >= +$0.05, buy YES; if <= -$0.05, buy NO. Entry only if the implied ask of that side is within the entry band.",
       "trend_threshold_dollars": 0.05,
-      "trend_candles": 6,
+      "trend_trades": 6,
       "band_min": 0.30,
       "band_max": 0.85,
-      "min_candles": 6
+      "min_trades": 6
     },
     {
-      "name": "mean-revert-24h",
-      "desc": "If the last 60-min close deviates from the mean of available hourly closes (up to 24) by <= -$0.10, buy YES (fade the drop); if >= +$0.10, buy NO (fade the rise). Entry only if the implied ask of that side is within the entry band.",
+      "name": "mean-revert-tape",
+      "desc": "If the last trade price deviates from the mean of the most recent 20 trades (minimum 6) by <= -$0.10, buy YES (fade the drop); if >= +$0.10, buy NO (fade the rise). Entry only if the implied ask of that side is within the entry band.",
       "deviation_threshold_dollars": 0.10,
-      "mean_candles": 24,
+      "mean_trades": 20,
       "band_min": 0.10,
       "band_max": 0.60,
-      "min_candles": 6
+      "min_trades": 6
     },
     {
       "name": "longshot-value",
@@ -61,7 +62,7 @@
       "min_volume_24h_contracts": 5000
     }
   ],
-  "strategy_priority": ["momentum-1h", "mean-revert-24h", "longshot-value"],
+  "strategy_priority": ["momentum-tape", "mean-revert-tape", "longshot-value"],
   "sizing": {
     "contracts_per_trade": 10,
     "max_open_positions": 15,

@@ -4,11 +4,11 @@
 Two layers:
   1. Unit tests of the deterministic pieces (fee formula vs the official fee
      schedule's published table, implied-ask rule vs the official orderbook doc,
-     classification, strategy rules, settlement math, rollups).
+     classification, strategy rules on trades-tape closes, settlement math, rollups).
   2. A two-run integration replay against recorded official-API-shaped payloads
      (tests/fixtures = run 1, tests/fixtures2 = run 2 with a settled market)
-     exercising the full lifecycle: open universe -> signals -> simulated fill
-     with fee -> mark to market -> settle YES/NO -> strategy rollups.
+     exercising the full lifecycle: open universe -> trades-tape signals ->
+     simulated fill with fee -> mark to market -> settle YES/NO -> rollups.
 
 Run: python3 -m unittest discover -s sim-desk/tests -t . (from repo root) or
      python3 sim-desk/tests/test_engine.py
@@ -117,13 +117,13 @@ class TestStrategyRules(unittest.TestCase):
     def test_momentum_fires_yes(self):
         closes = [0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]
         strat, side, reason = engine.evaluate_strategies(CONFIG, {}, closes, 0.49, 0.56, 1000)
-        self.assertEqual((strat, side), ("momentum-1h", "yes"))
+        self.assertEqual((strat, side), ("momentum-tape", "yes"))
         self.assertIn("trend", reason)
 
     def test_momentum_fires_no(self):
         closes = [0.56, 0.55, 0.54, 0.53, 0.52, 0.51, 0.50]
         strat, side, _ = engine.evaluate_strategies(CONFIG, {}, closes, 0.44, 0.51, 1000)
-        self.assertEqual((strat, side), ("momentum-1h", "no"))
+        self.assertEqual((strat, side), ("momentum-tape", "no"))
 
     def test_momentum_band_excludes(self):
         closes = [0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]
@@ -134,12 +134,12 @@ class TestStrategyRules(unittest.TestCase):
     def test_mean_revert_fires_yes(self):
         closes = [0.52] * 20 + [0.42, 0.41, 0.41, 0.40, 0.39, 0.38]
         strat, side, _ = engine.evaluate_strategies(CONFIG, {}, closes, 0.45, 0.62, 1000)
-        self.assertEqual((strat, side), ("mean-revert-24h", "yes"))
+        self.assertEqual((strat, side), ("mean-revert-tape", "yes"))
 
     def test_mean_revert_fires_no(self):
         closes = [0.48] * 20 + [0.58, 0.59, 0.59, 0.60, 0.61, 0.62]
         strat, side, _ = engine.evaluate_strategies(CONFIG, {}, closes, 0.35, 0.52, 1000)
-        self.assertEqual((strat, side), ("mean-revert-24h", "no"))
+        self.assertEqual((strat, side), ("mean-revert-tape", "no"))
 
     def test_longshot_value_requires_volume(self):
         closes = [0.82] * 8
@@ -157,7 +157,7 @@ class TestStrategyRules(unittest.TestCase):
     def test_priority_order(self):
         closes = [0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]  # momentum yes AND mean-revert no (rising)
         strat, side, _ = engine.evaluate_strategies(CONFIG, {}, closes, 0.45, 0.62, 6000)
-        self.assertEqual(strat, "momentum-1h")
+        self.assertEqual(strat, "momentum-tape")
 
 
 class TestSettlement(unittest.TestCase):
@@ -246,9 +246,9 @@ class TestIntegrationReplay(unittest.TestCase):
             self.assertEqual(len(ledger["trades_settled"]), 0)
             by_ticker = {p["ticker"]: p for p in ledger["positions_open"]}
             self.assertEqual(by_ticker["KXBTCMINMON-BTC-26NOV20-6750000"]["side"], "yes")
-            self.assertEqual(by_ticker["KXBTCMINMON-BTC-26NOV20-6750000"]["strategy"], "momentum-1h")
+            self.assertEqual(by_ticker["KXBTCMINMON-BTC-26NOV20-6750000"]["strategy"], "momentum-tape")
             self.assertEqual(by_ticker["KXBTCMINMON-BTC-26NOV20-6750000"]["entry_price"], 0.49)
-            self.assertEqual(by_ticker["KXAAAGASM-26DEC31-3.80"]["strategy"], "mean-revert-24h")
+            self.assertEqual(by_ticker["KXAAAGASM-26DEC31-3.80"]["strategy"], "mean-revert-tape")
             self.assertEqual(by_ticker["KXAAAGASM-26DEC31-3.80"]["entry_price"], 0.45)
             self.assertEqual(by_ticker["KXBTCMAX150-BTC-150K"]["side"], "no")
             self.assertEqual(by_ticker["KXBTCMAX150-BTC-150K"]["strategy"], "longshot-value")
@@ -270,15 +270,15 @@ class TestIntegrationReplay(unittest.TestCase):
 
             # skipped candidates are logged with reasons; every request URL is recorded
             reasons = " | ".join(s["reason"] for s in runlog["skips"])
-            self.assertIn("insufficient", reasons)
-            self.assertIn("no candlestick history", reasons)
+            self.assertIn("insufficient trade history", reasons)
+            self.assertIn("no trade history returned by the official tape", reasons)
             self.assertTrue(all(r["url"].startswith(CONFIG["base_url"]) for r in runlog["requests"]))
             self.assertEqual(runlog["summary"]["api_calls"], 31)
 
             # every entry carries its official request URL
             for p in ledger["positions_open"]:
                 self.assertTrue(p["orderbook_source_url"].startswith(CONFIG["base_url"]))
-                self.assertTrue(p["candlestick_source_url"].startswith(CONFIG["base_url"]))
+                self.assertTrue(p["trades_tape_source_url"].startswith(CONFIG["base_url"]))
                 self.assertTrue(p["entry_source_url"].startswith(CONFIG["base_url"]))
 
             # ---- run 2: market A settled YES; B and C carry open
@@ -299,9 +299,9 @@ class TestIntegrationReplay(unittest.TestCase):
             self.assertAlmostEqual(perf2["equity"], 998.44 + 3.50 + 1.00, places=2)
             self.assertEqual(perf2["result_counts"]["yes"], 1)
             self.assertEqual(perf2["result_counts"]["no"], 0)
-            self.assertEqual(perf2["by_strategy"]["momentum-1h"]["settled"], 1)
-            self.assertEqual(perf2["by_strategy"]["momentum-1h"]["win_rate"], 1.0)
-            self.assertAlmostEqual(perf2["by_strategy"]["momentum-1h"]["realized_pnl"], 4.92, places=2)
+            self.assertEqual(perf2["by_strategy"]["momentum-tape"]["settled"], 1)
+            self.assertEqual(perf2["by_strategy"]["momentum-tape"]["win_rate"], 1.0)
+            self.assertAlmostEqual(perf2["by_strategy"]["momentum-tape"]["realized_pnl"], 4.92, places=2)
 
             # duplicate-position guard: run 2 opened nothing new
             self.assertEqual(len(ledger2["runs"]), 2)

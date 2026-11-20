@@ -58,6 +58,18 @@ def candles(closes):
          "volume_fp": "10.00"} for i, c in enumerate(closes)]}
 
 
+def trades(closes, start_min=90, step_min=10, ticker="T"):
+    """Official trades-tape shape: GET /markets/trades rows (newest-first from the
+    API; the engine sorts by created_time itself). Times ascend with the closes."""
+    rows = []
+    for i, c in enumerate(closes):
+        hh = 10 + (start_min + i * step_min) // 60
+        mm = (start_min + i * step_min) % 60
+        rows.append({"ticker": ticker, "created_time": f"2026-11-20T{hh:02d}:{mm:02d}:00.000000Z",
+                     "yes_price_dollars": f"{c:.4f}", "count_fp": "10.00"})
+    return {"trades": rows, "cursor": ""}
+
+
 def ob(yes, no):
     return {"orderbook_fp": {
         "yes_dollars": [[f"{float(p):.4f}", f"{float(c):.2f}"] for p, c in yes],
@@ -77,11 +89,11 @@ PAYLOADS = {
     "ob_max.json": ob([("0.50", 3), ("0.83", 40)], []),
     "ob_nato.json": ob([("0.30", 6)], [("0.55", 4)]),
     "ob_eth.json": ob([("0.85", 10)], [("0.10", 5)]),
-    "candles_btc.json": candles([0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]),
-    "candles_gas.json": candles([0.52] * 20 + [0.42, 0.41, 0.41, 0.40, 0.39, 0.38]),
-    "candles_max.json": candles([0.82] * 8),
-    "candles_nato.json": candles([0.30, 0.31, 0.30]),
-    "candles_eth.json": {"candlesticks": []},
+    "trades_btc.json": trades([0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56], ticker="KXBTCMINMON-BTC-26NOV20-6750000"),
+    "trades_gas.json": trades([0.52] * 14 + [0.42, 0.41, 0.41, 0.40, 0.39, 0.38], ticker="KXAAAGASM-26DEC31-3.80"),
+    "trades_max.json": trades([0.82] * 8, ticker="KXBTCMAX150-BTC-150K"),
+    "trades_nato.json": trades([0.30, 0.31, 0.30], ticker="KXNEXTNATOSECGEN-NATO-SEC-GEN"),
+    "trades_eth.json": {"trades": [], "cursor": ""},
     "markets_tickers_run1.json": {"markets": [
         {"ticker": "KXBTCMINMON-BTC-26NOV20-6750000", "status": "open", "last_price_dollars": "0.5600"},
         {"ticker": "KXAAAGASM-26DEC31-3.80", "status": "open", "last_price_dollars": "0.4000"},
@@ -109,11 +121,11 @@ MANIFEST1 = {
     "/markets/KXBTCMAX150-BTC-150K/orderbook?": "ob_max.json",
     "/markets/KXNEXTNATOSECGEN-NATO-SEC-GEN/orderbook?": "ob_nato.json",
     "/markets/KXETHMINMON-ETH-26NOV20-2800000/orderbook?": "ob_eth.json",
-    "/series/KXBTCMINMON/markets/KXBTCMINMON-BTC-26NOV20-6750000/candlesticks?": "candles_btc.json",
-    "/series/KXAAAGASM/markets/KXAAAGASM-26DEC31-3.80/candlesticks?": "candles_gas.json",
-    "/series/KXBTCMAX150/markets/KXBTCMAX150-BTC-150K/candlesticks?": "candles_max.json",
-    "/series/KXNEXTNATOSECGEN/markets/KXNEXTNATOSECGEN-NATO-SEC-GEN/candlesticks?": "candles_nato.json",
-    "/series/KXETHMINMON/markets/KXETHMINMON-ETH-26NOV20-2800000/candlesticks?": "candles_eth.json",
+    "/markets/trades?ticker=KXBTCMINMON-BTC-26NOV20-6750000&limit=200": "trades_btc.json",
+    "/markets/trades?ticker=KXAAAGASM-26DEC31-3.80&limit=200": "trades_gas.json",
+    "/markets/trades?ticker=KXBTCMAX150-BTC-150K&limit=200": "trades_max.json",
+    "/markets/trades?ticker=KXNEXTNATOSECGEN-NATO-SEC-GEN&limit=200": "trades_nato.json",
+    "/markets/trades?ticker=KXETHMINMON-ETH-26NOV20-2800000&limit=200": "trades_eth.json",
     "/markets?tickers=": "markets_tickers_run1.json",
 }
 # targeted series queries (documented series_ticker filter)
