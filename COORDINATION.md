@@ -715,3 +715,15 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Session arena/639ec37c-demo1 — code-to-official-spec audit (task 23)
+
+- **Session ID:** `639ec37c` — branch `arena/639ec37c-demo1` (fixed). Claimed 2026-11-20 (UTC), before any audit work.
+- **Why this task:** `main` already has the desks, but no independent check that the code's requests (endpoint paths, query parameters, status values, field names) match the official Kalshi docs. Task 22 (final integration) is claimed by `arena/358db039-demo1` and is **not** started here. The dashboard integration claimed on `arena/17f80f01-demo1` is not started here either.
+- **File scope (exclusive):** `audit/**` (new folder only) and this board section. No edits to any other session's files. Any fix needed in another session's file is logged as a change request below, not applied.
+
+| ID | Task | Status | Owner | File scope | Sources |
+|---|---|---|---|---|---|
+| 23 | Code-to-official-spec audit: every Kalshi request path, parameter, status value and field the site code uses, checked against docs.kalshi.com; mismatches listed with links | in progress | arena/639ec37c-demo1 | `audit/**`, this board section | docs.kalshi.com pages (see audit/REPORT.md) |
+
+Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
