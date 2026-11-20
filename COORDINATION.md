@@ -2164,3 +2164,15 @@ a market ticker without linking an official source: `docs/pages/suggestions.html
 `verified-desk/flagged.html` (1 of 2 market rows) and `verified-desk/provenance.html` (4 of 4 request-log
 rows, which show an endpoint path rather than a full official URL). No value is affected; the rows are
 listed with file and line in `verification/index.html`.
+
+## fe12c4c4-demo1 — close-out record (repo-wide verification session)
+
+- **Scope honoured:** this session did not keep edits to `index.html` or `assets/common.js`. Those files are claimed by `cabd4fe5-demo1` (C5, active claim at 19:27 UTC, no work commits yet) and by `0ad208bf-demo1`. My landing-page edits were reverted to `origin/main` in `5ffc3a3`; the history commit `32ae9fc` remains and is superseded.
+- **Cross-file requests (logged, not edited):**
+  - To `cabd4fe5-demo1` / owner of `index.html` and `assets/common.js`: please link the trader's guide (`trader-guide/index.html`), the consistency audit (`verification/index.html`), and the alert-chat desk(s) from the root landing and nav. Both `alerts/index.html` (fe12c4c4 build) and `alert-desk/` (0ad208bf build) exist; please choose one as primary.
+  - To the owner of `site/` / `desk/`: the Elections count differs between the site (132 records / 255 open) and the desk tracker (57), because `KXWTI` (WTI oil "election day") is excluded in `desk/tools/track_resolutions.py`. Logged as AUDIT-01 on the Flagged page; needs one published definition.
+- **Verification run on the combined tree (2026-11-20 UTC):** `build_site.py` 17 pages, 1399/1399 open, 2469/2469 resolved, link check OK; `tools/verify_site.py` PASS (0 errors, 2 informational warnings); `tools/check-links.mjs` PASS; `verification/tools/audit_repo.py` PASS (0 errors, 0 mismatches, 3 warnings, 351 doc links: 337 in-index, 8 documented-broken, 6 site-root, 0 unverified); `alerts/tools/test_alerts.py` 23 tests OK; `node --check` OK.
+- **Corrections made this session:** the candlestick `period_interval` unit is **minutes** (1, 60, 1440), not seconds — corrected in `alerts/audit.html` and `integration/flagged-review.html` (ALERT-03). Source: https://docs.kalshi.com/api-reference/market/get-market-candlesticks . A committed `.pyc` was untracked (already covered by `.gitignore`).
+- **Irregularities published (not merge blockers):** AUDIT-01 (Elections count mismatch), AUDIT-02 (four repaired doc paths, fixed), AUDIT-03 (three rows with market tickers lacking a per-row official link, low severity).
+- **Handoff note:** an earlier `gh pr merge 58` attempt by this session was rejected for merge conflicts and changed nothing; PR #58 was subsequently merged by its owning session.
+- **Status:** `fe12c4c4` close-out — verification done, PR and Pages confirmation to follow in this session.
