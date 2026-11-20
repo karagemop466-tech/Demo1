@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Live Kalshi demo dashboard: highest-value live events in gas, elections, culture, crypto and golf with price charts and order-book depth.">
+<title>Kalshi Demo · Live dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> MONITOR</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">connecting…</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner" id="mode-banner">Connecting to the official demo API…</div>
+
+  <section class="section" style="margin-top:8px">
+    <div class="sec-head"><div>
+      <p class="eyebrow">01 / LIVE EVENTS · RANKED BY TRADED VALUE</p>
+      <h2>Highest-value live events — gas, elections, culture, crypto, golf</h2>
+      <p class="sub">Ranking uses an <b>estimated traded value</b> proxy: Σ per market of (official volume × last price). The exchange publishes contract volume but no official dollar-volume field — the proxy is labeled and <a href="../flagged.html">flagged for review</a>. Click a row to inspect prices and depth.</p>
+    </div>
+    <div class="toolbar">
+      <label class="lbl">Rank by
+        <select id="rank-by"><option value="est">Est. traded $ (proxy)</option><option value="vol">Contract volume</option></select>
+      </label>
+      <label class="lbl">Auto-refresh
+        <select id="refresh-secs"><option value="15">15 s</option><option value="30" selected>30 s</option><option value="60">60 s</option><option value="0">Off</option></select>
+      </label>
+      <button id="refresh-now">↻ Refresh now</button>
+    </div>
+    <div class="toolbar" id="topic-filter">
+      <button class="chip active" data-topic="all">All topics</button>
+      <button class="chip" data-topic="gas">Gas prices</button>
+      <button class="chip" data-topic="elections">Elections</button>
+      <button class="chip" data-topic="culture">Culture</button>
+      <button class="chip" data-topic="crypto">Crypto</button>
+      <button class="chip" data-topic="golf">Golf</button>
+    </div>
+    <div class="table-wrap"><table id="events-table">
+      <thead><tr>
+        <th>#</th><th>Event</th><th>Topic</th><th class="num">Markets</th>
+        <th class="num">Volume (contracts)</th><th class="num">Est. traded $ (proxy)</th>
+        <th class="num">Open interest</th><th>Closes (UTC)</th><th>Status</th><th>Source</th>
+      </tr></thead>
+      <tbody id="events-rows"><tr><td colspan="10" class="empty">Waiting for official demo API response…</td></tr></tbody>
+    </table></div>
+    <p class="footnote">Topic classification uses only official series fields (<code>category</code>, <code>tags</code>; e.g. golf = series tagged <code>Golf</code>, gas = <code>Oil and energy</code> series whose title names gas/diesel/fuel — rule <a href="api-notes.html">documented</a>). Series without an official match are not shown. “Volume” is the API’s contract count (<code>volume_fp</code>, fixed-point, verified) — blank when absent, never assumed 0. Source per row: the exact demo-API query behind this table.</p>
+  </section>
+
+  <section class="section">
+    <div class="sec-head"><div>
+      <p class="eyebrow">02 / PRICE MOVEMENT</p>
+      <h2>Contract price over time — seconds, minutes or hours</h2>
+      <p class="sub">Y axis: YES contract price (USD). X axis: time. Windows ≤ 1 h are built from official trade records (the finest official candle interval is 1 minute — verified); 6 h / 24 h / 7 d use official candlesticks at 1 min / 60 min / 1 day. Live mode polls trades every 5 s.</p>
+    </div>
+    <div class="toolbar">
+      <label class="lbl">Market <select id="chart-market" style="max-width:420px"><option value="">Select an event above</option></select></label>
+      <label class="lbl">Window
+        <select id="chart-window">
+          <option value="live">Live (5 s ticks)</option>
+          <option value="300">Last 5 min</option>
+          <option value="900">Last 15 min</option>
+          <option value="3600">Last 1 h</option>
+          <option value="21600">6 h · 1-min candles</option>
+          <option value="86400">24 h · 60-min candles</option>
+          <option value="604800">7 d · daily candles</option>
+        </select>
+      </label>
+      <button id="chart-refresh">↻ Reload window</button>
+    </div>
+    <div class="grid2" style="grid-template-columns:2fr 1fr">
+      <div>
+        <div class="chartbox" id="chartbox"><div class="empty">Select an event above, then a window.</div></div>
+        <div class="legend"><span><i style="background:#2ecc8f"></i>YES price</span><span id="chart-source"></span></div>
+      </div>
+      <div class="card">
+        <h3>Market stats <span class="src">(live snapshot)</span></h3>
+        <div id="market-stats"><div class="empty">No market selected.</div></div>
+        <p class="footnote" id="market-src"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head"><div>
+      <p class="eyebrow">03 / LIQUIDITY & DEPTH</p>
+      <h2>How many contracts are available at each price?</h2>
+      <p class="sub">Public order book: all resting bids on both sides, refreshed every 10 s while a market is selected. A YES bid at X is a NO ask at $1.00 − X (verified reciprocal rule), so implied asks and spread are derived — and labeled as derived.</p>
+    </div>
+    <div class="grid3">
+      <div class="card"><h3>Depth (top levels)</h3><div id="book-depth" class="depthbars"><div class="empty">No market selected.</div></div></div>
+      <div class="card"><h3>Book summary</h3><div id="book-summary"><div class="empty">No market selected.</div></div></div>
+      <div class="card"><h3>Raw order book</h3>
+        <div id="book-raw" class="empty">No market selected.</div>
+        <p class="footnote">Endpoint: <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">GET /markets/{ticker}/orderbook ↗</a> (public, verified). Empty book = no resting bids; shown as empty, never filled in.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="banner warn" id="estimate-note">
+    <b>Methodology (flagged for your review):</b> “highest dollar amount” has no official API field. This dashboard ranks by estimated traded value = Σ(volume × last YES price), a conservative proxy that ignores intra-candle price variation and NO-side pricing. Alternatives (24 h volume, open interest × price, or true traded notional from trade-by-trade sums) are listed in <a href="../suggestions.html">Suggestions</a>. Choose the definition you want before relying on the ranking.
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <span>Kalshi Demo Monitor · demo environment (mock funds) · all values from official API responses</span>
+  <span><a href="api-notes.html">API verification table</a> · <a href="../flagged.html">Flagged items</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

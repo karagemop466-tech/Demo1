@@ -1,0 +1,17 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXAAAGASW-26NOV16&limit=3 (limit param observed ignored — see flagged.html) and https://external-api.demo.kalshi.co/trade-api/v2/events?status=settled&series_ticker=KXAAAGASW&limit=3",
+  "fetched_at_utc": "2026-11-20T11:30:00Z",
+  "note": "Settled weekly US gas-price event with per-market resolution results. Excerpt of five markets; all resolved 'no' with settlement_value_dollars 0.0000.",
+  "settled_events": [
+    { "event_ticker": "KXAAAGASW-26NOV16", "series_ticker": "KXAAAGASW", "title": "US gas prices this week", "strike_date": "2026-11-16T04:59:00Z", "status_filter_used": "settled" },
+    { "event_ticker": "KXAAAGASW-26NOV09", "series_ticker": "KXAAAGASW", "title": "US gas prices this week", "strike_date": "2026-11-09T04:59:00Z", "status_filter_used": "settled" },
+    { "event_ticker": "KXAAAGASW-26NOV02", "series_ticker": "KXAAAGASW", "title": "US gas prices this week", "strike_date": "2026-11-02T04:59:00Z", "status_filter_used": "settled" }
+  ],
+  "resolved_markets": [
+    { "ticker": "KXAAAGASW-26NOV16-3.9400", "event_ticker": "KXAAAGASW-26NOV16", "yes_sub_title": "Above 3.9400", "result": "no", "status": "finalized", "settlement_ts": "2026-11-16T14:32:51.060078Z", "settlement_value_dollars": "0.0000", "last_price_dollars": "0.0000", "volume_fp": "0.00" },
+    { "ticker": "KXAAAGASW-26NOV16-3.9600", "event_ticker": "KXAAAGASW-26NOV16", "yes_sub_title": "Above 3.9600", "result": "no", "status": "finalized", "settlement_ts": "2026-11-16T14:32:51.060078Z", "settlement_value_dollars": "0.0000", "last_price_dollars": "0.0000", "volume_fp": "0.00" },
+    { "ticker": "KXAAAGASW-26NOV16-4.0200", "event_ticker": "KXAAAGASW-26NOV16", "yes_sub_title": "Above 4.0200", "result": "no", "status": "finalized", "settlement_ts": "2026-11-16T14:32:51.060078Z", "settlement_value_dollars": "0.0000", "last_price_dollars": "0.0000", "volume_fp": "0.00" },
+    { "ticker": "KXAAAGASW-26NOV16-4.1000", "event_ticker": "KXAAAGASW-26NOV16", "yes_sub_title": "Above 4.1000", "result": "no", "status": "finalized", "settlement_ts": "2026-11-16T14:32:51.060078Z", "settlement_value_dollars": "0.0000", "last_price_dollars": "0.0000", "volume_fp": "0.00" },
+    { "ticker": "KXAAAGASW-26NOV16-4.1600", "event_ticker": "KXAAAGASW-26NOV16", "yes_sub_title": "Above 4.1600", "result": "no", "status": "finalized", "settlement_ts": "2026-11-16T14:32:51.060078Z", "settlement_value_dollars": "0.0000", "last_price_dollars": "0.0000", "volume_fp": "0.00" }
+  ]
+}

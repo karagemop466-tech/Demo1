@@ -1,0 +1,18 @@
+{
+  "collected_at_utc": "2026-11-20T11:20:00Z–11:29:00Z",
+  "collector": "Arena agent session arena/ed67272c-demo1",
+  "method": "Platform page-fetcher performing GET requests against the official demo API. Responses are excerpts (only fields used by site tables) — no values edited or inferred. Trimmed fields are documented per file alongside the exact source URL.",
+  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "flagged_count": 11,
+  "files": [
+    "snapshot-events-gas.json",
+    "snapshot-resolutions-gas.json",
+    "snapshot-trades.json",
+    "snapshot-orderbook-candlesticks.json",
+    "snapshot-series-gas.json",
+    "snapshot-series-crypto.json",
+    "snapshot-series-golf.json",
+    "snapshot-series-elections.json",
+    "snapshot-series-culture.json"
+  ]
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Execute demo trades on Kalshi (V2 order API) and track the resulting orders, fills and performance.">
+<title>Kalshi Demo · Trading</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> MONITOR</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">—</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner warn"><b>Demo environment — mock funds.</b> Orders go to <span class="mono">external-api.demo.kalshi.co</span> (the sandbox exchange). Every order requires a visible confirmation step showing the exact JSON body before it is signed and sent. Legacy <code>/portfolio/orders</code> writes are removed by the exchange (they now return 410 Gone — verified); this page uses the official V2 endpoints.</div>
+  <div class="banner" id="connect-banner"><b>Not connected.</b> Connect your demo API key on the <a href="portfolio.html">Portfolio page</a> first. Trading and order panels stay blank until then.</div>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">01 / ORDER TICKET</p>
+    <h2>Execute a demo trade</h2>
+    <p class="sub">Official V2 order model: choose a book side — <b>bid</b> = your order buys YES exposure at the price (equivalently sells NO), <b>ask</b> = your order sells YES at that price (equivalently buys NO). Price must lie on the market's official price grid (<code>price_ranges</code>, verified per market). <a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noreferrer">Order direction docs ↗</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order V2 ↗</a></p>
+  </div></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="toolbar" style="flex-direction:column;align-items:stretch;gap:12px">
+        <div style="display:flex;gap:10px">
+          <label class="lbl" style="flex:1">Market ticker <input id="ord-ticker" placeholder="e.g. KXAAAGASW-26NOV23-3.6000"></label>
+          <label class="lbl" style="width:auto;align-self:flex-end"><button id="ord-fetch">Fetch market</button></label>
+        </div>
+        <div id="ord-market-info" class="sub"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <label class="lbl">Book side (bid = buy YES exposure)<select id="ord-side"><option value="bid">bid — buy YES exposure</option><option value="ask">ask — sell YES / buy NO exposure</option></select></label>
+          <label class="lbl">Count (contracts)<input id="ord-count" value="10" inputmode="decimal"></label>
+          <label class="lbl">Price (USD)<input id="ord-price" value="0.50" inputmode="decimal"></label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <label class="lbl">Time in force<select id="ord-tif"><option value="good_till_canceled">good_till_canceled</option><option value="fill_or_kill">fill_or_kill</option><option value="immediate_or_cancel">immediate_or_cancel</option></select></label>
+          <label class="lbl">Self-trade prevention<select id="ord-stp"><option value="taker_at_cross">taker_at_cross</option><option value="maker">maker</option></select></label>
+          <label class="lbl" style="align-self:flex-end"><input type="checkbox" id="ord-postonly"> post only</label>
+          <label class="lbl" style="align-self:flex-end"><input type="checkbox" id="ord-reduceonly"> reduce only (IOC only)</label>
+        </div>
+        <label class="lbl">Expiration (optional, GTC only — Unix seconds)<input id="ord-exp" placeholder="e.g. 1795260000"></label>
+        <label class="lbl">Strategy tag (recorded in your local journal)<select id="ord-strategy"><option>directional</option><option>momentum</option><option>mean-reversion</option><option>hedge</option><option>arbitrage</option><option>event-driven</option><option>market-making</option><option>other</option></select></label>
+        <div class="toolbar"><button class="primary" id="ord-preview">Preview order →</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Validation & preview</h3>
+      <div id="ord-validation" class="sub">Fetch a market first: the ticket validates count (≥ 0.01, 2 decimals) and price against the market's official <code>price_ranges</code> grid before any signature exists.</div>
+      <div id="ord-preview-box"></div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">02 / ORDER MANAGEMENT</p>
+    <h2>Orders <span class="src">GET /portfolio/orders?status=resting</span></h2>
+  </div>
+    <div class="toolbar"><label class="lbl">Status<select id="ord-status"><option value="resting">resting</option><option value="executed">executed</option><option value="canceled">canceled</option></select></label><button id="load-orders">↻ Load orders</button></div>
+  <div class="table-wrap"><table id="orders-table">
+    <thead><tr><th>Order ID</th><th>Market</th><th>Outcome</th><th>Book side</th><th class="num">Price</th><th class="num">Init / filled / remaining</th><th>Status</th><th>Cancel</th><th>Source</th></tr></thead>
+    <tbody id="orders-rows"><tr><td colspan="9" class="empty">Not connected.</td></tr></tbody></table></div>
+  <p class="footnote">Cancel uses the official V2 route: <code>DELETE /portfolio/events/orders/{order_id}?market_ticker=…</code> (auto-routing requires the market ticker — verified). Response raw JSON shown under each action.</p></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">03 / TRADE JOURNAL (LOCAL)</p>
+    <h2>Placed-from-this-site journal</h2>
+    <p class="sub">Each executed order is journalled in your browser (localStorage <code>kx_journal</code>) with its strategy tag, request and response — the basis for the strategy analysis on <a href="../analysis.html">Strategies</a>.</p>
+  </div>
+    <div class="toolbar"><button id="clear-journal" class="danger">Clear journal</button></div>
+  <div class="table-wrap"><table id="journal-table">
+    <thead><tr><th>Time</th><th>Market</th><th>Side</th><th class="num">Count × price</th><th>Strategy tag</th><th>Result</th><th>Raw</th></tr></thead>
+    <tbody id="journal-rows"></tbody></table></div></section>
+</main>
+
+<footer><div class="wrap">
+  <span>Kalshi Demo Monitor · demo orders only · confirmation required before any signature</span>
+  <span><a href="portfolio.html">Portfolio →</a> · <a href="../analysis.html">Strategies →</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/trading.js"></script>
+</body>
+</html>

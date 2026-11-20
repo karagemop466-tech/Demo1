@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Track Kalshi demo events from live to settled, with the official YES/NO result, settlement timestamp and per-row sources.">
+<title>Kalshi Demo · Resolutions</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> MONITOR</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">—</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner" id="mode-banner">Connecting…</div>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">01 / LIVE → SETTLED WATCHLIST</p>
+    <h2>Live events tracked until they resolve (YES or NO)</h2>
+    <p class="sub">Events in the five topics are checked every 60 s while this page is open. First-seen time, status transitions and the final outcome are recorded in your browser (localStorage) so the history survives reloads. When an event leaves the open list, its settled status is queried directly and the official <code>result</code> (yes/no), <code>settlement_ts</code> and <code>settlement_value_dollars</code> are recorded with a source link.</p>
+  </div>
+    <div class="toolbar"><label class="lbl">Auto-check <select id="track-secs"><option value="60" selected>60 s</option><option value="120">120 s</option><option value="300">300 s</option><option value="0">Off</option></select></label><button id="check-now">↻ Check now</button><button class="danger" id="clear-track">Clear local history</button></div></div>
+  <div class="table-wrap"><table id="track-table">
+    <thead><tr><th>Event</th><th>Topic</th><th>First seen</th><th>Status now</th><th>Outcome</th><th>Settled at</th><th>Source</th></tr></thead>
+    <tbody id="track-rows"><tr><td colspan="7" class="empty">Waiting for first check…</td></tr></tbody></table></div>
+  <p class="footnote"><b>Scope note (flagged):</b> this runs client-side — the watchlist only advances while the page is open. A scheduled checker (e.g. a GitHub Actions cron appending to a JSON file) is proposed in <a href="../suggestions.html">Suggestions S-07</a>. Events with multiple independent markets (e.g. gas strike ladders, DIRECNET netting) record a <b>per-market</b> result; the event row shows the outcome of its highest-volume market with the full list in the detail drawer.</p></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">02 / RESOLVED HISTORY (VERIFIED SAMPLE)</p>
+    <h2>Settled gas markets — official results</h2>
+  </div></div>
+  <div class="table-wrap"><table id="resolved-table">
+    <thead><tr><th>Market ticker</th><th>Strike</th><th>Result</th><th>Status</th><th>Settled at (UTC)</th><th class="num">Settlement value</th><th>Source</th></tr></thead>
+    <tbody></tbody></table></div>
+  <p class="footnote">Event <span class="mono">KXAAAGASW-26NOV16</span> (“US gas prices this week”, settled 2026-11-16) plus its series siblings settled the same week. Every strike market above $3.9400 resolved <b>no</b>. Sources are the exact query URLs; result vocabulary per <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement docs ↗</a>.</p></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">03 / HOW RESOLUTION IS DETERMINED</p>
+    <h2>Fields used, and what each means</h2>
+  </div></div>
+  <div class="card">
+    <div class="kv"><span>Market <code>status</code> values observed in demo</span><b class="mono">active → finalized</b></div>
+    <div class="kv"><span>Market <code>result</code></span><b class="mono">"yes" | "no" (blank while open)</b></div>
+    <div class="kv"><span><code>settlement_ts</code></span><b class="mono">ISO timestamp of determination</b></div>
+    <div class="kv"><span><code>settlement_value_dollars</code></span><b class="mono">$1.0000 if resolved yes, $0.0000 if no (observed)</b></div>
+    <div class="kv"><span>Docs</span><b><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement ↗</a> · <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noreferrer">Market Lifecycle ↗</a></b></div>
+  </div>
+  <p class="footnote">The <code>status</code> filter values accepted by the API (<code>unopened|open|closed|settled</code>) differ from the status values returned on market objects (<code>active</code>/<code>finalized</code>) — recorded as an irregularity on <a href="../flagged.html">Flagged for review</a>.</p></section>
+</main>
+
+<footer><div class="wrap">
+  <span>Kalshi Demo Monitor · demo environment (mock funds)</span>
+  <span><a href="api-notes.html">API verification</a> · <a href="../flagged.html">Flagged items</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/resolutions.js"></script>
+</body>
+</html>

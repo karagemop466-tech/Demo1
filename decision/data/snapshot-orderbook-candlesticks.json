@@ -1,0 +1,9 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV20H12-UP/orderbook and https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV20H12-UP/candlesticks?start_ts=1795167000&end_ts=1795171200&period_interval=1",
+  "fetched_at_utc": "2026-11-20T11:29:30Z",
+  "note": "Order book response verbatim (one YES bid level). Candlesticks for the same market returned an empty array despite trades ~8 minutes earlier (11:28:33Z trade vs 09:30–11:20 window) — flagged on flagged.html. Shown here unmodified; the site never interpolates.",
+  "market_ticker": "KXDEMOFUTHOURLY-26NOV20H12-UP",
+  "orderbook": { "orderbook_fp": { "no_dollars": [], "yes_dollars": [["0.0100", "10.00"]] } },
+  "candlesticks_response": { "candlesticks": [], "ticker": "KXDEMOFUTHOURLY-26NOV20H12-UP" },
+  "last_trade_seen": { "ticker": "KXDEMOFUTHOURLY-26NOV20H12-UP", "created_time": "2026-11-20T11:28:33.328397Z", "yes_price_dollars": "0.5500", "count_fp": "15.00", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=6" }
+}
