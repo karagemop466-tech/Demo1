@@ -1097,7 +1097,7 @@ def main():
     build_sources(meta)
     # static assets
     for asset in ("style.css", "chart.js", "explore.js"):
-        src_asset = ROOT / "assets" / asset
+        src_asset = ROOT / "site_src" / asset
         if not src_asset.exists():
             BUILD_ERRORS.append(f"missing source asset assets/{asset}")
             continue

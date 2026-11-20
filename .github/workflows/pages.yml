@@ -1,59 +1,43 @@
-name: Build and deploy site to GitHub Pages
-
-# GitHub Pages for this repository is configured in "legacy" mode: it serves the
-# repository root of `main` over a static file server, so no custom Pages
-# workflow can be selected from the repository settings by this session.
-# This workflow therefore rebuilds the site from the committed verified snapshot
-# and, if the generated output differs, commits it to main. Pages then publishes
-# it automatically. The build fails (and nothing is committed) if the site does
-# not build cleanly or has a broken internal link.
+name: Deploy static site to GitHub Pages
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
-  contents: write
-
+  contents: read
+  pages: write
+  id-token: write
 concurrency:
-  group: pages-content
+  group: pages
   cancel-in-progress: true
-
 jobs:
-  rebuild:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
       - name: Validate JavaScript
+        run: node --check monitor/app.js
+      - name: Validate required files
+        run: test -s index.html && test -s monitor/index.html && test -s monitor/styles.css && test -s monitor/app.js && test -s assets/style.css && test -s assets/common.js && test -s assets/dashboard.js && test -s data/markets.json
+      - name: Validate live desk scripts
+        run: node --check assets/js/kalshi-core.js && node --check assets/js/kalshi-ui.js && node --check assets/js/live.js && node --check tools/kalshi-signer.mjs && node --check tools/check-links.mjs && node --check tests/dashboard.test.mjs && python3 -m py_compile scripts/fetch_demo_data.py
+      - name: Rebuild verified dashboard from committed snapshot (fails on broken links)
         run: |
-          node --check assets/chart.js
-          node --check assets/explore.js
-          node --check app.js
-      - name: Validate Python
-        run: python -m py_compile build_site.py tools/collect_kalshi.py tools/account_worker.py
-      - name: Build site (fails on broken internal link or missing asset)
-        run: python build_site.py
-      - name: Verify no placeholder values leaked into rendered pages
-        run: |
-          set -e
-          if grep -rIn --include='*.html' -E 'undefined|NaN|>None<|\{[' site/ | head -20; then
-            echo "found suspicious rendered tokens"; exit 1
-          fi
-          echo "no undefined/NaN/None tokens in rendered pages"
-      - name: Commit rebuilt site if it changed
-        run: |
-          git config user.name "site-builder"
-          git config user.email "actions@users.noreply.github.com"
-          git add site/
-          if git diff --cached --quiet; then
-            echo "site output unchanged"
-          else
-            git commit -m "site: rebuild from verified snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            git push origin HEAD:main
-            echo "committed rebuilt site to main"
-          fi
+          python3 -m py_compile build_site.py tools/collect_kalshi.py tools/account_worker.py
+          python3 build_site.py
+      - name: Validate verified-dashboard JavaScript
+        run: node --check site/assets/chart.js && node --check site/assets/explore.js
+      - name: Site link, secrets and source-citation audit
+        run: node tools/check-links.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

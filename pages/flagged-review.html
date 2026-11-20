@@ -64,6 +64,26 @@
     <li>Review the <a href="suggestions.html">Suggestions</a> page and approve/defer/reject each item before implementing.</td>
   </ol>
   <p class="center source-list">Sources: <a href="https://docs.kalshi.com">https://docs.kalshi.com</a> · <a href="../docs/sources.md">docs/sources.md — consolidated verified endpoint table</a></p>
+
+  <section id="flagged-8c8d4499">
+    <h2>Flagged by session 8c8d4499 (live desk)</h2>
+    <p>Each item below is unresolved on purpose: it could not be confirmed from an official source at build time, so the live desk leaves the value blank instead of estimating it. Full evidence: <a href="../docs/api-verification.md">docs/api-verification.md</a>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Open item</th><th>Effect on the dashboard</th><th>Official source to check</th></tr></thead>
+        <tbody>
+          <tr><td>F-1</td><td>No Kalshi API credential exists in this repository, so the demo account was never read and no order was placed.</td><td>Balance, positions, fills and realised P&amp;L stay blank; the order builder drafts a request only.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noreferrer">Test in the demo environment</a> · <a href="https://docs.kalshi.com/getting_started/api_keys.md" target="_blank" rel="noreferrer">API keys</a></td></tr>
+          <tr><td>F-2</td><td>Browser CORS from the Pages origin worked once (2026-11-20 11:40 UTC, two HTTP 200s logged by the page) but is not documented as a guarantee by Kalshi.</td><td>If a future response is blocked, the request log shows status 0 and the table shows blanks plus the bridge instructions.</td><td><a href="https://docs.kalshi.com/getting_started/api_environments.md" target="_blank" rel="noreferrer">API environments</a></td></tr>
+          <tr><td>F-3</td><td>WebSocket streaming is not wired in: the handshake requires signed headers, which a browser cannot attach to a WebSocket.</td><td>Live updates use REST polling at a selectable cadence instead of a push feed.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets.md" target="_blank" rel="noreferrer">Quick start: WebSockets</a></td></tr>
+          <tr><td>F-4</td><td>&ldquo;Highest dollar amount&rdquo; is undefined in the brief; traded notional, 24 h notional and open exposure are all shown.</td><td>Ranking uses traded notional; the other two columns let a reviewer re-rank without changing code.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noreferrer">Get Markets field definitions</a></td></tr>
+          <tr><td>F-5</td><td>Candlesticks support only 1/60/1440-minute periods, so a true seconds candle does not exist.</td><td>The seconds view is built from individual trades; the interval control refuses anything else.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noreferrer">Get Market Candlesticks</a></td></tr>
+          <tr><td>F-6</td><td>Rate limits for the polling loop were not read in this session.</td><td>Defaults are conservative (30 s cadence, bounded pagination) but unverified against the tier budget.</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits.md" target="_blank" rel="noreferrer">Rate limits and tiers</a></td></tr>
+          <tr><td>F-7</td><td>The CI collector fix (<code>/events</code> limit 200; series link taken from the event record) has not yet produced a snapshot with data.</td><td>Until the next scheduled run, <code>data/events.json</code> and <code>data/candles.json</code> stay partly empty; the live desk does not depend on them.</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events.md" target="_blank" rel="noreferrer">Get Events (maximum: 200)</a></td></tr>
+          <tr><td>F-8</td><td>Four site variants coexist (root, <code>pages/</code>, <code>monitor/</code>, <code>live-desk/</code>); none were deleted.</td><td>Navigation from the landing page reaches the live desk; consolidation is left as an owner decision (S-1 on the suggestions board).</td><td>Repo tree: <a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noreferrer">karagemop466-tech/Demo1</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </main>
 <footer class="footer">Kalshi Demo Dashboard · Flagged for review</footer>
 </body>

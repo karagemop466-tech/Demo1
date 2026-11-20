@@ -1,52 +1,53 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="2; url=site/index.html">
-<title>Kalshi Demo Research — live verified dashboard</title>
-<meta name="description" content="Verified live dashboard for Kalshi demo markets: gas prices, elections, culture, crypto and golf, with every row linked to its official API source.">
-<link rel="canonical" href="site/index.html">
-<style>
-  :root{--bg:#0b0f14;--panel:#121821;--line:#243040;--ink:#e8eef6;--muted:#93a3b8;--accent:#5eead4;--accent2:#38bdf8}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;
-    background:radial-gradient(1000px 520px at 20% -10%,#12263a 0%,var(--bg) 60%) no-repeat,var(--bg);
-    color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .card{max-width:660px;width:100%;background:linear-gradient(180deg,#161d28,#121821);
-    border:1px solid var(--line);border-radius:18px;padding:30px 32px;box-shadow:0 30px 70px -40px #000}
-  .mark{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;
-    background:linear-gradient(140deg,var(--accent),var(--accent2));color:#062022;font-weight:800}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:.02em;margin-bottom:16px}
-  h1{font-size:1.5rem;margin:0 0 .5rem;letter-spacing:-.01em}
-  p{color:var(--muted);margin:.4rem 0}
-  a{color:var(--accent2);text-decoration:none}
-  a:hover{text-decoration:underline}
-  .btn{display:inline-block;margin-top:18px;padding:11px 18px;border-radius:10px;font-weight:650;
-    background:linear-gradient(140deg,var(--accent),var(--accent2));color:#052026}
-  .btn:hover{text-decoration:none;filter:brightness(1.06)}
-  ul{color:var(--muted);padding-left:1.1rem;font-size:13.5px}
-  .fine{font-size:12px;color:#6b7c91;margin-top:18px}
-  code{background:#0a1017;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.86em}
-</style>
-</head>
-<body>
-<main class="card">
-  <div class="brand"><span class="mark">K</span> Kalshi <b>Demo</b> Research</div>
-  <h1>Live, source-linked Kalshi demo dashboard</h1>
-  <p>Redirecting to the dashboard… If nothing happens, use the button below.</p>
-  <a class="btn" href="site/index.html">Open the dashboard →</a>
-  <ul>
-    <li><a href="site/markets.html">Live markets</a> — gas prices, elections, culture, crypto, golf</li>
-    <li><a href="site/liquidity.html">Price charts &amp; order-book depth</a></li>
-    <li><a href="site/resolved.html">Resolved outcomes (YES / NO)</a></li>
-    <li><a href="site/flagged.html">Flagged for review</a> · <a href="site/questions.html">Questions</a></li>
-  </ul>
-  <p class="fine">Data is collected from the official Kalshi demo Trade API
-  (<code>external-api.demo.kalshi.co/trade-api/v2</code>) by a scheduled job; the demo venue uses simulated funds,
-  so values are not real-money liquidity. The repository's earlier single-page prototype is archived at
-  <a href="archive/monitor.html">archive/monitor.html</a>. Research notes live under
-  <a href="pages/landing-executive-summary.html">pages/</a>.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <div class="banner" style="border-left-color:#0b7a5a">
+    <b>Verified live dashboard (new):</b>
+    <a href="site/index.html">open the source-linked Kalshi demo dashboard</a> —
+    live market tables for gas prices, elections, culture, crypto and golf, order-book depth, price charts,
+    resolved outcomes, a searchable data browser, and a flagged-for-review register. Built from
+    <code>snapshot/</code>, an official demo-API collection run with 485 logged requests and 0 failures.
+  </div>
+  <h1>Kalshi Demo Dashboard</h1>
+  <p class="lead">Live-market tracker for gas prices, elections, culture, crypto, and golf on Kalshi, with a source-linked data table, a live price chart, and an analysis section. Snapshot date: 2026-11-20 (UTC).</p>
+
+  <div class="banner">Trading and portfolio tracking are <b>not connected</b>. They need a Kalshi API key, which this site does not have. See <a href="portfolio.html">Portfolio &amp; trades</a>.</div>
+
+  <div class="grid">
+    <div class="card kpi"><div class="n">15</div><div class="l">Verified market rows (Kalshi production API)</div></div>
+    <div class="card kpi"><div class="n">4</div><div class="l">Categories with verified rows (gas, golf, crypto, elections)</div></div>
+    <div class="card kpi"><div class="n">1</div><div class="l">Category with no verified open market (culture)</div></div>
+    <div class="card kpi"><div class="n">0</div><div class="l">Trades placed or portfolio positions tracked</div></div>
+  </div>
+
+  <h2>Go to</h2>
+  <div class="grid">
+    <a class="tile" href="executive-summary.html"><b>Executive summary</b><span>What was built, what is verified, what is blocked, and the decisions needed.</span></a>
+    <a class="tile" href="markets.html"><b>Markets by category</b><span>Table of verified rows: gas, golf, crypto, elections, culture. Each row links to its API source.</span></a>
+    <a class="tile" href="dashboard.html"><b>Live dashboard</b><span>Price chart (seconds / minutes / hours) and orderbook liquidity by price.</span></a>
+    <a class="tile" href="portfolio.html"><b>Portfolio &amp; trades</b><span>Demo-account performance and trade log. Blocked until credentials are provided.</span></a>
+    <a class="tile" href="analysis.html"><b>Analysis</b><span>Findings from the snapshot and the trade-categorization framework.</span></a>
+    <a class="tile" href="questions.html"><b>Questions &amp; gaps</b><span>What must be answered before any decision, and how to find each missing item.</span></a>
+    <a class="tile" href="suggestions.html"><b>Suggestions</b><span>Proposed improvements. Nothing is implemented until you choose.</span></a>
+    <a class="tile" href="flagged.html"><b>Flagged for Review</b><span>Unverified items, irregularities, and repo findings, with source links.</span></a>
+    <a class="tile" href="site/index.html"><b>Verified dashboard (new)</b><span>Official-API snapshot: market tables, depth, charts, resolutions, data browser, review flags.</span></a>
+    <a class="tile" href="sources.html"><b>Sources</b><span>Official documentation and API endpoints used, with links.</span></a>
+  </div>
+  <h2>Live demo desk (session 8c8d4499)</h2>
+  <div class="grid">
+    <a class="tile" href="pages/live.html"><b>Live dashboard</b><span>Highest-dollar live events by traded notional (volume_fp × notional_value_dollars), gas/elections/culture/crypto/golf, price chart with candle or sub-minute tick resolution, order-book contracts and dollars at each price, and a per-request evidence log. Public demo API, no keys.</span></a>
+    <a class="tile" href="pages/resolutions.html"><b>Resolution tracker</b><span>Watches tracked events until the API returns result = yes/no, with settlement fields and the source URL of every observation.</span></a>
+    <a class="tile" href="pages/strategy.html"><b>Trades &amp; strategies</b><span>Fill ledger, rule-based strategy tags, realised P&amp;L joined to resolutions, order drafting, and the optional local signing bridge for the demo account.</span></a>
+    <a class="tile" href="docs/api-verification.md"><b>Verification log</b><span>Line-by-line: each claim, the official source, the live demo response that evidenced it, and what remains unverified.</span></a>
+  </div>
+  <h2>Other pages on this site</h2>
+  <div class="grid">
+    <a class="tile" href="monitor/index.html"><b>Single-page market monitor</b><span>Session e41f6700: live demo-market scan, order-book inspection, and review list.</span></a>
+    <a class="tile" href="pages/landing-executive-summary.html"><b>Multi-page site (pages/)</b><span>Session a443fb8f: category pages, dashboard, portfolio, trades, suggestions, questions, flagged review.</span></a>
+  </div>
 </main>
-</body>
-</html>
+<footer>Not investment advice. Data is a point-in-time snapshot from Kalshi's public REST API unless marked live. Every verified value links to its source.</footer>
+<script src="assets/common.js"></script>
+</body></html>

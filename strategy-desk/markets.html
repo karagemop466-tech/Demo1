@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Markets — Kalshi Demo Tracker</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%2338bdf8'/></svg>">
+</head>
+<body data-page="markets">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Live markets</div>
+  <h1>Live Markets — highest-dollar events by topic</h1>
+  <p class="sub">Live polling (every 20 s) of the official Kalshi <b>demo</b> REST API. Sorted by <b>estimated dollar volume</b> (contracts × last price — Kalshi reports volume in contracts; the $ figure is an estimate, always labeled as such).</p>
+
+  <div class="statusbar">
+    <span class="dotlive" id="connDot"></span><span id="connTxt">connecting…</span>
+    <button id="btnRefresh">Refresh now</button>
+    <button id="btnReverify">Re-verify series map</button>
+    <button id="btnAlt">Toggle alt host</button>
+    <label style="margin-left:auto"><input type="checkbox" id="chkLive" checked> <span id="liveLbl">Live (20s poll)</span></label>
+    <button id="btnExport">Export JSON</button>
+  </div>
+  <div id="fetchErr"></div>
+
+  <div class="controls"><span class="small">Topics:</span>
+    <div class="seg" id="topicSeg">
+      <button class="active" data-topic="all">All</button>
+      <button data-topic="gas">Gas prices</button>
+      <button data-topic="elections">Elections</button>
+      <button data-topic="culture">Culture</button>
+      <button data-topic="crypto">Crypto</button>
+      <button data-topic="golf">Golf</button>
+    </div>
+  </div>
+
+  <div class="grid kpi">
+    <div class="card kpi"><div class="label">Live events (tracked topics)</div><div class="value" id="kpiLive">—</div><div class="note">status = open, from API</div></div>
+    <div class="card kpi"><div class="label">Est. $ volume (open)</div><div class="value" id="kpiVol">—</div><div class="note">Σ contracts × last price (estimate)</div></div>
+    <div class="card kpi"><div class="label">Open contracts traded</div><div class="value" id="kpiContracts">—</div><div class="note">Σ volume, as reported by API</div></div>
+    <div class="card kpi"><div class="label">Resolved (YES / NO)</div><div class="value" id="kpiSettled">—</div><div class="note">official <span class="mono">result</span> field</div></div>
+  </div>
+
+  <div class="card"><div class="label small">Runtime-verified series per topic (via <span class="mono">GET /series/{ticker}</span>):</div><div id="discInfo" class="small">verifying…</div><div id="apiNote" class="small" style="margin-top:6px"></div></div>
+
+  <h2>Open events — sorted by estimated dollar volume</h2>
+  <div class="tablewrap" id="tblOpen"></div>
+
+  <h2>Resolution tracking — how each event resolved (YES / NO)</h2>
+  <p class="small">Markets appear here once the demo API reports <span class="mono">status = closed/settled</span>. The <b>Resolved</b> column shows the official <span class="mono">result</span> field (<span class="mono">yes | no</span>; <span class="mono">scalar</span> for scalar-settled markets). If the API has not published a result yet, the cell stays blank — no guessing.</p>
+  <div class="tablewrap" id="tblResolved"></div>
+
+  <div class="updated" id="stamp"></div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div>Sub-site: <b>Strategy Desk</b> (session arena/3c51bb52-demo1) · canonical site: <a href="../index.html">canonical Demo1 root</a> · CI data snapshots: <a href="../data/markets.json">data/markets.json</a> · <a href="../sources.html">canonical sources</a></div>
+
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
+</div></footer>
+
+<script src="assets/app.js"></script>
+<script src="assets/markets.js"></script>
+</body>
+</html>

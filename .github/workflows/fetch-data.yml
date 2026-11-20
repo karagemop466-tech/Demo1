@@ -1,0 +1,52 @@
+name: Refresh Kalshi demo data snapshot
+
+# Pulls the official public Kalshi demo Trade API responses into data/ so the
+# GitHub Pages site can show live values without a backend or API keys.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to fetch and (optionally) commit the snapshot to
+        required: false
+        default: main
+      publish:
+        description: "Set to true to commit and push the refreshed snapshot"
+        required: false
+        default: "true"
+permissions:
+  contents: write
+concurrency:
+  group: demo-data-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || 'main' }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch Kalshi demo market data
+        run: python3 scripts/fetch_demo_data.py --out data
+      - name: Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalshi-demo-snapshot
+          path: data
+      - name: Commit refreshed snapshot
+        if: ${{ github.event_name == 'schedule' || inputs.publish == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+          git commit -m "chore(data): refresh Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase origin ${{ inputs.branch || 'main' }}
+          git push origin HEAD:${{ inputs.branch || 'main' }}
