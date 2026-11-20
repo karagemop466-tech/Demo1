@@ -747,3 +747,31 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
   - **Env note:** this session's `bash` egress cannot reach `kalshi.co`, `docs.kalshi.com` or
     `github.io` (allowlist). Official docs are read through the page-fetch tool; GitHub Actions runners and the
     user's browser are unaffected. Same constraint recorded by earlier sessions.
+
+### F1–F7 delivery record — session arena/f55eb323-demo1
+
+| # | Task | Status | Files | Verification |
+|---|------|--------|-------|--------------|
+| F1 | Requirements matrix R-01…R-20 | done | `desk/requirements.html` (source: `desk/tools/build_pages.py::REQUIREMENTS`) | Every row shows implementation, status and an official source link; 4 rows are honestly `blocked`/`not executed` |
+| F2 | Resolution taxonomy split | done | `desk/tools/track_resolutions.py`, `desk/data/resolutions-log.json` | 2,394 closed records tracked: **2,042 resolved** (yes 198 / no 1,844) + **352 closed-awaiting-result** (no `result` field). Follows https://docs.kalshi.com/getting_started/market_lifecycle |
+| F3 | Automated simulated trading + strategy analysis | done | `desk/tools/paper_trader.py`, `desk/tools/kalshi_fees.py`, `desk/strategy.html` | 8 pre-registered rules → 16 paper trades opened from the committed snapshot; fees from the official schedule; all 21 published fee rows reproduced by assertion; OPEN trades excluded from win rate/P&L |
+| F4 | Live layer + ≥ $0.10 jump alerts | done | `desk/assets/core.js`, `desk/assets/live.js`, `desk/live.html` | Browser fetches official demo API directly (CORS confirmed by earlier sessions in `data/cors.json`); every move ≥ $0.10 in the committed candles listed with Kalshi page + news search, cause labelled unverified |
+| F5 | Consolidated Flagged for Review | done | `desk/flagged.html` | 12 flags (FL-01…FL-12) each with evidence + source + resolvability; carries forward earlier sessions' flags without editing their files |
+| F6 | Request: fix `site/` "Resolved 2469" label | needs review | — (logged only) | Still open against `build_site.py`; verified counts 2,469 collected / 2,117 with result / 352 awaiting |
+| F7 | PR → merge → Pages deploy | in progress | `COORDINATION.md` | Pages workflow now also builds and link-checks `desk/` |
+
+**Automation added:** `.github/workflows/desk.yml` (collect → transcribe → track → simulate → build → test → commit, every 30 min). It appends *no* keys and calls only public endpoints.
+
+**Verification performed (this session):** `python3 desk/tools/build_pages.py` → `link check: OK` (14 pages);
+`node desk/tools/dom_test.mjs` → **105/105**; `node desk/tools/page_runtime_test.mjs` → **40/40** (executes the real page
+scripts in jsdom against shape-accurate official payloads, including the API-blocked path); `node tools/check-links.mjs`
+→ PASS (269 files); `python3 desk/tools/kalshi_fees.py` → 21/21 published fee rows reproduced; subpath link test (served
+under `/Demo1/desk/`) → 0 problems.
+
+**Irregularities found and published (not fixed elsewhere):**
+1. `snapshot/markets.json` files 60 **KXWTI crude-oil** markets under `topic=elections` — excluded here (FL-05).
+2. Several demo books quote a **$0.00 YES ask / $1.00 NO ask** when the opposite side is empty; such rows cannot be bought and are blanked rather than priced (FL-09).
+3. The fee schedule's prose (“round up to a centicent”) contradicts its own 21-row table (whole-cent rounding); the table is what reproduces (FL-06).
+4. `site/` still labels 2,469 closed records “Resolved” (only 2,117 carry a result) — logged as F6/V-3 for its owner.
+5. Sandbox limitation, unchanged: this session's `bash` cannot reach `kalshi.co`/`github.io`; official docs were read
+   through the page-fetch tool and live API behaviour is exercised by the runner + the visitor's browser.

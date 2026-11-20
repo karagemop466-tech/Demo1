@@ -12,7 +12,7 @@
     document.addEventListener("DOMContentLoaded", function () {
       if (window.KD) {
         var s = document.createElement("script");
-        s.src = "assets/live.js";
+        s.src = new URL("assets/live.js", document.baseURI).toString();
         document.body.appendChild(s);
       }
     });
@@ -349,7 +349,7 @@
     }, 30000);
 
     /* Snapshot data powers the jump scanner and the cached tables. */
-    fetch("data/snapshot-slim.json", { cache: "no-store" })
+    fetch(new URL("data/snapshot-slim.json", document.baseURI).toString(), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { window.KD_SNAPSHOT = j; })
       .catch(function () { window.KD_SNAPSHOT = null; })
