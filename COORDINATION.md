@@ -5,7 +5,7 @@ Session: `arena/e41f6700-demo1` (current Arena-managed branch). No other session
 | Task | Status | Owner | File scope |
 |---|---|---|---|
 | Kalshi demo research, requirements, dashboard prototype and verification | done | arena/e41f6700-demo1 | `COORDINATION.md`, `README.md`, `index.html`, `styles.css`, `app.js`, `.github/workflows/pages.yml` |
-| GitHub Pages deployment and merge verification | needs review | arena/e41f6700-demo1 | GitHub repository settings / Actions (external) |
+| GitHub Pages deployment and merge verification | done | arena/e41f6700-demo1 | GitHub repository settings / Actions (external) |
 
 ## Log
 - 2026-11-20 — Initial repo had only a minimal README. Checked for existing `COORDINATION.md`; none existed. Claimed end-to-end scope and committed/pushed claim. First pull against the not-yet-published remote branch failed because it did not exist; rebased against `origin/main`, then pushed current branch successfully.
@@ -27,4 +27,6 @@ Session: `arena/e41f6700-demo1` (current Arena-managed branch). No other session
 - Topic terms are heuristic pending authoritative series allowlist; potential omissions/false matches flagged in the UI.
 - Historical price graph controls are present but no points are shown pending verified history API schema and support.
 - Private account performance and trading need secure authenticated backend and user-defined permissions/limits. Browser-only Pages must not hold private keys.
-- The user requested a PR/merge and confirmed Pages deployment. This is the current Arena branch, not a separate integration branch; the branch instructions prohibit switching/creating branches. Do not merge until a PR exists, build/deploy checks pass and a live deployment is confirmed. Flagged items do not prevent review but safe trade execution is intentionally absent.
+- PR #1: https://github.com/karagemop466-tech/Demo1/pull/1 — merged 2026-11-20 (`gh pr merge 1 --merge`). Main deploy run https://github.com/karagemop466-tech/Demo1/actions/runs/44725819853 completed successfully (build and Pages deploy jobs both passed). GitHub Pages API reports `built`; URL: https://karagemop466-tech.github.io/Demo1/ . A second platform Pages build/deployment run was still in progress at last status check; the project deploy workflow itself succeeded.
+- Local verification passed: `node --check app.js`, `git diff --check`, and static HTML internal anchor/file check. GitHub workflow validation and deploy passed. Browser/API runtime and live market response are not verified here; API may be CORS restricted.
+- Known warning: GitHub Actions emitted a Node.js 20 deprecation annotation for upstream actions; build/deploy succeeded. It is listed as a maintenance irregularity, not a site failure.
