@@ -345,14 +345,17 @@ def main() -> int:
     all_markets = list(open_markets) + list(closed_markets)
 
     # 5. events --------------------------------------------------------------
+    # limit is capped at 200 by the API (Get Events schema: maximum 200); 1000 returned
+    # HTTP 400 bad_request in the 2026-11-20T11:23Z run recorded in data/meta.json.
     events, event_pages = record("events", lambda: client.paginate(
-        "/events", {"limit": 1000, "with_nested_markets": "false"}, "events", args.max_pages)) or ([], 0)
+        "/events", {"limit": 200, "with_nested_markets": "false"}, "events", args.max_pages)) or ([], 0)
     event_by_ticker: dict[str, dict] = {}
     for ev in events:
         tick = str(ev.get("event_ticker", ""))
         if tick:
             event_by_ticker[tick] = {
                 "event_ticker": tick,
+                "series_ticker": ev.get("series_ticker", ""),
                 "title": ev.get("title", ""),
                 "category": ev.get("category", ""),
                 "status": ev.get("status", ""),
@@ -371,6 +374,10 @@ def main() -> int:
         m = dict(m)
         ev = event_by_ticker.get(str(m.get("event_ticker", "")), {})
         m["event_title"] = ev.get("title", "")
+        if not m.get("series_ticker") and ev.get("series_ticker"):
+            # GET /markets returns event_ticker but no series_ticker; the event record supplies
+            # the official series link (EventData.series_ticker), which the candlestick path needs.
+            m["series_ticker"] = ev["series_ticker"]
         hits = classify_market(m, series_meta)
         if not hits:
             if len(unmatched_sample) < 15:

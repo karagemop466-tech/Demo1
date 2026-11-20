@@ -266,12 +266,12 @@
     const agg = {};
     for (const m of Object.values(markets)) {
       const ev = events[m.event_ticker] || {};
-      const topics = classifyTopic({ series_ticker: seriesOf(m), title: ev.title || m.title, category: ev.category }, tax);
+      const topics = classifyTopic({ series_ticker: ev.series_ticker || seriesOf(m), title: ev.title || m.title, category: ev.category }, tax);
       if (o.topic !== 'all' && topics.indexOf(o.topic) === -1) continue;
       const d = marketDollars(m);
       const flow = byTicker[m.ticker] || {};
       const a = agg[m.event_ticker] || (agg[m.event_ticker] = {
-        event_ticker: m.event_ticker, series_ticker: seriesOf(m), title: ev.title || '', category: ev.category || '',
+        event_ticker: m.event_ticker, series_ticker: ev.series_ticker || seriesOf(m), title: ev.title || '', category: ev.category || '',
         topics: topics, markets: [], traded: 0, traded24h: 0, exposure: 0, fills: 0, flowContracts: 0, flowDollars: 0,
         resolvedCount: 0, yesCount: 0, noCount: 0, openCount: 0, anyActive: false, bestPrice: null, bestTicker: ''
       });
@@ -293,6 +293,8 @@
     return { rows: rows, trades: trades, markets: markets, events: events, taxonomy: tax, notes: notes, windowMinutes: o.minutes };
   }
 
+  /** Fallback only: Kalshi tickers are `<SERIES>-<EVENT>-<MARKET>` shaped; the preferred source is
+   *  the official EventData.series_ticker field returned by GET /events. */
   function seriesOf(market) {
     const ev = market.event_ticker || '';
     if (ev.indexOf('KXMVE') === 0) return 'KXMVE' + (ev.split('-')[0] || '').slice(5);
@@ -436,13 +438,19 @@
     return hits.length ? hits : ['unclassified'];
   }
 
-  /** Realised outcome for a fill, once the market has a yes/no result. */
-  function settle(trade, marketResult) {
-    if (!marketResult) return null;
-    const won = (marketResult === 'yes' && trade.side === 'buy') || (marketResult === 'no' && trade.side === 'sell');
-    const payoutPerContract = marketResult === 'yes' ? 1 : 0;
-    const gross = (trade.side === 'buy' ? payoutPerContract - trade.price : trade.price - (1 - payoutPerContract));
-    return { won: won, perContract: gross, total: gross * trade.count, fee: trade.fee || 0, net: gross * trade.count - (trade.fee || 0) };
+  /** Realised outcome for a fill, once the market has a yes/no result.
+   *  A contract on outcome X pays $1 when the market result equals X, else $0
+   *  (notional_value_dollars is the per-contract settlement value; $1.0000 on the
+   *  binary markets observed in the demo API). Buyers pay price, sellers receive it. */
+  function settle(trade, forcedResult) {
+    const result = forcedResult !== undefined ? forcedResult : trade.result;
+    if (!result) return null;
+    const outcome = trade.outcome || 'yes';
+    const payoff = result === outcome ? 1 : 0;
+    const perContract = (trade.side === 'buy' ? payoff - trade.price : trade.price - payoff) * (num(trade.notional) === null ? 1 : num(trade.notional));
+    const total = perContract * (trade.count || 0);
+    const fee = num(trade.fee) || 0;
+    return { won: payoff === (trade.side === 'buy' ? 1 : 0), payoff: payoff, perContract: perContract, total: total, fee: fee, net: total - fee };
   }
 
   function performance(rows) {
@@ -474,7 +482,7 @@
     taxonomy: taxonomy, classifyTopic: classifyTopic, marketDollars: marketDollars, seriesOf: seriesOf,
     recentTrades: recentTrades, scanLive: scanLive, orderbook: orderbook, candles: candles, ticks: ticks,
     watchList: watchList, watch: watch, unwatch: unwatch, trackResolutions: trackResolutions,
-    resolutions: resolutions, journal: journal, addJournalRow: addJournalRow, clearJournal: clearJournal,
+    resolutions: resolutions, journal: journal, saveJournal: saveJournal, addJournalRow: addJournalRow, clearJournal: clearJournal,
     categorize: categorize, settle: settle, performance: performance
   };
 })(window);
