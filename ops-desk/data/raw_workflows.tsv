@@ -1,0 +1,12 @@
+424951167	Refresh demo account summary (read-only)	.github/workflows/account.yml	active	2026-11-20T11:50:30.000Z
+425024609	Kalshi desk — collect, simulate, publish	.github/workflows/desk.yml	active	2026-11-20T13:16:20.000Z
+425037663	Engine live-snapshot refresh (demo API)	.github/workflows/engine-refresh.yml	active	2026-11-20T13:32:08.000Z
+424928516	Refresh Kalshi demo data snapshot	.github/workflows/fetch-data.yml	active	2026-11-20T11:22:24.000Z
+424947041	Kalshi demo data pipeline	.github/workflows/kalshi-data.yml	active	2026-11-20T11:45:27.000Z
+424932484	Strategy-desk link & syntax check	.github/workflows/link-check.yml	active	2026-11-20T11:27:24.000Z
+424926456	Collect Kalshi demo data	.github/workflows/live-data.yml	active	2026-11-20T11:19:33.000Z
+424921429	Deploy static site to GitHub Pages	.github/workflows/pages.yml	active	2026-11-20T11:13:26.000Z
+425361468	Repo consistency & source audit	.github/workflows/repo-audit.yml	active	2026-11-20T19:31:58.000Z
+425019568	sim-desk strategy runner	.github/workflows/sim-strategies.yml	active	2026-11-20T13:10:19.000Z
+424952154	exec-desk site check	.github/workflows/site-check.yml	active	2026-11-20T11:51:43.000Z
+424916988	pages-build-deployment	dynamic/pages/pages-build-deployment	active	2026-11-20T11:08:05.000Z

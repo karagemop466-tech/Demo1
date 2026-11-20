@@ -1597,3 +1597,51 @@ All live values in the site are drawn from the committed snapshot collected from
 5. Sandbox cannot reach Kalshi hosts (see above), so live-data freshness is only as current as the scheduled CI snapshot.
 
 Verification performed: fetch of the official docs page; fetch of the live Pages landing; curl check of the Kalshi API host (failed as stated); arithmetic re-check of the topic table.
+
+---
+
+---
+
+---
+
+## Session arena/54a39029-demo1 — ops-health desk: live pipeline & data-freshness monitor (claim)
+
+- **Session ID:** `54a39029` — branch `arena/54a39029-demo1` (platform-fixed; not renamed). Base `main` at `bb70853` (PR #53 merge).
+- **Claimed at:** 2026-11-20 ~19:31 UTC; claim committed and pushed **before** implementation.
+- **Overlap check done:** board read end-to-end; `git ls-remote --heads origin` (43 branches) and per-branch COORDINATION.md diffs inspected. Active sibling claims at claim time: `2a5bb307` (`alerts/**` + root landing rewrite + `kalshi-data.yml` fix), `2db27b09` (`alert-desk/**` dual chat), `87015421` (`trade-desk/**`), `91fc2cc7` (`trader-guide/index.html` + board), `fe12c4c4` (repo-wide consistency audit + final integration). No session owns pipeline/ops health monitoring, workflow-run auditing, or a `ops-desk/` namespace. This task takes that gap.
+
+| ID | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| O-1 | Ops-health desk (`ops-desk/`): inventory every scheduled/push-triggered data workflow as shipped, audit actual GitHub Actions run history from the official API, measure committed-data freshness, and publish a live, browser-refreshable health page with committed evidence + graceful degradation | done | 54a39029 | `ops-desk/**` (new tree only), this board section | docs.github.com Actions schedule docs + GitHub REST API workflow-runs docs (fetched; links in record below); run evidence from `api.github.com/repos/karagemop466-tech/Demo1/actions/...` (official API, run IDs logged) | Every number in the committed evidence carries its API URL; schema test + jsdom boot test + repo link checker | OPS-01: `sim-strategies.yml` shipped with **no** schedule trigger although its board record claims "push + 30-min schedule" (file history contains zero `cron` lines; sim engine idle since 13:40Z) → change request to owner `9dcbe7d4`, not applied. OPS-02: cron reliability — only 2 `schedule`-event runs in the repo's last 100 runs; `engine-refresh` shows 0 schedule runs and its last dispatch failed; `desk.yml` last push run failed. Scheduled runs may be delayed/dropped under load (GitHub docs) → flagged with links. No other session's files edited; root landing tile request logged, not applied |
+
+Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree `ops-desk/**` + this section only).
+
+### Record — session arena/54a39029-demo1 (O-1 done)
+
+**Deliverables (all new files, no other session's files touched):** `ops-desk/index.html` (health page; renders committed evidence; optional browser live re-check against the same official endpoints with rate-limit display and graceful degradation to committed evidence), `ops-desk/data/health.json` (evidence; every record carries its API URL), `ops-desk/data/cors-probe.json` (observed `access-control-allow-origin: *` headers), `ops-desk/data/raw_*` (raw API captures), `ops-desk/tools/build_health.py` + `tools/cors_probe.py` (stdlib-only generators), `ops-desk/README.md`, `ops-desk/test_ops_desk.mjs`.
+
+**Evidence snapshot (committed health.json, generated 2026-11-20 ~19:35Z):**
+- Repo sample: 200 runs spanning 13:15:02Z→19:32:05Z (374.1 min): push 150, pull_request 29, dynamic 18, **schedule 2**, workflow_dispatch 1. Both schedule runs: `Kalshi demo data pipeline` 19:28:36Z (cancelled) and `Refresh Kalshi demo data snapshot` 19:11:55Z (success) — linked to their run pages in health.json.
+- Expected schedule starts in that window (computed arithmetic, labelled as such): desk.yml 12, engine-refresh.yml 24, fetch-data.yml 24, kalshi-data.yml 24 — **84 computed vs 2 observed**. Official caveat quoted in health.json: "the `schedule` event can be delayed during periods of high loads … some queued jobs may be dropped."
+- Declared vs shipped: sim-strategies.yml declares push + workflow_dispatch only; full `git log --follow` history = 1 commit, 0 `cron` lines; board claim at COORDINATION.md line 1223 (S-4) says "on push + 30-min schedule" → OPS-01 mismatch, change request logged for `9dcbe7d4`.
+- Data freshness at build (commits API, per path): `data/` 23.2 min; `snapshot/` 468.6 min; `sim-desk/data/` 355.3 min; `engine/` 366.2 min; `desk/data/` 389.8 min — quantifies OPS-02's staleness impact.
+
+**Verification performed (all green):**
+1. `node ops-desk/test_ops_desk.mjs` — 13/13: health.json schema (every record carries its API URL; nothing inferred), OPS-01 git-history/board-claim cross-check, jsdom boot from committed evidence (4 KPI cards, workflow rows == evidence count, freshness rows == paths, OPS-01/OPS-02 render with board links), live-check happy path (4 result rows, rate-limit line, no overwrite of committed tables), live-check failure path (degrade banner cites the committed `generated_at_utc`).
+2. `node tools/check-links.mjs` — PASS: 368 files scanned, no broken internal links, no key material, source-link audit clean.
+3. `python3 -m py_compile ops-desk/tools/*.py` and `node --check ops-desk/test_ops_desk.mjs` — PASS; inline page script extracted and `node --check`ed — PASS.
+4. Rebase onto `origin/main` @ `6aa1ed5` (PRs #58/#60 merges): COORDINATION.md conflict resolved by keeping **both** sides verbatim (sibling sections 91fc2cc7/2db27b09/others + this section); nothing discarded.
+
+**Sources (official, pages fetched during this session):**
+- `https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule` — schedule semantics, high-load delay/drop caveat, default-branch-only, 5-min minimum.
+- `https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28` — run-evidence endpoints; "can be used without authentication … if only public resources are requested".
+- `https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28` — commits endpoints incl. `path` filter.
+- Live run/commit evidence: `https://api.github.com/repos/karagemop466-tech/Demo1/...` (URLs recorded per record in health.json).
+
+**Irregularities:** OPS-01 and OPS-02 as above; both published on `ops-desk/index.html` with run-page links and owner change requests. **Limits:** no Kalshi market data collected or altered by this task (out of scope); the page monitors GitHub Actions + git evidence only.
+
+### CI note on PR #63 (recorded 2026-11-20 ~19:58Z)
+
+- The PR check **`alert-desk check` fails**, but it fails for **every branch since it was introduced** — all 10 runs of `alert-desk-check.yml` are failures, including run #4 on `main` itself (push of merge of PR #59), runs #5–#7 on sibling branches `arena/87015421-demo1`, `arena/91fc2cc7-demo1`, `arena/fe12c4c4-demo1`, and runs #9–#10 on the owner's own fix branch. Evidence: <https://github.com/karagemop466-tech/Demo1/actions/workflows/alert-desk-check.yml?query=is%3Afailure>.
+- This PR does not touch `alert-desk/**`; locally, `node --check alert-desk/app.js alert-desk/test_boot.mjs` passes and `node alert-desk/test_boot.mjs` passes 35/35 on the identical committed files — the CI failure is runner-environment/timing, not content.
+- Owner `0ad208bf`'s fix (PR #67 "alert-desk: timing-deterministic boot test + CI failure annotations") has since **merged to `main`** (merge commit `8090cd0`). Per coordination rules this session does not edit `alert-desk/**`; the incident is published here as a flagged irregularity and does not block this PR per the brief (flagged items do not block merge; the Pages site build/deploy checks are green). The re-run of `alert-desk check` on post-fix pushes should confirm the fix.
