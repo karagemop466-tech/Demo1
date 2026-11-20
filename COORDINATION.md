@@ -187,7 +187,7 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - Preserved the e41f6700 single-page monitor by moving its files, unchanged except link paths, to `monitor/` (`index.html`, `app.js`, `styles.css`). Its `pages/` links now point to `../pages/`.
 - Root `index.html` is this session's landing page. The a443fb8f multi-page site under `pages/` is kept and linked from the landing page.
 - `pages.yml` path checks updated to the `monitor/` files; the workflow still validates `app.js` and uploads the repo.
-- Overlap status: PRs #1, #2, #4, #6 merged; PR #3 (`arena/ff423a65-demo1`) still open; `arena/0135085b-demo1` and `arena/0cc392e4-demo1` have no PR. Those two branches still hold unmerged claims for the same dashboard task.
+- Overlap status (updated 2026-11-20): PRs #1, #2, #4, #6, #9 merged. PR #3 (`arena/ff423a65-demo1`) was closed as superseded by PR #9, which independently completed the live monitor/chart/category/decision pages; PR #3 was not merged to avoid conflicting replacement of shared files. `arena/0135085b-demo1` and `arena/0cc392e4-demo1` remain without PRs as last observed.
 
 ---
 
@@ -244,5 +244,18 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - Live demo API checks (all succeeded, real responses, nothing fabricated): GET /markets?status=open&limit=1000 returns open demo markets (status active, result pending ""); GET /markets/{ticker}/orderbook valid (sampled book empty); GET /events/{ticker} returns series_ticker; GET /series/{s}/markets/{t}/candlesticks valid (no history yet).
 - Files added at root: `app.js` (shared vanilla-JS data module), `styles.css`, `chart.html` (price graph + order-book liquidity), `review.html` (flagged register), `markets/{gas,elections,culture,crypto,golf}.html` (category topic pages).
 - Conflicts resolved by keeping main's integrated root pages (`index.html`, `analysis.html`, `markets.html`, `portfolio.html`, `questions.html`, `suggestions.html`, `README.md`) and `monitor/app.js` + `monitor/styles.css` from session `arena/e41f6700-demo1`; no work from parallel sessions discarded.
-- Pending: PR #9 (`arena/7bc11020-demo1` → main) merge; confirm GitHub Pages deploy; record PR link + merge result below.
-- PR #9: https://github.com/karagemop466-tech/Demo1/pull/9 — merge result: PENDING
+- PR #9 (`arena/7bc11020-demo1` → main) was merged on 2026-11-20. GitHub Pages build/deploy run [44727971363](https://github.com/karagemop466-tech/Demo1/actions/runs/44727971363) succeeded; Pages API reports `built` at https://karagemop466-tech.github.io/Demo1/.
+- PR #9: https://github.com/karagemop466-tech/Demo1/pull/9 — merged to main. A subsequent workflow refresh run may still be in progress; it is separate from the successful Pages deployment.
+
+## Session arena/ff423a65-demo1 — overlap outcome
+
+| Task | Status | Owner | Scope attempted | Official sources | Verification | Irregularities / disposition |
+|---|---|---|---|---|---|---|
+| Add an evidence-first public REST market monitor with session price chart, selected-market resolution polling, selected orderbook depth, linked questions/suggestions/flags | done — superseded by integrated PR #9 | `arena/ff423a65-demo1` | `pages/live-market-monitor.html`, `assets/js/live-market-monitor.js`, `assets/css/live-market-monitor.css`, site navigation, and source/review docs | [API Environments](https://docs.kalshi.com/getting_started/api_environments), [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets), [Get Market](https://docs.kalshi.com/api-reference/market/get-market), [Orderbook Responses](https://docs.kalshi.com/getting_started/orderbook_responses), [API Keys](https://docs.kalshi.com/getting_started/api_keys), [Authenticated Requests](https://docs.kalshi.com/getting_started/quick_start_authenticated_requests), [Market Data Quick Start](https://docs.kalshi.com/getting_started/quick_start_market_data) | Fetched official demo `/markets?status=open&limit=10` via approved page retrieval; no API values hardcoded. `node --check` on both JS files, HTML parse, local-link checks, per-data-row official-link check, and `git diff --check` passed. Manual Pages workflow run [44728188187](https://github.com/karagemop466-tech/Demo1/actions/runs/44728188187) passed build/link checks. | “Highest dollar amount” remains undefined; contract counts are not dollar notional. Topic matching and bounded sampling are not exhaustive. Browser CORS/account access not confirmed. Draft PR was not merged because newer integrated work superseded it. |
+
+### Handoff and publication
+
+- This branch started from an early repository snapshot. While it was being developed, other sessions completed and merged the primary multi-page site; later integration PR #9 added data ingestion, category tables, dashboard/chart, portfolio/trade requirements, and review pages.
+- PR #3: https://github.com/karagemop466-tech/Demo1/pull/3 — **closed without merge** on 2026-11-20 because its shared-file changes conflicted with and were redundant to the newer integrated site. Closure note: https://github.com/karagemop466-tech/Demo1/pull/3#issuecomment-7038455230.
+- PR #9: https://github.com/karagemop466-tech/Demo1/pull/9 — merged to `main` on 2026-11-20. GitHub Pages build/deploy run [44727971363](https://github.com/karagemop466-tech/Demo1/actions/runs/44727971363) succeeded. Pages API status is `built`; live URL: https://karagemop466-tech.github.io/Demo1/.
+- No credentials were supplied, embedded, or used. No trades were sent. Unresolved limitations remain visible in the site's Flagged for Review page.
