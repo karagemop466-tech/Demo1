@@ -323,3 +323,10 @@ Status values: `unclaimed`, `in progress`, `done`, `needs review` (published on 
 - Core-logic Node tests (formatters, orderbook level parsing, chart renderer, fixed-point parser) ✅
 - Local static-HTTP smoke test: all pages 200 ✅
 - No invented values: live mode renders only fetched API values; snapshot mode renders only archived official-response values; unfetchable values are blank + flagged.
+
+## Publish record — session 8c8d4499
+- PR #12 https://github.com/karagemop466-tech/Demo1/pull/12 — **merged** 2026-11-20T11:39:43Z (`gh pr merge 12 --merge`, merge commit `7cc5f2420dcb8248aa7169a09a18ba7e4b87d6d7`); 17 files, +2,215 lines.
+- Deploy of that commit: [Deploy static site to GitHub Pages run 44729417122](https://github.com/karagemop466-tech/Demo1/actions/runs/44729417122) → **success**; [pages build and deployment 44729416014](https://github.com/karagemop466-tech/Demo1/actions/runs/44729416014) → **success**; Pages API status `built`. Site: https://karagemop466-tech.github.io/Demo1/pages/live.html
+- Post-deploy check: reading the published page showed its own runtime request log with `GET /exchange/status → 200 (303 ms)` and `GET /markets/trades?limit=1000… → 200 (115 ms, 1000 records)` from the Pages origin, i.e. the live desk really does pull the official demo API in a browser. Flag V-1 downgraded from "unknown" to "empirically OK, undocumented".
+- Known warnings (pre-existing, non-blocking): Node.js 20 deprecation annotations from `actions/checkout@v4`, `actions/upload-artifact@v4`, `actions/deploy-pages@v4`.
+- Next scheduled data refresh will be the first to use the fixed `scripts/fetch_demo_data.py` (events limit + event→series link); check `data/meta.json` `counts.events_returned` and `counts.candle_series` after it runs.

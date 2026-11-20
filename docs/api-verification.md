@@ -60,7 +60,7 @@ Capture window for the live calls: **2026-11-20 11:07 – 11:25 UTC**, host `htt
 
 | # | Item | Why it is not verified here |
 |---|---|---|
-| V-1 | Whether the demo API sends `Access-Control-Allow-Origin` for a GitHub Pages origin | The sandbox cannot open a browser socket to `kalshi.co`; no official page documents the CORS policy. The dashboard detects it at view time, shows the request log, and offers the localhost bridge as the fallback. |
+| V-1 | ~~Whether the demo API sends `Access-Control-Allow-Origin` for a GitHub Pages origin~~ **RESOLVED 2026-11-20 11:40 UTC** | Observed on the published page `https://karagemop466-tech.github.io/Demo1/pages/live.html`: its own request log recorded `GET /trade-api/v2/exchange/status → 200 (303 ms, 1 record)` and `GET /trade-api/v2/markets/trades?limit=1000&after_ts=…&before_ts=… → 200 (115 ms, 1000 records)` from that origin. No official page documents the policy, so this is empirical (one origin, one point in time) rather than contractual — the page still self-detects and offers the localhost bridge as the fallback. |
 | V-2 | The two order-book documentation slugs (R-7) and whether the older link 404s from a browser | Docs page content for `get-market-order-book` was not re-fetched in this session |
 | V-3 | `GET /markets/trades` full parameter list (`after_ts`, `before_ts`, `market_ticker`, `limit` max) | The reference page was linked from the official docs index but not read end-to-end here; the parameters used (`limit`, `after_ts`, `before_ts`, `market_ticker`) returned correct, filtered data in the live calls above |
 | V-4 | WebSocket streaming into this page | Documented as signed (E-3); no auth handshake was performed, so nothing is claimed about latency or channel payloads beyond the quoted docs |
@@ -82,3 +82,12 @@ node -e "const c=require('crypto');const kp=c.generateKeyPairSync('ed25519',{pri
 ```
 
 Documentation root used throughout: [docs.kalshi.com](https://docs.kalshi.com/) · machine-readable index: [llms.txt](https://docs.kalshi.com/llms.txt)
+
+## 6. Post-deploy observation (2026-11-20 11:40 UTC)
+
+After PR #12 was merged and Pages redeployed, the published `pages/live.html` was re-read and its
+runtime request log — written by the page itself in the viewer's browser — showed two HTTP 200
+responses from the demo host (see V-1). The scan was still mid-flight at capture time (trades page 1
+of up to 10 returned, 1,000 rows), which is why the table still displayed its "run a scan" placeholder:
+**the page shows blanks while data is missing rather than filling in anything.** No credential was
+used for those calls, because public market data needs none.
