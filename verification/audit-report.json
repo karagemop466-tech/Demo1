@@ -71,10 +71,10 @@
     }
   },
   "counts": {
-    "files_scanned": 431,
-    "findings": 5,
+    "files_scanned": 454,
+    "findings": 6,
     "errors": 0,
-    "warnings": 3,
+    "warnings": 4,
     "mismatches": 0,
     "explained": 2,
     "doc_links_used": 351,
@@ -82,8 +82,8 @@
     "doc_links_not_in_index": 0,
     "doc_links_documented_broken": 8,
     "doc_links_unverified": 0,
-    "tables_checked": 24,
-    "cross_desk_quantities": 64,
+    "tables_checked": 25,
+    "cross_desk_quantities": 69,
     "cross_desk_differences": 3
   },
   "findings": [
@@ -117,6 +117,14 @@
       "field": "market rows without official source link",
       "claimed": 1,
       "canonical": 1,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "tape-desk/verified.html",
+      "field": "market rows without official source link",
+      "claimed": 43,
+      "canonical": 89,
       "status": "WARNING"
     },
     {
@@ -305,6 +313,26 @@
       "rows_without_official_source": 0,
       "coverage_pct": 100.0,
       "unsourced_examples": []
+    },
+    "tape-desk/verified.html": {
+      "market_rows": 89,
+      "rows_with_official_source": 46,
+      "rows_without_official_source": 43,
+      "coverage_pct": 51.7,
+      "unsourced_examples": [
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        },
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        },
+        {
+          "line": 40,
+          "first_cell": "gas_prices"
+        }
+      ]
     },
     "verified-desk/flagged.html": {
       "market_rows": 2,
@@ -1286,7 +1314,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market",
-      "uses": 11,
+      "uses": 15,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1298,14 +1326,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
-      "uses": 78,
+      "uses": 87,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "alert-desk/README.md",
         "alert-desk/index.html",
-        "alerts.html"
+        "alerts-live.html"
       ]
     },
     {
@@ -1331,7 +1359,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
-      "uses": 55,
+      "uses": 59,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
@@ -1365,14 +1393,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 82,
+      "uses": 92,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "README.md",
-        "alerts/README.md",
-        "alerts/data/feed.json"
+        "alerts-live.html",
+        "alerts/README.md"
       ]
     },
     {
@@ -1389,14 +1417,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks",
-      "uses": 11,
+      "uses": 14,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "live-desk/app.js",
-        "live-desk/pages/categories/crypto.html",
-        "live-desk/pages/categories/culture.html"
+        "alerts-live.html",
+        "assets/alerts.js",
+        "docs/alerts-model.html"
       ]
     },
     {
@@ -1422,7 +1450,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-series-list",
-      "uses": 29,
+      "uses": 30,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1455,7 +1483,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-trades",
-      "uses": 42,
+      "uses": 49,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1719,26 +1747,26 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
-      "uses": 31,
+      "uses": 33,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
+        "EXECUTIVE_SUMMARY.md",
         "audit/flagged.html",
-        "audit/index.html",
-        "decision/js/api-notes.js"
+        "audit/index.html"
       ]
     },
     {
       "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
-      "uses": 8,
+      "uses": 9,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
+        "COORDINATION.md",
         "SOURCES.md",
         "docs/index.html",
-        "docs/pages/portfolio.html",
-        "docs/pages/sources.html"
+        "docs/pages/portfolio.html"
       ]
     },
     {
@@ -2333,14 +2361,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_environments",
-      "uses": 68,
+      "uses": 75,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
+        "alerts-live.html",
         "alerts/README.md",
-        "alerts/audit.html",
-        "alerts/data/feed.json"
+        "alerts/audit.html"
       ]
     },
     {
@@ -2390,14 +2418,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 96,
+      "uses": 108,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "alert-desk/README.md",
         "alert-desk/index.html",
-        "alerts.html"
+        "alerts-live.html"
       ]
     },
     {
@@ -2414,12 +2442,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/exchange_sharding",
-      "uses": 2,
+      "uses": 7,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
-        "verified-desk/portfolio.html",
-        "verified-desk/provenance.html"
+        "COORDINATION.md",
+        "tape-desk/data/live-check.json",
+        "tape-desk/data/watchlist.json",
+        "tape-desk/tools/build_watchlist.py"
       ]
     },
     {
@@ -2433,14 +2463,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/fee_rounding",
-      "uses": 5,
+      "uses": 10,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
+        "assets/alerts.js",
+        "docs/alerts-model.html",
         "flagged.html",
-        "pages/paper-trading.html",
-        "questions.html",
-        "sources.html"
+        "pages/paper-trading.html"
       ]
     },
     {
@@ -2520,7 +2550,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
-      "uses": 49,
+      "uses": 56,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2541,14 +2571,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_settlement",
-      "uses": 46,
+      "uses": 55,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "alert-desk/README.md",
         "alert-desk/index.html",
-        "alerts/README.md"
+        "alerts-live.html"
       ]
     },
     {
@@ -2627,14 +2657,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
-      "uses": 60,
+      "uses": 67,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
+        "alerts-live.html",
         "alerts/README.md",
-        "alerts/data/feed.json",
-        "alerts/index.html"
+        "alerts/data/feed.json"
       ]
     },
     {
@@ -2707,14 +2737,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_create_order",
-      "uses": 26,
+      "uses": 25,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "app.js",
-        "audit/index.html",
-        "docs/sources.md"
+        "docs/sources.md",
+        "live-desk/pages/flagged.html"
       ]
     },
     {
@@ -2731,7 +2761,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
-      "uses": 29,
+      "uses": 33,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
@@ -2755,14 +2785,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
-      "uses": 27,
+      "uses": 36,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
+        "alerts-live.html",
         "app.js",
-        "decision/js/requirements.js",
-        "desk/sources.html"
+        "assets/alerts.js"
       ]
     },
     {
@@ -2779,14 +2809,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/rate_limits",
-      "uses": 27,
+      "uses": 35,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
-        "decision/js/api-notes.js",
-        "decision/js/kalshi.js",
-        "engine/README.md",
-        "engine/app.js"
+        "COORDINATION.md",
+        "alerts-live.html",
+        "assets/alerts.js",
+        "decision/js/api-notes.js"
       ]
     },
     {
@@ -3768,6 +3798,61 @@
       "status": "agree"
     },
     {
+      "quantity": "awaiting result",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting result",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
       "quantity": "closed, awaiting result",
       "topic": "crypto",
       "values": {
@@ -4336,57 +4421,57 @@
       "status": "agree"
     },
     {
-      "quantity": "resolved markets found",
+      "quantity": "settled w/ yes/no result",
       "topic": "crypto",
       "values": {
-        "site/index.html": 900
+        "site/index.html": 668
       },
       "distinct_values": [
-        900
+        668
       ],
       "status": "agree"
     },
     {
-      "quantity": "resolved markets found",
+      "quantity": "settled w/ yes/no result",
       "topic": "culture",
       "values": {
-        "site/index.html": 428
+        "site/index.html": 368
       },
       "distinct_values": [
-        428
+        368
       ],
       "status": "agree"
     },
     {
-      "quantity": "resolved markets found",
+      "quantity": "settled w/ yes/no result",
       "topic": "elections",
       "values": {
-        "site/index.html": 132
+        "site/index.html": 131
       },
       "distinct_values": [
-        132
+        131
       ],
       "status": "agree"
     },
     {
-      "quantity": "resolved markets found",
+      "quantity": "settled w/ yes/no result",
       "topic": "gas_prices",
       "values": {
-        "site/index.html": 367
+        "site/index.html": 350
       },
       "distinct_values": [
-        367
+        350
       ],
       "status": "agree"
     },
     {
-      "quantity": "resolved markets found",
+      "quantity": "settled w/ yes/no result",
       "topic": "golf",
       "values": {
-        "site/index.html": 642
+        "site/index.html": 600
       },
       "distinct_values": [
-        642
+        600
       ],
       "status": "agree"
     },
