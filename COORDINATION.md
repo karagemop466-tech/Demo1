@@ -65,7 +65,6 @@ Claim log entry: 2026-11-20 — arena/4df8be5b-demo1 claimed tasks 20-21 (new fi
 | TEST-01 | `8c8d4499`, `tests/dashboard.test.mjs` and the tested `pages/live.html` integration | Previous fixture mismatch not reproduced after rebase; current run passes 46/46 assertions. No code fix requested in this integration. Keep the warning that mocked test success is not live API evidence.
 
 
-
 ## Tasks — session arena/4df8be5b-demo1 (verified live data + source-linked site)
 
 | # | Task | Status | Owner | File scope | Verification |
@@ -1270,3 +1269,122 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 
 ### Claim log
 - 2026-11-20 — session `87015421` claimed L-1..L-5; this claim is committed and pushed before implementation.
+
+
+# Session arena/9bfdf3bc-demo1 — final integration, verification & publish
+
+## Session claim
+- **Session ID:** `9bfdf3bc-demo1` — branch `arena/9bfdf3bc-demo1` (platform-fixed; not renamed).
+- **Base:** `main` at `cb6f8b77bf1a5f282797db0368170ff75435f8db` (branch is currently identical to `main`).
+- **Claimed at:** 2026-11-20 (UTC).
+- **Role:** final integration session per brief — verify the combined tree, confirm the site builds with no broken links, create PR → `main`, merge without waiting for approval, confirm GitHub Pages, record PR link + merge result here.
+- **Scope (only these files edited):** `COORDINATION.md` (this section, append-only). Deliberately NOT touched: root `index.html`, `assets/`, `pages/`, `site/`, `site_src/`, `snapshot/`, `data/`, `build_site.py`, `tools/collect_kalshi.py`, `exec-desk/`, `verified-desk/`, `decision/`, `strategy-desk/`, `live-desk/`, `monitor/`, `docs/`, `markets/`, `sim-desk/`, `engine/`, `desk/` — all owned by other completed sessions.
+
+## Verification performed (all green)
+
+| Gate | Command | Result |
+|---|---|---|
+| Site build | `python3 build_site.py` | 17 pages; markets=1399/1399; resolved=2469/2469; charts=10; **link check: OK** |
+| Line-by-line verification | `python3 tools/verify_site.py` | PASS; rows checked markets=250, resolved=250, topics=600, liquidity=48, index-figures=8; errors=0; warnings=2 (36 liquidity rows use a section-level order-book source; official external settlement sources listed) |
+| Link audit | `node tools/check-links.mjs` | PASS; 346 files scanned; no broken links, no secret material, source-citation audit clean |
+| Exec-desk DOM tests | `npm test` | 10/10 PASS |
+| Root dashboard tests | `node tests/dashboard.test.mjs` | 46/46 PASS |
+| Sharp-move jump tests (≥$0.10) | `node tests/dashboard-jumps.test.mjs` | 9/9 PASS |
+| Python unit tests | `python3 -m unittest discover -s tests -p 'test_*.py'` | 7/7 PASS |
+| Syntax | `node --check` on all `.js`; `python3 -m py_compile` on all `.py` | PASS |
+
+## Sources used (official only)
+
+- Demo REST/WebSocket base URLs and demo-environment limits: https://docs.kalshi.com/getting_started/api_environments and https://docs.kalshi.com/getting_started/demo_env (demo = mock funds; prices/behavior may not reflect real markets)
+- Market/series/event endpoints, filters, pagination: https://docs.kalshi.com/api-reference/market/get-markets, /get-series-list, https://docs.kalshi.com/api-reference/events/get-events
+- Order book (bids only; implied asks), candlestick intervals 1/60/1440: https://docs.kalshi.com/getting_started/orderbook_responses, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- YES/NO settlement ($1 per winning contract): https://docs.kalshi.com/getting_started/market_settlement
+- Signing, V2 orders, fills, WebSocket handshake: https://docs.kalshi.com/getting_started/api_keys, https://docs.kalshi.com/api-reference/orders/create-order-v2, https://docs.kalshi.com/api-reference/portfolio/get-fills, https://docs.kalshi.com/getting_started/quick_start_websockets
+- GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+
+All live values in the site are drawn from the committed snapshot collected from `https://external-api.demo.kalshi.co/trade-api/v2` on GitHub-hosted runners. The sandbox egress allowlist excludes `*.kalshi.co`, so no live Kalshi fetch was performed in this session; every rendered value carries its source request URL and blanks are never inferred.
+
+## Irregularities flagged (non-blocking; published on the site's Flagged for Review pages)
+
+1. **No Kalshi credentials in the repo.** Portfolio balance/positions/fills and order placement require authenticated signed requests; those cells are blank. A static GitHub Pages site must never hold a private key (SEC-01, AUTH-01, KEY-01; see exec-desk flagged register).
+2. **Demo venue only.** Values are mock-funds demo-book values, not production liquidity (official demo_env warning).
+3. **"Highest dollar amount" is not an official field.** Ranking uses computed 24 h traded notional; disclosed per row, never presented as an official dollar-volume figure.
+4. **Topic matching is heuristic** (published keyword rules over series tickers/tags), not an official Kalshi taxonomy.
+5. **Time-sensitive test fixtures** — `tests/dashboard.test.mjs` `pages/live.html` section reports "No trades matched" when run later than its fixed fixture timestamps; confirmed identical on the pristine tree; owned by an earlier session, left untouched (TEST-01).
+6. **Site fragmentation** — ~7 dashboard variants coexist; the root hub links to all. Consolidation recommended but not forced (each is a prior session's deliverable).
+
+## Tasks
+
+| # | Task | Status | Outcome |
+|---|------|--------|---------|
+| I1 | Final integration verification of the combined tree | done | All gates above PASS; no broken links; no fabricated values |
+| I2 | PR → `main`, merge, confirm GitHub Pages | in progress | PR created below; merge and Pages confirmation to follow |
+| I3 | Record PR link + merge result in COORDINATION.md | pending | Filled in after the PR is created and merged |
+
+## Pull request & merge record
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/52 — `arena/9bfdf3bc-demo1` → `main` (created) |
+| Merge result | MERGED 2026-11-20 via `gh pr merge 52 --merge` (no approval wait, per brief); merge commit `de4c771d4e8eb5a24e5197651eba00b062dc8c9b` |
+| Pages state after merge | BUILT — live at https://karagemop466-tech.github.io/Demo1/ (source: branch `main`, path `/`; public; HTTPS enforced) |
+
+---
+
+## Session arena/d973ced5-demo1 — final integration + two-chat price-swing alerts
+
+## Session claim
+
+- **Session ID:** `arena/d973ced5-demo1` — branch `arena/d973ced5-demo1` (platform-fixed; starts at `origin/main` commit `cb6f8b77` == current `main`).
+- **Claimed at:** 2026-11-20 (UTC), before any implementation commit.
+- **Role:** final integration session. Verifies the combined site line by line, builds the one user requirement with no implementation anywhere in the repo — a **two-chat scrolling alert system** for contract-price swings ≥ $0.10 in either direction (one chat with all swings, one selective high-ROI filter) — then runs the build/link gates, PR → main → merge, confirms GitHub Pages deploys, and records the PR link and merge result here.
+- **File scope (new/additive only):** `alerts.html` (new), `assets/js/alerts.js` (new), root `index.html` (one additive nav link), `COORDINATION.md` (this section). No other session's files edited.
+
+## Task board
+
+| # | Task | Status | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|---------|--------------|----------------|
+| I-1 | Repo review + line-by-line verification (build_site link gate, repo-wide link audit, JS/Python syntax, snapshot reconciliation) | done | repo-wide (read-only checks) | docs.kalshi.com candlesticks/orderbook/api_environments; snapshot/*.json | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS (346 files); `python3 tools/verify_site.py` → PASS, 0 errors; all JS + Python syntax OK | None new; pre-existing demo-venue caveats carried forward |
+| I-2 | Two-chat scrolling alert system ≥ $0.10 (all swings + selective high-ROI filter), official candlestick data, per-row source URLs, venue + news links | done | `alerts.html`, `assets/js/alerts.js`, root `index.html` (nav link) | docs.kalshi.com/api-reference/market/get-market-candlesticks; snapshot/charts.json (official demo API capture) | Jump math re-derived from `snapshot/charts.json`; page renders swings only where official closes exist; golf correctly empty; no cause asserted for any jump | Golf has no ≥$0.10 swing in the committed snapshot (blank, not fabricated); high-ROI filter is a disclosed magnitude heuristic, not a predictive model |
+| I-3 | Build + link/secret/source-citation gate on the changed tree | done | repo-wide | — | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS; `node --check` + `py_compile` OK | — |
+| I-4 | PR → main, merge, confirm GitHub Pages deploy, record PR link + merge result here | in progress | GitHub PR + this board | docs.github.com Pages | See publish record below | — |
+
+## Publish record — session arena/d973ced5-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | pending |
+| Merge result | pending |
+| GitHub Pages deploy | pending |
+| Live verification | pending |
+
+### Claim log
+
+| Date/time (UTC) | Session ID | Action |
+|---|---|---|
+| 2026-11-20 | arena/d973ced5-demo1 | Claimed final-integration scope (I-1..I-4); claim pushed before implementation. |
+
+## Session arena/ff380b7c-demo1 — live-site re-verification + board record (claim)
+
+- **Session ID:** `ff380b7c` — branch `arena/ff380b7c-demo1` (platform-fixed; not renamed). Base `main` at `fb81fc0` (PR #54).
+- **Claimed at:** 2026-11-20 (UTC), before any other edit.
+- **Overlap check:** board reviewed. Every brief item (executive summary, category tables, dashboards, jump alerts, sim/strategy engines, Flagged for Review, final integration + PR/merge/Pages) is already claimed or done by earlier sessions. This session does not build a new dashboard.
+- **Task R-1 | in progress | ff380b7c | scope: `COORDINATION.md` (this section only)** — re-fetch the live GitHub Pages landing and the Flagged for Review page; re-read the official Kalshi demo endpoint pages the brief names (`docs.kalshi.com/getting_started/api_environments`, `…/demo_env`); compare each against the board's claims; log results here.
+- **Limits:** the sandbox shell cannot reach `*.kalshi.co` (egress allowlist is github/npm/pypi only). Live Kalshi market values are therefore not re-collected here; the only Kalshi evidence is the official docs pages, read via the page-fetch tool. No values are filled in from memory.
+
+### Record — session arena/ff380b7c-demo1 (R-1 done)
+
+| # | Task | Status | Outcome |
+|---|------|--------|---------|
+| R-1 | Live-site + official-endpoint re-verification | done | See checks below. No site files edited; no values changed. |
+
+**Checks performed (2026-11-20 UTC):**
+1. Official REST and WebSocket demo URLs re-read from https://docs.kalshi.com/getting_started/api_environments and https://docs.kalshi.com/getting_started/demo_env. Both match the brief exactly: REST `https://external-api.demo.kalshi.co/trade-api/v2` (also `https://demo-api.kalshi.co/trade-api/v2`); WebSocket `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`). The demo page states mock funds and that demo prices "may not be reflective of those in real markets."
+2. Live landing https://karagemop466-tech.github.io/Demo1/ fetched: renders, topic counts 1,399 open / 2,117 resolved / 352 awaiting, snapshot 2026-11-20 11:43:59 UTC, 494 requests / 0 failed. Counts match the board's Task 20/21 records.
+3. Live Flagged for Review https://karagemop466-tech.github.io/Demo1/integration/flagged-review.html fetched: renders SEC-01, AUTH-01, KEY-01, PAPER-01, FILL-01, JUMP-01, SCOPE-01, RANK-01, SIM-01, LEGACY-01, TEST-01 with source links.
+
+**Irregularities from this check (no new file change; all already logged):**
+- Official environments page lists dedicated hosts `wss://user-ws.demo.kalshi.co/trade-api/ws/v2` (fill and user_orders) and `wss://margin-user-ws.demo.kalshi.co/trade-api/ws/v2/margin`, plus external-feeds hosts. It also says the `warp-ws` hosts are deprecated. Repo has no reference to `user-ws` or `external-feeds`; 3 files still mention `warp-ws` only in the audit text. Already logged by session ca4f2da1 as **A-03** on `audit/index.html`. Request for the owner of any future account/fill code: use `user-ws` for fill and order updates before building on the old host.
+- The official demo page links `https://demo.kalshi.co/` as the demo web app. Repo pages do not need to change for this.
+
+**Limits:** no live Kalshi market values were re-collected (the sandbox cannot reach `*.kalshi.co`); the API-URL facts above come from the official docs pages only.

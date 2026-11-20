@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price swing alerts ≥ $0.10 — Kalshi Demo</title>
+<meta name="description" content="Live-style alert feed of Kalshi demo contract-price swings of $0.10 or more in either direction, detected from official candlestick data. Two scrolling chats: all swings and a selective high-ROI filter.">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .chat-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+  @media (max-width:720px){.chat-wrap{grid-template-columns:1fr}}
+  .chat{border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;height:560px;background:var(--card)}
+  .chat-head{padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between;align-items:center;background:#f4f7fb}
+  .chat-head .n{color:var(--muted);font-weight:600;font-size:12.5px}
+  .chat-messages{overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .msg{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:flex;flex-direction:column;gap:5px;animation:fadeIn .25s ease;background:#fff}
+  .msg.up{--move:var(--ok)}.msg.down{--move:var(--bad)}
+  .msg-head{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted)}
+  .msg-time{font-weight:700;color:var(--ink)}
+  .msg-body{font-size:12.5px}
+  .msg-topic{color:var(--brand);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+  .msg-market{font-weight:600;color:var(--ink)}
+  .msg-ticker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#435061}
+  .msg-move{margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .msg-from,.msg-to{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#435061}
+  .msg-arrow{font-weight:800;font-size:16px;color:var(--move)}
+  .msg-delta{font-weight:700;color:var(--move);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .msg-links{margin-top:7px;display:flex;gap:8px;flex-wrap:wrap}
+  .msg-links a{font-size:11.5px;color:var(--brand);text-decoration:none;border-bottom:1px dotted var(--brand)}
+  .msg-links a:hover{text-decoration:underline}
+  .empty{grid-column:1/-1;color:var(--muted);padding:16px;text-align:center}
+  .status-banner{padding:8px 12px;border-radius:8px;background:#eef2f7;font-size:13px;margin:0 0 10px 0}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}
+  .mode-banner{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+  .key{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#eef2f7;padding:1px 6px;border-radius:4px}
+  .method{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .method b{color:var(--ink)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="alerts.html" class="active">Price swing alerts</a>
+      <a href="exec-desk/dashboard.html">Live desk</a>
+      <a href="site/gas-prices.html">Gas prices</a>
+      <a href="site/elections.html">Elections</a>
+      <a href="site/culture.html">Culture</a>
+      <a href="site/crypto.html">Crypto</a>
+      <a href="site/golf.html">Golf</a>
+      <a href="site/flagged.html">Flagged for review</a>
+      <a href="integration/executive-summary.html">Executive summary</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Price swing alerts · official Kalshi demo candlesticks</p>
+    <h1>Price swing alerts (≥ $0.10)</h1>
+    <p class="lede">A simplified scrolling alert feed of contract-price swings of <b>$0.10 or more in either direction</b>, detected between consecutive official candle closes on the Kalshi <b>demo</b> exchange. Two scrolling chats: <b>All swings</b> shows every detected move; <b>High-ROI filter</b> shows a selective subset using a disclosed magnitude heuristic (not a predictive model, no real money). Markets with no qualifying swing show nothing — no values are invented.</p>
+  </div>
+
+  <div class="callout warn">
+    <b>Demo only:</b> Kalshi's demo exchange uses mock funds, and its prices may not reflect real markets. The primary data is the committed official demo-API capture (<code class="key">snapshot/charts.json</code>, collected 2026-11-20T11:43:59Z from <code class="key">https://external-api.demo.kalshi.co/trade-api/v2</code>). A news-search link is a starting point for investigation, <b>not</b> a verified cause of any swing.
+  </div>
+
+  <div class="status-banner" id="status-banner">Loading official candle data…</div>
+  <div class="mode-banner" id="mode-banner"></div>
+
+  <div class="controls">
+    <div class="seg" id="th-seg">
+      <button data-th="0.10" class="on">$0.10</button>
+      <button data-th="0.05">$0.05</button>
+      <button data-th="0.20">$0.20</button>
+    </div>
+    <div class="seg" id="topic-seg">
+      <button data-topic="">All topics</button>
+      <button data-topic="gas_prices">Gas prices</button>
+      <button data-topic="elections">Elections</button>
+      <button data-topic="culture">Culture</button>
+      <button data-topic="crypto">Crypto</button>
+      <button data-topic="golf">Golf</button>
+    </div>
+    <button class="btn" id="btn-refresh">Refresh / try live</button>
+  </div>
+
+  <div class="chat-wrap">
+    <div class="chat" id="chat-all">
+      <div class="chat-head"><b>All swings</b><span class="n" id="count-all">0</span></div>
+      <div class="chat-messages" id="msgs-all"><div class="empty">—</div></div>
+    </div>
+    <div class="chat" id="chat-roi">
+      <div class="chat-head"><b>High-ROI filter</b><span class="n" id="count-roi">0</span></div>
+      <div class="chat-messages" id="msgs-roi"><div class="empty">—</div></div>
+    </div>
+  </div>
+
+  <div class="method">
+    <b>Method:</b> For each tracked market, consecutive candle closes are compared; a swing is recorded when <code class="key">|to − from| ≥ threshold</code>. Each entry links to the market on Kalshi, a news search for that event (cause unverified), and the exact official candlestick request URL that produced the two closes. Default window is 1-hour candles over the trailing 7 days; the snapshot also carries 1-minute and 1-day closes, which are scanned too. <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Official candlesticks API ↗</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment warning ↗</a>
+    <div style="margin-top:6px"><b>High-ROI filter (disclosed heuristic, not a model):</b> swings are scored by <code class="key">|Δ| ÷ from-price</code> (the relative move on the entry price) and ranked highest first; only swings scoring ≥ 0.10 are shown, capped at 20. This is a transparent proxy for "high-ROI setups," not a trading model and not a recommendation. The five-topic filter stays gas prices · elections · culture · crypto · golf.</div>
+  </div>
+</main>
+<footer class="wrap small" style="margin-top:18px">
+  Not investment advice. Kalshi demo prices are mock-funds data. Unverified values are never filled in; the flagged items for this desk are tracked in <a href="integration/flagged-review.html">Flagged for Review</a> and <a href="COORDINATION.md">COORDINATION.md</a>.
+</footer>
+<script src="assets/js/alerts.js"></script>
+</body>
+</html>
