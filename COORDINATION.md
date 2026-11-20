@@ -716,6 +716,7 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
 
+
 ## Session arena/3602732c-demo1 — final verification close-out
 
 - **Session ID:** `arena/3602732c-demo1` — branch `arena/3602732c-demo1`, branched from commit `f9fab19ffc9aeb7f74eae7f3177d2cb4d3c705d5` of `main` (== current `main`). Status: active.
@@ -729,3 +730,34 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/ (api_environments, quick_start_market_data, get-markets, get-market-orderbook, get-market-candlesticks, get-trades, get-series-list, get-events, portfolio get-balance/positions/fills, orders create-order-v2, market_lifecycle, demo_env), https://external-api.demo.kalshi.co/trade-api/v2 (recommended demo REST), https://gasprices.aaa.com/ (gas settlement input).
 - **Irregularities:** none new. Pre-existing non-blocking flags remain published on the site's Flagged for Review page: demo venue only (mock funds, thin books), no demo API key stored (portfolio/fills blank by design), "highest dollar amount" is a computed 24h traded notional (no official USD field), topic matching via ticker/tags regexes, fee formula not yet verified against official fee schedule, sub-minute chart resolution not offered by REST candlesticks.
 - **Result:** All requirements met and verified. Site live at https://karagemop466-tech.github.io/Demo1/. No PR/merge required beyond this session's COORDINATION.md record (branch already == main); this record is committed and pushed to `arena/3602732c-demo1` only.
+
+
+## Tasks — session arena/358db039-demo1 (final integration + verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 22 | Final integration: re-verify combined data line by line, broken-link check, site build, PR to main, merge, confirm Pages deploy | in progress | arena/358db039-demo1 | `COORDINATION.md` (claim + record); verification fixes only in files not owned by other sessions | docs.kalshi.com (api_environments, demo_env, candlesticks, orderbook, settlement); live site https://karagemop466-tech.github.io/Demo1/ | Full local suite: node --check, py_compile, build_site.py link gate, check-links, dom tests, pytest; live fetch of key pages | PR #32 (sharp-jump scanner, session arena/c8617443-demo1) merged to main as f9fab19 before this claim — rebased cleanly, no conflict. No demo API key in repo → portfolio/trading cells remain blank + flagged per no-fabrication rule. |
+
+Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final integration). Scope is COORDINATION.md plus verification-only fixes; exec-desk/jumps.* owned by arena/c8617443-demo1 (merged) and not touched.
+
+### Verification record — session arena/358db039-demo1 (task 22, final integration)
+
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Official endpoints match brief | ✅ | Fetched https://docs.kalshi.com/getting_started/api_environments.md 2026-11-20: demo REST `https://external-api.demo.kalshi.co/trade-api/v2` (recommended) + `https://demo-api.kalshi.co/trade-api/v2`; demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` + `wss://demo-api.kalshi.co/trade-api/ws/v2` — exact match to brief |
+| Live site serves | ✅ | Fetched https://karagemop466-tech.github.io/Demo1/ , /site/index.html , /exec-desk/jumps.html — all 200 with expected content |
+| JS syntax (pages.yml set + jumps) | ✅ | `node --check` pass: monitor/app.js, kalshi-core/ui/live, signer, check-links, dashboard.test, site chart/explore, exec-desk/js/jumps.js |
+| Python compile | ✅ | `py_compile` pass: build_site.py, collect_kalshi.py, account_worker.py, fetch_demo_data.py, fetch_kalshi_data.py, demo_trader.py |
+| Site build + link gate | ✅ | `python3 build_site.py` → "built 16 pages; markets=1399/1399 resolved=2469/2469 charts=10; link check: OK" |
+| Repo link audit | ✅ | `node tools/check-links.mjs` → PASS (238 files); `python3 exec-desk/scripts/check_links.py` → OK (123 internal); `python3 verified-desk/tools/check_links.py` → clean |
+| Dashboard tests | ✅ | `node tests/dashboard.test.mjs` → ALL CHECKS PASSED (46/46) after time-relative fixture fix (see below) |
+| Exec-desk DOM tests | ✅ | `node exec-desk/scripts/dom_test.mjs` → ALL ASSERTIONS PASSED |
+| Verified-desk tests | ✅ | `node --test verified-desk/tests/*.mjs` → 48/48 pass |
+| Pipeline unit tests | ✅ | `pytest tests/test_fetch_kalshi_data.py` → 7 passed |
+| Data freshness | ✅ | snapshot/metadata.json 2026-11-20T11:43:59Z (494 requests, 0 failed); docs/data/snapshot.json 2026-11-20T12:34:30Z; CI pipeline every 15 min on main |
+| CI on main | ✅ | `gh run list --branch main`: site-check, link check, Pages deploy all success after PR #32 merge (f9fab19) |
+| Requirement pages present | ✅ | 35/35 key pages non-empty (root hub, site/, docs/, exec-desk/, pages/) — see audit in PR body |
+
+**Fix applied by this session (final-integration scope):** `tests/dashboard.test.mjs` trade fixtures used hardcoded `created_time: 2026-11-20T11:11` which aged out of the page's default 60-minute scan window (`recentTrades` filters `created_time` within `[now-60m, now]`), causing 8 failures + a crash at line 166. Page logic was correct; fixtures changed to time-relative `isoAgo()` values (field shapes unchanged). File owned by merged session 8c8d4499; edited under final-integration authority and logged here. Also committed `package-lock.json` (jsdom devDep lock) for reproducible test runs.
+
+**Irregularities (non-blocking, published on Flagged pages):** No demo API key in repo → portfolio balances/fills blank + flagged (no fabrication). "Highest dollar amount" is computed notional (no official USD field) — disclosed per row. Demo books thin; values are test-venue data. Jumps page shows "API unreachable" when fetched from non-browser environments (sandbox egress) — browser CORS verified working via data/cors.json.
