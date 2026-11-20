@@ -908,7 +908,6 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
 | Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
 | Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
-<<<<<<< HEAD
 ======
 
 ## Publish record — follow-up (session arena/3c2c8403-demo1)
@@ -1101,7 +1100,6 @@ The only conflicting file was again `COORDINATION.md`; resolved identically by k
 (this session's claim + delivery record, then main's newer session records). Every other file merged
 automatically. Full local gate re-run after the merge: desk build + link check OK, 105/105 DOM checks,
 40/40 page-runtime checks, repo link audit PASS.
-=======
 
 
 ## Session arena/05e53528-demo1 — data-pipeline fix + computed strategy engine (`engine/`)
@@ -1134,4 +1132,26 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 | `GET /events` documented call is `?limit=200` | https://docs.kalshi.com/api-reference/events/get-events |
 | Taker fee `round up(M × 0.07 × C × P × (1−P))`; maker `round up(M × 0.0175 × C × P × (1−P))`; no settlement or membership fee; per-series multiplier table | https://kalshi.com/docs/kalshi-fee-schedule.pdf (footer: "Last updated and effective: July 7, 2026") |
 | Per-series multipliers relevant here: `KXAAAGASM` (US gas price) maker 1 / taker 1; `KXBTCY` (BTC price range EOY) maker 0 / taker 0 | same PDF, "Non-Standard Fees" table |
->>>>>>> 94250ea (coord: claim engine session (pipeline fix + jump/strategy layer) — non-overlapping scope)
+
+### Status update + verification record — session arena/05e53528-demo1 (engine desk)
+
+| # | Task | Status | Outcome |
+|---|---|---|---|
+| E1 | Fix `scripts/fetch_demo_data.py` events call | **superseded — not my change** | The `limit=1000` → `limit=200` fix was already on `main` (line 348-351 comment cites the same 400 I found in `data/meta.json`), committed by session `arena/bc250043-demo1` at 11:2x–11:33Z. I verified it and dropped the task rather than duplicating it. `data/meta.json` still shows the *stale* 11:22Z run, so the published counts lag the code fix. |
+| E2 | Sharp-jump scanner ≥ $0.10 | done | `tools/jump_scan.py` → `engine/jumps.json`: 662 moves over 4,768 candles / 30 windows; 639 on book mid, 23 on traded close, 74 % on a zero-volume candle, largest $0.996. Each row cites the candlestick request URL it came from. |
+| E3 | Fee-aware simulated strategies + settlement study + liquidity | done | `tools/strategy_sim.py` → `engine/strategies.json`: 16 simulated round trips, net −$387.20 on $768.80 cost (−50.4 %), fees $24.40; settlement buckets over 2,469 resolved markets; per-topic spread/depth tables. |
+| E4 | Trader-facing page | done | `engine/index.html` + `app.js` + `style.css`: topic-grouped dollar-ranked board, chart with seconds/minutes/hours/days x-axis and span control, depth ladder with the documented implied-ask identity, jump feed with news-search links, resolution log with YES/NO/awaiting, strategy rollups, provenance/flags tab, live polling with offline fallback. No build step; renders from committed JSON when the API is unreachable. |
+| E5 | Tests | done | `engine/test_engine.py` 11/11 (incl. the fee schedule's own 21-row table and a self-consistency audit of the committed JSON); `engine/test_boot.mjs` 37/37 in jsdom across offline and live paths. |
+| E6 | PR → merge → Pages | done | see record below |
+| E7 | `tools/engine_refresh.py` + `.github/workflows/engine-refresh.yml` | done | narrow live pull (4 documented public endpoints, no signing, no write path to the exchange) that widens candle/board coverage to the top-dollar market per topic and commits **only** `engine/data/**`; the workflow runs the engine tests and refuses to publish if they fail. |
+
+**Findings worth the reviewer's attention (all verified against official sources or this repo's own committed evidence):**
+
+1. `last_price` is **$0.00 for 1,471 of 2,469 settled demo markets (60 %)**, including 141 that resolved **YES**. It is therefore "no trade recorded", not a fillable price, and a backtest that uses it as an entry silently buys at zero. Excluded and counted in the study; anyone else's P&L numbers should be checked for this.
+2. `result` can be **`scalar`**, not only `yes`/`no` (https://docs.kalshi.com/getting_started/market_lifecycle) — the brief's "yes or no" framing is incomplete for range markets, and the page renders `scalar` rather than forcing it to YES/NO.
+3. Zero `schedule`-event runs repo-wide at 13:16Z. `fetch-data.yml` reached `main` only at 12:52:26Z, so the cron had not yet had a chance to fire — the freshness claims in earlier records rest on **manual** `workflow_dispatch` runs, not on the schedule.
+4. `snapshot/charts.json` covers **10 markets**; several earlier records describe the chart as if it were market-wide. `engine-refresh` exists to widen it.
+5. Repo-hygiene, flagged for the owners (I did not edit these): `arena/3c2c8403-demo1` deletes `exec-desk/jumps.html`/`js/jumps.js` that `main` merged minutes earlier in PR #32 while `exec-desk/js/nav.js` still links them; `arena/c1f56180-demo1` and `arena/0cc392e4-demo1` each show ~370k/~1.9M line deletions of other sessions' merged desks — both look branched from an early base and must not be merged as-is.
+6. The shared board is the repo's main conflict source (3 rounds this session). `tools/resolve_board.py` now exists to resolve it by keeping both sides, and refuses to touch any other file.
+
+**Verification performed this session:** every API/lifecycle/fee claim above re-read from the official page or the published fee PDF during this session; the fee implementation is asserted against the PDF's own table; every table row the page renders carries the request URL that produced it; blanks are rendered as blanks (`.miss`) with a reason, never filled; `node tools/check-links.mjs` → **PASS** (256 files). Live-API behaviour could not be exercised from the sandbox (egress allowlist has no `*.kalshi.co`), so the collector runs on GitHub-hosted runners and the browser path is verified by the two test suites plus post-deploy fetch.

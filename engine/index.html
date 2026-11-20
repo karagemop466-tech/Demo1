@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalshi demo desk — live events, jumps, resolutions, simulated strategies</title>
+<meta name="description" content="Live Kalshi demo-market desk for gas prices, elections, culture, crypto and golf: dollar-ranked event board, price chart with a selectable time axis, order-book depth, ≥$0.10 jump alerts, resolution tracking and fee-aware simulated strategies. Every value links to the official API response it came from.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230b7a5a'/><path d='M7 22L14 12l5 6 6-9' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<header class="bar">
+  <div class="brand">Kalshi <span>demo desk</span></div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="board" class="on">Event board</button>
+    <button data-tab="jumps">Jump alerts</button>
+    <button data-tab="resolutions">Resolutions</button>
+    <button data-tab="strategies">Strategies</button>
+    <button data-tab="sources">Sources &amp; flags</button>
+  </nav>
+  <div class="status">
+    <span id="badge" class="badge wait">connecting…</span>
+    <span id="stamp" class="stamp"></span>
+  </div>
+</header>
+
+<div class="ticker" id="ticker" hidden></div>
+
+<main>
+  <p class="warnbar">
+    <b>Demo venue.</b> Kalshi's own docs say the demo environment runs on mock funds and that
+    "the price and behavior of markets in the demo environment may not be reflective of those in
+    real markets"
+    (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo_env</a>).
+    Nothing here is a real-money book, and nothing here placed an order: there is no demo API key in
+    this repository, so the trade and portfolio numbers are
+    <b>SIMULATED</b> and labelled as such. Blank cells mean the API did not return a value — they are
+    never filled in.
+  </p>
+
+  <!-- ============================== BOARD ============================== -->
+  <section id="tab-board" class="tab on">
+    <div class="controls">
+      <div class="chips" id="topicChips" role="group" aria-label="Topic filter"></div>
+      <label class="ctl">Search
+        <input id="q" type="search" placeholder="title, ticker, series…" autocomplete="off">
+      </label>
+      <label class="ctl">Rank by
+        <select id="sort">
+          <option value="dollar_notional_24h">24h $ traded (computed)</option>
+          <option value="contracts_24h">24h contracts</option>
+          <option value="open_interest_contracts">Open interest</option>
+          <option value="last_price">Contract price</option>
+          <option value="close_time">Time to close</option>
+        </select>
+      </label>
+      <label class="ctl">Group
+        <select id="group">
+          <option value="topic">by topic (default)</option>
+          <option value="event">by event within topic</option>
+          <option value="none">flat list</option>
+        </select>
+      </label>
+      <span class="spacer"></span>
+      <button id="refresh" class="btn" title="Re-read page 1 of GET /markets?status=open from the demo API and update matching rows">Refresh board from API</button>
+    </div>
+
+    <div class="split">
+      <div class="boardwrap">
+        <div id="boardMeta" class="meta"></div>
+        <div id="board"></div>
+      </div>
+
+      <aside class="detail" id="detail">
+        <div class="dh">
+          <div>
+            <div class="dtitle" id="dTitle">Select a market</div>
+            <div class="dsub" id="dSub">The board is grouped by topic; click any row to chart it.</div>
+          </div>
+          <div class="dprice"><div id="dPrice">—</div><div id="dChg" class="chg"></div></div>
+        </div>
+
+        <div class="controls tight">
+          <label class="ctl">X-axis unit
+            <select id="xunit">
+              <option value="seconds">seconds</option>
+              <option value="minutes" selected>minutes</option>
+              <option value="hours">hours</option>
+              <option value="days">days</option>
+            </select>
+          </label>
+          <label class="ctl">Span
+            <select id="span">
+              <option value="900">15 min</option>
+              <option value="3600">1 hour</option>
+              <option value="21600" selected>6 hours</option>
+              <option value="86400">24 hours</option>
+              <option value="604800">7 days</option>
+              <option value="7776000">90 days</option>
+            </select>
+          </label>
+          <label class="ctl">Price basis
+            <select id="basis">
+              <option value="traded" selected>traded close (price_close)</option>
+              <option value="mid">book mid (yes bid/ask)</option>
+              <option value="both">both</option>
+            </select>
+          </label>
+          <label class="ctl">Poll
+            <select id="poll">
+              <option value="0">off</option>
+              <option value="5">5 s</option>
+              <option value="10" selected>10 s</option>
+              <option value="30">30 s</option>
+              <option value="60">60 s</option>
+            </select>
+          </label>
+          <span class="spacer"></span>
+          <a id="apiLink" class="btn ghost" target="_blank" rel="noopener" hidden>Official API response</a>
+        </div>
+
+        <div class="chartbox">
+          <div class="axis-note">Y = contract price in dollars ($0.00–$1.00) · X = time,
+            <span id="axisDesc">minutes</span>. <span id="chartSrc" class="src"></span></div>
+          <svg id="chart" viewBox="0 0 760 300" role="img" aria-label="Contract price history"></svg>
+          <div class="legend" id="legend"></div>
+        </div>
+
+        <div class="depth">
+          <div class="dhead">
+            <b>Contracts available at each price</b>
+            <span class="hint">YES bids are resting orders on the YES side. A YES <i>ask</i> is not returned by
+            the API: it is the documented identity 1.00 − highest NO bid
+            (<a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">orderbook_responses</a>).</span>
+          </div>
+          <div id="depthTable"></div>
+        </div>
+        <div class="dfoot" id="dFoot"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================== JUMPS ============================== -->
+  <section id="tab-jumps" class="tab">
+    <div class="controls">
+      <div class="chips" id="jumpThresh" role="group" aria-label="Jump threshold"></div>
+      <label class="ctl">Basis
+        <select id="jumpBasis">
+          <option value="traded" selected>traded close</option>
+          <option value="book mid">book mid</option>
+          <option value="any">either</option>
+        </select>
+      </label>
+      <label class="ctl">Window
+        <select id="jumpWindow">
+          <option value="any" selected>any captured window</option>
+          <option value="1m/6h">1-minute candles</option>
+          <option value="1h/7d">hourly candles</option>
+          <option value="1d/90d">daily candles</option>
+        </select>
+      </label>
+      <span class="spacer"></span>
+      <span id="jumpMeta" class="meta"></span>
+    </div>
+    <p class="expl">
+      A jump is two <i>adjacent candles</i> in the official candlestick response whose recorded close differs
+      by at least the threshold. The move is a fact about the tape; <b>the cause is not</b>. The news link is a
+      search over the event title, not a source — nothing here asserts why a price moved, and on thin demo
+      books a single stray lot can print a "jump". Filter to 1-minute candles to see only moves that mattered
+      inside a minute.
+    </p>
+    <div id="jumps"></div>
+  </section>
+
+  <!-- ========================== RESOLUTIONS ========================== -->
+  <section id="tab-resolutions" class="tab">
+    <p class="expl">
+      Every market is tracked until the exchange sets an outcome. On a settled market <code>result</code> is
+      <code>yes</code>, <code>no</code> or (for scalar markets) <code>scalar</code>, and
+      <code>settlement_value_dollars</code> / <code>settlement_ts</code> carry the payout — statuses and their
+      meaning are in the official
+      <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">market lifecycle</a>
+      page. A market past its close time with no result yet is still awaiting determination, so the result cell
+      stays blank and is marked as such rather than guessed.
+    </p>
+    <div class="controls">
+      <div class="chips" id="resFilter" role="group" aria-label="Resolution filter"></div>
+    </div>
+    <div id="resolutions"></div>
+  </section>
+
+  <!-- ========================== STRATEGIES =========================== -->
+  <section id="tab-strategies" class="tab">
+    <p class="expl">
+      Three rules replayed over captured candles, plus a study of what holding to settlement would have paid at
+      every price bucket. Costs are real: each leg crosses the recorded spread and pays the published taker fee
+      <code>round up(M × 0.07 × C × P × (1 − P))</code>
+      (<a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a>,
+      effective July 7, 2026; no settlement or membership fee). These are
+      <b>simulated fills on demo data</b>, not account history — and they are a small sample, so treat every
+      number as a measurement of <i>this tape</i>, not an edge.
+    </p>
+    <div id="strategies"></div>
+  </section>
+
+  <!-- =========================== SOURCES ============================= -->
+  <section id="tab-sources" class="tab">
+    <div id="sources"></div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <b>How this page gets its numbers.</b> Tables and charts render from
+    <code>strategies.json</code> / <code>jumps.json</code> — files computed by
+    <code>tools/strategy_sim.py</code> and <code>tools/jump_scan.py</code> from a capture of the official demo API,
+    each field stamped with the request URL that returned it. When the browser can reach the demo API
+    (public, unauthenticated; CORS evidenced in <code>../data/cors.json</code>) the selected market is polled live
+    and the badge goes green. No manual input, no build step, no credentials, no order ever placed.
+  </div>
+  <div class="foot-links">
+    <a href="../index.html">Site index</a>
+    <a href="https://docs.kalshi.com/" target="_blank" rel="noopener">Official Kalshi API docs</a>
+    <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

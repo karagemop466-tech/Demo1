@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-20T13:02:54Z",
+ "generated_utc": "2026-11-20T13:20:58Z",
  "status_label": "SIMULATED \u2014 no orders were placed; no demo API key exists in this repo",
  "inputs": {
   "charts": "snapshot/charts.json",
@@ -18,8 +18,8 @@
   "jump_threshold_dollars": 0.1,
   "hold_candles": 30,
   "fees": {
-   "taker_formula": "round up(M x 0.07 x C x P x (1-P))",
-   "maker_formula": "round up(M x 0.0175 x C x P x (1-P))",
+   "taker_formula": "round up(M \u00d7 0.07 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
+   "maker_formula": "round up(M \u00d7 0.0175 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
    "settlement_fee": 0,
    "membership_fee": 0,
    "source": "https://kalshi.com/docs/kalshi-fee-schedule.pdf",
@@ -631,15 +631,15 @@
     "winners": 4,
     "win_rate_pct": 25.0,
     "gross_usd": -362.8,
-    "fees_usd": 24.54,
-    "net_usd": -387.34,
+    "fees_usd": 24.4,
+    "net_usd": -387.2,
     "cost_usd": 768.8,
-    "net_roi_pct": -50.38,
-    "avg_net_usd": -24.2088,
+    "net_roi_pct": -50.36,
+    "avg_net_usd": -24.2,
     "best_trade_usd": 3.07,
-    "worst_trade_usd": -98.14,
+    "worst_trade_usd": -98.0,
     "avg_hold_minutes": 13.5,
-    "markets": 5,
+    "markets": 6,
     "source_urls": [
      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
@@ -671,15 +671,15 @@
      "winners": 3,
      "win_rate_pct": 30.0,
      "gross_usd": -253.5,
-     "fees_usd": 14.53,
-     "net_usd": -268.03,
+     "fees_usd": 14.39,
+     "net_usd": -267.89,
      "cost_usd": 462.8,
-     "net_roi_pct": -57.91,
-     "avg_net_usd": -26.803,
+     "net_roi_pct": -57.88,
+     "avg_net_usd": -26.789,
      "best_trade_usd": 3.07,
-     "worst_trade_usd": -98.14,
+     "worst_trade_usd": -98.0,
      "avg_hold_minutes": 16.3,
-     "markets": 5,
+     "markets": 6,
      "source_urls": [
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
@@ -707,20 +707,76 @@
     }
    },
    "by_topic": {
-    "unclassified": {
-     "trades": 16,
-     "winners": 4,
-     "win_rate_pct": 25.0,
-     "gross_usd": -362.8,
-     "fees_usd": 24.54,
-     "net_usd": -387.34,
-     "cost_usd": 768.8,
-     "net_roi_pct": -50.38,
-     "avg_net_usd": -24.2088,
+    "Crypto": {
+     "trades": 1,
+     "winners": 0,
+     "win_rate_pct": 0.0,
+     "gross_usd": -98.0,
+     "fees_usd": 0.0,
+     "net_usd": -98.0,
+     "cost_usd": 98.0,
+     "net_roi_pct": -100.0,
+     "avg_net_usd": -98.0,
+     "best_trade_usd": -98.0,
+     "worst_trade_usd": -98.0,
+     "avg_hold_minutes": 17.0,
+     "markets": 1,
+     "source_urls": [
+      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1787399193&end_ts=1795175193&period_interval=1440"
+     ]
+    },
+    "Culture": {
+     "trades": 6,
+     "winners": 0,
+     "win_rate_pct": 0.0,
+     "gross_usd": -141.0,
+     "fees_usd": 7.87,
+     "net_usd": -148.87,
+     "cost_usd": 190.0,
+     "net_roi_pct": -78.35,
+     "avg_net_usd": -24.8117,
+     "best_trade_usd": -1.21,
+     "worst_trade_usd": -95.34,
+     "avg_hold_minutes": 7.5,
+     "markets": 2,
+     "source_urls": [
+      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1787399155&end_ts=1795175155&period_interval=1440",
+      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1787399154&end_ts=1795175154&period_interval=1440",
+      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794570354&end_ts=1795175154&period_interval=60"
+     ]
+    },
+    "Elections": {
+     "trades": 2,
+     "winners": 1,
+     "win_rate_pct": 50.0,
+     "gross_usd": -96.8,
+     "fees_usd": 0.29,
+     "net_usd": -97.09,
+     "cost_usd": 196.8,
+     "net_roi_pct": -49.33,
+     "avg_net_usd": -48.545,
+     "best_trade_usd": 0.6,
+     "worst_trade_usd": -97.69,
+     "avg_hold_minutes": 30.0,
+     "markets": 1,
+     "source_urls": [
+      "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1787399118&end_ts=1795175118&period_interval=1440"
+     ]
+    },
+    "Gas prices": {
+     "trades": 7,
+     "winners": 3,
+     "win_rate_pct": 42.86,
+     "gross_usd": -27.0,
+     "fees_usd": 16.24,
+     "net_usd": -43.24,
+     "cost_usd": 284.0,
+     "net_roi_pct": -15.23,
+     "avg_net_usd": -6.1771,
      "best_trade_usd": 3.07,
-     "worst_trade_usd": -98.14,
-     "avg_hold_minutes": 13.5,
-     "markets": 5,
+     "worst_trade_usd": -22.88,
+     "avg_hold_minutes": 13.4,
+     "markets": 2,
      "source_urls": [
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
@@ -753,15 +809,15 @@
      "winners": 3,
      "win_rate_pct": 21.43,
      "gross_usd": -354.5,
-     "fees_usd": 22.63,
-     "net_usd": -377.13,
+     "fees_usd": 22.49,
+     "net_usd": -376.99,
      "cost_usd": 649.8,
-     "net_roi_pct": -58.04,
-     "avg_net_usd": -26.9379,
+     "net_roi_pct": -58.02,
+     "avg_net_usd": -26.9279,
      "best_trade_usd": 3.07,
-     "worst_trade_usd": -98.14,
+     "worst_trade_usd": -98.0,
      "avg_hold_minutes": 12.1,
-     "markets": 5,
+     "markets": 6,
      "source_urls": [
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
@@ -813,15 +869,15 @@
      "winners": 3,
      "win_rate_pct": 30.0,
      "gross_usd": -253.5,
-     "fees_usd": 14.53,
-     "net_usd": -268.03,
+     "fees_usd": 14.39,
+     "net_usd": -267.89,
      "cost_usd": 462.8,
-     "net_roi_pct": -57.91,
-     "avg_net_usd": -26.803,
+     "net_roi_pct": -57.88,
+     "avg_net_usd": -26.789,
      "best_trade_usd": 3.07,
-     "worst_trade_usd": -98.14,
+     "worst_trade_usd": -98.0,
      "avg_hold_minutes": 16.3,
-     "markets": 5,
+     "markets": 6,
      "source_urls": [
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
       "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
@@ -856,16 +912,16 @@
     "hold_minutes": 30,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXPRESNOMD",
-     "series_ticker": "KXPRESNOMD-28-AYAN",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXPRESNOMD-28-AYAN",
+     "series_ticker": "KXPRESNOMD",
+     "title": "Will Andrew Yang be the nominee for the Presidency for the Democratic party?",
+     "event_ticker": "KXPRESNOMD-28",
+     "topic": "elections",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1787399118&end_ts=1795175118&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -894,16 +950,16 @@
     "hold_minutes": 30,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXPRESNOMD",
-     "series_ticker": "KXPRESNOMD-28-AYAN",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXPRESNOMD-28-AYAN",
+     "series_ticker": "KXPRESNOMD",
+     "title": "Will Andrew Yang be the nominee for the Presidency for the Democratic party?",
+     "event_ticker": "KXPRESNOMD-28",
+     "topic": "elections",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1787399118&end_ts=1795175118&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -925,23 +981,23 @@
     "cost_usd": 98.0,
     "proceeds_usd": 0.0,
     "gross_usd": -98.0,
-    "fees_usd": 0.14,
-    "net_usd": -98.14,
-    "roi_pct": -100.14,
+    "fees_usd": 0.0,
+    "net_usd": -98.0,
+    "roi_pct": -100.0,
     "hold_candles": 17,
     "hold_minutes": 17,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXBTCY",
-     "series_ticker": "KXBTCY-27JAN0100-T149999.99",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXBTCY-27JAN0100-T149999.99",
+     "series_ticker": "KXBTCY",
+     "title": "BTC price  on Jan 1, 2027?",
+     "event_ticker": "KXBTCY-27JAN0100",
+     "topic": "crypto",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1787399193&end_ts=1795175193&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -970,16 +1026,16 @@
     "hold_minutes": 6,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXOSCARPIC",
-     "series_ticker": "KXOSCARPIC-27-INV",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXOSCARPIC-27-INV",
+     "series_ticker": "KXOSCARPIC",
+     "title": "Will The Invite win Best Picture at the Oscars?",
+     "event_ticker": "KXOSCARPIC-27",
+     "topic": "culture",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1787399155&end_ts=1795175155&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1008,16 +1064,16 @@
     "hold_minutes": 1,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXRT",
-     "series_ticker": "KXRT-FUR-85",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXRT-FUR-85",
+     "series_ticker": "KXRT",
+     "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+     "event_ticker": "KXRT-FUR",
+     "topic": "culture",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794570354&end_ts=1795175154&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1046,16 +1102,16 @@
     "hold_minutes": 30,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXRT",
-     "series_ticker": "KXRT-FUR-85",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXRT-FUR-85",
+     "series_ticker": "KXRT",
+     "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+     "event_ticker": "KXRT-FUR",
+     "topic": "culture",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794570354&end_ts=1795175154&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1084,16 +1140,16 @@
     "hold_minutes": 4,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXRT",
-     "series_ticker": "KXRT-FUR-85",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXRT-FUR-85",
+     "series_ticker": "KXRT",
+     "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+     "event_ticker": "KXRT-FUR",
+     "topic": "culture",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1787399154&end_ts=1795175154&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1122,16 +1178,16 @@
     "hold_minutes": 1,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXRT",
-     "series_ticker": "KXRT-FUR-85",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXRT-FUR-85",
+     "series_ticker": "KXRT",
+     "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+     "event_ticker": "KXRT-FUR",
+     "topic": "culture",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794570354&end_ts=1795175154&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1160,16 +1216,16 @@
     "hold_minutes": 1,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6400",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6400?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1794570272&end_ts=1795175072&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1198,16 +1254,16 @@
     "hold_minutes": 30,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6200",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6200?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1236,16 +1292,16 @@
     "hold_minutes": 30,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6400",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6400?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1794570272&end_ts=1795175072&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1274,16 +1330,16 @@
     "hold_minutes": 2,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6400",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6400?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1787399073&end_ts=1795175073&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1312,16 +1368,16 @@
     "hold_minutes": 1,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6200",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6200?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1d/90d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787399074&end_ts=1795175074&period_interval=1440",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1350,16 +1406,16 @@
     "hold_minutes": 3,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXRT",
-     "series_ticker": "KXRT-FUR-85",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXRT-FUR-85",
+     "series_ticker": "KXRT",
+     "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+     "event_ticker": "KXRT-FUR",
+     "topic": "culture",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794570354&end_ts=1795175154&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1388,16 +1444,16 @@
     "hold_minutes": 17,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6200",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6200?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794570273&end_ts=1795175073&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    },
@@ -1426,21 +1482,4281 @@
     "hold_minutes": 13,
     "would_have_been_held_to_resolution": false,
     "book": {
-     "market_ticker": "KXAAAGASW",
-     "series_ticker": "KXAAAGASW-26NOV23-3.6400",
-     "title": null,
-     "event_ticker": null,
-     "topic": null,
+     "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+     "series_ticker": "KXAAAGASW",
+     "title": "Will average **gas prices** be above $3.6400?",
+     "event_ticker": "KXAAAGASW-26NOV23",
+     "topic": "gas_prices",
      "window": "1h/7d",
      "period_minutes": null,
      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1794570272&end_ts=1795175072&period_interval=60",
      "source_error": null,
-     "status": null,
+     "status": "active",
      "result": null
     }
    }
   ]
  },
+ "resolutions": [
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-T2544.99",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-T1055",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2542",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2537",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2532",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2527",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2522",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2517",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2512",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2507",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2502",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2497",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2492",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2487",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2482",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2477",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2472",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2467",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2462",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2457",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2452",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2447",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2442",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2437",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2432",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2427",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2422",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2417",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2412",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2407",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2402",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2397",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2392",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2387",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2382",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2377",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2372",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2367",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2362",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2357",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2352",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2347",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2342",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2337",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2332",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2327",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2322",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2317",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2312",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2307",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2302",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2297",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2292",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2287",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2282",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2277",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2272",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2267",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2262",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXETH-26NOV2006-B2257",
+   "event_ticker": "KXETH-26NOV2006",
+   "series_ticker": "KXETH",
+   "title": "Ethereum price at Nov 20, 2026 at 6am EST?",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-20T11:41:34.76497Z",
+   "close_time": "2026-11-20T11:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=settled&limit=60"
+  }
+ ],
+ "board": [
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.6200?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.89,
+   "previous_price": 0.81,
+   "yes_bid": 0.87,
+   "yes_ask": 0.89,
+   "implied_yes_ask": 0.89,
+   "best_yes_bid_contracts": 33.71,
+   "best_no_bid_contracts": 177.3,
+   "yes_bid_levels": 8,
+   "no_bid_levels": 6,
+   "book": {
+    "yes": [
+     [
+      0.87,
+      5.0
+     ],
+     [
+      0.86,
+      193.79
+     ],
+     [
+      0.85,
+      196.07
+     ],
+     [
+      0.84,
+      198.41
+     ],
+     [
+      0.8,
+      208.33
+     ],
+     [
+      0.79,
+      210.97
+     ],
+     [
+      0.78,
+      213.67
+     ],
+     [
+      0.39,
+      33.71
+     ]
+    ],
+    "no": [
+     [
+      0.11,
+      18.04
+     ],
+     [
+      0.1,
+      185.18
+     ],
+     [
+      0.09,
+      183.15
+     ],
+     [
+      0.08,
+      65.33
+     ],
+     [
+      0.07,
+      179.21
+     ],
+     [
+      0.06,
+      177.3
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook"
+   },
+   "contracts_24h": 4368.84,
+   "open_interest_contracts": 10871.86,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 3811.23,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6200&min_ts=1795088664&limit=1000&max_ts=1795175064",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.6400?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.02,
+   "previous_price": 0.29,
+   "yes_bid": 0.0,
+   "yes_ask": 0.08,
+   "implied_yes_ask": 0.02,
+   "best_yes_bid_contracts": 16666.66,
+   "best_no_bid_contracts": 877.19,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 8,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      16666.66
+     ]
+    ],
+    "no": [
+     [
+      0.98,
+      8333.07
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.96,
+      4166.66
+     ],
+     [
+      0.92,
+      2095.93
+     ],
+     [
+      0.91,
+      3703.7
+     ],
+     [
+      0.9,
+      3333.32
+     ],
+     [
+      0.82,
+      577.36
+     ],
+     [
+      0.81,
+      877.19
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400/orderbook"
+   },
+   "contracts_24h": 26453.55,
+   "open_interest_contracts": 31089.84,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 2746.88,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6400&min_ts=1795088661&limit=1000&max_ts=1795175061",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.50",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "event_title": "Gas prices in the US in Nov 2026?",
+   "title": "Will average **gas prices** be above $3.50?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.5,
+   "previous_price": 0.45,
+   "yes_bid": 0.5,
+   "yes_ask": 0.51,
+   "implied_yes_ask": 0.51,
+   "best_yes_bid_contracts": 80.0,
+   "best_no_bid_contracts": 264.55,
+   "yes_bid_levels": 4,
+   "no_bid_levels": 6,
+   "book": {
+    "yes": [
+     [
+      0.5,
+      103.81
+     ],
+     [
+      0.49,
+      340.13
+     ],
+     [
+      0.48,
+      347.22
+     ],
+     [
+      0.01,
+      80.0
+     ]
+    ],
+    "no": [
+     [
+      0.49,
+      97.27
+     ],
+     [
+      0.48,
+      320.51
+     ],
+     [
+      0.47,
+      314.46
+     ],
+     [
+      0.39,
+      224.45
+     ],
+     [
+      0.38,
+      268.81
+     ],
+     [
+      0.37,
+      264.55
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook"
+   },
+   "contracts_24h": 3507.66,
+   "open_interest_contracts": 5324.76,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1772.32,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-10-27T20:34:13Z",
+   "close_time": "2026-11-30T04:59:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASM-26NOV30-3.50&min_ts=1795088669&limit=1000&max_ts=1795175069",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6000",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.6000?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.99,
+   "previous_price": 0.97,
+   "yes_bid": 0.96,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": 173.61,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 0,
+   "book": {
+    "yes": [
+     [
+      0.96,
+      173.61
+     ]
+    ],
+    "no": [],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6000/orderbook"
+   },
+   "contracts_24h": 968.22,
+   "open_interest_contracts": 7065.29,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 938.63,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6000",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6000&min_ts=1795088669&limit=1000&max_ts=1795175069",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6000/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6600",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.02,
+   "previous_price": 0.02,
+   "yes_bid": 0.01,
+   "yes_ask": 0.02,
+   "implied_yes_ask": 0.02,
+   "best_yes_bid_contracts": 16665.66,
+   "best_no_bid_contracts": 4166.66,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      16665.66
+     ]
+    ],
+    "no": [
+     [
+      0.98,
+      4894.72
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.96,
+      4166.66
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6600/orderbook"
+   },
+   "contracts_24h": 4174.13,
+   "open_interest_contracts": 26934.78,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 88.0,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6600",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6600&min_ts=1795088666&limit=1000&max_ts=1795175066",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6600/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6800",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.6800?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.04,
+   "previous_price": 0.04,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": {
+    "yes": [],
+    "no": [],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6800/orderbook"
+   },
+   "contracts_24h": 628.81,
+   "open_interest_contracts": 6822.76,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 24.31,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6800",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV23-3.6800&min_ts=1795088670&limit=1000&max_ts=1795175070",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6800/orderbook"
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASM-26DEC31-3.30",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26DEC31",
+   "event_title": "Gas prices in the US in Dec 2026?",
+   "title": "Will average **gas prices** be above $3.30?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.29,
+   "previous_price": 0.69,
+   "yes_bid": 0.29,
+   "yes_ask": 0.7,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 20.14,
+   "open_interest_contracts": 198.94,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2025-10-13T21:28:30Z",
+   "close_time": "2026-12-31T04:59:00Z",
+   "expected_expiration_time": "2026-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26DEC31-3.30",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.40",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "event_title": "Gas prices in the US in Nov 2026?",
+   "title": "Will average **gas prices** be above $3.40?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.97,
+   "previous_price": 0.97,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 11.0,
+   "open_interest_contracts": 1713.4,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-10-27T20:34:13Z",
+   "close_time": "2026-11-30T04:59:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.40",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.60",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "event_title": "Gas prices in the US in Nov 2026?",
+   "title": "Will average **gas prices** be above $3.60?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.1,
+   "previous_price": 0.16,
+   "yes_bid": 0.05,
+   "yes_ask": 0.06,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 8.19,
+   "open_interest_contracts": 6282.92,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-10-27T20:34:13Z",
+   "close_time": "2026-11-30T04:59:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.60",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.9400",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.9400?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.02,
+   "previous_price": 0.02,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 0.0,
+   "open_interest_contracts": 3421.27,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.9400",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.9200",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.9200?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.02,
+   "previous_price": 0.02,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 0.0,
+   "open_interest_contracts": 3273.51,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.9200",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "gas_prices",
+   "topic_label": "Gas prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.9000",
+   "series_ticker": "KXAAAGASW",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "event_title": "US gas prices this week",
+   "title": "Will average **gas prices** be above $3.9000?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.0,
+   "previous_price": 0.0,
+   "yes_bid": 0.0,
+   "yes_ask": 0.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 0.0,
+   "open_interest_contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-15T21:34:40Z",
+   "close_time": "2026-11-23T04:59:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "series ticker is a Kalshi AAA gas-price series \u2014 matched ticker (pattern \"kxaaagas\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.9000",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-MTG",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Marjorie Taylor Greene be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.005,
+   "previous_price": 0.008,
+   "yes_bid": 0.004,
+   "yes_ask": 0.005,
+   "implied_yes_ask": 0.005,
+   "best_yes_bid_contracts": 80.0,
+   "best_no_bid_contracts": 133.0,
+   "yes_bid_levels": 4,
+   "no_bid_levels": 8,
+   "book": {
+    "yes": [
+     [
+      0.004,
+      166666.64
+     ],
+     [
+      0.003,
+      166666.65
+     ],
+     [
+      0.002,
+      249999.99
+     ],
+     [
+      0.001,
+      80.0
+     ]
+    ],
+    "no": [
+     [
+      0.995,
+      94452.27
+     ],
+     [
+      0.994,
+      83333.31
+     ],
+     [
+      0.993,
+      71428.56
+     ],
+     [
+      0.992,
+      20833.33
+     ],
+     [
+      0.991,
+      18518.51
+     ],
+     [
+      0.99,
+      16666.66
+     ],
+     [
+      0.184,
+      88.15
+     ],
+     [
+      0.183,
+      133.0
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG/orderbook"
+   },
+   "contracts_24h": 129953.85,
+   "open_interest_contracts": 18714262.43,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 711.94,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2025-11-05T23:26:54Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-MTG&min_ts=1795088711&limit=1000&max_ts=1795175111",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMD-28-AYAN",
+   "series_ticker": "KXPRESNOMD",
+   "event_ticker": "KXPRESNOMD-28",
+   "event_title": "Who will be the Democratic nominee in 2028?",
+   "title": "Will Andrew Yang be the nominee for the Presidency for the Democratic party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.004,
+   "yes_bid": 0.002,
+   "yes_ask": 0.004,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 1000024.19,
+   "best_no_bid_contracts": 199999.98,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      499999.98
+     ],
+     [
+      0.001,
+      1000024.19
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55555.55
+     ],
+     [
+      0.996,
+      248401.85
+     ],
+     [
+      0.995,
+      199999.98
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook"
+   },
+   "contracts_24h": 174368.52,
+   "open_interest_contracts": 47102275.7,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 525.33,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-03-22T22:26:40Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMD-28-AYAN&min_ts=1795088689&limit=1000&max_ts=1795175089",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESPERSON-28-MOBA",
+   "series_ticker": "KXPRESPERSON",
+   "event_ticker": "KXPRESPERSON-28",
+   "event_title": "Who will win the next presidential election?",
+   "title": "Who will win the next presidential election?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.005,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 333373.32,
+   "best_no_bid_contracts": 66666.66,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      166666.66
+     ],
+     [
+      0.001,
+      333373.32
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55416.53
+     ],
+     [
+      0.996,
+      81969.56
+     ],
+     [
+      0.995,
+      66666.66
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MOBA/orderbook"
+   },
+   "contracts_24h": 172898.46,
+   "open_interest_contracts": 235470.76,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 523.67,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-05T22:04:20Z",
+   "close_time": "2029-11-07T15:00:00Z",
+   "expected_expiration_time": "2029-01-21T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MOBA",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESPERSON-28-MOBA&min_ts=1795088703&limit=1000&max_ts=1795175103",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MOBA/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-LHOG",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Larry Hogan be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.003,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 499999.98,
+   "best_no_bid_contracts": 99999.99,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      249999.99
+     ],
+     [
+      0.001,
+      499999.98
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55555.55
+     ],
+     [
+      0.996,
+      122974.43
+     ],
+     [
+      0.995,
+      99999.99
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-LHOG/orderbook"
+   },
+   "contracts_24h": 173489.07,
+   "open_interest_contracts": 562824.93,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 522.72,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-05T22:04:20Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-LHOG",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-LHOG&min_ts=1795088694&limit=1000&max_ts=1795175094",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-LHOG/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-ETRU",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Eric Trump be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.004,
+   "previous_price": 0.003,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": 0.004,
+   "best_yes_bid_contracts": 333333.32,
+   "best_no_bid_contracts": 66666.66,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 2,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      166666.66
+     ],
+     [
+      0.001,
+      333333.32
+     ]
+    ],
+    "no": [
+     [
+      0.996,
+      81362.2
+     ],
+     [
+      0.995,
+      66666.66
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-ETRU/orderbook"
+   },
+   "contracts_24h": 173061.62,
+   "open_interest_contracts": 17920760.19,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 521.18,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-03-22T22:26:40Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-ETRU",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-ETRU&min_ts=1795088698&limit=1000&max_ts=1795175098",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-ETRU/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-MPEN",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Mike Pence be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.003,
+   "yes_bid": 0.002,
+   "yes_ask": 0.004,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 500019.98,
+   "best_no_bid_contracts": 99999.99,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      249999.99
+     ],
+     [
+      0.001,
+      500019.98
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55555.55
+     ],
+     [
+      0.996,
+      122896.54
+     ],
+     [
+      0.995,
+      99999.99
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MPEN/orderbook"
+   },
+   "contracts_24h": 172891.21,
+   "open_interest_contracts": 20990459.9,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 520.75,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2025-05-09T17:25:33Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MPEN",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESNOMR-28-MPEN&min_ts=1795088707&limit=1000&max_ts=1795175107",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MPEN/orderbook"
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-EM",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Elon Musk be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.004,
+   "previous_price": 0.004,
+   "yes_bid": 0.002,
+   "yes_ask": 0.004,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 117838.94,
+   "open_interest_contracts": 4361664.95,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2024-12-10T03:33:22Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-EM",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESPERSON-28-MTAY",
+   "series_ticker": "KXPRESPERSON",
+   "event_ticker": "KXPRESPERSON-28",
+   "event_title": "Who will win the next presidential election?",
+   "title": "Who will win the next presidential election?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.004,
+   "yes_bid": 0.002,
+   "yes_ask": 0.004,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 116109.56,
+   "open_interest_contracts": 659765.62,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-05T22:04:20Z",
+   "close_time": "2029-11-07T15:00:00Z",
+   "expected_expiration_time": "2029-01-21T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MTAY",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMD-28-JAM",
+   "series_ticker": "KXPRESNOMD",
+   "event_ticker": "KXPRESNOMD-28",
+   "event_title": "Who will be the Democratic nominee in 2028?",
+   "title": "Will Jamie Dimon be the nominee for the Presidency for the Democratic party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.004,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 112428.56,
+   "open_interest_contracts": 36198423.84,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2025-08-24T19:10:03Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-JAM",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESPERSON-28-JDIM",
+   "series_ticker": "KXPRESPERSON",
+   "event_ticker": "KXPRESPERSON-28",
+   "event_title": "Who will win the next presidential election?",
+   "title": "Who will win the next presidential election?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.004,
+   "previous_price": 0.003,
+   "yes_bid": 0.003,
+   "yes_ask": 0.004,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 111560.71,
+   "open_interest_contracts": 8954114.38,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2025-12-08T21:04:19Z",
+   "close_time": "2029-11-07T15:00:00Z",
+   "expected_expiration_time": "2029-01-21T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-JDIM",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMD-28-RC",
+   "series_ticker": "KXPRESNOMD",
+   "event_ticker": "KXPRESNOMD-28",
+   "event_title": "Who will be the Democratic nominee in 2028?",
+   "title": "Will Roy Cooper be the Democratic Presidential nominee in 2028?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.003,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 110783.62,
+   "open_interest_contracts": 50370245.69,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2024-12-10T03:33:22Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-RC",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "elections",
+   "topic_label": "Elections",
+   "market_ticker": "KXPRESNOMR-28-TSCO",
+   "series_ticker": "KXPRESNOMR",
+   "event_ticker": "KXPRESNOMR-28",
+   "event_title": "Who will be the Republican nominee in 2028?",
+   "title": "Will Tim Scott be the nominee for the Presidency for the Republican party?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.01,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 96021.58,
+   "open_interest_contracts": 450949.81,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-10-19T23:03:53Z",
+   "close_time": "2028-11-07T15:00:00Z",
+   "expected_expiration_time": "2028-11-07T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention election \u2014 matched tags (pattern \"election\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-TSCO",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-HUN-72",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-HUN",
+   "event_title": "The Hunger Games: Sunrise on the Reaping \u00b7 Rotten Tomatoes score",
+   "title": "The Hunger Games: Sunrise on the Reaping Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.59,
+   "yes_bid": 0.02,
+   "yes_ask": 0.03,
+   "implied_yes_ask": 0.03,
+   "best_yes_bid_contracts": 16666.66,
+   "best_no_bid_contracts": 3333.33,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.02,
+      8333.33
+     ],
+     [
+      0.01,
+      16666.66
+     ]
+    ],
+    "no": [
+     [
+      0.97,
+      5555.32
+     ],
+     [
+      0.96,
+      4166.66
+     ],
+     [
+      0.95,
+      3333.33
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72/orderbook"
+   },
+   "contracts_24h": 6425.87,
+   "open_interest_contracts": 17180.03,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 2142.04,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-10-29T00:34:19Z",
+   "close_time": "2026-11-23T15:00:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXRT-HUN-72&min_ts=1795088749&limit=1000&max_ts=1795175149",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-FUR-85",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-FUR",
+   "event_title": "The Further Mis-Adventures of Cliff Booth \u00b7 Rotten Tomatoes score",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.17,
+   "previous_price": 0.43,
+   "yes_bid": 0.14,
+   "yes_ask": 0.17,
+   "implied_yes_ask": 0.17,
+   "best_yes_bid_contracts": 33373.32,
+   "best_no_bid_contracts": 877.19,
+   "yes_bid_levels": 7,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.14,
+      50.4
+     ],
+     [
+      0.13,
+      1282.05
+     ],
+     [
+      0.12,
+      1388.88
+     ],
+     [
+      0.04,
+      3939.8
+     ],
+     [
+      0.03,
+      16666.65
+     ],
+     [
+      0.02,
+      16666.66
+     ],
+     [
+      0.01,
+      33373.32
+     ]
+    ],
+    "no": [
+     [
+      0.83,
+      881.17
+     ],
+     [
+      0.82,
+      925.92
+     ],
+     [
+      0.81,
+      877.19
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85/orderbook"
+   },
+   "contracts_24h": 25280.78,
+   "open_interest_contracts": 24822.67,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1697.75,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-09T22:04:17Z",
+   "close_time": "2026-11-30T15:00:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXRT-FUR-85&min_ts=1795088743&limit=1000&max_ts=1795175143",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-HUN-77",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-HUN",
+   "event_title": "The Hunger Games: Sunrise on the Reaping \u00b7 Rotten Tomatoes score",
+   "title": "The Hunger Games: Sunrise on the Reaping Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.12,
+   "previous_price": 0.1,
+   "yes_bid": 0.08,
+   "yes_ask": 0.12,
+   "implied_yes_ask": 0.12,
+   "best_yes_bid_contracts": 80.0,
+   "best_no_bid_contracts": 399.86,
+   "yes_bid_levels": 4,
+   "no_bid_levels": 1,
+   "book": {
+    "yes": [
+     [
+      0.08,
+      2082.33
+     ],
+     [
+      0.07,
+      2380.95
+     ],
+     [
+      0.06,
+      2777.77
+     ],
+     [
+      0.01,
+      80.0
+     ]
+    ],
+    "no": [
+     [
+      0.88,
+      399.86
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-77/orderbook"
+   },
+   "contracts_24h": 6904.96,
+   "open_interest_contracts": 20877.06,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 748.57,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-10-29T00:34:19Z",
+   "close_time": "2026-11-23T15:00:00Z",
+   "expected_expiration_time": "2026-11-23T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-77",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXRT-HUN-77&min_ts=1795088745&limit=1000&max_ts=1795175145",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-77/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-INV",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will The Invite win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.03,
+   "yes_bid": 0.01,
+   "yes_ask": 0.02,
+   "implied_yes_ask": 0.02,
+   "best_yes_bid_contracts": 33333.32,
+   "best_no_bid_contracts": 8333.32,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      33333.32
+     ]
+    ],
+    "no": [
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.96,
+      8333.32
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-INV/orderbook"
+   },
+   "contracts_24h": 13888.88,
+   "open_interest_contracts": 52273.19,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 333.33,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-07-30T15:34:16Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-INV",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXOSCARPIC-27-INV&min_ts=1795088744&limit=1000&max_ts=1795175144",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-INV/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-WIL",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will Wild Horse Nine win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.03,
+   "yes_bid": 0.01,
+   "yes_ask": 0.02,
+   "implied_yes_ask": 0.02,
+   "best_yes_bid_contracts": 33334.32,
+   "best_no_bid_contracts": 8333.32,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      33334.32
+     ]
+    ],
+    "no": [
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.96,
+      8333.32
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-WIL/orderbook"
+   },
+   "contracts_24h": 13888.88,
+   "open_interest_contracts": 1206919.88,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 333.33,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-03-19T23:57:06Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-WIL",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXOSCARPIC-27-WIL&min_ts=1795088744&limit=1000&max_ts=1795175144",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-WIL/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-ART",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will Artificial win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.03,
+   "yes_bid": 0.01,
+   "yes_ask": 0.02,
+   "implied_yes_ask": 0.02,
+   "best_yes_bid_contracts": 33333.32,
+   "best_no_bid_contracts": 8333.32,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      33333.32
+     ]
+    ],
+    "no": [
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.96,
+      8333.32
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ART/orderbook"
+   },
+   "contracts_24h": 13888.88,
+   "open_interest_contracts": 230235.54,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 333.33,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-03-19T23:57:06Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ART",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXOSCARPIC-27-ART&min_ts=1795088745&limit=1000&max_ts=1795175145",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ART/orderbook"
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-FUR-75",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-FUR",
+   "event_title": "The Further Mis-Adventures of Cliff Booth \u00b7 Rotten Tomatoes score",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.94,
+   "previous_price": 0.94,
+   "yes_bid": 0.93,
+   "yes_ask": 0.94,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 1460.26,
+   "open_interest_contracts": 2382.36,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-09T22:04:17Z",
+   "close_time": "2026-11-30T15:00:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-75",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-FUR-70",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-FUR",
+   "event_title": "The Further Mis-Adventures of Cliff Booth \u00b7 Rotten Tomatoes score",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.97,
+   "previous_price": 0.79,
+   "yes_bid": 0.96,
+   "yes_ask": 0.97,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 841.42,
+   "open_interest_contracts": 2386.38,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-09T22:04:17Z",
+   "close_time": "2026-11-30T15:00:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-70",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXRT-FOC-50",
+   "series_ticker": "KXRT",
+   "event_ticker": "KXRT-FOC",
+   "event_title": "Focker-In-Law \u00b7 Rotten Tomatoes score",
+   "title": "Focker-In-Law Rotten Tomatoes score?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.74,
+   "previous_price": 0.74,
+   "yes_bid": 0.74,
+   "yes_ask": 0.76,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 233.96,
+   "open_interest_contracts": 1752.01,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-10-19T20:03:46Z",
+   "close_time": "2026-11-30T15:00:00Z",
+   "expected_expiration_time": "2026-11-30T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention a culture review score \u2014 matched title (pattern \"rotten\\s*tomatoes|\\bmetacritic\\b\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FOC-50",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-DUN",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will Dune: Part Three win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.1,
+   "previous_price": 0.09,
+   "yes_bid": 0.09,
+   "yes_ask": 0.1,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 153.0,
+   "open_interest_contracts": 1288198.97,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-03-19T23:57:06Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-DUN",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-YOU",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will You Can See Everything win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.2,
+   "previous_price": 0.21,
+   "yes_bid": 0.2,
+   "yes_ask": 0.21,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 128.4,
+   "open_interest_contracts": 924332.63,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-09-09T00:04:04Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-YOU",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXOSCARPIC-27-ODY",
+   "series_ticker": "KXOSCARPIC",
+   "event_ticker": "KXOSCARPIC-27",
+   "event_title": "Oscar for Best Picture?",
+   "title": "Will The Odyssey win Best Picture at the Oscars?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.99,
+   "previous_price": 0.53,
+   "yes_bid": 0.0,
+   "yes_ask": 0.99,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 44.0,
+   "open_interest_contracts": 524760.6,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-03-19T23:57:06Z",
+   "close_time": "2027-12-31T15:00:00Z",
+   "expected_expiration_time": "2027-12-31T15:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Oscar \u2014 matched title (pattern \"\\boscar\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ODY",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-T149999.99",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 0.01,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": {
+    "yes": [],
+    "no": [],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-T149999.99/orderbook"
+   },
+   "contracts_24h": 92031.97,
+   "open_interest_contracts": 11453252.92,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1503.6,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-T149999.99",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-T149999.99&min_ts=1795088788&limit=1000&max_ts=1795175188",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-T149999.99/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B127500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": {
+    "yes": [],
+    "no": [],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B127500/orderbook"
+   },
+   "contracts_24h": 61515.45,
+   "open_interest_contracts": 39622137.23,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1004.0,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B127500",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-B127500&min_ts=1795088788&limit=1000&max_ts=1795175188",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B127500/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B112500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": 0.01,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": 5555.55,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [],
+    "no": [
+     [
+      0.99,
+      16666.66
+     ],
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B112500/orderbook"
+   },
+   "contracts_24h": 61506.05,
+   "open_interest_contracts": 12723571.22,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1003.9,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B112500",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-B112500&min_ts=1795088788&limit=1000&max_ts=1795175188",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B112500/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B107500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": {
+    "yes": [],
+    "no": [],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B107500/orderbook"
+   },
+   "contracts_24h": 58993.54,
+   "open_interest_contracts": 8441491.85,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 978.77,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B107500",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-B107500&min_ts=1795088789&limit=1000&max_ts=1795175189",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B107500/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B117500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": 0.01,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": 5555.55,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [],
+    "no": [
+     [
+      0.99,
+      16666.66
+     ],
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B117500/orderbook"
+   },
+   "contracts_24h": 58983.91,
+   "open_interest_contracts": 21106124.34,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 978.6,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B117500",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-B117500&min_ts=1795088790&limit=1000&max_ts=1795175190",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B117500/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B97500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.04,
+   "yes_bid": 0.0,
+   "yes_ask": 0.97,
+   "implied_yes_ask": 0.01,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": 2994602.38,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 4,
+   "book": {
+    "yes": [],
+    "no": [
+     [
+      0.99,
+      16666.66
+     ],
+     [
+      0.98,
+      8333.33
+     ],
+     [
+      0.97,
+      5555.55
+     ],
+     [
+      0.03,
+      2994602.38
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B97500/orderbook"
+   },
+   "contracts_24h": 31512.71,
+   "open_interest_contracts": 7322453.32,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 708.43,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B97500",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCY-27JAN0100-B97500&min_ts=1795088790&limit=1000&max_ts=1795175190",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B97500/orderbook"
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B92500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.04,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 31177.81,
+   "open_interest_contracts": 6479603.84,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B92500",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B132500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 31005.74,
+   "open_interest_contracts": 12935444.79,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B132500",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B32500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 30975.26,
+   "open_interest_contracts": 6356456.28,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B32500",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B27500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.01,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 30967.91,
+   "open_interest_contracts": 19440841.68,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B27500",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B87500",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.03,
+   "previous_price": 0.02,
+   "yes_bid": 0.01,
+   "yes_ask": 0.04,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 28584.46,
+   "open_interest_contracts": 6083824.09,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B87500",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXBTCY-27JAN0100-T20000.00",
+   "series_ticker": "KXBTCY",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "event_title": "Bitcoin price at the end of 2026",
+   "title": "BTC price  on Jan 1, 2027?",
+   "status": "active",
+   "result": null,
+   "last_price": 0.01,
+   "previous_price": 0.02,
+   "yes_bid": 0.0,
+   "yes_ask": 1.0,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 28117.79,
+   "open_interest_contracts": 9351766.83,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-02-26T00:47:19Z",
+   "close_time": "2027-01-01T05:00:00Z",
+   "expected_expiration_time": "2027-01-01T05:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention Bitcoin \u2014 matched title (pattern \"\\bbitcoin\\b|\\bbtc\\b|kxbtc\")",
+   "topic_matched_weakly": false,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-T20000.00",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-SSTR",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Sepp Straka wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.025,
+   "previous_price": 0.011,
+   "yes_bid": 0.022,
+   "yes_ask": 0.025,
+   "implied_yes_ask": 0.025,
+   "best_yes_bid_contracts": 305555.47,
+   "best_no_bid_contracts": 226.0,
+   "yes_bid_levels": 8,
+   "no_bid_levels": 4,
+   "book": {
+    "yes": [
+     [
+      0.022,
+      549.0
+     ],
+     [
+      0.021,
+      7936.5
+     ],
+     [
+      0.02,
+      8333.33
+     ],
+     [
+      0.019,
+      8771.92
+     ],
+     [
+      0.009,
+      18518.51
+     ],
+     [
+      0.008,
+      249999.96
+     ],
+     [
+      0.007,
+      261904.72
+     ],
+     [
+      0.006,
+      305555.47
+     ]
+    ],
+    "no": [
+     [
+      0.975,
+      6516.32
+     ],
+     [
+      0.974,
+      6410.25
+     ],
+     [
+      0.973,
+      6172.83
+     ],
+     [
+      0.972,
+      226.0
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook"
+   },
+   "contracts_24h": 515192.51,
+   "open_interest_contracts": 681894.62,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 6162.2,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-SSTR&min_ts=1795088821&limit=1000&max_ts=1795175221",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-TMOO",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Taylor Moore wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.005,
+   "previous_price": 0.006,
+   "yes_bid": 0.004,
+   "yes_ask": 0.005,
+   "implied_yes_ask": 0.005,
+   "best_yes_bid_contracts": 833413.3,
+   "best_no_bid_contracts": 366666.52,
+   "yes_bid_levels": 4,
+   "no_bid_levels": 6,
+   "book": {
+    "yes": [
+     [
+      0.004,
+      916666.52
+     ],
+     [
+      0.003,
+      1499999.85
+     ],
+     [
+      0.002,
+      416666.65
+     ],
+     [
+      0.001,
+      833413.3
+     ]
+    ],
+    "no": [
+     [
+      0.995,
+      94463.4
+     ],
+     [
+      0.994,
+      83333.31
+     ],
+     [
+      0.993,
+      71428.56
+     ],
+     [
+      0.992,
+      458333.26
+     ],
+     [
+      0.991,
+      407407.22
+     ],
+     [
+      0.99,
+      366666.52
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TMOO/orderbook"
+   },
+   "contracts_24h": 840965.93,
+   "open_interest_contracts": 1149202.14,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 4206.97,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": true,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TMOO",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-TMOO&min_ts=1795088816&limit=1000&max_ts=1795175216",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TMOO/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-MPEN",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Marco Penge wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.007,
+   "previous_price": 0.01,
+   "yes_bid": 0.006,
+   "yes_ask": 0.007,
+   "implied_yes_ask": 0.007,
+   "best_yes_bid_contracts": 1166766.62,
+   "best_no_bid_contracts": 13888.88,
+   "yes_bid_levels": 6,
+   "no_bid_levels": 6,
+   "book": {
+    "yes": [
+     [
+      0.006,
+      56104.54
+     ],
+     [
+      0.005,
+      189359.2
+     ],
+     [
+      0.004,
+      291666.62
+     ],
+     [
+      0.003,
+      388888.85
+     ],
+     [
+      0.002,
+      583333.31
+     ],
+     [
+      0.001,
+      1166766.62
+     ]
+    ],
+    "no": [
+     [
+      0.993,
+      65908.18
+     ],
+     [
+      0.992,
+      145833.31
+     ],
+     [
+      0.991,
+      129850.57
+     ],
+     [
+      0.99,
+      133333.28
+     ],
+     [
+      0.989,
+      15151.51
+     ],
+     [
+      0.988,
+      13888.88
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPEN/orderbook"
+   },
+   "contracts_24h": 407748.44,
+   "open_interest_contracts": 417738.36,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 2555.05,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPEN",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MPEN&min_ts=1795088825&limit=1000&max_ts=1795175225",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPEN/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-SSTE",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Sam Stevens wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.005,
+   "previous_price": 0.01,
+   "yes_bid": 0.004,
+   "yes_ask": 0.005,
+   "implied_yes_ask": 0.005,
+   "best_yes_bid_contracts": 2500079.9,
+   "best_no_bid_contracts": 380952.32,
+   "yes_bid_levels": 4,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.004,
+      374999.94
+     ],
+     [
+      0.003,
+      1333333.2
+     ],
+     [
+      0.002,
+      1999999.92
+     ],
+     [
+      0.001,
+      2500079.9
+     ]
+    ],
+    "no": [
+     [
+      0.995,
+      527408.64
+     ],
+     [
+      0.994,
+      444444.32
+     ],
+     [
+      0.993,
+      380952.32
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTE/orderbook"
+   },
+   "contracts_24h": 347344.69,
+   "open_interest_contracts": 392406.77,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 2046.65,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTE",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-SSTE&min_ts=1795088835&limit=1000&max_ts=1795175235",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTE/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-ZBLA",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Zac Blair wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.011,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 166706.66,
+   "best_no_bid_contracts": 33333.33,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      83333.33
+     ],
+     [
+      0.001,
+      166706.66
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55554.69
+     ],
+     [
+      0.996,
+      41666.66
+     ],
+     [
+      0.995,
+      33333.33
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-ZBLA/orderbook"
+   },
+   "contracts_24h": 229973.53,
+   "open_interest_contracts": 258967.76,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 2036.4,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-ZBLA",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-ZBLA&min_ts=1795088839&limit=1000&max_ts=1795175239",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-ZBLA/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-MPAV",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Matthieu Pavon wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.005,
+   "yes_bid": 0.001,
+   "yes_ask": 1.0,
+   "implied_yes_ask": 0.003,
+   "best_yes_bid_contracts": 166726.66,
+   "best_no_bid_contracts": 33333.33,
+   "yes_bid_levels": 2,
+   "no_bid_levels": 3,
+   "book": {
+    "yes": [
+     [
+      0.002,
+      83333.33
+     ],
+     [
+      0.001,
+      166726.66
+     ]
+    ],
+    "no": [
+     [
+      0.997,
+      55554.61
+     ],
+     [
+      0.996,
+      41666.66
+     ],
+     [
+      0.995,
+      33333.33
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPAV/orderbook"
+   },
+   "contracts_24h": 396454.18,
+   "open_interest_contracts": 401103.45,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": 1370.31,
+   "dollar_formula": "SUM(yes_price_dollars * count_fp) over trades with min_ts = now-24h from GET /markets/trades",
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPAV",
+    "notional": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGATOUR-THRC26-MPAV&min_ts=1795088830&limit=1000&max_ts=1795175230",
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPAV/orderbook"
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-TCRO",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Trace Crowe wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.01,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 224329.01,
+   "open_interest_contracts": 247412.18,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TCRO",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-RCAS",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Ricky Castillo wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.022,
+   "previous_price": 0.011,
+   "yes_bid": 0.019,
+   "yes_ask": 0.022,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 215733.06,
+   "open_interest_contracts": 224563.74,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-RCAS",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-RHOE",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Rico Hoey wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.003,
+   "previous_price": 0.011,
+   "yes_bid": 0.002,
+   "yes_ask": 0.003,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 175464.34,
+   "open_interest_contracts": 183368.81,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-RHOE",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-NSHI",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Neal Shipley wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.02,
+   "previous_price": 0.008,
+   "yes_bid": 0.019,
+   "yes_ask": 0.02,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 174495.7,
+   "open_interest_contracts": 184139.81,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-NSHI",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXPGATOUR-THRC26-NDUN",
+   "series_ticker": "KXPGATOUR",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "event_title": "The RSM Classic Winner",
+   "title": "The RSM Classic: Nick Dunlap wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.006,
+   "previous_price": 0.003,
+   "yes_bid": 0.005,
+   "yes_ask": 0.006,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 137587.16,
+   "open_interest_contracts": 255631.24,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T01:34:34Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-NDUN",
+    "notional": null,
+    "orderbook": null
+   }
+  },
+  {
+   "topic": "golf",
+   "topic_label": "Golf",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-PATTAV",
+   "series_ticker": "KXLPGATOUR",
+   "event_ticker": "KXLPGATOUR-CMEGTC26",
+   "event_title": "CME Group Tour Championship Winner",
+   "title": "CME Group Tour Championship: Patty Tavatanakit wins",
+   "status": "active",
+   "result": null,
+   "last_price": 0.01,
+   "previous_price": 0.0,
+   "yes_bid": 0.01,
+   "yes_ask": 0.011,
+   "implied_yes_ask": null,
+   "best_yes_bid_contracts": null,
+   "best_no_bid_contracts": null,
+   "yes_bid_levels": 0,
+   "no_bid_levels": 0,
+   "book": null,
+   "contracts_24h": 66666.64,
+   "open_interest_contracts": 66666.64,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": "2026-11-16T14:04:28Z",
+   "close_time": "2026-12-06T00:00:00Z",
+   "expected_expiration_time": "2026-11-22T00:00:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": "title/tags mention golf \u2014 matched tags (pattern \"\\bgolf\\b\")",
+   "topic_matched_weakly": true,
+   "has_candles": false,
+   "sources": {
+    "markets": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXLPGATOUR&status=open&limit=60",
+    "market": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLPGATOUR-CMEGTC26-PATTAV",
+    "notional": null,
+    "orderbook": null
+   }
+  }
+ ],
  "liquidity": {
   "definition": "per-topic spread and resting depth from the order book response; the implied ask is the documented identity 1.00 - highest NO bid",
   "by_topic": [
@@ -1516,6 +5832,62 @@
     "spread": 0.019,
     "yes_bid_levels": 8,
     "no_bid_levels": 4,
+    "book": {
+     "yes": [
+      [
+       0.022,
+       549.0
+      ],
+      [
+       0.021,
+       7936.5
+      ],
+      [
+       0.02,
+       8333.33
+      ],
+      [
+       0.019,
+       8771.92
+      ],
+      [
+       0.009,
+       18518.51
+      ],
+      [
+       0.008,
+       249999.96
+      ],
+      [
+       0.007,
+       261904.72
+      ],
+      [
+       0.006,
+       305555.47
+      ]
+     ],
+     "no": [
+      [
+       0.975,
+       6516.32
+      ],
+      [
+       0.974,
+       6410.25
+      ],
+      [
+       0.973,
+       6172.83
+      ],
+      [
+       0.972,
+       226.0
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook"
+    },
     "contracts_at_best_yes_bid": 305555.47,
     "contracts_at_best_no_bid": 226.0,
     "dollar_notional_24h": 6162.2,
@@ -1530,6 +5902,54 @@
     "spread": 0.004,
     "yes_bid_levels": 4,
     "no_bid_levels": 6,
+    "book": {
+     "yes": [
+      [
+       0.004,
+       916666.52
+      ],
+      [
+       0.003,
+       1499999.85
+      ],
+      [
+       0.002,
+       416666.65
+      ],
+      [
+       0.001,
+       833413.3
+      ]
+     ],
+     "no": [
+      [
+       0.995,
+       94463.4
+      ],
+      [
+       0.994,
+       83333.31
+      ],
+      [
+       0.993,
+       71428.56
+      ],
+      [
+       0.992,
+       458333.26
+      ],
+      [
+       0.991,
+       407407.22
+      ],
+      [
+       0.99,
+       366666.52
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TMOO/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-TMOO/orderbook"
+    },
     "contracts_at_best_yes_bid": 833413.3,
     "contracts_at_best_no_bid": 366666.52,
     "dollar_notional_24h": 4206.97,
@@ -1544,6 +5964,70 @@
     "spread": 0.5,
     "yes_bid_levels": 8,
     "no_bid_levels": 6,
+    "book": {
+     "yes": [
+      [
+       0.87,
+       5.0
+      ],
+      [
+       0.86,
+       193.79
+      ],
+      [
+       0.85,
+       196.07
+      ],
+      [
+       0.84,
+       198.41
+      ],
+      [
+       0.8,
+       208.33
+      ],
+      [
+       0.79,
+       210.97
+      ],
+      [
+       0.78,
+       213.67
+      ],
+      [
+       0.39,
+       33.71
+      ]
+     ],
+     "no": [
+      [
+       0.11,
+       18.04
+      ],
+      [
+       0.1,
+       185.18
+      ],
+      [
+       0.09,
+       183.15
+      ],
+      [
+       0.08,
+       65.33
+      ],
+      [
+       0.07,
+       179.21
+      ],
+      [
+       0.06,
+       177.3
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200/orderbook"
+    },
     "contracts_at_best_yes_bid": 33.71,
     "contracts_at_best_no_bid": 177.3,
     "dollar_notional_24h": 3811.23,
@@ -1558,6 +6042,50 @@
     "spread": 0.01,
     "yes_bid_levels": 1,
     "no_bid_levels": 8,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       16666.66
+      ]
+     ],
+     "no": [
+      [
+       0.98,
+       8333.07
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.96,
+       4166.66
+      ],
+      [
+       0.92,
+       2095.93
+      ],
+      [
+       0.91,
+       3703.7
+      ],
+      [
+       0.9,
+       3333.32
+      ],
+      [
+       0.82,
+       577.36
+      ],
+      [
+       0.81,
+       877.19
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6400/orderbook"
+    },
     "contracts_at_best_yes_bid": 16666.66,
     "contracts_at_best_no_bid": 877.19,
     "dollar_notional_24h": 2746.88,
@@ -1572,6 +6100,62 @@
     "spread": 0.006,
     "yes_bid_levels": 6,
     "no_bid_levels": 6,
+    "book": {
+     "yes": [
+      [
+       0.006,
+       56104.54
+      ],
+      [
+       0.005,
+       189359.2
+      ],
+      [
+       0.004,
+       291666.62
+      ],
+      [
+       0.003,
+       388888.85
+      ],
+      [
+       0.002,
+       583333.31
+      ],
+      [
+       0.001,
+       1166766.62
+      ]
+     ],
+     "no": [
+      [
+       0.993,
+       65908.18
+      ],
+      [
+       0.992,
+       145833.31
+      ],
+      [
+       0.991,
+       129850.57
+      ],
+      [
+       0.99,
+       133333.28
+      ],
+      [
+       0.989,
+       15151.51
+      ],
+      [
+       0.988,
+       13888.88
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPEN/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPEN/orderbook"
+    },
     "contracts_at_best_yes_bid": 1166766.62,
     "contracts_at_best_no_bid": 13888.88,
     "dollar_notional_24h": 2555.05,
@@ -1586,6 +6170,34 @@
     "spread": 0.02,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.02,
+       8333.33
+      ],
+      [
+       0.01,
+       16666.66
+      ]
+     ],
+     "no": [
+      [
+       0.97,
+       5555.32
+      ],
+      [
+       0.96,
+       4166.66
+      ],
+      [
+       0.95,
+       3333.33
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72/orderbook"
+    },
     "contracts_at_best_yes_bid": 16666.66,
     "contracts_at_best_no_bid": 3333.33,
     "dollar_notional_24h": 2142.04,
@@ -1600,6 +6212,42 @@
     "spread": 0.004,
     "yes_bid_levels": 4,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.004,
+       374999.94
+      ],
+      [
+       0.003,
+       1333333.2
+      ],
+      [
+       0.002,
+       1999999.92
+      ],
+      [
+       0.001,
+       2500079.9
+      ]
+     ],
+     "no": [
+      [
+       0.995,
+       527408.64
+      ],
+      [
+       0.994,
+       444444.32
+      ],
+      [
+       0.993,
+       380952.32
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTE/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTE/orderbook"
+    },
     "contracts_at_best_yes_bid": 2500079.9,
     "contracts_at_best_no_bid": 380952.32,
     "dollar_notional_24h": 2046.65,
@@ -1614,6 +6262,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       166706.66
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55554.69
+      ],
+      [
+       0.996,
+       41666.66
+      ],
+      [
+       0.995,
+       33333.33
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-ZBLA/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-ZBLA/orderbook"
+    },
     "contracts_at_best_yes_bid": 166706.66,
     "contracts_at_best_no_bid": 33333.33,
     "dollar_notional_24h": 2036.4,
@@ -1628,6 +6304,54 @@
     "spread": 0.5,
     "yes_bid_levels": 4,
     "no_bid_levels": 6,
+    "book": {
+     "yes": [
+      [
+       0.5,
+       103.81
+      ],
+      [
+       0.49,
+       340.13
+      ],
+      [
+       0.48,
+       347.22
+      ],
+      [
+       0.01,
+       80.0
+      ]
+     ],
+     "no": [
+      [
+       0.49,
+       97.27
+      ],
+      [
+       0.48,
+       320.51
+      ],
+      [
+       0.47,
+       314.46
+      ],
+      [
+       0.39,
+       224.45
+      ],
+      [
+       0.38,
+       268.81
+      ],
+      [
+       0.37,
+       264.55
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.50/orderbook"
+    },
     "contracts_at_best_yes_bid": 80.0,
     "contracts_at_best_no_bid": 264.55,
     "dollar_notional_24h": 1772.32,
@@ -1642,6 +6366,54 @@
     "spread": 0.16,
     "yes_bid_levels": 7,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.14,
+       50.4
+      ],
+      [
+       0.13,
+       1282.05
+      ],
+      [
+       0.12,
+       1388.88
+      ],
+      [
+       0.04,
+       3939.8
+      ],
+      [
+       0.03,
+       16666.65
+      ],
+      [
+       0.02,
+       16666.66
+      ],
+      [
+       0.01,
+       33373.32
+      ]
+     ],
+     "no": [
+      [
+       0.83,
+       881.17
+      ],
+      [
+       0.82,
+       925.92
+      ],
+      [
+       0.81,
+       877.19
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-FUR-85/orderbook"
+    },
     "contracts_at_best_yes_bid": 33373.32,
     "contracts_at_best_no_bid": 877.19,
     "dollar_notional_24h": 1697.75,
@@ -1656,6 +6428,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       166726.66
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55554.61
+      ],
+      [
+       0.996,
+       41666.66
+      ],
+      [
+       0.995,
+       33333.33
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPAV/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MPAV/orderbook"
+    },
     "contracts_at_best_yes_bid": 166726.66,
     "contracts_at_best_no_bid": 33333.33,
     "dollar_notional_24h": 1370.31,
@@ -1670,6 +6470,25 @@
     "spread": null,
     "yes_bid_levels": 0,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [],
+     "no": [
+      [
+       0.99,
+       16666.66
+      ],
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B112500/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B112500/orderbook"
+    },
     "contracts_at_best_yes_bid": null,
     "contracts_at_best_no_bid": 5555.55,
     "dollar_notional_24h": 1003.9,
@@ -1684,6 +6503,25 @@
     "spread": null,
     "yes_bid_levels": 0,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [],
+     "no": [
+      [
+       0.99,
+       16666.66
+      ],
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B117500/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B117500/orderbook"
+    },
     "contracts_at_best_yes_bid": null,
     "contracts_at_best_no_bid": 5555.55,
     "dollar_notional_24h": 978.6,
@@ -1698,6 +6536,17 @@
     "spread": null,
     "yes_bid_levels": 1,
     "no_bid_levels": 0,
+    "book": {
+     "yes": [
+      [
+       0.96,
+       173.61
+      ]
+     ],
+     "no": [],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6000/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6000/orderbook"
+    },
     "contracts_at_best_yes_bid": 173.61,
     "contracts_at_best_no_bid": null,
     "dollar_notional_24h": 938.63,
@@ -1712,6 +6561,34 @@
     "spread": 0.11,
     "yes_bid_levels": 4,
     "no_bid_levels": 1,
+    "book": {
+     "yes": [
+      [
+       0.08,
+       2082.33
+      ],
+      [
+       0.07,
+       2380.95
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.01,
+       80.0
+      ]
+     ],
+     "no": [
+      [
+       0.88,
+       399.86
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-77/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-77/orderbook"
+    },
     "contracts_at_best_yes_bid": 80.0,
     "contracts_at_best_no_bid": 399.86,
     "dollar_notional_24h": 748.57,
@@ -1726,6 +6603,62 @@
     "spread": 0.004,
     "yes_bid_levels": 4,
     "no_bid_levels": 8,
+    "book": {
+     "yes": [
+      [
+       0.004,
+       166666.64
+      ],
+      [
+       0.003,
+       166666.65
+      ],
+      [
+       0.002,
+       249999.99
+      ],
+      [
+       0.001,
+       80.0
+      ]
+     ],
+     "no": [
+      [
+       0.995,
+       94452.27
+      ],
+      [
+       0.994,
+       83333.31
+      ],
+      [
+       0.993,
+       71428.56
+      ],
+      [
+       0.992,
+       20833.33
+      ],
+      [
+       0.991,
+       18518.51
+      ],
+      [
+       0.99,
+       16666.66
+      ],
+      [
+       0.184,
+       88.15
+      ],
+      [
+       0.183,
+       133.0
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG/orderbook"
+    },
     "contracts_at_best_yes_bid": 80.0,
     "contracts_at_best_no_bid": 133.0,
     "dollar_notional_24h": 711.94,
@@ -1740,6 +6673,29 @@
     "spread": null,
     "yes_bid_levels": 0,
     "no_bid_levels": 4,
+    "book": {
+     "yes": [],
+     "no": [
+      [
+       0.99,
+       16666.66
+      ],
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.03,
+       2994602.38
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B97500/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B97500/orderbook"
+    },
     "contracts_at_best_yes_bid": null,
     "contracts_at_best_no_bid": 2994602.38,
     "dollar_notional_24h": 708.43,
@@ -1754,6 +6710,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       499999.98
+      ],
+      [
+       0.001,
+       1000024.19
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55555.55
+      ],
+      [
+       0.996,
+       248401.85
+      ],
+      [
+       0.995,
+       199999.98
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook"
+    },
     "contracts_at_best_yes_bid": 1000024.19,
     "contracts_at_best_no_bid": 199999.98,
     "dollar_notional_24h": 525.33,
@@ -1768,6 +6752,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       166666.66
+      ],
+      [
+       0.001,
+       333373.32
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55416.53
+      ],
+      [
+       0.996,
+       81969.56
+      ],
+      [
+       0.995,
+       66666.66
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MOBA/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-MOBA/orderbook"
+    },
     "contracts_at_best_yes_bid": 333373.32,
     "contracts_at_best_no_bid": 66666.66,
     "dollar_notional_24h": 523.67,
@@ -1782,6 +6794,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       249999.99
+      ],
+      [
+       0.001,
+       499999.98
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55555.55
+      ],
+      [
+       0.996,
+       122974.43
+      ],
+      [
+       0.995,
+       99999.99
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-LHOG/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-LHOG/orderbook"
+    },
     "contracts_at_best_yes_bid": 499999.98,
     "contracts_at_best_no_bid": 99999.99,
     "dollar_notional_24h": 522.72,
@@ -1796,6 +6836,30 @@
     "spread": 0.003,
     "yes_bid_levels": 2,
     "no_bid_levels": 2,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       166666.66
+      ],
+      [
+       0.001,
+       333333.32
+      ]
+     ],
+     "no": [
+      [
+       0.996,
+       81362.2
+      ],
+      [
+       0.995,
+       66666.66
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-ETRU/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-ETRU/orderbook"
+    },
     "contracts_at_best_yes_bid": 333333.32,
     "contracts_at_best_no_bid": 66666.66,
     "dollar_notional_24h": 521.18,
@@ -1810,6 +6874,34 @@
     "spread": 0.002,
     "yes_bid_levels": 2,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.002,
+       249999.99
+      ],
+      [
+       0.001,
+       500019.98
+      ]
+     ],
+     "no": [
+      [
+       0.997,
+       55555.55
+      ],
+      [
+       0.996,
+       122896.54
+      ],
+      [
+       0.995,
+       99999.99
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MPEN/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MPEN/orderbook"
+    },
     "contracts_at_best_yes_bid": 500019.98,
     "contracts_at_best_no_bid": 99999.99,
     "dollar_notional_24h": 520.75,
@@ -1824,6 +6916,30 @@
     "spread": 0.01,
     "yes_bid_levels": 1,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       33333.32
+      ]
+     ],
+     "no": [
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.96,
+       8333.32
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-INV/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-INV/orderbook"
+    },
     "contracts_at_best_yes_bid": 33333.32,
     "contracts_at_best_no_bid": 8333.32,
     "dollar_notional_24h": 333.33,
@@ -1838,6 +6954,30 @@
     "spread": 0.01,
     "yes_bid_levels": 1,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       33334.32
+      ]
+     ],
+     "no": [
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.96,
+       8333.32
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-WIL/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-WIL/orderbook"
+    },
     "contracts_at_best_yes_bid": 33334.32,
     "contracts_at_best_no_bid": 8333.32,
     "dollar_notional_24h": 333.33,
@@ -1852,6 +6992,30 @@
     "spread": 0.01,
     "yes_bid_levels": 1,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       33333.32
+      ]
+     ],
+     "no": [
+      [
+       0.98,
+       8333.33
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.96,
+       8333.32
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ART/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ART/orderbook"
+    },
     "contracts_at_best_yes_bid": 33333.32,
     "contracts_at_best_no_bid": 8333.32,
     "dollar_notional_24h": 333.33,
@@ -1866,6 +7030,30 @@
     "spread": 0.01,
     "yes_bid_levels": 1,
     "no_bid_levels": 3,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       16665.66
+      ]
+     ],
+     "no": [
+      [
+       0.98,
+       4894.72
+      ],
+      [
+       0.97,
+       5555.55
+      ],
+      [
+       0.96,
+       4166.66
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6600/orderbook",
+     "captured_utc": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6600/orderbook"
+    },
     "contracts_at_best_yes_bid": 16665.66,
     "contracts_at_best_no_bid": 4166.66,
     "dollar_notional_24h": 88.0,

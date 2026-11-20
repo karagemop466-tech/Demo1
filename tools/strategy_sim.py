@@ -245,7 +245,7 @@ def _traded_jumps(points, threshold):
 def run_strategies(charts, markets_by_ticker, threshold=0.10, contracts=100,
                    hold_candles=30):
     trades = []
-    for series_ticker, mkt_ticker, label, win in _candle_series(charts):
+    for mkt_ticker, series_ticker, label, win in _candle_series(charts):
         pts = _points(win)
         if len(pts) < 4:
             continue
@@ -328,7 +328,7 @@ def run_strategies(charts, markets_by_ticker, threshold=0.10, contracts=100,
                     "book": base,
                 })
     # J3: stale-quote — enter when the entry candle traded nothing but the book moved
-    for series_ticker, mkt_ticker, label, win in _candle_series(charts):
+    for mkt_ticker, series_ticker, label, win in _candle_series(charts):
         pts = _points(win)
         if len(pts) < 6:
             continue
@@ -462,6 +462,14 @@ def liquidity(markets):
             "spread": (round(implied_yes_ask - best_yes_bid, 4)
                        if best_yes_bid is not None and implied_yes_ask is not None else None),
             "yes_bid_levels": len(yb), "no_bid_levels": len(nb),
+            # the levels themselves, kept compact (price, contracts) and capped: the
+            # depth ladder answers "how many contracts at this price", which needs them
+            "book": {
+                "yes": [[fnum(l.get("price")), fnum(l.get("contracts"))] for l in yb[-12:]],
+                "no": [[fnum(l.get("price")), fnum(l.get("contracts"))] for l in nb[-12:]],
+                "source": ob.get("source"),
+                "captured_utc": m.get("sources", {}).get("orderbook") if isinstance(m.get("sources"), dict) else None,
+            },
             "contracts_at_best_yes_bid": (fnum(yb[-1].get("contracts")) if yb else None),
             "contracts_at_best_no_bid": (fnum(nb[-1].get("contracts")) if nb else None),
             "dollar_notional_24h": (m.get("dollar_notional_24h") or {}).get("value")
@@ -492,6 +500,125 @@ def liquidity(markets):
     return rows, top[:40]
 
 
+def board(markets, per_topic=12):
+    """A compact, browser-sized ranking of live events by traded dollar notional.
+
+    The snapshot this is built from holds ~1,400 open markets with full books, which is
+    too large to hand a page; this keeps the fields a trader scans, in the units the API
+    returned them, plus the request URL for every row. `dollar_notional_24h` is the
+    collector's computed 24 h traded notional (labelled, with its formula) because the
+    API exposes no USD-volume field on GET /markets.
+    """
+    by_topic = defaultdict(list)
+    for m in markets:
+        dn = m.get("dollar_notional_24h")
+        if isinstance(dn, dict):
+            value, formula, src = dn.get("value"), dn.get("formula"), dn.get("source")
+        else:
+            value, formula, src = dn, None, None
+        ob = m.get("orderbook") or {}
+        had_book = bool(m.get("orderbook"))
+        yb, nb = ob.get("yes_bids") or [], ob.get("no_bids") or []
+        by_topic[m.get("topic") or "unclassified"].append({
+            "topic": m.get("topic"),
+            "topic_label": TOPIC_LABEL.get(m.get("topic") or "", m.get("topic")),
+            "market_ticker": m.get("market_ticker"),
+            "series_ticker": m.get("series_ticker"),
+            "event_ticker": m.get("event_ticker"),
+            "event_title": m.get("event_title"),
+            "title": m.get("title"),
+            "status": m.get("status"),
+            "result": m.get("result"),
+            "last_price": fnum(m.get("last_price")),
+            "previous_price": fnum(m.get("previous_price")),
+            "yes_bid": fnum((m.get("quotes") or {}).get("yes", {}).get("bid")),
+            "yes_ask": fnum((m.get("quotes") or {}).get("yes", {}).get("ask")),
+            "implied_yes_ask": fnum(ob.get("implied_yes_ask")),
+            "best_yes_bid_contracts": (fnum((yb[-1] or {}).get("contracts")) if yb else None),
+            "best_no_bid_contracts": (fnum((nb[-1] or {}).get("contracts")) if nb else None),
+            "yes_bid_levels": len(yb), "no_bid_levels": len(nb),
+            # the levels themselves, compact (price, contracts) and capped: the depth
+            # ladder answers "how many contracts at this price", which needs them.
+            # None (not an empty list) when no book request exists for this market.
+            "book": {
+                "yes": [[fnum(l.get("price")), fnum(l.get("contracts"))] for l in yb[-12:]],
+                "no": [[fnum(l.get("price")), fnum(l.get("contracts"))] for l in nb[-12:]],
+                "source": ob.get("source"),
+            } if had_book else None,
+            "contracts_24h": fnum(m.get("volume_24h_contracts")),
+            "open_interest_contracts": fnum(m.get("open_interest_contracts")),
+            "notional_value_dollars": fnum(m.get("notional_value_dollars")),
+            "dollar_notional_24h": value,
+            "dollar_formula": formula,
+            "open_time": m.get("open_time"),
+            "close_time": m.get("close_time"),
+            "expected_expiration_time": m.get("expected_expiration_time"),
+            "settlement_value_dollars": m.get("settlement_value_dollars"),
+            "settlement_ts": m.get("settlement_ts"),
+            "topic_match_reason": m.get("topic_match_reason"),
+            "topic_matched_weakly": m.get("topic_matched_weakly"),
+            "has_candles": False,
+            "sources": {
+                "markets": m.get("sources", {}).get("markets") if isinstance(m.get("sources"), dict) else None,
+                "market": m.get("sources", {}).get("market") if isinstance(m.get("sources"), dict) else None,
+                "notional": src,
+                "orderbook": ob.get("source"),
+            },
+        })
+    rows = []
+    for topic, lst in by_topic.items():
+        lst.sort(key=lambda r: -(r["dollar_notional_24h"] or 0.0))
+        rows.extend(lst[:per_topic])
+    return rows
+
+
+def mark_charted(rows, charts):
+    tickers = set()
+    for entry in charts.get("series", []) or []:
+        if entry.get("market_ticker"):
+            tickers.add(entry["market_ticker"])
+    for m in charts.get("markets", []) or []:
+        if m.get("candles"):
+            tickers.add(m.get("market_ticker"))
+    for r in rows:
+        r["has_candles"] = r["market_ticker"] in tickers
+    return rows
+
+
+def resolutions(resolved, limit=60):
+    """Most recently settled markets with the official outcome fields.
+
+    `result` is what the exchange set at determination — yes / no / scalar — and
+    settlement_value_dollars / settlement_ts are the payout fields, both read straight
+    from the response. A market that is past close_time but has no result is still
+    awaiting determination (status closed / determined / disputed), which is exactly the
+    "keep tracking until it resolves" set, so those rows are kept with result = null and
+    render blank on the page rather than being guessed at.
+    """
+    out = []
+    for m in resolved:
+        src = m.get("source")
+        if not src and isinstance(m.get("sources"), dict):
+            src = m.get("sources").get("markets") or m.get("sources").get("market")
+        out.append({
+            "topic": m.get("topic"), "topic_label": TOPIC_LABEL.get(m.get("topic") or "", m.get("topic")),
+            "market_ticker": m.get("market_ticker") or m.get("ticker"),
+            "event_ticker": m.get("event_ticker"), "series_ticker": m.get("series_ticker"),
+            "title": m.get("title"), "status": m.get("status"), "result": m.get("result"),
+            "last_price": fnum(m.get("last_price")) if m.get("last_price") is not None
+            else fnum(m.get("last_price_dollars")),
+            "settlement_value_dollars": fnum(m.get("settlement_value_dollars")),
+            "settlement_ts": m.get("settlement_ts"),
+            "close_time": m.get("close_time"),
+            "contracts": fnum(m.get("volume_contracts")) if m.get("volume_contracts") is not None
+            else fnum(m.get("volume_fp")),
+            "notional_value_dollars": fnum(m.get("notional_value_dollars")),
+            "source": src,
+        })
+    out.sort(key=lambda r: (r.get("settlement_ts") or r.get("close_time") or ""), reverse=True)
+    return out[:limit]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--charts", default="snapshot/charts.json")
@@ -502,6 +629,9 @@ def main():
     ap.add_argument("--threshold", type=float, default=0.10)
     ap.add_argument("--contracts", type=float, default=100)
     ap.add_argument("--hold", type=int, default=30, help="exit after N candles")
+    ap.add_argument("--resolutions-limit", type=int, default=60)
+    ap.add_argument("--board-per-topic", type=int, default=12,
+                    help="live rows kept per topic in the board the page renders")
     ap.add_argument("--min-volume", type=float, default=100.0,
                     help="contracts a market must have traded to enter the liquid-only study")
     ap.add_argument("--out", default="engine/strategies.json")
@@ -552,8 +682,8 @@ def main():
             "jump_threshold_dollars": args.threshold,
             "hold_candles": args.hold,
             "fees": {
-                "taker_formula": "round up(M x 0.07 x C x P x (1-P))",
-                "maker_formula": "round up(M x 0.0175 x C x P x (1-P))",
+                "taker_formula": "round up(M \u00d7 0.07 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
+                "maker_formula": "round up(M \u00d7 0.0175 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
                 "settlement_fee": 0,
                 "membership_fee": 0,
                 "source": FEE_SOURCE,
@@ -613,6 +743,8 @@ def main():
             "summary": summary,
             "trades": sorted(trades, key=lambda t: t["entry_t"]),
         },
+        "resolutions": resolutions(resolved_list, args.resolutions_limit),
+        "board": mark_charted(board(markets_list, args.board_per_topic), charts_blob),
         "liquidity": {
             "definition": ("per-topic spread and resting depth from the order book response; the "
                            "implied ask is the documented identity 1.00 - highest NO bid"),

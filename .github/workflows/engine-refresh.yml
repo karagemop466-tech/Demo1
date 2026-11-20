@@ -39,6 +39,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Engine arithmetic tests (fee schedule, jump rule, fills, provenance)
+        run: python3 engine/test_engine.py
       - name: Fetch demo market data for the engine
         run: python3 tools/engine_refresh.py --out engine/data/live-snapshot.json
       - name: Recompute jumps and strategy results from the refreshed data
@@ -48,6 +50,8 @@ jobs:
             --out engine/data/jumps.json || python3 tools/jump_scan.py --out engine/data/jumps.json
           python3 tools/strategy_sim.py --live engine/data/live-snapshot.json \
             --out engine/data/strategies.json || python3 tools/strategy_sim.py --out engine/data/strategies.json
+      - name: Refuse to publish data that fails the self-consistency tests
+        run: python3 engine/test_engine.py
       - name: Upload artifact (always)
         uses: actions/upload-artifact@v4
         with:

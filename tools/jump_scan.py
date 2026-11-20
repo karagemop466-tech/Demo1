@@ -194,6 +194,8 @@ def main():
     ap.add_argument("--resolved", default="snapshot/resolved.json")
     ap.add_argument("--threshold", type=float, default=0.10)
     ap.add_argument("--out", default="engine/jumps.json")
+    ap.add_argument("--emit-charts", default=None,
+                    help="also write a compact chart file (arrays, 4dp) for the browser")
     args = ap.parse_args()
 
     charts = json.load(open(args.charts, encoding="utf-8"))
@@ -239,6 +241,31 @@ def main():
             "uncovered markets are not evidence of no movement.",
         ],
     }
+    if args.emit_charts:
+        # compact tuples keep the browser payload small: [t, price_close, yes_bid, yes_ask]
+        cs = []
+        for entry in normalize_charts(charts):
+            wins = {}
+            for label, win in (entry.get("windows") or {}).items():
+                pts = []
+                for p in sorted(win.get("points") or [], key=lambda z: z.get("t") or 0):
+                    pts.append([p.get("t"),
+                                None if p.get("price_close") is None else round(to_float(p["price_close"]), 4),
+                                None if p.get("yes_bid_close") is None else round(to_float(p["yes_bid_close"]), 4),
+                                None if p.get("yes_ask_close") is None else round(to_float(p["yes_ask_close"]), 4)])
+                wins[label] = {"period_minutes": win.get("period_interval_minutes")
+                               or win.get("period_minutes"), "points": pts,
+                               "source": win.get("source"), "error": win.get("error")}
+            cs.append({"market_ticker": entry.get("market_ticker"),
+                       "series_ticker": entry.get("series_ticker"), "windows": wins})
+        os.makedirs(os.path.dirname(args.emit_charts) or ".", exist_ok=True)
+        with open(args.emit_charts, "w", encoding="utf-8") as fh:
+            json.dump({"generated_utc": payload["generated_utc"],
+                       "base": charts.get("base") or charts.get("rest_base"),
+                       "note": ("compact copy of the captured candlesticks for the chart; values are "
+                                "verbatim from the API response named in each window's source URL"),
+                       "series": cs}, fh, separators=(",", ":"))
+
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as fh:
         json.dump(payload, fh, indent=1, sort_keys=False)
