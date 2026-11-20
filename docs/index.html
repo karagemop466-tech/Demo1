@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Kalshi Demo Dashboard</h1>
+  <p class="lead">Live-market tracker for gas prices, elections, culture, crypto, and golf on Kalshi, with a source-linked data table, a live price chart, and an analysis section. Snapshot date: 2026-11-20 (UTC).</p>
+
+  <div class="banner">Trading and portfolio tracking are <b>not connected</b>. They need a Kalshi API key, which this site does not have. See <a href="portfolio.html">Portfolio &amp; trades</a>.</div>
+
+  <div class="grid">
+    <div class="card kpi"><div class="n">15</div><div class="l">Verified market rows (Kalshi production API)</div></div>
+    <div class="card kpi"><div class="n">4</div><div class="l">Categories with verified rows (gas, golf, crypto, elections)</div></div>
+    <div class="card kpi"><div class="n">1</div><div class="l">Category with no verified open market (culture)</div></div>
+    <div class="card kpi"><div class="n">0</div><div class="l">Trades placed or portfolio positions tracked</div></div>
+  </div>
+
+  <h2>Go to</h2>
+  <div class="grid">
+    <a class="tile" href="executive-summary.html"><b>Executive summary</b><span>What was built, what is verified, what is blocked, and the decisions needed.</span></a>
+    <a class="tile" href="markets.html"><b>Markets by category</b><span>Table of verified rows: gas, golf, crypto, elections, culture. Each row links to its API source.</span></a>
+    <a class="tile" href="dashboard.html"><b>Live dashboard</b><span>Price chart (seconds / minutes / hours) and orderbook liquidity by price.</span></a>
+    <a class="tile" href="portfolio.html"><b>Portfolio &amp; trades</b><span>Demo-account performance and trade log. Blocked until credentials are provided.</span></a>
+    <a class="tile" href="analysis.html"><b>Analysis</b><span>Findings from the snapshot and the trade-categorization framework.</span></a>
+    <a class="tile" href="questions.html"><b>Questions &amp; gaps</b><span>What must be answered before any decision, and how to find each missing item.</span></a>
+    <a class="tile" href="suggestions.html"><b>Suggestions</b><span>Proposed improvements. Nothing is implemented until you choose.</span></a>
+    <a class="tile" href="flagged.html"><b>Flagged for Review</b><span>Unverified items, irregularities, and repo findings, with source links.</span></a>
+    <a class="tile" href="sources.html"><b>Sources</b><span>Official documentation and API endpoints used, with links.</span></a>
+  </div>
+</main>
+<footer>Not investment advice. Data is a point-in-time snapshot from Kalshi's public REST API unless marked live. Every verified value links to its source.</footer>
+<script src="assets/common.js"></script>
+</body></html>

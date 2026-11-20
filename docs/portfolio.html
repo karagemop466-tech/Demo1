@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio &amp; trades · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Portfolio &amp; trades</h1>
+  <p class="lead">Demo-account performance, trade log, and trade categories. Nothing is connected yet.</p>
+
+  <div class="banner bad"><b>Blocked.</b> Kalshi's portfolio and order endpoints require a signed request with an API key. This session has no key, and it must not hold one in this public repository or site. A test call to <code>/portfolio/balance</code> on the demo host returned an error without credentials. <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Kalshi API keys guide</a> · <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Environments (keys are environment-specific)</a></div>
+
+  <h2>What is needed to unblock</h2>
+  <div class="card"><ol class="tight">
+    <li>A demo API key ID and private key, generated in the Kalshi demo account. Kalshi says demo keys work only on demo endpoints.</li>
+    <li>A place to sign requests that is not this static site, for example a small backend or a scheduled job whose secrets are stored outside the repo.</li>
+    <li>Your written permission to place demo orders, and any position or size limits.</li>
+  </ol></div>
+
+  <h2>Portfolio performance</h2>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Metric</th><th class="num">Value</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Demo balance</td><td class="num"><span class="blank">blank</span></td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td><td><span class="tag t-blk">Blocked</span></td></tr>
+      <tr><td>Open positions</td><td class="num"><span class="blank">blank</span></td><td>—</td><td><span class="tag t-blk">Blocked</span></td></tr>
+      <tr><td>Realized P&amp;L</td><td class="num"><span class="blank">blank</span></td><td>—</td><td><span class="tag t-blk">Blocked</span></td></tr>
+      <tr><td>Unrealized P&amp;L</td><td class="num"><span class="blank">blank</span></td><td>—</td><td><span class="tag t-blk">Blocked</span></td></tr>
+    </tbody></table></div></div>
+
+  <h2>Trade log</h2>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Date (UTC)</th><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Price</th><th>Category</th><th>Strategy tag</th><th>Result</th><th>Source</th></tr></thead>
+    <tbody><tr><td colspan="9" class="note">No trades. No orders were placed in this session.</td></tr></tbody>
+  </table></div></div>
+
+  <h2>Planned trade categories (for later analysis)</h2>
+  <div class="card"><ul class="tight">
+    <li><b>By market type:</b> monthly threshold (gas strikes), outright winner (golf), price-range bucket (crypto), long-dated outcome (elections).</li>
+    <li><b>By time to close:</b> under 1 day, 1–7 days, over 7 days.</li>
+    <li><b>By entry price:</b> under $0.10 (longshot), $0.10–$0.90, over $0.90.</li>
+    <li><b>By liquidity at entry:</b> resting contracts on the side you buy, from the orderbook at order time.</li>
+  </ul><p class="note">These categories are a design choice, not a Kalshi classification. They have no data behind them yet.</p></div>
+</main>
+<footer>Blocked until credentials are supplied. No values are estimated. Not investment advice.</footer>
+<script src="assets/common.js"></script>
+</body></html>

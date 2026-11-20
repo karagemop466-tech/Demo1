@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive summary · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Executive summary</h1>
+  <p class="lead">Snapshot 2026-11-20 (UTC). Read this first. Every figure links to a source on the pages that follow.</p>
+
+  <h2>What is done</h2>
+  <div class="card"><ul class="tight">
+    <li><b>Market data table</b> for gas prices, golf, crypto, and elections, from Kalshi's production REST API. <a href="markets.html">Markets by category</a>. <span class="tag t-ver">Verified</span></li>
+    <li><b>Live dashboard</b> with a price chart (X = time, switchable seconds / minutes / hours; Y = YES contract price) and an orderbook liquidity view (contracts available at each price). <a href="dashboard.html">Open dashboard</a>. The browser-side live feed is <span class="tag t-unv">not yet verified from a browser</span>.</li>
+    <li><b>Analysis</b> of the snapshot and a trade-categorization framework. <a href="analysis.html">Open analysis</a>.</li>
+    <li><b>Questions, suggestions, and flagged items</b>. <a href="questions.html">Questions</a> · <a href="suggestions.html">Suggestions</a> · <a href="flagged.html">Flagged for Review</a>.</li>
+  </ul></div>
+
+  <h2>What is blocked</h2>
+  <div class="card"><ul class="tight">
+    <li><b>Demo-account portfolio performance:</b> needs a Kalshi API key. The portfolio endpoint returned an error without credentials. <span class="tag t-blk">Blocked</span></li>
+    <li><b>Placing trades and tracking their results:</b> needs the same key and explicit permission to place orders. Nothing was traded. <span class="tag t-blk">Blocked</span></li>
+    <li><b>Full market list and "highest dollar amount" ranking:</b> the sandbox cannot reach Kalshi's hosts directly, and the events endpoint does not filter by category, so a full crawl needs many paginated fetches. The table is a sample. <span class="tag t-unv">Partial</span></li>
+    <li><b>Culture:</b> no open culture market was confirmed. The row is left blank and flagged. <span class="tag t-unv">Unverified</span></li>
+  </ul></div>
+
+  <h2>Key verified facts</h2>
+  <div class="card"><ul class="tight">
+    <li>Gas markets settle on the <b>AAA national average for regular gasoline</b>, read on the settlement date. Example rule (Nov 30, 2026 contracts): "strictly greater than $3.65 ... according to AAA." <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a> · <a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA</a></li>
+    <li>AAA's national regular average was <b>$3.6898 on 11/20/26</b>, down from $3.7212 yesterday and $4.2786 a month ago. <a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA national average</a></li>
+    <li>Yet the Nov 30 "above $3.65" contract's last trade was <b>$0.02</b>, and "above $3.55" was $0.13. These are contract prices, not forecasts, and they are unexplained by this session. They need checking before any reading (see Flagged). <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li>Golf: the RSM Classic winner contracts traded at $0.001–$0.003. Largest verified volume: Robert Streb (16,578.83 contracts). <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li>Crypto: the four sampled BTC range contracts for Nov 20, 2026 (close 12:00 UTC) have <b>zero volume and zero open interest</b>. <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li>Elections: NATO Secretary General contracts (close dates in 2099) show Kaja Kallas at $0.13 last trade and 1,962.46 contracts of volume. <a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li>The demo environment carries placeholder-like data (titles "x", "demo strike", 2099 closes). Demo and production also disagree on a category label. Treat demo values as test data. See Flagged.</li>
+  </ul></div>
+
+  <h2>Decisions needed from you</h2>
+  <div class="card"><ol class="tight">
+    <li>Provide a Kalshi <b>demo</b> API key pair with a secure place to sign requests (a backend or your own machine). GitHub Pages cannot hold keys. Without this, portfolio and trade tasks cannot start.</li>
+    <li>Confirm whether the dashboard should show <b>production</b> live markets (default), <b>demo</b> markets, or both.</li>
+    <li>Choose the next build step from <a href="suggestions.html">Suggestions</a> (for example, a full scheduled crawl, or a WebSocket feed for true per-second prices).</li>
+    <li>Decide how the five overlapping session branches should be reconciled (see COORDINATION.md on the repo).</li>
+  </ol></div>
+
+  <p class="note">Not investment advice. Secondary web articles were used only to locate series tickers; every value on this site comes from Kalshi's API or AAA's page, and the sources page says which.</p>
+</main>
+<footer>Snapshot 2026-11-20 · Sources listed on the Sources page · Unverified items on Flagged for Review.</footer>
+<script src="assets/common.js"></script>
+</body></html>
