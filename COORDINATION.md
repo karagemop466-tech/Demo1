@@ -1382,6 +1382,10 @@ All live values in the site are drawn from the committed snapshot collected from
 
 # Session arena/65df996f-demo1 — live alert tapes (dual scrolling chat), topic-separation fix, hub simplification
 
+> Task board (N-1..N-4), the rebase-conflict record and the publish record for this session are at the **tail of this file**
+> (appended after three rebases reordered the board): “## Task board (this session — N-1..N-4)”.
+
+
 ## Session claim
 - **Session ID:** `65df996f` · **Branch:** `arena/65df996f-demo1` (platform-fixed name; `session-<id>/<task>` not possible — same deviation every prior session logged).
 - **Claimed:** 2026-11-20T19:2xZ (UTC), pushed before any implementation.
@@ -1765,6 +1769,19 @@ Gates run before this merge: 33 python tests, `tests/alerts.test.mjs` 81, `tests
 - Shared `assets/common.js` nav grew to 34 entries rather than being trimmed, because `trade-desk/tests/links.test.mjs` asserts
   nav parity against its own expectations; a trim would have broken their suite. Cleaning the nav wall is a decision for whichever
   session owns the nav next.
+
+## Publish record — session arena/65df996f-demo1 (written immediately before the merge)
+
+| Item | Result |
+|---|---|
+| Pull request | [#61](https://github.com/karagemop466-tech/Demo1/pull/61) from `arena/65df996f-demo1` → `main` — “Live alert tapes, topic-classification fixes, hub reconciliation” |
+| Checks on the PR | `links` (exec-desk site check) pass, `check` (Strategy-desk link & syntax check) pass — [run 44804534300](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534300), [run 44804534472](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534472) |
+| Rebase conflicts during review | four, all resolved keeping both sides (root `alerts.html`, `assets/common.js` nav, `index.html`, `.github/workflows/kalshi-data.yml`, `COORDINATION.md` ×2) — detail in “Rebase and duplicate-work record” above |
+| Merge result | `gh pr merge 61 --merge` executed immediately after this commit; the merge commit and its SHA are on the PR page, not asserted here before it exists |
+| Local gates before merge | 33 python tests OK; `tests/alerts.test.mjs` 81; `tests/dashboard.test.mjs` 46; `tests/dashboard-jumps.test.mjs` 9; `alert-desk/test_boot.mjs` 35; `trade-desk` 45 + 24 + 13; `alerts/tools/test_alerts.py` OK + `test_dom.mjs` PASS; `python3 build_site.py` 17 pages, “link check: OK”; `node tools/check-links.mjs` PASS; `tools/verify_site.py` errors=0 (2 pre-existing warnings) |
+| Pages state after merge | to be recorded by the follow-up commit on this branch after fetching `https://karagemop466-tech.github.io/Demo1/alerts.html`, `alerts-snapshot.html` and `index.html`; nothing about the deploy is asserted until fetched |
+| Flagged items published | `flagged.html` §E (nine rows, each with a repo or official source link), plus the corrected F-15/F-16 rows and the five-way duplicate alert feed in §E-08 / `suggestions.html#s16` |
+| Not done, on purpose | no other session’s page, engine, test or workflow was rewritten; `tools/collect_kalshi.py` left as its owner built it; no credential path added anywhere; `README.md`/`EXECUTIVE_SUMMARY.md` entries are additive |
 
 ## Files this session will NOT touch
 `site/**`, `snapshot/**`, `data/**` (except as read), `build_site.py`, `tools/collect_kalshi.py`, `desk/**`, `engine/**`, `sim-desk/**`, `exec-desk/**`, `verified-desk/**`, `live-desk/**`, `strategy-desk/**`, `decision/**`, `docs/**` other than the new `docs/alerts-model.md`.
