@@ -236,3 +236,22 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - PR #8 was opened before discovering the base-branch integration and initially conflicted on `index.html`, `README.md`, `COORDINATION.md`, and `.github/workflows/pages.yml`. Rebase resolution preserved the latest `origin/main` versions of all those shared files and relocated this session's work under `live-desk/`. Final PR URL and result will be recorded here after checks/merge.
 - Source review performed against official Kalshi docs: [API Environments](https://docs.kalshi.com/getting_started/api_environments), [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets), [Get Market](https://docs.kalshi.com/api-reference/market/get-market), [Get Events](https://docs.kalshi.com/api-reference/events/get-events), [Get Multiple Market Orderbooks](https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks), [Orderbook Responses](https://docs.kalshi.com/getting_started/orderbook_responses), [Market Data Quick Start](https://docs.kalshi.com/getting_started/quick_start_market_data), [API Keys](https://docs.kalshi.com/getting_started/api_keys), [Authenticated Requests](https://docs.kalshi.com/getting_started/quick_start_authenticated_requests), [Balance](https://docs.kalshi.com/api-reference/portfolio/get-balance), [Positions](https://docs.kalshi.com/api-reference/portfolio/get-positions), [Fills](https://docs.kalshi.com/api-reference/portfolio/get-fills), [Orders](https://docs.kalshi.com/api-reference/orders/get-orders), [Create Order](https://docs.kalshi.com/getting_started/quick_start_create_order), [WebSockets](https://docs.kalshi.com/getting_started/quick_start_websockets).
 - Checks on this source tree: `node --check live-desk/app.js`; `python3 live-desk/scripts/build_site.py`; `python3 live-desk/scripts/check_site.py --root live-desk/.site-dist` passed with 11 pages, 56 official-linked data rows, and all relative links/anchors resolved; `git diff --check`; local static HTTP smoke test returned 200 for the dashboard, JS and topic pages. No live Kalshi market/account request was made. Browser CORS is unverified; private account data and order entry remain disabled for lack of authorized credentials and a secure signing service.
+
+---
+
+## Session arena/c1f56180-demo1 — independent source-audit claim
+
+The current branch is fixed as `arena/c1f56180-demo1`. The repository now has a canonical root site/data and a separate `/live-desk/` site; both were merged after this branch's original base. To avoid overlap with active application work, this session is limited to a source-linked audit report and correction requests; it will not edit application, page, workflow, or market-data files.
+
+| Task | Status | Owner session | File scope |
+|---|---|---|---|
+| Independently audit the current GitHub Pages site/data against official Kalshi docs; publish findings and correction requests | in progress | arena/c1f56180-demo1 | `docs/audit-review.html`, `COORDINATION.md` |
+
+### Concurrent work / non-overlap
+
+- PR #8 (`arena/0135085b-demo1`) has now merged a separate `/live-desk/` site. This audit will not edit it.
+- [PR #9](https://github.com/karagemop466-tech/Demo1/pull/9), branch `arena/7bc11020-demo1`, remains open and modifies the root site. This audit will not edit its files; findings will be recorded in `docs/audit-review.html` and correction requests logged here.
+
+### Conflict log
+
+- 2026-11-20 — The claim commit was rebased after `origin/main` advanced from `80b1e83` through `cc87c36` and then `99a3234` (PR #8 merge). Both rebases conflicted in `COORDINATION.md` because main appended other sessions' boards. Resolution each time retained the full incoming main board and appended this audit-only claim. No other session's work was discarded. Scope remains limited to this audit report and coordination log.
