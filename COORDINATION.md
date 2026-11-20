@@ -584,7 +584,70 @@ Fees: https://kalshi.com/docs/kalshi-fee-schedule.pdf · https://kalshi.com/fee-
 Live responses: the 27 requests logged in `verified-desk/provenance.html`, all against `https://external-api.demo.kalshi.co/trade-api/v2`.
 Demo account walkthrough (linked from the demo-env page): https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account
 
-## Publish record — session s-8344abc8 (`verified-desk/`)
+---
+
+# Session arena/3a5f6f1d-demo1 — exec-desk (live trading desk)
+
+## Session claim
+- **Session ID:** `arena-3a5f6f1d` — branch `arena/3a5f6f1d-demo1` (fixed; Arena tracks this session by branch, so the `session-<id>/<task>` branch convention could not be used).
+- **Claimed:** 2026-11-20, first commit `7ede826` pushed before implementation work.
+- **File scope:** `exec-desk/**`, `.github/workflows/site-check.yml`, this section of `COORDINATION.md`, a new "exec-desk" section appended to `README.md`, and one tile section added to root `index.html` (integration convention used by earlier sessions).
+- **Overlap handling:** root `index.html`, `README.md`, `.gitignore`, `docs/`, `pages/`, `site/` etc. belong to other sessions — this session's site was relocated from the repo root into `exec-desk/` (commit after claim) so no other session's files are overwritten; add/add conflicts with `main` were resolved by keeping `main`'s versions of shared files and appending to them.
+
+## Task board
+| ID | Task | Status | Owner | File scope |
+|---|---|---|---|---|
+| T01 | Repo review; coordination board | done | arena-3a5f6f1d | COORDINATION.md (this section) |
+| T02 | Official-source research & verification log | done | arena-3a5f6f1d | exec-desk/docs/SOURCES.md, exec-desk/docs/VERIFICATION.md |
+| T03 | Executive summary page | done | arena-3a5f6f1d | exec-desk/executive-summary.html |
+| T04 | Live API data layer (REST client, polling, CORS strategy) | done | arena-3a5f6f1d | exec-desk/js/kalshi.js, exec-desk/js/config.js |
+| T05 | Dashboard: top dollar-amount events, 5 topics, sec/min/hour chart, liquidity depth | done | arena-3a5f6f1d | exec-desk/dashboard.html, exec-desk/js/dashboard.js, exec-desk/js/chart.js |
+| T06 | Markets tracker: live events until resolution, YES/NO watch log | done | arena-3a5f6f1d | exec-desk/markets.html, exec-desk/js/markets.js |
+| T07 | Portfolio performance (demo account) + categorization + strategy rollups | done | arena-3a5f6f1d | exec-desk/portfolio.html, exec-desk/js/portfolio.js |
+| T08 | Trade execution (REAL demo V2 orders + SIMULATED paper fills) | done | arena-3a5f6f1d | exec-desk/trades.html, exec-desk/js/trades.js, exec-desk/js/trade-exec.js |
+| T09 | Suggestions section (accept/reject/defer + path picker) | done | arena-3a5f6f1d | exec-desk/suggestions.html, exec-desk/js/suggestions.js |
+| T10 | Questions / missing-information list | done | arena-3a5f6f1d | exec-desk/questions.html |
+| T11 | Flagged for Review page | done | arena-3a5f6f1d | exec-desk/flagged.html, exec-desk/js/flagged.js |
+| T12 | Landing page + shared nav + styles | done | arena-3a5f6f1d | exec-desk/index.html, exec-desk/css/styles.css, exec-desk/js/nav.js |
+| T13 | GitHub Pages integration: link check, CI, PR → main, merge, deploy confirmation | done | arena-3a5f6f1d | .github/workflows/site-check.yml, PR record below |
+
+## Sources (this session — full register in exec-desk/docs/SOURCES.md)
+- https://docs.kalshi.com/llms.txt (official doc index; every page below exists)
+- https://docs.kalshi.com/getting_started/demo_env (demo REST/WS URLs = the brief's table, verbatim; mock funds; "prices may not reflect real markets")
+- https://docs.kalshi.com/getting_started/api_environments (prod+demo endpoint tables; signed path = no query string)
+- https://docs.kalshi.com/getting_started/quick_start_market_data (public market data, no auth; orderbook arrays ascending best-last)
+- https://docs.kalshi.com/getting_started/quick_start_websockets (WS handshake requires signed headers → REST polling without keys)
+- https://docs.kalshi.com/api-reference/market/get-markets · get-series-list · get-market-orderbook · get-market-candlesticks
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/api-reference/portfolio/get-balance · get-positions · get-settlements · get-fills
+- https://docs.kalshi.com/api-reference/orders/get-orders · create-order-v2 (legacy /portfolio/orders writes → 410)
+- https://docs.kalshi.com/getting_started/market_settlement · market_lifecycle · api_keys · rate_limits
+- https://kalshi.com/docs/kalshi-fee-schedule.pdf · https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account
+- CORS evidence from session arena-6aa291e9: `data/cors.json` (ACAO for the github.io origin, 2026-11-20) — folded into UNVERIFIED-01/03.
+
+## Verification performed (this session)
+- Every API claim read page-by-page from docs.kalshi.com and cross-checked against the embedded OpenAPI spec; per-line table in exec-desk/docs/VERIFICATION.md (30+ rows).
+- `node --check` on all 11 exec-desk JS files; `python3 exec-desk/scripts/check_links.py` (117 internal links, 0 broken); repo-wide `node tools/check-links.mjs` run before merge (secrets + link audit).
+- Table rows on data pages link the live official API URL + the official schema page; values that cannot be confirmed render blank with an UNVERIFIED flag (never inferred).
+
+## Irregularities flagged (published on exec-desk/flagged.html)
+1. UNVERIFIED-01 — CORS undocumented in official docs; github.io origin evidenced working via `data/cors.json`; runtime detection retained.
+2. UNVERIFIED-02 — no demo API credentials anywhere; authenticated cells blank; SIMULATED ledger clearly labeled.
+3. UNVERIFIED-03 — optional third-party relay fallback (public data only), toggleable, expected never to engage on github.io.
+4. UNVERIFIED-04 — "highest dollar amount" has no official field; computed 24h $ volume disclosed, ranking toggle shows official alternatives.
+5. UNVERIFIED-05 — demo prices may not reflect real markets (official warning).
+6. UNVERIFIED-06 — official series `category` strings unpublished → transparent keyword classifier, matched series shown per row.
+7. UNVERIFIED-07 — no official sub-minute candles; seconds mode is labeled client sampling.
+8. Repo/API irregularities R1–R5 (placeholder README pre-integration; prose vs enum `paused`; deprecated market `title`; legacy order writes 410; sandbox egress) on exec-desk/flagged.html.
+
+## Conflict log (this session)
+- Round 1 (pre-PR): add/add on `README.md`, `COORDINATION.md`, `.gitignore` vs `origin/main` — resolved by keeping `main`'s versions and appending this session's sections; site relocated to `exec-desk/`. No other session's work discarded.
+- Round 2 (PR #25 open, merge attempt rejected with conflicts): `main` advanced via PRs #23 and #24 while #25 was open. `index.html` auto-merged; `COORDINATION.md` conflicted — resolved by keeping **both** sides (this session's section + publish records of sessions s-8344abc8 and arena/4df8be5b). No other session's work discarded.
+
+## PR & deploy record
+- **PR #25:** https://github.com/karagemop466-tech/Demo1/pull/25 — `arena/3a5f6f1d-demo1` → `main`.
+- CI on the PR head: `site-check` (exec-desk links + JS) **pass**; `Strategy-desk link & syntax check` **pass**; repo-wide `node tools/check-links.mjs` **pass** locally; all `pages.yml` deploy steps verified locally (build_site.py link check OK).
+- Merge: `gh pr merge 25 --merge` executed immediately after this record was pushed (no waiting for review, per brief). Post-merge merge SHA and Pages build status are recorded in the follow-up entry below.## Publish record — session s-8344abc8 (`verified-desk/`)
 
 | Item | Value |
 | --- | --- |
@@ -616,4 +679,3 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
   workflow rebuilds it and fails the deploy if any internal link breaks.
 - `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
 - Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.
-

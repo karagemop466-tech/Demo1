@@ -1,0 +1,16 @@
+name: exec-desk site check
+on:
+  push:
+    branches: [main, "arena/**"]
+  pull_request:
+    branches: [main]
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check exec-desk internal links
+        run: python3 exec-desk/scripts/check_links.py
+      - name: Syntax-check exec-desk JS
+        run: |
+          for f in exec-desk/js/*.js; do node --check "$f"; done

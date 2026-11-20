@@ -172,3 +172,17 @@ tools (collector, offline-verifiable request signer, site integrity checker).
 * Data policy: every table row carries an official source URL; anything unconfirmable is left
   blank and badged `unverified`, never estimated. Irregularities are published on
   `verified-desk/flagged.html` rather than resolved by inference.
+
+## Exec-desk (session arena-3a5f6f1d) — live trading desk
+
+A second, fully self-contained desk at [`exec-desk/`](exec-desk/index.html) focused on **live interaction with the official demo API**:
+
+- **Live dashboard** — highest dollar-amount events across gas/elections/culture/crypto/golf, price chart with seconds / minutes / hours x-axis, liquidity depth (contracts available at each price).
+- **Resolution tracking** — open markets polled until `result = yes/no`, with a resolution watch log.
+- **Portfolio & trades** — official `/portfolio/*` reads with a locally stored demo key (blank without one, per no-fabrication rules), plus a clearly labeled SIMULATED paper ledger; REAL demo orders via `POST /portfolio/events/orders` (V2).
+- **Trade categorization & strategies** — auto category (topic · side · price band) + named strategy tags with win rate / P&L / ROI rollups.
+- **Suggestions** — accept/reject/defer workflow and an implementation path picker; nothing is implemented without a recorded decision.
+- **Questions & Flagged** — answered/unknown/decision-needed questions; 7 UNVERIFIED flags + 5 repo/API irregularities, each with a source link and a verification step.
+- Sources & line-by-line verification: [`exec-desk/docs/SOURCES.md`](exec-desk/docs/SOURCES.md), [`exec-desk/docs/VERIFICATION.md`](exec-desk/docs/VERIFICATION.md).
+
+Link check for this desk: `python3 exec-desk/scripts/check_links.py`.

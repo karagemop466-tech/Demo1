@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions &amp; Open Decisions — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Questions, information &amp; answers required before decisions</h1>
+  <p class="sub">A decision can only be made from information we actually have. This page separates the three states explicitly:
+    <span class="badge open">ANSWERED</span> (verified against an official source, linked),
+    <span class="badge unv">UNKNOWN</span> (cannot be answered from available information — the missing data is named),
+    <span class="badge settled">DECISION NEEDED</span> (facts exist but a reviewer must choose). Suggestions for discovering missing information are embedded in each entry and rolled up at the bottom.</p>
+
+  <div class="banner info"><b>Rule applied throughout:</b> if a value cannot be confirmed from an official source it is left blank and flagged —
+    never inferred. See <a href="flagged.html">Flagged for Review</a> and <a href="docs/VERIFICATION.md">verification log</a>.</div>
+
+  <h2>The questions</h2>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q1 · What exactly is the “highest dollar amount” used to rank live events?</div>
+    <div class="a"><b>Information we have (official):</b> the Market schema publishes <span class="mono">volume_fp</span>, <span class="mono">volume_24h_fp</span>,
+      <span class="mono">open_interest_fp</span> (contracts) and <span class="mono">notional_value_dollars</span> — but no dollar-volume field
+      (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>).
+      <br><b>Current default:</b> rank by computed 24h dollar volume = <span class="mono">volume_24h_fp × last_price_dollars</span>, with the other two metrics side-by-side on the dashboard.
+      <br><b>Missing:</b> the business definition you want. <b>What resolves it:</b> pick one metric in the dashboard “Rank by” toggle and record it as the standard (suggestion C3).</div></div>
+
+  <div class="qcard"><span class="status badge unv">UNKNOWN</span>
+    <div class="q">Q2 · Does the demo API allow direct browser (CORS) calls?</div>
+    <div class="a"><b>Information we have:</b> nothing official — the documentation does not mention CORS, and the build sandbox cannot reach kalshi hosts to inspect response headers.
+      <br><b>Missing:</b> <span class="mono">Access-Control-Allow-Origin</span> behavior for browser origins.
+      <br><b>What resolves it:</b> open <a href="dashboard.html">dashboard.html</a> and read the connection badge (LIVE / relay / BLOCKED), or ask Kalshi support to confirm. Until then: <a href="flagged.html">UNVERIFIED-01</a>.
+      <br><b>Suggestion to discover:</b> C1 — treat transport as the first blocking decision.</div></div>
+
+  <div class="qcard"><span class="status badge unv">UNKNOWN</span>
+    <div class="q">Q3 · Where do demo API credentials come from, and who provides them?</div>
+    <div class="a"><b>Information we have (official):</b> demo accounts live at <a href="https://demo.kalshi.co" target="_blank" rel="noopener">demo.kalshi.co</a>; keys are created per account and never shared between demo and production
+      (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a> ·
+      <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a>).
+      <br><b>Missing:</b> an actual key pair. Credentials must never be posted in chat; they are entered only into trades.html → Settings (localStorage).
+      <br><b>What resolves it:</b> a reviewer creates a demo key and pastes it locally. Until then all authenticated cells stay blank: <a href="flagged.html">UNVERIFIED-02</a>.</div></div>
+
+  <div class="qcard"><span class="status badge open">ANSWERED</span>
+    <div class="q">Q4 · Is demo data the same as production data?</div>
+    <div class="a"><b>Official answer: no.</b> “The price and behavior of markets in the demo environment may not be reflective of those in real markets.”
+      (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">source</a>).
+      <b>Consequence:</b> every figure on this site is demo-environment data by requirement — <a href="flagged.html">UNVERIFIED-05</a>. No decision required unless you later want production data (out of scope for this brief).</div></div>
+
+  <div class="qcard"><span class="status badge open">ANSWERED</span>
+    <div class="q">Q5 · How does an event resolve — how do we know YES vs NO?</div>
+    <div class="a"><b>Official answer:</b> markets move through lifecycle statuses
+      <span class="mono">initialized → inactive → active → closed → determined → (disputed) → finalized</span>; the Market <span class="mono">result</span> field then holds
+      <span class="mono">yes</span>, <span class="mono">no</span>, <span class="mono">scalar</span> or empty (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">schema</a>).
+      Yes holders are paid $1/contract on a Yes outcome, No holders $1/contract on a No outcome
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>).
+      <b>This site:</b> <a href="markets.html">markets.html</a> polls open markets and logs every observed result into the resolution watch log.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q6 · Is client-side sampling acceptable for the “seconds” chart?</div>
+    <div class="a"><b>Information we have (official):</b> candlesticks exist only at <span class="mono">period_interval</span> 1, 60 or 1440 minutes
+      (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">docs</a>) — there is no official seconds series.
+      <br><b>Current default:</b> sample <span class="mono">GET /markets/{ticker}</span> every 2s in the browser and plot the mid price (labeled, <a href="flagged.html">UNVERIFIED-07</a>).
+      <br><b>What resolves it:</b> accept sampling, or choose authenticated WebSocket ticker streaming (suggestion C5) for true tick data.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q7 · How should the five topics (gas, elections, culture, crypto, golf) be identified?</div>
+    <div class="a"><b>Information we have:</b> <span class="mono">GET /series</span> supports an exact, case-sensitive <span class="mono">category</span> filter, but the list of valid category strings is not published
+      (<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">docs</a>).
+      <br><b>Current default:</b> transparent keyword classifier over series title/ticker/category/tags — the keyword list and matched series are displayed on <a href="markets.html">markets.html</a> (<a href="flagged.html">UNVERIFIED-06</a>).
+      <br><b>What resolves it:</b> reviewer confirms the matched series look right, or supplies official series tickers per topic.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q8 · Should performance include fees?</div>
+    <div class="a"><b>Information we have (official):</b> fee structures are per-series (<span class="mono">fee_type</span>, <span class="mono">fee_multiplier</span>) and documented in the
+      <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a>; settlement fees are zero for simple yes/no outcomes
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>).
+      <br><b>Current default:</b> paper P&amp;L excludes fees and says so on the trades page.
+      <br><b>What resolves it:</b> accept fee-free estimates (fast) or implement fee-aware P&amp;L (suggestion C7, more faithful).</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q9 · What is the paper-trading bankroll / risk budget?</div>
+    <div class="a"><b>Information we have:</b> none — no budget was specified anywhere in the brief, and the site must not invent one.
+      <br><b>Current behavior:</b> paper trades have no cap; cost basis is simply <span class="mono">count × price</span>.
+      <br><b>What resolves it:</b> a reviewer sets a budget (e.g., $1,000 simulated) and a per-trade cap; suggestion C6 can attach position sizing to strategy tags.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q10 · Is the third-party relay acceptable while CORS is unresolved?</div>
+    <div class="a"><b>Information we have:</b> if the browser blocks direct calls, requests can be forwarded through a public relay while still targeting the official API URL — but a third party sees the traffic
+      (<a href="flagged.html">UNVERIFIED-03</a>). Toggle exists in trades.html → Settings.
+      <br><b>What resolves it:</b> accept (default, data is public market data), or disable and live with blank values until C1 is done.</div></div>
+
+  <div class="qcard"><span class="status badge open">ANSWERED</span>
+    <div class="q">Q11 · Which hosts does this site talk to?</div>
+    <div class="a"><b>Official answer:</b> demo REST <span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span> (recommended) with
+      <span class="mono">https://demo-api.kalshi.co/trade-api/v2</span> as alternate; demo WS <span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span> / <span class="mono">wss://demo-api.kalshi.co/trade-api/ws/v2</span>
+      (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">source</a>) — exactly the endpoints in the project brief. The code hardcodes demo hosts; production hosts are never called.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q12 · Which order parameters should execution use by default?</div>
+    <div class="a"><b>Information we have (official):</b> Create Order V2 requires <span class="mono">side</span> (bid/ask), <span class="mono">count</span>, <span class="mono">price</span>,
+      <span class="mono">time_in_force</span> (fill_or_kill | good_till_canceled | immediate_or_cancel) and <span class="mono">self_trade_prevention_type</span>
+      (<a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">docs</a>).
+      <br><b>Current default:</b> <span class="mono">good_till_canceled</span> + <span class="mono">taker_at_cross</span>, limit at best ask (taker) or best bid (maker) — selectable in the ticket.
+      <br><b>What resolves it:</b> reviewer confirms defaults or specifies maker/taker policy per strategy.</div></div>
+
+  <div class="qcard"><span class="status badge settled">DECISION NEEDED</span>
+    <div class="q">Q13 · What metric defines a “good” strategy?</div>
+    <div class="a"><b>Information we have:</b> the site computes win rate, absolute P&amp;L and ROI on cost for every category/strategy tag (portfolio.html).
+      <br><b>Missing:</b> the objective function (e.g., maximize win rate ≥ 60% vs maximize P&amp;L vs limit drawdown).
+      <br><b>What resolves it:</b> pick one primary metric; suggestions with conflicting rankings must then be ranked by it (feeds the path picker on suggestions.html).</div></div>
+
+  <div class="qcard"><span class="status badge open">ANSWERED</span>
+    <div class="q">Q14 · Are other agent sessions working in this repo?</div>
+    <div class="a"><b>Current answer:</b> the shared board <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a> lists only session <span class="mono">arena-3a5f6f1d</span> (this one), owning all tasks on branch
+      <span class="mono">arena/3a5f6f1d-demo1</span>. If another session appears there with a claim, this session must not touch its file scope (per the board's rules).</div></div>
+
+  <h2>Missing-information discovery — what to do next</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Highest-value unknowns</h3><div class="meta">
+      1. <b>CORS behavior (Q2)</b> — one browser check resolves it.<br>
+      2. <b>Demo key availability (Q3)</b> — one key unlocks portfolio + real orders.<br>
+      3. <b>Ranking definition (Q1)</b> — one decision makes rankings reproducible.<br>
+      4. <b>Topic classifier acceptance (Q7)</b> — one glance at markets.html series column.</div></div>
+    <div class="card"><h3>How missing information is discovered here</h3><div class="meta">
+      • Every UNKNOWN above is mirrored on <a href="flagged.html">flagged.html</a> with a verification step.<br>
+      • <a href="suggestions.html">suggestions.html</a> turns each unknown into a reviewable proposal (C1, C2, C3…).<br>
+      • <a href="docs/VERIFICATION.md">docs/VERIFICATION.md</a> records every line checked against official docs and what stayed unverified.<br>
+      • Live auto-suggestions recompute from current API responses, so new unknowns surface as connection/market conditions change.</div></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+</body>
+</html>

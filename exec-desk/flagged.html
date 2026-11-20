@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for Review — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Flagged for Review</h1>
+  <p class="sub">Unverified items and irregularities found while building this site. None of these block the merge or the site —
+    they are published here with source links so a reviewer can inspect them after the site is live and request changes.
+    Rule: <b>if a value cannot be confirmed from an official source, it is left blank and flagged — never filled in.</b></p>
+
+  <div class="banner"><b>Live connection state:</b> <span id="live-state">…</span> — this page re-checks the official API when it loads.</div>
+
+  <div id="flag-list"></div>
+
+  <h2>Repository irregularities (from the pre-build review)</h2>
+  <div class="table-scroll">
+    <table class="data">
+      <thead><tr><th>#</th><th>Finding</th><th>Impact</th><th>Disposition</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>Repository contained only a placeholder <span class="mono">README.md</span> (“# Demo1”) and a single initial commit — no code, no CI, no Pages config.</td>
+          <td>None — clean slate.</td><td>Site files added on the session branch; README rewritten at integration.</td>
+          <td class="src"><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">repo</a></td></tr>
+        <tr><td>R2</td><td>Official docs describe market status filters as <span class="mono">unopened/open/closed/settled</span> in prose, while the embedded OpenAPI enum also includes <span class="mono">paused</span>.</td>
+          <td>Filter mismatch risk if only prose is trusted.</td><td>Site passes only documented filter values; enum superset noted in verification log.</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>R3</td><td>Market <span class="mono">title</span>/<span class="mono">subtitle</span> fields are deprecated in the official schema.</td>
+          <td>Blank titles if deprecated fields are read.</td><td>Site renders event <span class="mono">title</span> + <span class="mono">yes_sub_title</span> instead.</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>R4</td><td>Legacy order-write endpoints (<span class="mono">POST /portfolio/orders</span>) now return <span class="mono">410 Gone</span>.</td>
+          <td>Any code using v1 writes fails.</td><td>Site uses only V2 <span class="mono">POST /portfolio/events/orders</span>.</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2</a></td></tr>
+        <tr><td>R5</td><td>Build sandbox egress is restricted to GitHub/npm/PyPI hosts — kalshi hosts are unreachable at build time.</td>
+          <td>No build-time data capture possible.</td><td>All data fetched client-side at view time; nothing pre-filled.</td>
+          <td class="src"><a href="docs/VERIFICATION.md">verification log</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/flagged.js"></script>
+</body>
+</html>

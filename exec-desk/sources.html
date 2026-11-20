@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Sources</h1>
+  <p class="sub">Every factual claim on this site traces to an official Kalshi source below (all fetched and re-verified 2026-11-20).
+    Machine-readable copies: <a href="docs/SOURCES.md">docs/SOURCES.md</a> · <a href="docs/VERIFICATION.md">docs/VERIFICATION.md</a>.</p>
+
+  <div class="table-scroll">
+    <table class="data">
+      <thead><tr><th>#</th><th>Official source</th><th>What it verifies</th><th>Used on</th></tr></thead>
+      <tbody>
+        <tr><td>S1</td><td class="src"><a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">docs.kalshi.com/llms.txt</a></td><td>Official documentation index — proves every page below exists</td><td>all pages</td></tr>
+        <tr><td>S2</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test In The Demo Environment</a></td><td>Demo REST/WS URLs (exact match to project brief), mock funds, “prices may not reflect real markets” warning</td><td>executive-summary, dashboard, flagged</td></tr>
+        <tr><td>S3</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td><td>Production + demo endpoint tables; signed path rules</td><td>executive-summary, trades</td></tr>
+        <tr><td>S4</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Quick Start: Market Data</a></td><td>Public endpoints need no auth; orderbook arrays ascending best-last</td><td>dashboard, markets</td></tr>
+        <tr><td>S5</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a></td><td>WS handshake requires signed headers even for public channels</td><td>dashboard, flagged</td></tr>
+        <tr><td>S6</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td><td>Query params, status enums, full Market schema (prices, volumes, result)</td><td>dashboard, markets, trades</td></tr>
+        <tr><td>S7</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td><td>Series discovery fields; category filter semantics</td><td>dashboard, markets</td></tr>
+        <tr><td>S8</td><td class="src"><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td><td>Event params (<span class="mono">status</span>, <span class="mono">series_ticker</span>, <span class="mono">with_nested_markets</span>) and EventData schema</td><td>dashboard, markets</td></tr>
+        <tr><td>S9</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a></td><td>Bids-only book; YES ask implied as 1 − NO bid</td><td>dashboard liquidity</td></tr>
+        <tr><td>S10</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td><td>period_interval valid values 1 / 60 / 1440 minutes</td><td>dashboard minutes/hours</td></tr>
+        <tr><td>S11</td><td class="src"><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td><td>Yes/No pays $1 per contract; settlement timing; zero fees for simple yes/no</td><td>executive-summary, markets, portfolio</td></tr>
+        <tr><td>S12</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td><td>Balance fields + 1 req/s rate limit</td><td>portfolio</td></tr>
+        <tr><td>S13</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td><td>Position fields incl. signed <span class="mono">position_fp</span></td><td>portfolio</td></tr>
+        <tr><td>S14</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements" target="_blank" rel="noopener">Get Settlements</a></td><td>Settlement records endpoint</td><td>portfolio</td></tr>
+        <tr><td>S15</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td><td>User fills endpoint</td><td>portfolio, trades</td></tr>
+        <tr><td>S16</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/get-orders" target="_blank" rel="noopener">Get Orders</a></td><td><span class="mono">GET /portfolio/orders</span> read path + Order schema</td><td>trades</td></tr>
+        <tr><td>S17</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td><td>Order body requirements, TIF/STP enums, 201 semantics, legacy 410</td><td>trades</td></tr>
+        <tr><td>S18</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></td><td>Key creation and request signing scheme</td><td>trades, portfolio</td></tr>
+        <tr><td>S19</td><td class="src"><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a></td><td>Token budgets — polling cadence rationale</td><td>dashboard</td></tr>
+        <tr><td>S20</td><td class="src"><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market Lifecycle</a></td><td>Creation → settlement state machine</td><td>markets</td></tr>
+        <tr><td>S21</td><td class="src"><a href="https://docs.kalshi.com/welcome" target="_blank" rel="noopener">Docs home</a></td><td>Documentation root</td><td>sources</td></tr>
+        <tr><td>S22</td><td class="src"><a href="https://github.com/Kalshi/kalshi-starter-code-python" target="_blank" rel="noopener">Kalshi official starter code</a></td><td>Official org example code for authenticated endpoints</td><td>sources</td></tr>
+        <tr><td>S23</td><td class="src"><a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">Help: create a demo account</a></td><td>Official demo account setup (linked from S2)</td><td>executive-summary</td></tr>
+        <tr><td>S24</td><td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi fee schedule (PDF)</a></td><td>Official fee tables referenced by series <span class="mono">fee_type</span></td><td>trades, suggestions</td></tr>
+        <tr><td>S25</td><td class="src"><a href="https://demo.kalshi.co" target="_blank" rel="noopener">demo.kalshi.co</a></td><td>Demo web app / account creation (from S2)</td><td>executive-summary, questions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="banner" style="margin-top:16px"><b>Not used as sources:</b> third-party tutorials, blogs, or search snippets. They were
+    consulted only to locate the official docs and are never cited for any value shown on this site. The only non-Kalshi URL in
+    active use is the flagged CORS relay (<a href="flagged.html">UNVERIFIED-03</a>), which transports — but does not author — data.</div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+</body>
+</html>
