@@ -3,6 +3,7 @@
   var pages = [
     ["index.html", "Home"],
     ["exec-desk/dashboard.html", "Live desk"],
+    ["desk/index.html", "Consolidated desk"],
     ["site/index.html", "Topic snapshots"],
     ["exec-desk/jumps.html", "Price jumps"],
     ["exec-desk/markets.html", "Resolutions"],
