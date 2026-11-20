@@ -49,12 +49,12 @@
       <tr><td>Golf event (live)</td><td>KXPGAPLAYOFF-THRC26 "The RSM Classic: Playoff" active, volume 0 (thin demo book)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGAPLAYOFF&status=open&with_nested_markets=true" target="_blank" rel="noreferrer">golf event ↗</a></td></tr>
       <tr><td>Culture event (live)</td><td>KXOSCARSUPACTO-27 (99th Academy Awards, MECNET) with per-actor markets at 0.02</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXOSCARSUPACTO&status=open&with_nested_markets=true" target="_blank" rel="noreferrer">culture event ↗</a></td></tr>
       <tr><td>Elections event (live)</td><td>KXNEXTNATOSECGEN-99 "Who will be the next Secretary General of NATO?" open, MECNET, settlement source NATO</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEXTNATOSECGEN-99" target="_blank" rel="noreferrer">elections event ↗</a></td></tr>
+      <tr><td>CORS header test (CI)</td><td>HTTP GET with <code>Origin: https://karagemop466-tech.github.io</code> → response carries <code>access-control-allow-origin: https://karagemop466-tech.github.io</code>; browser fetches from this site are therefore permitted (simple GETs, no preflight)</td><td><a href="https://karagemop466-tech.github.io/Demo1/data/cors.json" target="_blank" rel="noreferrer">data/cors.json (headers read from official API response, 2026-11-20) ↗</a></td></tr>
     </tbody>
   </table></div>
 
   <h2>C. Not verifiable from official sources (left blank, flagged)</h2>
   <ul class="small">
-    <li>CORS behavior of the demo API — no official statement exists; third-party reports only. <a href="flagged.html">F1</a></li>
     <li>Numeric unauthenticated rate limits — docs do not publish them. <a href="flagged.html">F8</a></li>
     <li>Portfolio/fills/order data for the demo account — requires credentials that do not exist here. <a href="flagged.html">F4</a></li>
     <li>Production-side dollar-volume official metric — not documented; our estimate is labeled as such. <a href="flagged.html">F2</a></li>

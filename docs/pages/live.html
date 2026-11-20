@@ -203,7 +203,7 @@ function toggleLive(ev) {
       }
     } catch (e) {
       LIVESTATUS = "blocked";
-      note.innerHTML = `<b>Live polling unavailable:</b> ${K.esc(e.message)}. The demo API likely rejects browser cross-origin requests (flagged — see Flagged page). CI snapshot candles still display; nothing is fabricated.`;
+      note.innerHTML = `<b>Live polling unavailable:</b> ${K.esc(e.message)}. CORS for this origin was verified working on 2026-11-20 (<a href="https://karagemop466-tech.github.io/Demo1/data/cors.json" target="_blank" rel="noreferrer">data/cors.json ↗</a>) — so this is likely a transient API/network failure. CI snapshot candles still display; nothing is fabricated.`;
       clearInterval(LIVE.timer);
     }
   };

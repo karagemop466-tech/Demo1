@@ -80,8 +80,9 @@ The Suggestions page (S6) asks the reviewer to pick the headline metric or keep 
 
 ## 6. Open items & flagged irregularities (non-blocking; full register on the site)
 
-1. **CORS unverified** — third-party reports say the REST API 403s browser `Origin` headers; site treats
-   CI snapshots as the primary data path and degrades gracefully. Needs one empirical check (F1).
+1. **CORS — resolved** — a CI header test with `Origin: https://karagemop466-tech.github.io` observed the
+   official API reflecting the origin (`data/cors.json`), so browser-side live fetches work; the site still
+   falls back to CI snapshots when the API is unreachable (F1 closed 2026-11-20).
 2. **USD metric choice** (S6), **series allowlist approval** (S5), **risk limits for auto-trading** (Q6).
 3. Root monitor (earlier session) requests `limit=1000` vs documented max 200, and builds possibly-404
    kalshi.com links — logged (F9/F10), not edited (file owned by another session).

@@ -56,7 +56,8 @@ Session `arena-6aa291e9-demo1`. Rule followed everywhere: official source or bla
 
 | # | Item | Used for |
 |---|---|---|
-| D1 | https://github.com/dtmiescke/kalshi-bot/pull/222 | CORS lead (403 on Origin) — FLAGGED UNVERIFIED (F1) |
+| D1 | https://github.com/dtmiescke/kalshi-bot/pull/222 | CORS lead (403 on Origin) — superseded by direct header test below |
+| D3 | `data/cors.json` (repo) — headers read from an official demo-API response carrying `Origin` | **CORS verified working** for this site's origin (F1 resolved 2026-11-20) |
 | D2 | https://cryptostruct.com/prediction-markets/kalshi-kxaaagasw | gas series ticker lead (later confirmed live via demo API) |
 
 ## E. GitHub / platform
