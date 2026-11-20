@@ -31,7 +31,7 @@ Sessions in this repo:
 | 9 | Questions / information / answers for decision-making | done | arena-a443fb8f-demo1 | pages/questions.html | docs/sources.md | Pending live data | — |
 | 10 | Flagged for Review page (unverified items + irregularities) | done | arena-a443fb8f-demo1 | pages/flagged-review.html | — | n/a | — |
 | 11 | GitHub Pages: enable, build check, broken-link check, publish | done | arena-a443fb8f-demo1 | Pages settings via gh API | docs.github.com | Pages already enabled on repo, serving main at https://karagemop466-tech.github.io/Demo1/ (status: built). Local broken-link check: none. Will re-deploy automatically when main is updated via merge. | Cannot change Pages source branch via gh API (403 integration permission); not needed since Pages serves main and the PR merges into main |
-| 12 | Final integration: merge conflict resolution, combined-site verification, PR to main, merge, record PR link & merge result | in progress | arena-a443fb8f-demo1 | all | docs/sources.md; docs.kalshi.com | Internal links verified (both sessions' files); all table rows carry official source links; unverified values left blank and flagged | Merge conflict with main resolved 2026-11-20 (see integration log) |
+| 12 | Final integration: merge conflict resolution, combined-site verification, PR to main, merge, record PR link & merge result | done | arena-a443fb8f-demo1 | all | docs/sources.md; docs.kalshi.com | Internal links verified (both sessions' files); all table rows carry official source links; unverified values left blank and flagged | PR #4 merged into main via `gh pr merge 4 --merge`; GitHub Pages deploy run 44726443743 succeeded; site live at https://karagemop466-tech.github.io/Demo1/ |
 
 ## Tasks — session arena/e41f6700-demo1
 
@@ -47,6 +47,8 @@ Sessions in this repo:
 | 2026-11-20 | arena-a443fb8f-demo1 | PR #4 (arena/a443fb8f-demo1 → main) could not merge cleanly: add/add conflicts on COORDINATION.md and index.html (both sessions added these files independently). |
 | 2026-11-20 | arena-a443fb8f-demo1 | Resolved by merging main into the feature branch: kept arena/e41f6700-demo1's root `index.html`, `app.js`, `styles.css`, `.github/workflows/pages.yml`, `README.md` (their deployed single-page monitor); preserved arena-a443fb8f-demo1's multi-page site under `pages/` (landing-executive-summary.html, dashboard.html, category pages, portfolio, trades, suggestions, questions, flagged-review, assets/, docs/); added cross-links from root nav to the multi-page section; wrote this merged COORDINATION.md. No work from either session was discarded. |
 | 2026-11-20 | arena-a443fb8f-demo1 | Re-ran local broken-link check on combined tree: none. |
+| 2026-11-20 | arena-a443fb8f-demo1 | PR #4 (https://github.com/karagemop466-tech/Demo1/pull/4) merged into main with `gh pr merge 4 --merge`; GitHub Pages deploy run 44726443743 succeeded; site live at https://karagemop466-tech.github.io/Demo1/ (Node.js 20 deprecation annotation noted as pre-existing maintenance irregularity). |
+| 2026-11-20 | arena-a443fb8f-demo1 | Task 12 marked done; final COORDINATION.md record pushed to arena/a443fb8f-demo1 (follow-up PR #5 to main to keep main's board current). |
 
 ## Claim log
 
