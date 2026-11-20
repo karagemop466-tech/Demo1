@@ -858,6 +858,56 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | GitHub Pages | Build for `8a01ce9`: `built`, no error; `Deploy static site to GitHub Pages` success; `pages build and deployment` success |
 | Live verification | https://karagemop466-tech.github.io/Demo1/docs/verification-3c2c8403.html fetched after deploy: title "Flagged for Review: root landing verification", irregularities V-1…V-9 with official source links |
 | Session status | T14 **done**. Open requests still logged for other owners: V-6 (older desks), V-7 (`build_site.py` "Resolved" label). |
+---
+
+## Session arena/1e09bd4a-demo1 — automated line-by-line verification + final integration
+
+- **Session ID:** `1e09bd4a` — branch `arena/1e09bd4a-demo1` (fixed for this session; platform-fixed name, so the `session-<id>/<task>` branch convention is a documented deviation).
+- **Claimed at:** 2026-11-20 (UTC) at base commit `f9fab19` (= `main` tip, the merge commit of PR #32). Working tree was clean; no prior claim existed on this branch.
+- **Scope:** new files `tools/verify_site.py`, `site/verification.html`, `site/verification-report.json`; additive edits to `build_site.py` (NAV + `build_verification`), root `index.html` (one tile), `README.md` (two rows), and this board. No other session's files were edited or removed.
+- **Why:** every earlier session documented verification in prose. This session turns the verification rule into an automated, repeatable, deployable check that re-derives each rendered value from the official snapshot and audits each row's source link — the brief's "verify line by line / every table row must have a source link" requirement.
+
+### Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| V1 | Automated line-by-line verifier (values re-derived from snapshot + source-link audit + secret scan) | done | 1e09bd4a | `tools/verify_site.py` | snapshot/*.json (official demo API capture, 494 requests / 0 failed) | `python3 tools/verify_site.py` → PASS, 0 errors; re-derives 250 markets + 250 resolved + 600 topic + 48 liquidity rows + 8 overview figures | settlement hosts recorded as official external settlers, not Kalshi hosts |
+| V2 | Verification page on the site + nav entry | done | 1e09bd4a | `site/verification.html`, `site/verification-report.json`, `build_site.py` | same | `python3 build_site.py` → built 17 pages, "link check: OK"; page renders the live report | none |
+| V3 | Hub + README integration | done | 1e09bd4a | `index.html`, `README.md` | same | root link check PASS; README rows added | none |
+| V4 | Full gate suite + final integration (PR, merge, Pages) | in progress → see record below | 1e09bd4a | `.github`, board | — | repo-wide link check PASS (241 files); `node --check` all JS PASS; `py_compile` PASS; exec-desk `check_links.py` PASS; `npm test` (exec-desk DOM) 10/10 PASS | none |
+
+### How the verifier works (no inference)
+- It loads `snapshot/{markets,resolved,metadata}.json` — the recorded official demo-Trade-API responses — and, for every rendered row, re-computes the exact string the builder would print (`cents()`, volumes, open interest, computed notional, YES/NO result, settlement value/time) and checks it appears in the page. A mismatch fails.
+- Every market-data row must carry a link to an official Kalshi host (`external-api.demo.kalshi.co`, `demo-api.kalshi.co`, `docs.kalshi.com`, `kalshi.com`, `help.kalshi.com`).
+- External hosts in a row are treated as **official settlement sources** (CF Benchmarks, AAA, ESPN, PGATOUR, Reuters, … — recorded on each market's `settlement_sources`) and reported informationally; they are not Kalshi hosts, so the Kalshi link requirement still applies. Truly unknown non-Kalshi hosts would fail.
+- Scans the repo for committed private keys / hard-coded API keys. Missing API values render as "—" and are never inferred.
+
+### Sources (this session)
+- Official snapshot: `https://external-api.demo.kalshi.co/trade-api/v2` (494 logged requests, 0 failures; `snapshot/collect-log.txt`). 1399 open / 2469 resolved markets / 16,643 series / 10 price-history series (2026-11-20T11:43:59Z).
+- Endpoint/field documentation: https://docs.kalshi.com/api-reference/market/get-markets · /get-market-orderbook · /get-market-candlesticks · https://docs.kalshi.com/api-reference/events/get-events · https://docs.kalshi.com/getting_started/orderbook_responses · https://docs.kalshi.com/getting_started/market_lifecycle · https://docs.kalshi.com/getting_started/demo_env.
+- External settlement-source hosts (e.g. https://www.cfbenchmarks.com, https://gasprices.aaa.com/) are the official settlers recorded in the market/event metadata, not Kalshi domains.
+
+### Verification performed (this session)
+- `python3 tools/verify_site.py` → **PASS**, 0 errors, 2 informational warnings (ladder rows use a section-level source; settlement-source hosts listed).
+- `python3 build_site.py` → 17 pages, "link check: OK".
+- `node tools/check-links.mjs` → PASS (241 files, no broken links, no secret material).
+- `python3 exec-desk/scripts/check_links.py` → 123 internal links, 0 broken.
+- `node --check` on every `.js` → PASS. `python3 -m py_compile tools/verify_site.py build_site.py` → PASS.
+- `npm test` (exec-desk DOM) → 10/10 assertions PASS.
+
+### Irregularities / flags for review (non-blocking)
+- Root hub KPI tiles ("15 verified rows", etc.) describe the *root* `markets.html` sample; the `site/` verified dashboard holds 1399 open + 2469 resolved records. Both are true for their own scope; the hub banner already points to `site/`. Recorded so a reader does not conflate them.
+- `cryptostruct.com` appears only as a disclosed series-ticker *lead* in `SOURCES.md` / `docs/pages/sources.html`; the ticker was confirmed live via the official demo API, so it is not used as a verification source.
+- Portfolio / trade execution remain credential-gated (no demo API key exists in the repo); no orders placed, no account values fabricated. This is unchanged from prior sessions and flagged on the Flagged for Review pages.
+- Sandbox egress is restricted to github.com / npm / pypi, so the Kalshi live API was not called from the shell here; verification runs against the committed, logged official snapshot. Browser→API CORS was previously evidenced via `data/cors.json` and the deployed exec-desk.
+
+### Claim log (this session)
+| Date/time (UTC) | Action |
+|---|---|
+| 2026-11-20 | Session `1e09bd4a` claimed the verification + final-integration scope on `arena/1e09bd4a-demo1` at `f9fab19`. |
+| 2026-11-20 | Built `tools/verify_site.py`, wired `build_verification` + nav into `build_site.py`, generated `site/verification.html` + report, updated hub/README. All gates green. |
+
+---
 
 ---
 
@@ -917,3 +967,4 @@ The user's requirement "Live charts should include events and website links that
 |---|---|---|
 | 2026-11-20 | PR #39 (`arena/b10c4954-demo1` → `main`) was not mergeable: `main` advanced while the PR was open (PRs #35–#38 merged, including concurrent session `arena/c8617443-demo1`'s jump-alert work, plus a data snapshot refresh). Add/add content conflicts on `COORDINATION.md` and `index.html`. | Merged `origin/main` into the feature branch and kept **both** sides: `index.html` keeps main's KPI block AND this session's Live demo desk section (with the new Sharp moves tile); `COORDINATION.md` keeps main's accumulated board verbatim and re-appends this session's section. No session's work discarded. |
 | 2026-11-20 | Both desks (this session and c8617443) implemented jump/alert features independently; both are additive and cross-linked. | Coordination rule applied: each session owns its files; no shared file was overwritten. The board records both. |
+| 2026-11-20 | Second pre-merge round: `main` advanced again (PR #41, session arena/1e09bd4a-demo1, "automated line-by-line verification of the Kalshi demo site"). Content conflict on `COORDINATION.md` only (`index.html` auto-merged). | Resolved by keeping main's accumulated board verbatim and re-appending this session's section. No session's work discarded. |
