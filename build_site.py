@@ -12,6 +12,7 @@ Outputs: site/ for GitHub Pages (served from the repo subpath /Demo1/).
 """
 
 import html
+import importlib.util
 import json
 import re
 import sys
@@ -113,6 +114,7 @@ NAV = [
     ("explore.html", "Data browser"),
     ("flagged.html", "Flagged for review"),
     ("sources.html", "Sources"),
+    ("verification.html", "Verification"),
 ]
 
 
@@ -194,6 +196,35 @@ def market_link(m):
 
 def topic_label(key, meta):
     return (meta.get("topics", {}).get(key, {}) or {}).get("label", key)
+
+
+def _load_verifier():
+    """Import tools/verify_site.py (single source of truth for the check)."""
+    path = ROOT / "tools" / "verify_site.py"
+    spec = importlib.util.spec_from_file_location("verify_site", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def build_verification(meta):
+    """Render the automated line-by-line verification page from the real check."""
+    vs = None
+    try:
+        vs = _load_verifier()
+        report = vs.run_verification(ROOT)
+    except Exception as e:  # never let the audit page break the build
+        BUILD_ERRORS.append(f"verification failed to run: {e}")
+        report = {"status": "ERROR", "errors": [str(e)], "warnings": [], "stats": {},
+                  "snapshot_counts": {}, "verified_utc": None,
+                  "snapshot_base": meta.get("rest_base"), "settlement_source_hosts": []}
+    if vs is not None:
+        body = vs.render_report_html(report)
+    else:
+        body = f"<div class='callout warn'>Verification could not be run: {esc(report.get('errors'))}</div>"
+    page("verification.html", "Line-by-line verification", body,
+         subtitle="Automated re-check of every rendered value against the official snapshot",
+         active="verification.html")
 
 
 def build_index(meta, markets, resolved):
@@ -1115,6 +1146,7 @@ def main():
     build_explore(meta, markets_all, resolved_all)
     build_flagged(meta, markets)
     build_sources(meta)
+    build_verification(meta)
     # static assets
     for asset in ("style.css", "chart.js", "explore.js"):
         src_asset = ROOT / "site_src" / asset

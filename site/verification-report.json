@@ -1,0 +1,39 @@
+{
+  "verified_utc": "2026-11-20T11:43:59Z",
+  "snapshot_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "snapshot_counts": {
+    "open_markets": 1399,
+    "resolved_markets": 2469,
+    "requests": 494,
+    "failed": 0,
+    "series": 16643
+  },
+  "stats": {
+    "markets_rows_checked": 250,
+    "resolved_rows_checked": 250,
+    "topic_gas_prices_rows_checked": 120,
+    "topic_elections_rows_checked": 120,
+    "topic_culture_rows_checked": 120,
+    "topic_crypto_rows_checked": 120,
+    "topic_golf_rows_checked": 120,
+    "liquidity_rows_checked": 48,
+    "index_figures_checked": 8
+  },
+  "errors": [],
+  "warnings": [
+    "liquidity.html: 36 full-ladder rows carry a section-level order-book source link rather than a per-row link",
+    "external OFFICIAL settlement sources referenced (from the markets' settlement_sources): gasprices.aaa.com, www.cfbenchmarks.com, www.espn.com, www.foxsports.com, www.netflix.com, www.oscars.org, www.pgatour.com, www.rottentomatoes.com, www.theice.com"
+  ],
+  "settlement_source_hosts": [
+    "gasprices.aaa.com",
+    "www.cfbenchmarks.com",
+    "www.espn.com",
+    "www.foxsports.com",
+    "www.netflix.com",
+    "www.oscars.org",
+    "www.pgatour.com",
+    "www.rottentomatoes.com",
+    "www.theice.com"
+  ],
+  "status": "PASS"
+}

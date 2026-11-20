@@ -12,7 +12,8 @@
     ["flagged.html", "Flagged for Review"],
     ["sources.html", "Sources"],
     ["monitor/index.html", "Monitor (single page)"],
-    ["pages/landing-executive-summary.html", "Multi-page site"]
+    ["pages/landing-executive-summary.html", "Multi-page site"],
+    ["pages/price-jumps.html", "Sharp moves (≥$0.10)"]
   ];
   var here = (location.pathname.split("/").pop() || "index.html");
   var nav = document.getElementById("site-nav");
