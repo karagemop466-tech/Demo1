@@ -1,6 +1,9 @@
 # Python
 __pycache__/
 *.pyc
+# Node: jsdom is an optional dev dependency for verified-desk/tests/browser_boot.test.mjs
+# (npm i --no-save jsdom). It is never part of the published site.
+node_modules/
 # Local build output is generated in CI and by build_site.py; site/ IS published,
 # data/ IS committed deliberately (it is the verified snapshot the site renders).
 .DS_Store

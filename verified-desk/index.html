@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Desk — overview</title>
+<meta name="description" content="Collect, organise and analyse Kalshi demo API data: highest-dollar-volume live events across gas prices, elections, culture, crypto and golf, with resolution tracking, liquidity views and a decision register.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="index">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Kalshi Demo Desk</h1>
+    <p class="lede">A verification-first workspace for the Kalshi demo API: live event collection, dollar-volume ranking across the five requested topics, resolution tracking, price&nbsp;+&nbsp;liquidity charts, a trade/strategy layer, and an explicit register of what is still unknown. Every table row links to the page it came from; anything that could not be confirmed is left blank and flagged.</p>
+    <p class="verified-stamp">Market data captured from <code>https://external-api.demo.kalshi.co/trade-api/v2</code> in the window <strong>2026-11-20 11:11–11:21 UTC</strong> · engine covered by <strong>34 passing unit tests</strong> · <strong>no orders were placed</strong> (see <a href="#limits">limits</a>).</p>
+  </div>
+
+  <div class="grid cols-4">
+    <div class="kpi"><div class="label">Topics in scope</div><div class="value">5</div><div class="note">gas prices · elections · culture · crypto · golf</div></div>
+    <div class="kpi"><div class="label">Events captured</div><div class="value">8</div><div class="note">20 markets, each with a source URL</div></div>
+    <div class="kpi"><div class="label">Legs resolved</div><div class="value">10</div><div class="note">6 YES · 4 NO of the 20 captured</div></div>
+    <div class="kpi"><div class="label">Series with volume</div><div class="value">17</div><div class="note">from <code>include_volume=true</code></div></div>
+  </div>
+
+  <div class="notice info">
+    <h3>Read in this order</h3>
+    <ol>
+      <li><a href="exec-summary.html">Executive summary</a> — what was verified, what it means, what is blocked.</li>
+      <li><a href="dashboard.html">Live dashboard</a> — highest estimated dollar-volume events, topic filter, resolution tracker.</li>
+      <li><a href="markets.html">Price &amp; liquidity</a> — candlestick chart with a selectable time axis, and contracts resting at each price.</li>
+      <li><a href="portfolio.html">Portfolio &amp; trades</a> and <a href="strategies.html">Strategy lab</a> — what a real account would need, plus a replay simulator.</li>
+      <li><a href="questions.html">Open questions</a> → <a href="suggestions.html">Suggestions</a> → <a href="flagged.html">Flagged for review</a> — the decision gate.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Verified facts <span class="sub">each row states one thing this project confirmed and links the official page that says it</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Fact used throughout the site</th><th scope="col">Status</th><th scope="col">Official source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Demo REST root is <code>https://external-api.demo.kalshi.co/trade-api/v2</code>; the shared host <code>demo-api.kalshi.co</code> is also supported.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs.kalshi.com/getting_started/demo_env</a></td>
+          </tr>
+          <tr>
+            <td>Demo WebSocket root is <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code>.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">same table, WebSocket row</a></td>
+          </tr>
+          <tr>
+            <td>The demo environment uses <em>mock funds</em>, credentials are not shared with production, and its prices “may not be reflective of those in real markets”.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env warning block</a></td>
+          </tr>
+          <tr>
+            <td>Exchange and trading are live on the demo host right now (4 shards, <code>trading_active: true</code>).</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">GET /exchange/status</a></td>
+          </tr>
+          <tr>
+            <td>Public market-data reads need no key; portfolio reads and order writes require a signed <code>KALSHI-ACCESS-*</code> handshake.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">market data quick start</a></td>
+          </tr>
+          <tr>
+            <td>Taker fee = <code>roundup(M × 0.07 × C × P × (1−P))</code>; maker = <code>0.0175</code>; no settlement fee. <code>KXAAAGASM</code> carries maker&nbsp;1 / taker&nbsp;1 multipliers.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi fee schedule (PDF)</a></td>
+          </tr>
+          <tr>
+            <td>Order placement today is <code>POST /portfolio/events/orders</code> (V2 shape); the legacy <code>/portfolio/orders</code> writes return <code>410 Gone</code>.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">create your first order</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td>
+          </tr>
+          <tr>
+            <td>Candlesticks come in 1-minute, 1-hour and 1-day periods only, ≤5,000 periods per request, timestamps in <strong>seconds</strong>.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+          </tr>
+          <tr>
+            <td>The order book returns <strong>bids only</strong>; a NO bid at Y is a YES ask at $1.00&nbsp;−&nbsp;Y; an unknown ticker returns <code>200</code> with empty arrays rather than <code>404</code>.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td>
+          </tr>
+          <tr>
+            <td>Rate limits are token-based (most calls 10 tokens), split read/write, answered with <code>429 too_many_requests</code> and <code>X-RateLimit-*</code> headers; unauthenticated traffic has separate limits.</td>
+            <td><span class="badge yes">confirmed</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a></td>
+          </tr>
+          <tr>
+            <td>“Highest dollar amount” is <strong>not</strong> an API field: markets expose contract counts (<code>volume_fp</code>), so dollar volume has to be computed.</td>
+            <td><span class="badge warn">derived</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets schema</a> · <a href="flagged.html#fl-1">FL-1</a></td>
+          </tr>
+          <tr>
+            <td>A browser-only static site cannot place orders or open the WebSocket: both need signed handshake headers that cannot be sent (or keyed safely) from page code.</td>
+            <td><span class="badge no">blocking</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket connection</a> · <a href="flagged.html#fl-3">FL-3</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2" id="limits">
+    <div class="card">
+      <h3>What this site does now</h3>
+      <div class="body prose">
+        <ul>
+          <li>Ranks captured events by <strong>estimated</strong> dollar turnover and filters to the five topics.</li>
+          <li>Tracks each event <strong>until every leg has a yes/no result</strong>, including events that are only partly settled.</li>
+          <li>Plots real captured candles with a selectable time axis and shows contracts resting at a chosen price, with the cost and slippage of taking them.</li>
+          <li>Provides a replay simulator so trade logic can be inspected without an account.</li>
+          <li>Keeps the record straight: <a href="provenance.html">provenance</a>, <a href="questions.html">open questions</a>, <a href="flagged.html">flags</a>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>What it cannot do here</h3>
+      <div class="body prose">
+        <ul>
+          <li><strong>No real trading or portfolio read.</strong> No demo API key or private key was supplied, so nothing was executed. The path to enable it is documented on <a href="portfolio.html">Portfolio &amp; trades</a>.</li>
+          <li><strong>No sub-second stream</strong> from a static page (see the WebSocket constraint above).</li>
+          <li><strong>Live mode depends on your browser</strong> being allowed to read the demo host cross-origin; if the request is refused, the dashboard says so and falls back to the snapshot instead of pretending.</li>
+          <li><strong>Not investment advice.</strong> Demo prices are simulated.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Repository map</h3>
+    <div class="body">
+      <dl class="terms">
+        <dt>data/snapshot.json</dt><dd>every captured API row, with the exact request URL on each row and <code>null</code> where the capture was truncated.</dd>
+        <dt>assets/kalshi.js</dt><dd>the engine: classification, ranking, resolution, order-book maths, fees, portfolio maths. Pure functions only.</dd>
+        <dt>assets/app.js</dt><dd>shell, tables, chart, explorer, simulator. Contains no market maths of its own.</dd>
+        <dt>assets/app.css</dt><dd>the whole design system: masthead, tabs, KPI cards, tables, chart, depth ladder. No CDN, no webfonts, no images, so it renders offline and on Pages unchanged.</dd>
+        <dt>tests/kalshi.test.mjs</dt><dd><code>node --test tests/kalshi.test.mjs</code> — 34 pure-function tests, including reproducing 21 rows of the published fee table and asserting every snapshot row is sourced.</dd>
+        <dt>tests/browser_boot.test.mjs</dt><dd>boots each page in jsdom against the real snapshot and fails on any script error, empty mount or row-less table (14 checks; skips if jsdom is absent).</dd>
+        <dt>tools/refresh_snapshot.py</dt><dd>regenerate the snapshot from anywhere with network access, same schema, nulls preserved, cursor-following; <code>--check</code> re-probes the documented API quirks and <code>--dry-run</code> writes nothing.</dd>
+        <dt>tools/check_links.py</dt><dd>pre-commit gate: every internal link and anchor, every mount id the renderers expect, every <code>docs.kalshi.com</code> URL against the official index, and source coverage in the snapshot.</dd>
+        <dt>tools/kalshi_sign.py</dt><dd>reference signer for the <code>KALSHI-ACCESS-*</code> headers (Ed25519 built in, RSA-PSS via <code>cryptography</code>); <code>--self-test</code> reproduces the RFC 8032 vectors and confirms the query string is excluded from the signed payload. It refuses to send unless <code>KALSHI_ALLOW_LIVE=1</code> is set.</dd>
+        <dt>../COORDINATION.md</dt><dd>shared task board for all parallel agent sessions: claims, verification log, conflict log, irregularities. Everything listed above lives inside <code>verified-desk/</code> — one of several independent desks published side by side in this repository (<a href="flagged.html#fl-9">FL-9</a>).</dd>
+      </dl>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

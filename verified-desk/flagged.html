@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review — irregularities and unverified items</title>
+<meta name="description" content="Every irregularity, unverified value and open risk found while building the Kalshi demo dashboard, each with its evidence link and what would clear it.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="flagged">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Flagged for review</h1>
+    <p class="lede">Published rather than hidden. These are the places where the data is thin, a claim could not be confirmed, or the API behaves in a way that will bite whoever extends this. None of them block the site; all of them should be read before acting on a number.</p>
+  </div>
+
+  <div class="notice info">
+    <strong>Reading convention.</strong> <span class="badge unverified">unverified</span> means “we could not confirm this from an official source, so no value is shown”. <span class="badge warn">derived</span> means “this number is computed by us, not published by Kalshi”. A blank cell is deliberate, never an oversight.
+  </div>
+
+  <div class="card">
+    <h2>Flags</h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">ID</th><th scope="col">Item</th><th scope="col">Severity</th><th scope="col">Evidence</th><th scope="col">What clears this flag</th></tr></thead>
+        <tbody>
+          <tr id="fl-1">
+            <td><code>FL-1</code></td>
+            <td><strong>“Highest dollar amount” is not an API field.</strong> Markets report contract counts (<code>volume_fp</code>, <code>volume_24h_fp</code>, <code>open_interest_fp</code>); dollars are computed here as <code>volume × last price</code>, which prices a lifetime of trading at the final print. Rankings are therefore directional, not audited turnover.</td>
+            <td><span class="badge warn">derived</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets schema</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&amp;status=open" target="_blank" rel="noopener">live payload</a></td>
+            <td>Either sum <code>price × count</code> over <code>GET /trades</code> per event and cache it (<a href="suggestions.html#s-1">S-1</a>), or accept the proxy in writing and keep the <em>estimate</em> label in every header.</td>
+          </tr>
+          <tr id="fl-2">
+            <td><code>FL-2</code></td>
+            <td><strong>CORS from a browser to the demo host is unverified.</strong> If <code>Access-Control-Allow-Origin</code> is absent, the dashboard's live scan silently fails for every visitor and only the snapshot renders. Response headers were not observable in this environment.</td>
+            <td><span class="badge unverified">unverified</span></td>
+            <td class="src">click <a href="dashboard.html">Scan live API now</a> — the banner reports the real outcome per browser</td>
+            <td>One click on the dashboard from your network, or a <code>curl -i</code> preflight showing the header. If it fails, the answer is a read-through proxy, not a redesign.</td>
+          </tr>
+          <tr id="fl-3">
+            <td><code>FL-3</code></td>
+            <td><strong>Streaming and account features are structurally out of reach for a static page.</strong> The WebSocket docs state the connection itself requires authentication even for public channels; browsers cannot set handshake headers, and no page should hold a private key.</td>
+            <td><span class="badge no">blocking</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket Connection</a> · <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td>
+            <td>A signed proxy (or a desktop/Node client). Then the dashboard can consume a bridge endpoint and “live” means streamed rather than polled.</td>
+          </tr>
+          <tr id="fl-4">
+            <td><code>FL-4</code></td>
+            <td><strong>Seconds on the X axis cannot come from REST at all.</strong> <code>period_interval</code> accepts only 1, 60 and 1440 minutes, ≤5,000 periods per call. The “seconds” option on this site therefore shows 60-second buckets of 1-minute candles and says so.</td>
+            <td><span class="badge warn">partial delivery</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+            <td>Accept 1-minute as the floor, or fund the WS bridge and use <code>trade</code>/<code>ticker</code>/<code>cfbenchmarks_value_5hz</code>.</td>
+          </tr>
+          <tr id="fl-5">
+            <td><code>FL-5</code></td>
+            <td><strong>The Culture topic has no demo substance.</strong> <code>GET /series?category=Culture</code> returned exactly two series, <code>KXXBANNEDGROK</code> and <code>KXXBANNEDMURRAYHILLGUY1</code>, both with <code>volume_fp 0.00</code>. A “culture” column on this dashboard is an empty column, not a small one.</td>
+            <td><span class="badge no">coverage gap</span></td>
+            <td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&amp;include_volume=true" target="_blank" rel="noopener">category response</a></td>
+            <td>Track Culture against the public production host (no key needed), or drop it from the topic list. See <a href="questions.html#q-7">Q-7</a>.</td>
+          </tr>
+          <tr id="fl-6">
+            <td><code>FL-6</code></td>
+            <td><strong><code>GET /trades</code> could not be retrieved in this session,</strong> with either <code>ticker=</code> or <code>market_tickers=</code>. No claim about the public tape, its fields or its limits is made anywhere on this site, and trade-level turnover stays unimplemented.</td>
+            <td><span class="badge unverified">unverified</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades (docs)</a></td>
+            <td>A successful call from any machine with egress — <code>tools/refresh_snapshot.py --with-trades</code> is written to do exactly that and log the outcome.</td>
+          </tr>
+          <tr id="fl-7">
+            <td><code>FL-7</code></td>
+            <td><strong>The collector in this repo has never reached the API from here.</strong> The sandbox blocks all egress except package and Git hosts (three direct attempts failed at TLS with exit 35), so <code>verified-desk/tools/refresh_snapshot.py</code> has only had its failure paths exercised: <code>--check</code> and <code>--dry-run</code> both exit cleanly and write nothing, which is the behaviour that matters when a capture dies mid-run. <code>verified-desk/tools/kalshi_sign.py</code> is a different case — its Ed25519 is verified offline against the published RFC 8032 vectors, so the algorithm is proven here even though Kalshi's verifier has never seen a request from it. <code>verified-desk/tools/check_links.py</code> runs fully offline and passes.</td>
+            <td><span class="badge warn">untested path</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a> (an environment fact, not a Kalshi claim)</td>
+            <td>One run of <code>python3 tools/refresh_snapshot.py --check</code> followed by <code>python3 tools/refresh_snapshot.py</code> on any machine with ordinary egress; the collector logs every request it makes, so a partial failure is visible in <code>request_log</code> rather than silently shrinking the file.</td>
+          </tr>
+          <tr id="fl-8">
+            <td><code>FL-8</code></td>
+            <td><strong>Partial captures are visible as gaps.</strong> <code>volume_fp</code> for <code>KXPGATOP40-THOC26-ABHAT</code> is <code>null</code> because the response chunk ended mid-object, and the golf settled listing spans 81 chunks of which only the first was read. Golf coverage here is therefore two events, not the tournament.</td>
+            <td><span class="badge unverified">incomplete</span></td>
+            <td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGATOP40&amp;with_nested_markets=true&amp;limit=2&amp;status=settled" target="_blank" rel="noopener">the paged query</a></td>
+            <td>The refresher follows cursors to completion; the UI already marks the affected event's dollar total with a <em>floor</em> badge instead of hiding it.</td>
+          </tr>
+<tr id="fl-9">
+  <td><code>FL-9</code></td>
+  <td><strong>This repository is being written by several agent sessions at once, and the collisions were real.</strong> The base commit contained only <code>README.md</code> with the text <code># Demo1</code>. While this desk was being built, four other sessions merged their own sites into <code>main</code>, and each also wrote root-level <code>index.html</code>, <code>dashboard.html</code>, <code>markets.html</code>, <code>portfolio.html</code>, <code>questions.html</code>, <code>suggestions.html</code> and <code>flagged.html</code> — the same filenames this desk had chosen. Merging naively would have overwritten someone else's landing page or hidden this one. How it was resolved at integration: the whole desk (pages, <code>assets/</code>, <code>data/</code>, <code>tests/</code>, <code>tools/</code>) moved under <code>verified-desk/</code> with its own landing page, and the root <code>index.html</code> keeps its hub role with one additive section linking here. No file owned by another session was deleted or rewritten. GitHub Pages remains a <em>legacy Jekyll</em> build of <code>main</code> at <code>/</code>, so <code>.nojekyll</code> must stay (it does) and any file beginning with an underscore would be stripped from the published site.</td>
+  <td><span class="badge warn">process</span></td>
+  <td class="src"><a href="https://github.com/karagemop466-tech/Demo1/commits/main" target="_blank" rel="noopener">main commit history</a> · <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener">Pages publishing source</a></td>
+  <td>Nothing to clear — this is the record of how the collision was handled. Unifying the five desks under one navigation is a decision for the repo owner, not something to do unilaterally in an integration commit.</td>
+</tr>
+
+          <tr id="fl-10">
+            <td><code>FL-10</code></td>
+            <td><strong>Silent-parameter behaviour will mislead extensions.</strong> <code>GET /series?limit=5</code> returned the whole category; an unknown <code>tags=</code> value returns <code>{"series":null}</code> rather than an empty list; <code>GET /events?with_daily_volumes=true</code> was accepted and ignored. None of these raise an error you could catch.</td>
+            <td><span class="badge warn">trap</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a> (no <code>limit</code> parameter exists)</td>
+            <td>Already encoded: null-vs-empty handling and unit tests for both branches. Keep validating parameter names against the OpenAPI blocks rather than trusting a 200.</td>
+          </tr>
+          <tr id="fl-11">
+            <td><code>FL-11</code></td>
+            <td><strong>Reads are cached and event status is coarser than market status.</strong> At 11:18Z the open-events query still showed a market whose <code>close_time</code> was 11:15:00Z as <code>active</code>; the ballot event appeared under <code>status=open</code> with three of four legs finalized. Polling event listings for settlement timing will be wrong by seconds to hours.</td>
+            <td><span class="badge warn">accuracy</span></td>
+            <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">“prices, sizes and <code>status</code> can lag … by several seconds”</a></td>
+            <td>Poll the single market (or the WS <code>market_lifecycle_v2</code> channel) inside the close window, and treat <code>result</code> — not event status — as the settlement signal, which this tracker does.</td>
+          </tr>
+          <tr id="fl-12">
+            <td><code>FL-12</code></td>
+            <td><strong>Fee-schedule extraction is lossy.</strong> The PDF's non-standard-fee table came out of text extraction with columns interleaved, so only the formula, the maker coefficient, the “no settlement fee” line and the <code>KXAAAGASM</code> multipliers are quoted here. Multipliers for other series are <em>not</em> published on this site rather than guessed.</td>
+            <td><span class="badge unverified">partial</span></td>
+            <td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule PDF</a> · <a href="https://kalshi.com/fee-schedule" target="_blank" rel="noopener">upcoming changes page</a> (linked from the PDF, not yet checked)</td>
+            <td>Confirm per-series multipliers from <code>GET /series/{ticker}</code> (<code>fee_type</code>, <code>fee_multiplier</code>) — the API is the better source anyway, and it is already in the engine.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>Values deliberately left blank</h3>
+      <div class="body table-scroll">
+        <table class="data">
+          <thead><tr><th scope="col">Field</th><th scope="col">Where</th><th scope="col">Why blank</th></tr></thead>
+          <tbody>
+            <tr><td><code>volume_fp</code>, <code>volume_24h_fp</code></td><td><code>KXPGATOP40-THOC26-ABHAT</code></td><td>truncated chunk during capture (<a href="#fl-8">FL-8</a>)</td></tr>
+            <tr><td>balance, positions, fills, P&amp;L</td><td>Portfolio &amp; trades</td><td>no API key exists (<a href="questions.html#q-1">Q-1</a>)</td></tr>
+            <tr><td>series volume for <code>KXAAAGASM</code>, <code>KXBTCMAX90</code></td><td>series table</td><td>those queries were made without <code>include_volume=true</code>; the API returned no volume field to copy</td></tr>
+            <tr><td>trade-level turnover</td><td>everywhere</td><td><code>/trades</code> unverified (<a href="#fl-6">FL-6</a>)</td></tr>
+            <tr><td>rate-limit tier for this account</td><td>API reference</td><td>needs an authenticated read (<code>GET /account/limits</code>)</td></tr>
+            <tr><td>non-standard fee multipliers per series</td><td>markets page</td><td>PDF extraction lossy (<a href="#fl-12">FL-12</a>)</td></tr>
+            <tr><td>any “live” price at page load</td><td>dashboard</td><td>browser CORS unconfirmed (<a href="#fl-2">FL-2</a>); snapshot ages instead of pretending</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Process notes</h3>
+      <div class="body prose">
+        <ul style="margin-top:0">
+          <li>Every flag above is mirrored in <code>COORDINATION.md</code> so a parallel session sees it before claiming overlapping work.</li>
+          <li>Nothing here was resolved by inference. Where a number was tempting but absent — gas series volume, demo culture volume, golf leg volume — the cell is blank and badged.</li>
+          <li>Two flags (<a href="#fl-9">FL-9</a>, <a href="#fl-7">FL-7</a>) are about this <em>environment</em>, not Kalshi; they will not disappear by re-running the API.</li>
+          <li>The flag list is the review queue: it does not gate the merge, and the site is live with these caveats attached rather than gated behind a cleanup pass.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

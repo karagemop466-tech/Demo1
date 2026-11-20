@@ -480,3 +480,106 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 | Live verification | https://karagemop466-tech.github.io/Demo1/pages/demo-live.html fetched post-deploy: LIVE mode active (browser reading official demo API), 10 tracked events, 666 markets, resolution tracker showing "50 finalized: 23 yes / 27 no" for KXDPWTTOP20-DPWTC26; data/demo-snapshot.json served correctly |
 | Post-merge fixes | data/demo-snapshot.json timestamp typo corrected (11:33:00Z), shipped in this record commit |
 | Tasks 13–17 | All done. Sources, verification and irregularities recorded in the session section above and docs/demo-data-verification.md |
+
+---
+
+# Tasks — session s-8344abc8 (branch `arena/8344abc8-demo1`) · `verified-desk/`
+
+Claimed 2026-11-20 ~11:15 UTC at base commit `4a225ce`. Branch name is fixed by the platform, so it does not follow the `session-<id>/<task>` naming rule; recorded here as a deviation rather than a rename. **All output is namespaced under `verified-desk/`** — see the conflict log below for why.
+
+## Session registry
+
+| Session ID | Branch | Base | First seen (UTC) | Notes |
+| --- | --- | --- | --- | --- |
+| s-8344abc8 | `arena/8344abc8-demo1` | `4a225ce` | 2026-11-20 ~11:15 | Arena agent. Sandbox has **no egress to any kalshi host** (TLS exit 35), so all API/doc data was retrieved with the agent page-fetch tool, not `curl`. |
+
+## Environment finding that constrained every task
+
+* `curl` from the sandbox to `external-api.demo.kalshi.co`, `demo-api.kalshi.co` and `api.elections.kalshi.com` fails with TLS exit 35; only `github.com`, `codeload.github.com`, `api.github.com`, `registry.npmjs.org`, `pypi.org`, `files.pythonhosted.org` are reachable.
+* Consequence: no sandbox script can refresh `data/*.json`. `verified-desk/tools/refresh_snapshot.py` therefore had **only its failure paths** exercised here (`--check`, `--dry-run`: clean "demo host unreachable" exits, nothing written). `verified-desk/tools/kalshi_sign.py --self-test` needs no network and passes (built-in Ed25519 reproduces RFC 8032 TEST 1 and TEST 2 byte-for-byte). `verified-desk/tools/check_links.py` is fully offline and is this desk's pre-commit gate.
+* jsdom (`npm i --no-save jsdom`, git-ignored) makes the pages actually bootable in the sandbox; that is how two real render defects were found (below).
+
+## Tasks
+
+| # | Task | Status | File scope (this desk only) | Notes |
+| - | ---- | ------ | --------------------------- | ----- |
+| 1 | Coordination board + repo audit | done | `COORDINATION.md` (append-only section), `verified-desk/README.md`, `.gitignore` | Root `README.md` and root `index.html` were edited **additively only** (one hub section + one README section) as the integration session for this desk |
+| 2 | Verified API reference | done | `verified-desk/api-reference.html` | 13 endpoints + WS channels + limits; each row marked exercised / documented-only / unverified for this session |
+| 3 | Live data collection, dollar-volume ranking, resolutions | done | `verified-desk/data/snapshot.json`, `verified-desk/assets/kalshi.js`, `verified-desk/tests/kalshi.test.mjs`, `verified-desk/tools/refresh_snapshot.py` | 27 logged requests → 8 events / 20 markets / 17 series rows / 16 one-minute candles; every row carries its source URL; nulls preserved |
+| 4 | Dashboard: top-dollar events, topic filter, resolution tracking | done | `verified-desk/index.html`, `verified-desk/dashboard.html`, `verified-desk/assets/app.{js,css}` | Ranking is client-side because `/events` has no sort param; snapshot / scan / stream modes; resolution tracked per **market**, not per event |
+| 5 | Price chart + order-book depth | done | `verified-desk/markets.html` | Granularity floor is 1 minute; the "seconds" option is a labelled 60-second resample (IR-9); bid-only ladder with the NO→YES conversion printed |
+| 6 | Portfolio, trade execution, categorisation, strategies | done (design + replay); live trading gated on IR-4 | `verified-desk/portfolio.html`, `verified-desk/strategies.html`, `verified-desk/tools/kalshi_sign.py` | No fabricated balances or fills anywhere; `replaySim` runs the captured candles; the order path exists as a specification plus a guarded CLI signer |
+| 7 | Executive summary | done | `verified-desk/exec-summary.html` | Written after tasks 3–6; every figure re-derived from the snapshot file in the same commit |
+| 8 | Suggestions register | done | `verified-desk/suggestions.html` | S-1…S-10 with approve/defer/reject + note, persisted in localStorage, JSON export; nothing implemented beforehand |
+| 9 | Open questions / information gaps | done | `verified-desk/questions.html` | 9 answered from sources, 12 open with owner + cheapest discovery action |
+| 10 | Flagged for review | done | `verified-desk/flagged.html` | FL-1…FL-12 with evidence links and "what clears this", plus a table of every deliberate blank |
+| 11 | Site shell + Pages compatibility | done | `verified-desk/assets/app.css`, `verified-desk/assets/app.js` | 12 nav entries over 11 pages; no build step, CDN, webfonts or images |
+| 12 | Final integration: relocate, merge `main`, PR, deploy check | in progress | `verified-desk/**` + additive root hub rows | Gate: 48 tests + `verified-desk/tools/check_links.py` + canonical `tools/check-links.mjs` (repo-wide, PASS, 144 files) |
+
+## Verification log (this session)
+
+| Date (UTC) | Claim verified | Official source |
+| --- | --- | --- |
+| 2026-11-20 | Demo REST root `https://external-api.demo.kalshi.co/trade-api/v2` and demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` are the recommended demo endpoints | https://docs.kalshi.com/getting_started/demo_env |
+| 2026-11-20 | `GET /exchange/status`: `exchange_active:true`, `trading_active:true`, shards "Default / Demo shard 1 / Demo shard 2" | https://external-api.demo.kalshi.co/trade-api/v2/exchange/status |
+| 2026-11-20 | `GET /series` accepts `category`,`tags`,`include_volume`,`min_updated_ts` and has **no `limit`/`cursor`**; live call with `limit=5` returned the whole category | https://docs.kalshi.com/api-reference/market/get-series-list |
+| 2026-11-20 | `GET /events`: limit ≤200, `status`,`series_ticker`,`tickers`,`min_close_ts`,`min_updated_ts`; **no sort parameter**, so dollar-volume ranking must be client-side | https://docs.kalshi.com/api-reference/events/get-events |
+| 2026-11-20 | Candlesticks: `period_interval` ∈ {1, 60, 1440} **minutes**, ≤5,000 periods, `start_ts`/`end_ts` in seconds | https://docs.kalshi.com/api-reference/market/get-market-candlesticks |
+| 2026-11-20 | Orderbook: bids only, ascending, best last; `yes_dollars`/`no_dollars` are `[price_dollars, count_fp]`; empty arrays also returned for unknown tickers (200, never 404) | https://docs.kalshi.com/getting_started/orderbook_responses |
+| 2026-11-20 | Market volume fields are contract counts (`volume_fp`, `volume_24h_fp`, `open_interest_fp`); no dollar-volume field exists | https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&status=open |
+| 2026-11-20 | Fee model: taker `⌈0.07·C·P·(1−P)⌉`, maker `⌈0.0175·C·P·(1−P)⌉`, no settlement fee, `KXAAAGASM` multipliers 1/1 — asserted against all 21 published table rows in `verified-desk/tests/kalshi.test.mjs` | https://kalshi.com/docs/kalshi-fee-schedule.pdf |
+| 2026-11-20 | WS authentication is required at the handshake even for public channels; one subscription per channel; `429` on too many/too-fast connections | https://docs.kalshi.com/websockets/websocket-connection |
+| 2026-11-20 | Signing contract: Ed25519 or RSA-PSS/SHA-256 over `timestamp + METHOD + path` with the **query string excluded**, ±30 s tolerance; key shown once at `/account/profile` | https://docs.kalshi.com/getting_started/api_keys |
+| 2026-11-20 | Correct write endpoint is `POST /portfolio/events/orders`; legacy `/portfolio/orders` writes are `410 Gone`; duplicate `client_order_id` → `409 order_already_exists` | https://docs.kalshi.com/getting_started/quick_start_create_order |
+| 2026-11-20 | `/series?category=Culture&include_volume=true` → exactly two series, both `volume_fp 0.00` | https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&include_volume=true |
+| 2026-11-20 | `/events?series_ticker=KXPGATOP40&status=open` → `{"events":[]}` while the settled query returned rows (capture-time state, not an error) | https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGATOP40&limit=3&status=open |
+| 2026-11-20 | All 49 `docs.kalshi.com` URLs used by the desk exist in the official index, and the bare (non-`.md`) form renders — checked by hand this session; `check_links.py --llms/--online` repeats it mechanically | https://docs.kalshi.com/llms.txt |
+| 2026-11-20 | Desk tests: 48 pass (`node --test verified-desk/tests/kalshi.test.mjs verified-desk/tests/browser_boot.test.mjs`); `python3 verified-desk/tools/check_links.py` exits 0 (109 internal links, 13 mount checks, 45 sourced snapshot rows); canonical `node tools/check-links.mjs` PASS over 144 files | this repository |
+
+## Change requests (to the owner of another session's file)
+
+| Date (UTC) | To | Request | Status |
+| --- | --- | --- | --- |
+| 2026-11-20 | user / account holder | Demo API key id + private key, or a proxy that holds them — the only blocker for real portfolio reads and order placement | open → `verified-desk/questions.html#q-1`, `#q-2` |
+| 2026-11-20 | root `index.html` owner | This desk added one `<h2>` tile section linking `verified-desk/`; nothing else in that file was touched. Reorder or retitle freely | applied additively |
+| 2026-11-20 | CI pipeline owner (`scripts/fetch_demo_data.py`) | Consider recording `status=settled` markets and a per-request log so `result` and truncation gaps are visible in the shared snapshot (this desk's `refresh_snapshot.py` does both) | open, non-blocking |
+| 2026-11-20 | any session | `verified-desk/assets/*` is integration-owned: one engine, one shell, one stylesheet. Send a change request rather than editing it in parallel | convention |
+
+## Handoff log
+
+| Date (UTC) | Task | From → To | Reason |
+| --- | --- | --- | --- |
+| 2026-11-20 | 1–12 | s-8344abc8 → itself (integration) | Single-session build; no claim went stale, so no takeover occurred. Tasks were closed and then re-verified in one integration pass — a deviation from the "small frequent commits" rule, worth knowing when reading history |
+| 2026-11-20 | 12 | s-8344abc8 → next session | State at hand-off: 11 pages complete and boot-tested; the site has **never been loaded from a real browser** (jsdom only); `FL-2` (browser→API CORS) is one click from resolution; trade execution stays unimplemented pending IR-4 |
+
+## Conflict log
+
+| Date (UTC) | Files | Description | Resolution |
+| --- | --- | --- | --- |
+| 2026-11-20 | `index.html`, `dashboard.html`, `markets.html`, `portfolio.html`, `questions.html`, `suggestions.html`, `flagged.html`, `README.md`, `.nojekyll`, `COORDINATION.md` | Before pushing, `origin/main` had advanced from `4a225ce` to `db76c63`: four other sessions merged their own sites and each had also written **root-level** pages with the same filenames this desk chose (PRs #11, #12, #16, #17, #18). `git merge-tree` predicted add/add conflicts on all of them | **No other session's file was overwritten or deleted.** This desk relocated in full to `verified-desk/` (pages + assets + data + tests + tools) in commit `b567888`, matching the `docs/`, `live-desk/`, `monitor/`, `strategy-desk/` convention main had already established. `README.md` and root `index.html` took **theirs**, then received one additive section each. `COORDINATION.md` took theirs (the accumulated board) and this section is appended. `.nojekyll` already existed on main — this desk's copy was dropped. Result: only `COORDINATION.md` conflicted; canonical `tools/check-links.mjs` passes repo-wide afterwards |
+| 2026-11-20 | `assets/app.js` (pre-move) | Latent contention: tasks 4/5/8/9 all needed one shell file. Resolved by keeping `dataTable`/`NAV`/renderers in one integration-owned module and pages as pure markup | noted above as a convention |
+
+| 2026-11-20 | `.gitignore` | Second collision while PR #20 was open: `main` advanced again (PRs #14 and #19 merged, incl. a `snapshot/` isolation move by session 4df8be5b). Only `.gitignore` conflicted (add/add) — `index.html`, `README.md` and this board auto-merged, so the additive desk sections from both sides survived | Resolved as a **union**: main's Python/build-output comments kept verbatim, this desk's `node_modules/` line (optional jsdom dev dependency) added with its comment. Re-ran all three gates after the merge: 48 desk tests pass, `verified-desk/tools/check_links.py` clean, canonical `node tools/check-links.mjs` PASS |
+## Irregularities flagged by this session (mirrored on `verified-desk/flagged.html`)
+
+| ID | Item | Severity |
+| --- | ---- | -------- |
+| IR-1 | No network egress from the sandbox to any Kalshi host (TLS exit 35); all live data came from the agent's fetch tool, so no sandbox-side integration test of the API client is possible | medium |
+| IR-2 | Browser→demo-API CORS unverifiable from the sandbox; the desk renders from the committed snapshot and reports the live-scan result verbatim instead of assuming | medium |
+| IR-3 | `GET /series?limit=5` silently ignores `limit`; unknown `tags=` → `{"series":null}`; unknown `/events` params ignored — none of these error, so naive code misreads them | low |
+| IR-4 | No demo API key exists for this project, so no order was or can be placed; portfolio pages are a credential-ready design plus a candle-replay simulation | high |
+| IR-5 | No open golf **outright** series in demo (`KXPGATOP40&status=open` → `{"events":[]}`), so the golf column is Ryder Cup + settled Open legs only | medium |
+| IR-6 | Culture is effectively absent from demo (2 series, both zero volume); the page says so instead of substituting another category | high |
+| IR-7 | Orderbook is empty past `close_time` and empty (not 404) for unknown tickers, so captured depth means "no resting orders"; a real ladder needs an open-market window | medium |
+| IR-8 | `GET /trades` could not be retrieved here with either `ticker=` or `market_tickers=`, so exact turnover is unimplemented and no tape claim is made anywhere | medium |
+| IR-9 | Sub-minute data is structurally unavailable in REST; the seconds view is a labelled 60-second resample and true sub-second needs the authenticated `cfbenchmarks_value_5hz` channel | medium |
+| IR-10 | The fee-schedule PDF's non-standard-fee table extracts with interleaved columns, so only the formula, maker coefficient, "no settlement fee" line and `KXAAAGASM` 1/1 multipliers are quoted; other series' multipliers are omitted, not guessed | low |
+| IR-11 | Event status is coarser than market status (an `open` event contained finalized legs) and reads are cached for seconds, so settlement tracking keys on `result` per market and prints `updated_time` | medium |
+| IR-12 | Root `index.html`, `README.md` and `.nojekyll` were shared-write across five sessions with no lock; add/add collisions were only avoidable by namespacing. Recommendation for the repo owner: reserve root paths for a hub page and require every session to work in a subdirectory from the start | high |
+
+## Sources used by this desk
+
+Docs (all via `docs.kalshi.com`, slugs confirmed against `llms.txt`): `getting_started/`demo_env · api_keys · quick_start_create_order · quick_start_market_data · rate_limits · pagination · orderbook_responses · historical_data · exchange_sharding · fixed_point_migration · order_direction · order_errors — `api-reference/`market/get-markets · market/get-market · market/get-series-list · market/get-series · market/get-market-candlesticks · market/get-market-orderbook · market/get-trades · events/get-events · exchange/get-exchange-status · exchange/get-user-data-timestamp · orders/create-order-v2 · orders/amend-order-v2 · orders/cancel-order-v2 · orders/get-orders · orders/get-order-queue-position · order-groups/create-order-group · portfolio/get-balance · portfolio/get-positions · portfolio/get-fills · portfolio/get-settlements · account/get-account-api-limits · search/get-tags-for-series-categories · search/get-filters-for-sports · live-data/get-event-live-data — `websockets/websocket-connection`.
+Fees: https://kalshi.com/docs/kalshi-fee-schedule.pdf · https://kalshi.com/fee-schedule.
+Live responses: the 27 requests logged in `verified-desk/provenance.html`, all against `https://external-api.demo.kalshi.co/trade-api/v2`.
+Demo account walkthrough (linked from the demo-env page): https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive summary — Kalshi Demo Desk</title>
+<meta name="description" content="Executive summary of the Kalshi demo API project: what was verified, what the data shows, what is blocked, and the recommended path.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="exec">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Executive summary</h1>
+    <p class="lede">Prepared <strong>2026-11-20</strong> from live reads of the Kalshi demo API and the official documentation. Written so that every number can be clicked through to its source, and every gap says who has to close it.</p>
+  </div>
+
+  <div class="notice stop">
+    <h3>The one thing to know first</h3>
+    <p style="margin:0">The market-data half of this brief is built and working against <strong>live demo data</strong>: collection, topic filtering, dollar-volume ranking, resolution tracking, price charts and liquidity depth. The <strong>account half is not</strong>, and could not be: no demo API key or private key exists in this project, and Kalshi requires a signed request for every portfolio read and every order. So <em>no trades were executed and no portfolio was tracked</em> — that work is designed, documented and unit-tested, and blocked on one credential from you (see <a href="questions.html#q-1">Q-1</a>).</p>
+  </div>
+
+  <div class="card">
+    <h2>1 · Requirements against outcomes <span class="sub">every line of the brief, with its status</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">Status</th><th scope="col">Where / why</th></tr></thead>
+        <tbody>
+          <tr><td>Collect, organise and analyse from a full list of requirements</td><td><span class="badge yes">delivered</span></td><td>Snapshot of 8 events / 20 markets + 17 series volume rows in <code>data/snapshot.json</code>; requirement-by-requirement table is this section.</td></tr>
+          <tr><td>Use the demo endpoints (<code>external-api.demo.kalshi.co</code> REST, <code>external-api-ws.demo.kalshi.co</code> WS)</td><td><span class="badge yes">delivered</span></td><td>Both hosts wired in <code>Kalshi.BASES</code>; REST exercised live. WS is reachable only from an authenticated client, not page code — <a href="flagged.html#fl-3">FL-3</a>.</td></tr>
+          <tr><td>Executive summary of important details</td><td><span class="badge yes">this page</span></td><td>—</td></tr>
+          <tr><td>Dashboard tracking highest dollar-amount live events, five topics only</td><td><span class="badge yes">delivered</span></td><td><a href="dashboard.html">Live dashboard</a>. Ranking is an <em>estimate</em> because the API publishes contract counts, not dollar volume — <a href="flagged.html#fl-1">FL-1</a>.</td></tr>
+          <tr><td>Track live events until they resolve, and how they resolved</td><td><span class="badge yes">delivered</span></td><td>Resolution tracker keys off <code>result</code> + <code>settlement_ts</code> + <code>settlement_value_dollars</code> per leg; handles partially settled events.</td></tr>
+          <tr><td>Track portfolio performance from the demo account</td><td><span class="badge no">blocked</span></td><td>Needs your demo API key id + private key. <a href="portfolio.html">Page built</a>, <a href="questions.html#q-1">Q-1</a>.</td></tr>
+          <tr><td>Analyse trades, categorise them, build strategies by trade type</td><td><span class="badge open">framework ready</span></td><td>8-axis taxonomy + 7 strategies, all derived from real API fields; <a href="strategies.html">Strategy lab</a> and the replay simulator on <a href="portfolio.html">portfolio</a>.</td></tr>
+          <tr><td>Execute trades and track performance</td><td><span class="badge no">not performed</span></td><td>Order path documented (<code>POST /portfolio/events/orders</code>) and a signing reference shipped, but sending it requires the credential above. Nothing was placed.</td></tr>
+          <tr><td>Live, interactive; price graph with time X-axis (s/m/h) and contract price Y-axis</td><td><span class="badge warn">partial</span></td><td>Minutes/hours/days work from REST candles. <strong>Seconds is not available from REST at all</strong> — candlesticks are 1/60/1440 minutes only; the fix is the WS feed — <a href="flagged.html#fl-4">FL-4</a>.</td></tr>
+          <tr><td>See current liquidity: contracts available at a given price</td><td><span class="badge yes">delivered</span></td><td>Ladder + “price focus” slider on <a href="markets.html">Price &amp; liquidity</a>, with cost/slippage of taking that size.</td></tr>
+          <tr><td>Suggestions section to review before implementing changes</td><td><span class="badge yes">delivered</span></td><td><a href="suggestions.html">10 suggestions</a>, each approvable/deferrable with a note, exportable as JSON.</td></tr>
+          <tr><td>Clear list of questions/information/answers needed before a decision</td><td><span class="badge yes">delivered</span></td><td><a href="questions.html">Open questions</a>: answered, unanswered, and how to discover each one.</td></tr>
+          <tr><td>Repo review, line by line, official sources, flag irregularities</td><td><span class="badge yes">delivered</span></td><td>Base commit contained only <code>README.md</code> with the text <code># Demo1</code> — nothing to inherit, nothing to flag in inherited code. Findings and irregularities in <a href="flagged.html">Flagged for review</a> and <code>COORDINATION.md</code>.</td></tr>
+          <tr><td>GitHub Pages site with clean landing page, subpages by category, tables</td><td><span class="badge yes">delivered</span></td><td>10 pages, no build step, published from <code>main</code>.</td></tr>
+          <tr><td>Every table row needs a source link; unconfirmable values blank + flagged</td><td><span class="badge yes">enforced</span></td><td>A unit test asserts every snapshot row carries a source URL; a truncated capture is printed as <code>—</code> with a <em>floor</em> badge rather than filled in.</td></tr>
+          <tr><td>No manual input from me; work autonomously end to end</td><td><span class="badge yes">done</span></td><td>Single session, self-claimed board, PR opened and merged without waiting; flagged items do not block.</td></tr>
+          <tr><td>Coordinate parallel sessions via COORDINATION.md</td><td><span class="badge yes">done</span></td><td>Created (it did not exist), claimed all 12 tasks with file scopes, logged sources per task.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2 · What the demo API actually is <span class="sub">findings that change the plan</span></h2>
+    <div class="body prose">
+      <h3>F-1 · There is no “dollar volume” field, so ranking is arithmetic we own</h3>
+      <p>Markets report <code>volume_fp</code>, <code>volume_24h_fp</code> and <code>open_interest_fp</code> as fixed-point <em>contract counts</em>. Nothing in <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> reports dollars. This site therefore computes <code>Σ volume_fp × last_price_dollars</code>, labels it <em>estimate</em>, and flags any event whose legs were not fully captured as a <em>floor</em>. Exact turnover is recoverable — sum <code>price × count</code> across <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">GET /trades</a> — which is <a href="suggestions.html#s-1">S-1</a>.</p>
+
+      <h3>F-2 · Volume in demo is thin enough that liquidity, not price, is the real constraint</h3>
+      <p>In the captured set, the busiest US gas strike had <strong>385.82 lifetime contracts</strong> and only <strong>20.14 in 24h</strong> (event total <strong>$115.75</strong> estimated, of which $111.89 is that one strike and the other four legs add $3.85); the three Ryder Cup legs had <strong>1.17–1.18</strong> contracts each; and <strong>13 of the 20</strong> captured legs printed bid <code>0.0000</code> / ask <code>1.0000</code> — <em>no executable quote at all</em>. Meanwhile <code>KXBTC15M</code> shows <strong>7,949,039 contracts</strong> across the series. A strategy that ignores the book will look fine on paper and fail on the screen — hence the depth gate in <a href="suggestions.html#s-5">S-5</a>.</p>
+
+      <h3>F-3 · Resolutions are observable to the second, and fast</h3>
+      <p>Crypto 15-minute markets closed at <code>11:00:00Z</code> and carried <code>settlement_ts 11:00:04.609813Z</code> with <code>result: "no"</code> and <code>settlement_value_dollars: "0.0000"</code>. That is the whole “track until resolved, and how” requirement satisfied from one field set, on a cadence short enough to watch live. Golf showed the opposite extreme: The Open legs settled within minutes of the final putt, and the <code>rules_secondary</code> text explains the fair-market-price branch for a golfer who never tees off.</p>
+
+      <h3>F-4 · Event status ≠ market status, which is the trap in this design</h3>
+      <p>The California ballot event was returned by <code>status=open</code> even though three of its four markets were already <code>finalized</code>, because one leg was still active. Any tracker that polls <em>events</em> and marks them done on the first settlement, or that trusts event status alone, will mis-report. The tracker here therefore counts settled legs against total legs.</p>
+
+      <h3>F-5 · The API returns empties in three different shapes</h3>
+      <p>An unknown <code>tags</code> value on <code>GET /series</code> returns <code>{"series":null}</code>; a closed or mistyped order book returns <code>200</code> with <em>empty arrays</em> and never <code>404</code> (documented in <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>); and <code>GET /series</code> silently ignores <code>limit</code>. Naive dashboards render these as zeros. Here “no data” prints <code>—</code> and “real zero” prints <code>0.00</code>.</p>
+
+      <h3>F-6 · Fees are steep at mid prices and trivial at the tails — which shapes strategy</h3>
+      <p>The published taker formula <code>0.07 × C × P × (1−P)</code> peaks at <strong>$1.75 per 100 contracts at 50¢</strong> and falls to <strong>$0.07 at 1¢ or 99¢</strong> (the engine reproduces all 21 rows of the official table in tests). Consequence: mid-price churn is expensive, longshot/favorite harvesting is nearly fee-free, and maker pricing (<code>0.0175</code>) only exists where the series enables it — <code>KXAAAGASM</code> runs maker&nbsp;1 / taker&nbsp;1, so the gas ladder has no maker rebate.</p>
+
+      <h3>F-7 · Demo is not a small production; it is a different catalog</h3>
+      <p><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">The docs warn</a> that demo prices and behaviour “may not be reflective of those in real markets”. Concretely: the Culture category contains exactly <strong>two</strong> series, both with zero volume, and there is no “Election” tag (<code>GET /series?tags=Election</code> returns <code>{"series":null}</code>) — elections live in a separate <code>Elections</code> category. Any conclusion about “culture markets” from demo is an artefact of the sandbox, so <a href="suggestions.html#s-6">S-6</a> asks for a production reconciliation run before decisions are made.</p>
+
+      <h3>F-8 · A static site is the right shape for 80% of this, and structurally wrong for 20%</h3>
+      <p>Public REST reads are unauthenticated and cacheable, so GitHub Pages can serve the whole market-data experience with no server. Portfolio reads, order writes and the WebSocket handshake all require signed headers; a browser cannot attach headers to a WebSocket at all, and embedding a private key in page code would leak it. So the architecture is: <em>static site + optional live fetch + one tiny signed proxy when you want account features</em> (<a href="suggestions.html#s-2">S-2</a>).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3 · Topic coverage at capture <span class="sub">what exists to trade, per requested topic</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Topic</th><th scope="col">Live in demo?</th><th scope="col">Busiest series seen (contracts)</th><th scope="col">Dollar-volume signal</th><th scope="col">Resolution behaviour observed</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><td>Gas prices</td><td><span class="badge open">5 strikes open</span></td><td><code>KXAAAGASM</code> — 385.82 on the 3.30 leg</td><td>≈$111.89 on that leg; four other strikes near $0.03</td><td>month-end settlement, <code>settlement_timer_seconds 300</code>, settles off AAA's daily print</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?limit=3&amp;with_nested_markets=true&amp;series_ticker=KXAAAGASM" target="_blank" rel="noopener">events</a> · <a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA (settlement source)</a></td></tr>
+          <tr><td>Crypto</td><td><span class="badge yes">very live</span></td><td><code>KXBTC15M</code> — 7,949,039</td><td>1,756.61 contracts on the single open 15-min leg at capture (≈$5.27 estimated)</td><td>resolves ~4s after close with a 1-second settlement timer</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?tags=BTC&amp;include_volume=true" target="_blank" rel="noopener">series volumes</a> · <a href="https://www.cfbenchmarks.com/" target="_blank" rel="noopener">CF Benchmarks (settlement source)</a></td></tr>
+          <tr><td>Elections</td><td><span class="badge warn">partial</span></td><td><code>KXCABALLOTMEASURES</code> — 40 series-wide</td><td>$0.03 per settled leg; 3.15 contracts each; $0.13 event-wide</td><td>accelerated determination allowed once media project a winner (quoted in <code>rules_secondary</code>)</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXCABALLOTMEASURES&amp;with_nested_markets=true&amp;limit=1&amp;status=open" target="_blank" rel="noopener">events</a></td></tr>
+          <tr><td>Golf</td><td><span class="badge warn">thin live / rich history</span></td><td><code>KXPGATOP40</code> — 1,791,408 (settled events)</td><td>$2,719.67 on the Aberg leg alone; $7,907.60 across the event, reported as a floor</td><td>closes early when the event occurs; non-participation branches in rules</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&amp;include_volume=true" target="_blank" rel="noopener">series volumes</a></td></tr>
+          <tr><td>Culture</td><td><span class="badge no">effectively absent</span></td><td><code>KXXBANNEDGROK</code> — 0.00</td><td>no volume to rank</td><td>n/a in demo</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&amp;include_volume=true" target="_blank" rel="noopener">category dump</a> · <a href="flagged.html#fl-5">FL-5</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="body"><p class="dim" style="font-size:12.5px;margin:0">Dollar figures are this project's estimate (contracts × price). They describe the demo sandbox only, which is why the site refuses to call them market dollars.</p></div>
+  </div>
+
+  <div class="card">
+    <h2>4 · Recommended path <span class="sub">sequenced, with the decision each step unlocks</span></h2>
+    <div class="body prose">
+      <h3>Phase 0 — decide three things (this week, no engineering)</h3>
+      <ul>
+        <li><strong>Demo or production data as the source of truth?</strong> The brief says demo; demo is thin (F-2, F-7). Recommendation: keep demo for plumbing and executions, and rank topics off production public data, which needs no credentials at all.</li>
+        <li><strong>Issue a demo API key?</strong> Answering <a href="questions.html#q-1">Q-1</a> unblocks portfolio tracking, fills, orders and the WebSocket. Everything else is already built.</li>
+        <li><strong>Accept the dollar-volume proxy, or pay for exactness?</strong> Accepting it keeps a static site; exactness means summing trades (<a href="suggestions.html#s-1">S-1</a>).</li>
+      </ul>
+      <h3>Phase 1 — make the live path real (1–2 days)</h3>
+      <ul>
+        <li>Run the browser live scan once and record whether the demo host answers cross-origin; if it does not, that is the only reason to build a proxy for market data. (<a href="flagged.html#fl-2">FL-2</a>)</li>
+        <li>Add scheduled snapshot refresh into git so every published number carries a timestamp (<a href="suggestions.html#s-7">S-7</a>).</li>
+        <li>Wire the resolution poller for markets inside their close window (<a href="suggestions.html#s-9">S-9</a>).</li>
+      </ul>
+      <h3>Phase 2 — account features (needs Q-1)</h3>
+      <ul>
+        <li>Deploy the signed proxy; read balance, positions, fills; write the ledger into the same tables that already exist here.</li>
+        <li>Stamp strategy ids into <code>client_order_id</code> from day one, or the categorisation you asked for will be unreconstructable (<a href="suggestions.html#s-4">S-4</a>).</li>
+        <li>Only then place orders, starting with the deepest series (<code>KXBTC15M</code>) at 1 contract, with the depth gate from <a href="suggestions.html#s-5">S-5</a> refusing anything the book cannot absorb.</li>
+      </ul>
+      <h3>Phase 3 — decision support</h3>
+      <ul>
+        <li>Sub-second charts via the authenticated WS feed; alerts on settlement rather than price; strategy evaluation over stored fills rather than over a 20-row snapshot.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>5 · Verification statement</h2>
+    <div class="body prose">
+      <ul>
+        <li><strong>Sources.</strong> Only <code>docs.kalshi.com</code>, the <code>kalshi.com</code> fee PDF, and the demo API itself were used for claims. Third-party articles were used <em>only</em> as a lead to find candidate series tickers, and every ticker taken that way was then confirmed against the API before appearing anywhere in this repo. That provenance chain is recorded per row in <a href="provenance.html">data provenance</a>.</li>
+        <li><strong>Tests.</strong> <code>node --test tests/kalshi.test.mjs</code> → 34 passing, covering money rounding, the fee table, classification precedence, resolution edge cases, book walking, candle range validation and the null-vs-zero rules.</li>
+        <li><strong>Reproducibility.</strong> <code>tools/refresh_snapshot.py</code> regenerates the snapshot with the same schema from any machine with network access; <code>tools/check_links.py</code> verifies every outbound link returns 200. Both are documented as <em>untested in the agent sandbox</em>, because the sandbox has no egress to Kalshi (see <a href="flagged.html#fl-7">FL-7</a>).</li>
+        <li><strong>Not verified, deliberately.</strong> CORS reachability from a browser, the exact market <code>status</code> enum, rate-limit tier numbers for this account, and anything requiring an API key. Each is blank + flagged instead of filled in.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notice">
+    <h4>Standing caveat</h4>
+    <p style="margin:0">Kalshi's own documentation states that demo prices and behaviour may not reflect real markets, and that demo uses mock funds. Nothing on this site is investment advice, and nothing on it has moved money.</p>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

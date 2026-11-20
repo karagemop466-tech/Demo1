@@ -157,3 +157,18 @@ a measure of money at risk. Sub-minute price history comes from individual trade
 candlestick endpoint only supports 1, 60 and 1440-minute intervals. Browser-side cross-origin access
 to the demo host is detected at view time (see the request log on the page) — if it is blocked, the
 page says so and points at the local bridge instead of substituting values.
+
+---
+
+## Verified desk (session s-8344abc8)
+
+A self-contained second implementation lives in [`verified-desk/`](verified-desk/README.md):
+11 pages, a pure tested engine (`assets/kalshi.js`, 34 unit tests), a source-linked capture
+(`data/snapshot.json`, 27 logged requests), a jsdom boot test for every page, and three
+tools (collector, offline-verifiable request signer, site integrity checker).
+
+* Live: <https://karagemop466-tech.github.io/Demo1/verified-desk/>
+* Verification: `cd verified-desk && node --test tests/kalshi.test.mjs tests/browser_boot.test.mjs && python3 tools/check_links.py`
+* Data policy: every table row carries an official source URL; anything unconfirmable is left
+  blank and badged `unverified`, never estimated. Irregularities are published on
+  `verified-desk/flagged.html` rather than resolved by inference.

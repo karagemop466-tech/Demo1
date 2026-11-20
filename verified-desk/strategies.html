@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy lab — trade types, signals and evidence</title>
+<meta name="description" content="Seven strategies expressed as API fields and rules, with the data each needs and whether it can be measured today.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="strategies">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Strategy lab</h1>
+    <p class="lede">The brief asks for strategies “based on the type of trade”. Each one below is written as a machine-checkable rule over API fields, with the fee model applied, so a candidate is either supported by the data or it is not.</p>
+  </div>
+
+  <div class="notice info">
+    <h4>Ground rule used everywhere on this page</h4>
+    <p style="margin:0">A strategy counts as <span class="badge yes">measurable now</span> only if every field in its entry rule exists in the captured payload. Anything needing a private feed, a news source, or an order book we cannot see is marked <span class="badge warn">blocked</span> with the blocker named — not quietly scored.</p>
+  </div>
+
+  <div id="mount-signals" data-mount></div>
+
+  <div class="card">
+    <h2>Trade categorisation <span class="sub">the axes every fill should carry</span></h2>
+    <div class="body prose">
+      <p style="margin-top:0">These are the axes the demo ledger writes per trade (see <a href="portfolio.html">Portfolio &amp; trades</a>). Each is derived from a documented field, so the labels survive a rebuild and can be audited back to the API.</p>
+    </div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Axis</th><th scope="col">Values</th><th scope="col">Derived from</th><th scope="col">Why it matters here</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><td>Direction</td><td>YES / NO</td><td><code>outcome_side</code> + <code>book_side</code></td><td>The legacy <code>action</code>/<code>side</code> pair was replaced; old code mislabels shorts.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/order_direction.md" target="_blank" rel="noopener">order direction</a></td></tr>
+          <tr><td>Role</td><td>maker / taker</td><td>did the order rest before matching</td><td>Fee coefficient differs 0.0175 vs 0.07 — the same trade has different P&amp;L by role.</td><td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a></td></tr>
+          <tr><td>Horizon</td><td>&lt;1h · 1–24h · 1–7d · &gt;7d</td><td>entry time → market <code>close_time</code></td><td>Demo cadences (15-min crypto) make sub-hour horizons testable at all.</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&amp;status=open" target="_blank" rel="noopener">close_time field</a></td></tr>
+          <tr><td>Topic</td><td>gas-prices · elections · culture · crypto · golf</td><td><code>series_ticker</code> prefix, then <code>tags</code>, then <code>category</code>, then keywords</td><td>The classification basis is stored per row so a keyword-only match is visibly weaker.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series-list.md" target="_blank" rel="noopener">series fields</a></td></tr>
+          <tr><td>Price bucket</td><td>longshot ≤0.05 · mid · favorite ≥0.90</td><td><code>last_price_dollars</code> at entry</td><td>Both the fee curve and the payoff skew are functions of price.</td><td class="src"><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a></td></tr>
+          <tr><td>Intent</td><td>strategy id, supplied at order time</td><td><code>client_order_id</code> convention</td><td>Not recoverable after the fact — see <a href="suggestions.html#s-4">S-4</a>.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_create_order.md" target="_blank" rel="noopener">quick start</a></td></tr>
+          <tr><td>Liquidity context</td><td>contracts at the touch when filled</td><td>order-book ladder + <code>yes_bid_size_fp</code></td><td>Separates a real two-sided fill from a print into an empty book.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses.md" target="_blank" rel="noopener">orderbook responses</a></td></tr>
+          <tr><td>Outcome</td><td>yes / no / open</td><td><code>result</code>, confirmed by <code>settlement_value_dollars</code></td><td>Closes the loop the brief asks for: track until resolved, then score the trade.</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXBTC15M&amp;with_nested_markets=true&amp;limit=3&amp;status=settled" target="_blank" rel="noopener">settled rows</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What would make these testable for real</h2>
+    <div class="body prose">
+      <ol>
+        <li><strong>A stored ledger with labels.</strong> Fills alone give price/quantity/side. Intent has to be written at order time.</li>
+        <li><strong>Snapshot-before-order.</strong> Record the top of book and the depth ladder at the instant of submission; otherwise slippage can never be attributed.</li>
+        <li><strong>A reference feed for the settlement input.</strong> The 15-minute crypto rules settle on the average of the sixty seconds of CF Benchmarks BRTI before expiry — quoting Coinbase instead is a different number and a wrong model. That text is in the captured <code>rules_secondary</code>.</li>
+        <li><strong>A production comparison.</strong> Demo volume is a fraction of real volume; edges measured here do not transfer (see <a href="suggestions.html#s-6">S-6</a>).</li>
+        <li><strong>A minimum sample.</strong> Twenty legs cannot rank strategies. Treat every number here as a specification of the test, not a result.</li>
+      </ol>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
