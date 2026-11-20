@@ -1282,9 +1282,9 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 
 | Item | Result |
 |---|---|
-| Pull request | https://github.com/karagemop466-tech/Demo1/pull/PENDING — `arena/2a5bb307-demo1` → `main` (created) |
-| Merge result | pending — `gh pr merge <N> --merge` (no approval wait, per brief) |
-| Pages state after merge | pending — `gh api /repos/karagemop466-tech/Demo1/pages` |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/57 — `arena/2a5bb307-demo1` → `main` (created and merged) |
+| Merge result | MERGED 2026-11-20T19:36:31Z via `gh pr merge 57 --merge`; merge commit `70690b178` |
+| Pages state after merge | BUILT — live at https://karagemop466-tech.github.io/Demo1/ (source: branch `main`, path `/`); confirmed via Pages API status `built` |
 
 # Session arena/9bfdf3bc-demo1 — final integration, verification & publish
 
