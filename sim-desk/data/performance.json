@@ -1,15 +1,15 @@
 {
  "schema": 1,
- "updated_ts": "2026-11-20T13:31:03Z",
+ "updated_ts": "2026-11-20T13:33:53Z",
  "simulated": true,
  "started_cash_dollars": 1000.0,
- "cash": 998.51,
- "open_value": 0.7,
- "equity": 999.21,
- "open_count": 1,
+ "cash": 990.36,
+ "open_value": 8.73,
+ "equity": 999.09,
+ "open_count": 2,
  "settled_count": 0,
  "realized_pnl": 0,
- "roi_on_started_cash": -0.0008,
+ "roi_on_started_cash": -0.0009,
  "equity_curve": [
   {
    "ts": "2026-11-20T13:15:12Z",
@@ -30,6 +30,10 @@
   {
    "ts": "2026-11-20T13:31:03Z",
    "equity": 999.21
+  },
+  {
+   "ts": "2026-11-20T13:33:53Z",
+   "equity": 999.09
   }
  ],
  "by_strategy": {
@@ -41,6 +45,17 @@
    "win_rate": null,
    "invested": 1.4,
    "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  "momentum-tape": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
    "realized_pnl": 0.0,
    "roi": null
   }
@@ -56,6 +71,17 @@
    "fees": 0.09,
    "realized_pnl": 0.0,
    "roi": null
+  },
+  "elections": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
+   "realized_pnl": 0.0,
+   "roi": null
   }
  },
  "by_band": {
@@ -67,6 +93,17 @@
    "win_rate": null,
    "invested": 1.4,
    "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  "0.80-1.01": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
    "realized_pnl": 0.0,
    "roi": null
   }
@@ -82,6 +119,19 @@
    "win_rate": null,
    "invested": 1.4,
    "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  {
+   "topic": "elections",
+   "strategy": "momentum-tape",
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
    "realized_pnl": 0.0,
    "roi": null
   }

@@ -3,8 +3,8 @@
  "meta": {
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "started_cash_dollars": 1000.0,
-  "updated_ts": "2026-11-20T13:31:03Z",
-  "runs": 5,
+  "updated_ts": "2026-11-20T13:33:53Z",
+  "runs": 6,
   "simulated": true,
   "notes": [
    "All fills are SIMULATED \u2014 no orders were placed and no Kalshi account was touched.",
@@ -22,7 +22,7 @@
    "demo_env": "https://docs.kalshi.com/getting_started/demo_env"
   }
  },
- "cash": 998.51,
+ "cash": 990.36,
  "positions_open": [
   {
    "id": "sim-4c2285c19256",
@@ -45,12 +45,40 @@
    "volume_24h_at_entry": 4451.64,
    "band": "0.00-0.20",
    "mark_price": 0.07,
-   "mark_ts": "2026-11-20T13:31:03Z",
+   "mark_ts": "2026-11-20T13:33:53Z",
    "mark_basis": "official last_price_dollars (held side)",
    "notional_dollars": 1.4,
    "signal_reason": "NO implied ask $0.14 <= $0.20 with 24h volume 4452 contracts",
    "best_opposite_bid": 0.86,
-   "mark_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXAAAGASW-26NOV23-3.6200&limit=1000"
+   "mark_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXAAAGASW-26NOV23-3.6200%2CKXPRESPERSON-28-GABB&limit=1000"
+  },
+  {
+   "id": "sim-9342dc2e9d71",
+   "ticker": "KXPRESPERSON-28-GABB",
+   "series_ticker": "KXPRESPERSON",
+   "event_ticker": "KXPRESPERSON-28",
+   "title": "Who will win the next presidential election?",
+   "topic": "elections",
+   "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE",
+   "strategy": "momentum-tape",
+   "side": "yes",
+   "contracts": 10,
+   "entry_price": 0.803,
+   "entry_fee": 0.12,
+   "entry_ts": "2026-11-20T13:33:39Z",
+   "entry_run": "20261120T133322Z",
+   "entry_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRYDERCUP&status=open&limit=1000",
+   "orderbook_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-GABB/orderbook?depth=10",
+   "trades_tape_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPRESPERSON-28-GABB&limit=200",
+   "volume_24h_at_entry": 61123.63,
+   "band": "0.80-1.01",
+   "mark_price": 0.803,
+   "mark_ts": "2026-11-20T13:33:53Z",
+   "mark_basis": "official last_price_dollars (held side)",
+   "notional_dollars": 8.03,
+   "signal_reason": "tape trend over last 6 trades +0.80 >= +0.05; YES implied ask $0.80 in band",
+   "best_opposite_bid": 0.197,
+   "mark_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXAAAGASW-26NOV23-3.6200%2CKXPRESPERSON-28-GABB&limit=1000"
   }
  ],
  "trades_settled": [],
@@ -403,6 +431,161 @@
    "cash": 998.51,
    "equity": 999.21,
    "open_positions": 1
+  },
+  {
+   "ts": "2026-11-20T13:33:53Z",
+   "run_id": "20261120T133322Z",
+   "universe_markets": 10998,
+   "candidates": 20,
+   "candidate_list": [
+    {
+     "ticker": "KXPRESPERSON-28-GABB",
+     "topic": "elections",
+     "notional_24h": 49082.27,
+     "volume_24h": 61123.63,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-SSTR",
+     "topic": "golf",
+     "notional_24h": 12881.91,
+     "volume_24h": 515276.52,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JP",
+     "topic": "elections",
+     "notional_24h": 7325.88,
+     "volume_24h": 7768.7,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MTHO",
+     "topic": "golf",
+     "notional_24h": 5356.6,
+     "volume_24h": 41204.6,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MGRE",
+     "topic": "golf",
+     "notional_24h": 5242.07,
+     "volume_24h": 109209.88,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-LHOD",
+     "topic": "golf",
+     "notional_24h": 4820.96,
+     "volume_24h": 209607.11,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-RCAS",
+     "topic": "golf",
+     "notional_24h": 4748.47,
+     "volume_24h": 215839.61,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-KMIT",
+     "topic": "golf",
+     "notional_24h": 4674.98,
+     "volume_24h": 59176.91,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXAAAGASW-26NOV23-3.6200",
+     "topic": "gas",
+     "notional_24h": 4144.66,
+     "volume_24h": 4456.62,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXPRESNOMR-28-JDV",
+     "topic": "elections",
+     "notional_24h": 2503.75,
+     "volume_24h": 7587.13,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMR-28-MR",
+     "topic": "elections",
+     "notional_24h": 2501.98,
+     "volume_24h": 11372.64,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JOSS",
+     "topic": "elections",
+     "notional_24h": 2071.35,
+     "volume_24h": 7643.34,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXAAAGASM-26NOV30-3.50",
+     "topic": "gas",
+     "notional_24h": 1753.83,
+     "volume_24h": 3507.66,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXTIME-26-PET",
+     "topic": "culture",
+     "notional_24h": 1753.09,
+     "volume_24h": 43827.24,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-ZOH",
+     "topic": "culture",
+     "notional_24h": 1662.68,
+     "volume_24h": 6927.85,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-MARK",
+     "topic": "culture",
+     "notional_24h": 1522.47,
+     "volume_24h": 16916.31,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-JON",
+     "topic": "culture",
+     "notional_24h": 1498.61,
+     "volume_24h": 18732.62,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-WM",
+     "topic": "elections",
+     "notional_24h": 1492.6,
+     "volume_24h": 82922.04,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXTIME-26-JP",
+     "topic": "culture",
+     "notional_24h": 1199.02,
+     "volume_24h": 29975.6,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-STE",
+     "topic": "culture",
+     "notional_24h": 1191.93,
+     "volume_24h": 29798.31,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    }
+   ],
+   "new_trades": 1,
+   "settled": 0,
+   "api_calls": 70,
+   "errors": 0,
+   "cash": 990.36,
+   "equity": 999.09,
+   "open_positions": 2
   }
  ]
 }
