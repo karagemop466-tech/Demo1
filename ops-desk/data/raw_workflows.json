@@ -1,0 +1,12 @@
+{"created_at":"2026-11-20T11:50:30.000Z","id":424951167,"name":"Refresh demo account summary (read-only)","path":".github/workflows/account.yml","state":"active"}
+{"created_at":"2026-11-20T13:16:20.000Z","id":425024609,"name":"Kalshi desk — collect, simulate, publish","path":".github/workflows/desk.yml","state":"active"}
+{"created_at":"2026-11-20T13:32:08.000Z","id":425037663,"name":"Engine live-snapshot refresh (demo API)","path":".github/workflows/engine-refresh.yml","state":"active"}
+{"created_at":"2026-11-20T11:22:24.000Z","id":424928516,"name":"Refresh Kalshi demo data snapshot","path":".github/workflows/fetch-data.yml","state":"active"}
+{"created_at":"2026-11-20T11:45:27.000Z","id":424947041,"name":"Kalshi demo data pipeline","path":".github/workflows/kalshi-data.yml","state":"active"}
+{"created_at":"2026-11-20T11:27:24.000Z","id":424932484,"name":"Strategy-desk link \u0026 syntax check","path":".github/workflows/link-check.yml","state":"active"}
+{"created_at":"2026-11-20T11:19:33.000Z","id":424926456,"name":"Collect Kalshi demo data","path":".github/workflows/live-data.yml","state":"active"}
+{"created_at":"2026-11-20T11:13:26.000Z","id":424921429,"name":"Deploy static site to GitHub Pages","path":".github/workflows/pages.yml","state":"active"}
+{"created_at":"2026-11-20T19:31:58.000Z","id":425361468,"name":"Repo consistency \u0026 source audit","path":".github/workflows/repo-audit.yml","state":"active"}
+{"created_at":"2026-11-20T13:10:19.000Z","id":425019568,"name":"sim-desk strategy runner","path":".github/workflows/sim-strategies.yml","state":"active"}
+{"created_at":"2026-11-20T11:51:43.000Z","id":424952154,"name":"exec-desk site check","path":".github/workflows/site-check.yml","state":"active"}
+{"created_at":"2026-11-20T11:08:05.000Z","id":424916988,"name":"pages-build-deployment","path":"dynamic/pages/pages-build-deployment","state":"active"}

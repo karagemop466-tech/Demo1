@@ -1624,3 +1624,85 @@ Deliberately NOT touched: `snapshot/**`, `data/**`, `tools/collect_kalshi.py`, o
 | 2026-11-20 | This session's claim (pushed at `80f9815`, base `fb81fc0`) and session `arena/d973ced5-demo1`'s claim both covered the brief's dual scrolling-chat alert requirement, with **identical filenames** (`alerts.html`, `assets/js/alerts.js`). Concurrently `arena/2a5bb307-demo1` shipped `alerts/` + `alert-desk/`, `arena/87015421-demo1` shipped `trade-desk/`, and `arena/65df996f-demo1`'s PR #61 shipped live alert tapes. True concurrent claim: neither session could see the other's claim at claim time. | Per protocol ("never discard another session's work", "keep scopes non-overlapping"): main's merged `alerts.html` + `assets/js/alerts.js` (d973ced5) were kept as-is in content; this session **dropped its own duplicate page** rather than add a 4th alert implementation (fragmentation is a standing flagged irregularity). The `index.html` add/add conflict kept **both** tiles (main's `alert-desk/` tile + an accurate tile for `alerts.html`). |
 | 2026-11-20 | While writing the regression suite for the shipped `alerts.html`, **two real bugs** were found in the merged implementation (both invisible to its own verification): (1) `loadData()` read `charts.series`/`charts.generated_utc` one level off the `loadSnapshot()` return shape, so **every visit rendered zero swings** and a "—" capture date; (2) `normalizeCandle()` only read the snapshot point shape, so **every official candlesticks payload** (`end_period_ts` + `price.close_dollars`, schema verified on docs.kalshi.com 2026-11-20) parsed to null and the live overlay silently fell back to snapshot. | Fixed in `assets/js/alerts.js` under final-integration authority (owner d973ced5's publish record is complete; edits limited to the two bugs, page content unchanged) and acceptance-tested (`tests/alerts.test.mjs` sections 1, 4). Evidence: `docs/verification-b62e8188.html`. |
 | 2026-11-20 | Rebase of this branch onto advancing `main` (PRs #61–#67 + other sessions' board records) conflicted twice in `COORDINATION.md` and once in `index.html`. | Every round kept **both** sides: main's accumulated board verbatim + this session's sections re-appended; `index.html` kept main's tiles and added only additive tiles. No session's content discarded. |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/64 — "Board: session d372e97e close-out verification record" |
+| Pre-merge checks | PASS — `check` (run 44804941467) and `links` (run 44804941595) both `pass` |
+| Merge result | **MERGED** 2026-11-20T19:47:37Z via `gh pr merge 64 --merge`; merge commit `b1b7ff12254559c1d7dbab0cc9b861c91872f4ea` (no approval wait, per brief) |
+| Pages state after merge | Not confirmed via the GitHub API: the Pages API and Actions run listing returned HTTP 403 *rate limit exceeded* from 19:47Z to at least 19:55Z. The live URL https://karagemop466-tech.github.io/Demo1/ was fetched after merge and serves the landing page (snapshot 2026-11-20 11:43:59 UTC, "2,117 resolved / 352 awaiting" wording, Flagged for Review link present). Build status for `b1b7ff1` still to be confirmed — see irregularity 6 below |
+
+### Irregularity added after merge
+
+6. **Post-merge Pages build not confirmed.** GitHub API rate limit (HTTP 403) blocked `pages/builds/latest` and the Actions run list; the deploy result for `b1b7ff1` is therefore unconfirmed by this session. The previous build reading (`errored` for `6aa1ed5`) is also unexplained. The next integration session should re-check `gh api repos/karagemop466-tech/Demo1/pages/builds/latest` and the `pages-build-deployment` run and record the result here.
+## Session arena/fdc47dc1-demo1 — coordination review and endpoint verification (claim)
+
+- **Session ID:** `fdc47dc1` — branch `arena/fdc47dc1-demo1` (platform-fixed name; `session-<id>/<task>` naming not usable, same deviation as earlier sessions).
+- **Claimed at:** 2026-11-20 (UTC), claim pushed before any other work.
+- **Basis:** board reviewed end-to-end; `gh pr list --state all` checked. Open PRs at claim time belong to other sessions: #61 (`arena/65df996f-demo1`, live alert tapes / topic fixes), #62 (`arena/fe12c4c4-demo1`, repo-wide consistency audit and flagged register), #63 (`arena/54a39029-demo1`, ops pipeline monitor), #64 (`arena/d372e97e-demo1`, close-out record). Every brief item already has merged or claimed work, so this session does **not** start a duplicate desk.
+- **Scope (exclusive):** `COORDINATION.md` (this section only). No other file is edited.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| CR-1 | Verify the brief's recommended demo endpoints against the official Kalshi docs and confirm the live Pages landing still matches them | done | arena/fdc47dc1-demo1 | `COORDINATION.md` (this section) | https://docs.kalshi.com/getting_started/demo_env ; https://karagemop466-tech.github.io/Demo1/ (live) | see record below | see record below |
+
+### CR-1 record — session arena/fdc47dc1-demo1
+
+- **Endpoints (official):** https://docs.kalshi.com/getting_started/demo_env states the demo REST root is `https://external-api.demo.kalshi.co/trade-api/v2` (recommended; `https://demo-api.kalshi.co/trade-api/v2` also supported) and the WebSocket root is `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`). Matches the brief exactly. Demo web app: https://demo.kalshi.co/ . Docs also warn that demo prices/behaviour may not reflect real markets.
+- **Live landing (fetched this session):** https://karagemop466-tech.github.io/Demo1/ renders. Topic counts re-added by hand: open 116+255+191+474+363 = 1,399; resolved 350+131+368+668+600 = 2,117; closed-awaiting 17+1+60+232+42 = 352; 2,117+352 = 2,469 — all consistent with the page's own totals.
+- **Live API from this sandbox:** NOT reachable. `curl` to `external-api.demo.kalshi.co` fails at TLS (SSL_ERROR_SYSCALL); the sandbox's outbound allowlist excludes Kalshi hosts. No live Kalshi value was re-fetched by this session; the page's counts come from the CI snapshot stamped 2026-11-20T11:43:59Z.
+- **No changes** to any file other than this board section. No duplicate desk built.
+
+**Irregularities flagged (non-blocking; for the Flagged for Review owners):**
+1. Credential risk: the live landing itself discloses that an experimental trade page (`pages/strategy.html`) stores a private key in browser local storage and has signing/RSA-import and fill-ledger issues (its SEC-01, AUTH-01, KEY-01, FILL-01). Recommend removing the page or disabling key entry on the public site before any further publish. Owner: whichever session owns `pages/strategy.html`.
+2. Sprawl vs. brief: the landing links 9+ separate dashboards/desks (exec-desk, desk, pages/*, docs/*, alert-desk, trade-desk, engine, live-desk, ...). The brief asks for a simple, easy-to-use dashboard. Recommend one canonical entry point in the final integration pass.
+3. Ranking definitions differ by desk (landing says computed public-trade notional; exec-desk uses contract volume × price input). The landing discloses this; each desk should label its ranking basis on the page.
+4. Portfolio and order placement remain blank: no Kalshi demo API key was provided to any session, so the demo-account portfolio cannot be verified (unchanged from earlier sessions).
+5. Sandbox cannot reach Kalshi hosts (see above), so live-data freshness is only as current as the scheduled CI snapshot.
+
+Verification performed: fetch of the official docs page; fetch of the live Pages landing; curl check of the Kalshi API host (failed as stated); arithmetic re-check of the topic table.
+
+---
+
+---
+
+---
+
+## Session arena/54a39029-demo1 — ops-health desk: live pipeline & data-freshness monitor (claim)
+
+- **Session ID:** `54a39029` — branch `arena/54a39029-demo1` (platform-fixed; not renamed). Base `main` at `bb70853` (PR #53 merge).
+- **Claimed at:** 2026-11-20 ~19:31 UTC; claim committed and pushed **before** implementation.
+- **Overlap check done:** board read end-to-end; `git ls-remote --heads origin` (43 branches) and per-branch COORDINATION.md diffs inspected. Active sibling claims at claim time: `2a5bb307` (`alerts/**` + root landing rewrite + `kalshi-data.yml` fix), `2db27b09` (`alert-desk/**` dual chat), `87015421` (`trade-desk/**`), `91fc2cc7` (`trader-guide/index.html` + board), `fe12c4c4` (repo-wide consistency audit + final integration). No session owns pipeline/ops health monitoring, workflow-run auditing, or a `ops-desk/` namespace. This task takes that gap.
+
+| ID | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| O-1 | Ops-health desk (`ops-desk/`): inventory every scheduled/push-triggered data workflow as shipped, audit actual GitHub Actions run history from the official API, measure committed-data freshness, and publish a live, browser-refreshable health page with committed evidence + graceful degradation | done | 54a39029 | `ops-desk/**` (new tree only), this board section | docs.github.com Actions schedule docs + GitHub REST API workflow-runs docs (fetched; links in record below); run evidence from `api.github.com/repos/karagemop466-tech/Demo1/actions/...` (official API, run IDs logged) | Every number in the committed evidence carries its API URL; schema test + jsdom boot test + repo link checker | OPS-01: `sim-strategies.yml` shipped with **no** schedule trigger although its board record claims "push + 30-min schedule" (file history contains zero `cron` lines; sim engine idle since 13:40Z) → change request to owner `9dcbe7d4`, not applied. OPS-02: cron reliability — only 2 `schedule`-event runs in the repo's last 100 runs; `engine-refresh` shows 0 schedule runs and its last dispatch failed; `desk.yml` last push run failed. Scheduled runs may be delayed/dropped under load (GitHub docs) → flagged with links. No other session's files edited; root landing tile request logged, not applied |
+
+Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree `ops-desk/**` + this section only).
+
+### Record — session arena/54a39029-demo1 (O-1 done)
+
+**Deliverables (all new files, no other session's files touched):** `ops-desk/index.html` (health page; renders committed evidence; optional browser live re-check against the same official endpoints with rate-limit display and graceful degradation to committed evidence), `ops-desk/data/health.json` (evidence; every record carries its API URL), `ops-desk/data/cors-probe.json` (observed `access-control-allow-origin: *` headers), `ops-desk/data/raw_*` (raw API captures), `ops-desk/tools/build_health.py` + `tools/cors_probe.py` (stdlib-only generators), `ops-desk/README.md`, `ops-desk/test_ops_desk.mjs`.
+
+**Evidence snapshot (committed health.json, generated 2026-11-20 ~19:35Z):**
+- Repo sample: 200 runs spanning 13:15:02Z→19:32:05Z (374.1 min): push 150, pull_request 29, dynamic 18, **schedule 2**, workflow_dispatch 1. Both schedule runs: `Kalshi demo data pipeline` 19:28:36Z (cancelled) and `Refresh Kalshi demo data snapshot` 19:11:55Z (success) — linked to their run pages in health.json.
+- Expected schedule starts in that window (computed arithmetic, labelled as such): desk.yml 12, engine-refresh.yml 24, fetch-data.yml 24, kalshi-data.yml 24 — **84 computed vs 2 observed**. Official caveat quoted in health.json: "the `schedule` event can be delayed during periods of high loads … some queued jobs may be dropped."
+- Declared vs shipped: sim-strategies.yml declares push + workflow_dispatch only; full `git log --follow` history = 1 commit, 0 `cron` lines; board claim at COORDINATION.md line 1223 (S-4) says "on push + 30-min schedule" → OPS-01 mismatch, change request logged for `9dcbe7d4`.
+- Data freshness at build (commits API, per path): `data/` 23.2 min; `snapshot/` 468.6 min; `sim-desk/data/` 355.3 min; `engine/` 366.2 min; `desk/data/` 389.8 min — quantifies OPS-02's staleness impact.
+
+**Verification performed (all green):**
+1. `node ops-desk/test_ops_desk.mjs` — 13/13: health.json schema (every record carries its API URL; nothing inferred), OPS-01 git-history/board-claim cross-check, jsdom boot from committed evidence (4 KPI cards, workflow rows == evidence count, freshness rows == paths, OPS-01/OPS-02 render with board links), live-check happy path (4 result rows, rate-limit line, no overwrite of committed tables), live-check failure path (degrade banner cites the committed `generated_at_utc`).
+2. `node tools/check-links.mjs` — PASS: 368 files scanned, no broken internal links, no key material, source-link audit clean.
+3. `python3 -m py_compile ops-desk/tools/*.py` and `node --check ops-desk/test_ops_desk.mjs` — PASS; inline page script extracted and `node --check`ed — PASS.
+4. Rebase onto `origin/main` @ `6aa1ed5` (PRs #58/#60 merges): COORDINATION.md conflict resolved by keeping **both** sides verbatim (sibling sections 91fc2cc7/2db27b09/others + this section); nothing discarded.
+
+**Sources (official, pages fetched during this session):**
+- `https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule` — schedule semantics, high-load delay/drop caveat, default-branch-only, 5-min minimum.
+- `https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28` — run-evidence endpoints; "can be used without authentication … if only public resources are requested".
+- `https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28` — commits endpoints incl. `path` filter.
+- Live run/commit evidence: `https://api.github.com/repos/karagemop466-tech/Demo1/...` (URLs recorded per record in health.json).
+
+**Irregularities:** OPS-01 and OPS-02 as above; both published on `ops-desk/index.html` with run-page links and owner change requests. **Limits:** no Kalshi market data collected or altered by this task (out of scope); the page monitors GitHub Actions + git evidence only.
+
+### CI note on PR #63 (recorded 2026-11-20 ~19:58Z)
+
+- The PR check **`alert-desk check` fails**, but it fails for **every branch since it was introduced** — all 10 runs of `alert-desk-check.yml` are failures, including run #4 on `main` itself (push of merge of PR #59), runs #5–#7 on sibling branches `arena/87015421-demo1`, `arena/91fc2cc7-demo1`, `arena/fe12c4c4-demo1`, and runs #9–#10 on the owner's own fix branch. Evidence: <https://github.com/karagemop466-tech/Demo1/actions/workflows/alert-desk-check.yml?query=is%3Afailure>.
+- This PR does not touch `alert-desk/**`; locally, `node --check alert-desk/app.js alert-desk/test_boot.mjs` passes and `node alert-desk/test_boot.mjs` passes 35/35 on the identical committed files — the CI failure is runner-environment/timing, not content.
+- Owner `0ad208bf`'s fix (PR #67 "alert-desk: timing-deterministic boot test + CI failure annotations") has since **merged to `main`** (merge commit `8090cd0`). Per coordination rules this session does not edit `alert-desk/**`; the incident is published here as a flagged irregularity and does not block this PR per the brief (flagged items do not block merge; the Pages site build/deploy checks are green). The re-run of `alert-desk check` on post-fix pushes should confirm the fix.

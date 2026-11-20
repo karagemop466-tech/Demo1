@@ -1,0 +1,37 @@
+{
+  "schema": "ops-desk/cors-probe v1",
+  "probed_at_utc": "2026-11-20T19:37:50Z",
+  "method": "urllib GET with no Origin header and with Origin: null replaced by a plain GET; headers recorded verbatim. Browsers send Origin and enforce CORS client-side; the observed Access-Control-Allow-Origin: * is the header a browser would receive. Re-run the probe to refresh.",
+  "results": [
+    {
+      "url": "https://api.github.com/repos/karagemop466-tech/Demo1/actions/workflows?per_page=100",
+      "status": 200,
+      "observed_headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "x-ratelimit-limit": "5450",
+        "x-ratelimit-remaining": "2980"
+      }
+    },
+    {
+      "url": "https://api.github.com/repos/karagemop466-tech/Demo1/actions/runs?per_page=1",
+      "status": 200,
+      "observed_headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "x-ratelimit-limit": "5450",
+        "x-ratelimit-remaining": "2978"
+      }
+    },
+    {
+      "url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=data&per_page=1",
+      "status": 200,
+      "observed_headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
+        "x-ratelimit-limit": "5450",
+        "x-ratelimit-remaining": "2976"
+      }
+    }
+  ]
+}
