@@ -10,7 +10,9 @@
     ["questions.html", "Questions & gaps"],
     ["suggestions.html", "Suggestions"],
     ["flagged.html", "Flagged for Review"],
-    ["sources.html", "Sources"]
+    ["sources.html", "Sources"],
+    ["monitor/index.html", "Monitor (single page)"],
+    ["pages/landing-executive-summary.html", "Multi-page site"]
   ];
   var here = (location.pathname.split("/").pop() || "index.html");
   var nav = document.getElementById("site-nav");

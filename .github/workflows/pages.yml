@@ -1,0 +1,33 @@
+name: Deploy static site to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript
+        run: node --check monitor/app.js
+      - name: Validate required files
+        run: test -s index.html && test -s monitor/index.html && test -s monitor/styles.css && test -s monitor/app.js && test -s assets/style.css && test -s assets/common.js && test -s assets/dashboard.js && test -s data/markets.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
