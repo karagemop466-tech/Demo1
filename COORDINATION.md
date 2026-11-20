@@ -1276,3 +1276,63 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 ## Log
 
 - 2026-11-20 ~19:20 UTC — session `2a5bb307` claimed A-1..A-4; claim pushed before implementation.
+
+# Session arena/9bfdf3bc-demo1 — final integration, verification & publish
+
+## Session claim
+- **Session ID:** `9bfdf3bc-demo1` — branch `arena/9bfdf3bc-demo1` (platform-fixed; not renamed).
+- **Base:** `main` at `cb6f8b77bf1a5f282797db0368170ff75435f8db` (branch is currently identical to `main`).
+- **Claimed at:** 2026-11-20 (UTC).
+- **Role:** final integration session per brief — verify the combined tree, confirm the site builds with no broken links, create PR → `main`, merge without waiting for approval, confirm GitHub Pages, record PR link + merge result here.
+- **Scope (only these files edited):** `COORDINATION.md` (this section, append-only). Deliberately NOT touched: root `index.html`, `assets/`, `pages/`, `site/`, `site_src/`, `snapshot/`, `data/`, `build_site.py`, `tools/collect_kalshi.py`, `exec-desk/`, `verified-desk/`, `decision/`, `strategy-desk/`, `live-desk/`, `monitor/`, `docs/`, `markets/`, `sim-desk/`, `engine/`, `desk/` — all owned by other completed sessions.
+
+## Verification performed (all green)
+
+| Gate | Command | Result |
+|---|---|---|
+| Site build | `python3 build_site.py` | 17 pages; markets=1399/1399; resolved=2469/2469; charts=10; **link check: OK** |
+| Line-by-line verification | `python3 tools/verify_site.py` | PASS; rows checked markets=250, resolved=250, topics=600, liquidity=48, index-figures=8; errors=0; warnings=2 (36 liquidity rows use a section-level order-book source; official external settlement sources listed) |
+| Link audit | `node tools/check-links.mjs` | PASS; 346 files scanned; no broken links, no secret material, source-citation audit clean |
+| Exec-desk DOM tests | `npm test` | 10/10 PASS |
+| Root dashboard tests | `node tests/dashboard.test.mjs` | 46/46 PASS |
+| Sharp-move jump tests (≥$0.10) | `node tests/dashboard-jumps.test.mjs` | 9/9 PASS |
+| Python unit tests | `python3 -m unittest discover -s tests -p 'test_*.py'` | 7/7 PASS |
+| Syntax | `node --check` on all `.js`; `python3 -m py_compile` on all `.py` | PASS |
+
+## Sources used (official only)
+
+- Demo REST/WebSocket base URLs and demo-environment limits: https://docs.kalshi.com/getting_started/api_environments and https://docs.kalshi.com/getting_started/demo_env (demo = mock funds; prices/behavior may not reflect real markets)
+- Market/series/event endpoints, filters, pagination: https://docs.kalshi.com/api-reference/market/get-markets, /get-series-list, https://docs.kalshi.com/api-reference/events/get-events
+- Order book (bids only; implied asks), candlestick intervals 1/60/1440: https://docs.kalshi.com/getting_started/orderbook_responses, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- YES/NO settlement ($1 per winning contract): https://docs.kalshi.com/getting_started/market_settlement
+- Signing, V2 orders, fills, WebSocket handshake: https://docs.kalshi.com/getting_started/api_keys, https://docs.kalshi.com/api-reference/orders/create-order-v2, https://docs.kalshi.com/api-reference/portfolio/get-fills, https://docs.kalshi.com/getting_started/quick_start_websockets
+- GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+
+All live values in the site are drawn from the committed snapshot collected from `https://external-api.demo.kalshi.co/trade-api/v2` on GitHub-hosted runners. The sandbox egress allowlist excludes `*.kalshi.co`, so no live Kalshi fetch was performed in this session; every rendered value carries its source request URL and blanks are never inferred.
+
+## Irregularities flagged (non-blocking; published on the site's Flagged for Review pages)
+
+1. **No Kalshi credentials in the repo.** Portfolio balance/positions/fills and order placement require authenticated signed requests; those cells are blank. A static GitHub Pages site must never hold a private key (SEC-01, AUTH-01, KEY-01; see exec-desk flagged register).
+2. **Demo venue only.** Values are mock-funds demo-book values, not production liquidity (official demo_env warning).
+3. **"Highest dollar amount" is not an official field.** Ranking uses computed 24 h traded notional; disclosed per row, never presented as an official dollar-volume figure.
+4. **Topic matching is heuristic** (published keyword rules over series tickers/tags), not an official Kalshi taxonomy.
+5. **Time-sensitive test fixtures** — `tests/dashboard.test.mjs` `pages/live.html` section reports "No trades matched" when run later than its fixed fixture timestamps; confirmed identical on the pristine tree; owned by an earlier session, left untouched (TEST-01).
+6. **Site fragmentation** — ~7 dashboard variants coexist; the root hub links to all. Consolidation recommended but not forced (each is a prior session's deliverable).
+
+## Tasks
+
+| # | Task | Status | Outcome |
+|---|------|--------|---------|
+| I1 | Final integration verification of the combined tree | done | All gates above PASS; no broken links; no fabricated values |
+| I2 | PR → `main`, merge, confirm GitHub Pages | in progress | PR created below; merge and Pages confirmation to follow |
+| I3 | Record PR link + merge result in COORDINATION.md | pending | Filled in after the PR is created and merged |
+
+## Pull request & merge record
+
+| Item | Result |
+|---|---|
+| Pull request | **pending** — to be created from `arena/9bfdf3bc-demo1` → `main` |
+| Merge result | **pending** — `gh pr merge <N> --merge` (no approval wait, per brief) |
+| Pages state after merge | **pending** — `gh api /repos/karagemop466-tech/Demo1/pages` |
+
+---
