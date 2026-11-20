@@ -1332,7 +1332,7 @@ All live values in the site are drawn from the committed snapshot collected from
 | Item | Result |
 |---|---|
 | Pull request | https://github.com/karagemop466-tech/Demo1/pull/52 — `arena/9bfdf3bc-demo1` → `main` (created) |
-| Merge result | pending — `gh pr merge 52 --merge` to be run as the final step (no approval wait, per brief) |
-| Pages state after merge | pending — `gh api /repos/karagemop466-tech/Demo1/pages` (confirm after merge) |
+| Merge result | MERGED 2026-11-20 via `gh pr merge 52 --merge` (no approval wait, per brief); merge commit `de4c771d4e8eb5a24e5197651eba00b062dc8c9b` |
+| Pages state after merge | BUILT — live at https://karagemop466-tech.github.io/Demo1/ (source: branch `main`, path `/`; public; HTTPS enforced) |
 
 ---
