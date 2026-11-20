@@ -1,0 +1,39 @@
+name: tape-desk check
+
+# Session arena/5bfa283b-demo1 (T-3): additive check for the live tape desk.
+# Only touches tape-desk/** plus this file; no shared workflow is modified.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tape-desk/**"
+  pull_request:
+    paths:
+      - "tape-desk/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install jsdom
+        run: npm install --no-audit --no-fund --silent jsdom
+      - name: Syntax check
+        run: |
+          python3 -m py_compile tape-desk/tools/build_watchlist.py tape-desk/tools/build_map.py
+          node --check tape-desk/core.js
+          node --check tape-desk/app.js
+          node --check tape-desk/test_boot.mjs
+      - name: The published dataset is reproducible from the committed inputs
+        run: |
+          python3 tape-desk/tools/build_watchlist.py
+          git diff --exit-code -- tape-desk/data tape-desk/verified.html
+      - name: Tests (core rules, build parity, jsdom boot: live path and snapshot fallback)
+        run: node tape-desk/test_boot.mjs
+      - name: Consolidation map regenerates
+        run: python3 tape-desk/tools/build_map.py
+      - name: Repository link and source audit
+        run: node tools/check-links.mjs
