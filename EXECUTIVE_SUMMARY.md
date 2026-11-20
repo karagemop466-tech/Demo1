@@ -133,17 +133,19 @@ Line-by-line review of the merged tree with re-verification against the official
 board requests closed, and the one brief requirement still unimplemented anywhere in the repo
 implemented. Full evidence: [`docs/verification-b62e8188.html`](docs/verification-b62e8188.html).
 
-- **Dual scrolling-chat alert system (implemented — the brief's "simplified scrolling chat" alerting
-  requirement).** [`alerts.html`](alerts.html) + [`assets/js/alerts.js`](assets/js/alerts.js):
-  Chat A posts every watched-event swing of **≥ $0.10 in either direction** as real-time chat
-  messages; Chat B posts only events the **published, deterministic ROI model** scores ≥ 60
-  (formula shown on the page — momentum, order-book depth, 24 h volume, price extremeness;
-  not backtested, not investment advice). Watches the five topics only, tracks each event until the
-  API's `result` field resolves YES/NO (resolution messages in the feed), and links every alert to
-  the official API request, the official venue event page, and a news search labelled *cause
-  unverified*. LIVE mode polls the official demo API from the visitor's browser every 15 s;
-  unreachable → SNAPSHOT REPLAY of the committed official candles with a clear banner.
-  Headless test [`tests/alerts.test.mjs`](tests/alerts.test.mjs) **29/29 PASS**.
+- **Dual scrolling-chat alert requirement — covered on main; shipped page repaired and pinned.**
+  The brief's "two scrolling chat" alerting (≥ $0.10 swings either direction; one chat with all
+  events, one high-ROI filter) was unimplemented on this session's base but was landed concurrently
+  by other sessions (root [`alerts.html`](alerts.html) + [`assets/js/alerts.js`](assets/js/alerts.js),
+  plus `alerts/`, `alert-desk/`, `trade-desk/`). Per coordination rules this session did **not** add
+  a fourth variant. It instead: (1) wrote [`tests/alerts.test.mjs`](tests/alerts.test.mjs) (**23/23**),
+  a headless regression suite pinning the shipped page's behaviour (swing detection both directions
+  at the threshold, the two scrolling chats and the disclosed high-ROI filter, per-message official
+  API + venue + *cause-unverified* links, topic/threshold controls, empty-state honesty); and
+  (2) found and fixed **two real bugs in the shipped page** — `loadData()` read the snapshot payload
+  one level off, so every visit rendered zero swings and a "—" capture date; and `normalizeCandle()`
+  did not accept the official candlesticks schema (`end_period_ts` + `price.close_dollars`), so the
+  live overlay never worked and silently fell back to snapshot. Both are acceptance-tested.
 - **V-3/F6 fixed.** `build_site.py` no longer labels all 2,469 closed records "Resolved": the
   snapshot-derived split (2,117 settled with YES/NO result — 222 YES / 1,895 NO — and 352 closed
   awaiting result) now renders on the overview, topic and resolved pages, and

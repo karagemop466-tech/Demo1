@@ -100,15 +100,20 @@
     </tbody>
   </table></div>
 
-  <h2>4. New requirement implementation: dual scrolling-chat alert desk</h2>
+  <h2>4. Dual scrolling-chat alert requirement — coverage verified, shipped page repaired</h2>
+  <p class="fine">At this session's claim time (base <code>fb81fc0</code>) the brief's “two scrolling chats” alerting
+  requirement had no implementation. During the session, concurrent sessions merged three implementations
+  (<code>alerts.html</code> (d973ced5), <code>alerts/</code> + <code>alert-desk/</code> (2a5bb307), <code>trade-desk/</code> (87015421)).
+  Per the coordination rules this session did <b>not</b> add a fourth page; it verified coverage of the shipped root
+  page, pinned its behaviour with a headless regression suite, and fixed two real bugs found in it.</p>
   <div class="tablewrap"><table>
-    <thead><tr><th>Brief requirement</th><th>Implementation</th><th>Status</th></tr></thead>
+    <thead><tr><th>Brief requirement</th><th>Where implemented (merged)</th><th>This session's contribution</th></tr></thead>
     <tbody>
-      <tr><td>“Live alerting system to sudden swings in contract prices ≥ $0.10 in either direction”</td><td><code>alerts.html</code> + <code>assets/js/alerts.js</code>: baseline-reset swing detector, threshold $0.05/$0.10/$0.20</td><td><b>Done</b> — 29/29 headless assertions</td></tr>
-      <tr><td>“Simplified scrolling chat so someone can view in real time”</td><td>Chat-style message feed, newest at bottom, auto-scroll, pause/resume</td><td><b>Done</b></td></tr>
-      <tr><td>“Two scrolling chats — one all events, one filtered to high-ROI model picks”</td><td>Chat A (every alert) + Chat B (published deterministic ROI model, score ≥ 60; formula shown on the page)</td><td><b>Done</b></td></tr>
-      <tr><td>“Track live events until resolved yes or no”</td><td>Watch table + resolution chat messages when the API's <code>result</code> field reports yes/no</td><td><b>Done</b></td></tr>
-      <tr><td>Live charts label jumps with event + website links; no hallucinated causes</td><td>Each alert links the official API request, the official Kalshi venue event page, and a news search labelled “cause unverified”</td><td><b>Done</b> (cause links are leads, never asserted)</td></tr>
+      <tr><td>“Live alerting system to sudden swings ≥ $0.10 in either direction”</td><td><code>alerts.html</code> + <code>assets/js/alerts.js</code>: consecutive official candle closes compared at the threshold (either direction)</td><td><b>23/23 regression suite</b> pinning detection, both directions, threshold controls</td></tr>
+      <tr><td>“Simplified scrolling chat so someone can view in real time”</td><td>Two side-by-side chat feeds, newest at the bottom, auto-scrolled, animated messages</td><td>Suite asserts the chat rendering contract (messages, counts, empty states)</td></tr>
+      <tr><td>“Two scrolling chats — all events, and model high-ROI filter”</td><td>Chat “All swings” + chat “High-ROI filter” (disclosed relative-move heuristic, capped at 20)</td><td>Suite asserts Chat B ⊆ Chat A and the disclosed cap; observed (flagged) that the ≥0.10 relative-move cut can never exclude a qualifying swing because contract prices ≤ $1.00 — only the 20-pick cap binds</td></tr>
+      <tr><td>Event + website links on sharp jumps, no hallucinated causes</td><td>Each message: official venue event page + news search labelled “cause unverified” + exact candlesticks API path</td><td>Suite asserts all three links per message</td></tr>
+      <tr><td><b>Two real bugs found and fixed in the shipped page</b></td><td colspan="2">1) <code>loadData()</code> read <code>charts.series</code>/<code>charts.generated_utc</code> one level off the <code>loadSnapshot()</code> return shape → <b>every visit rendered zero swings</b> and a “—” capture date. 2) <code>normalizeCandle()</code> did not accept the official candlesticks payload (<code>end_period_ts</code> + <code>price.close_dollars</code>, schema below) → <b>the live overlay never worked</b> and silently fell back to snapshot. Both fixed and acceptance-tested (suite sections 1 and 4).</td></tr>
     </tbody>
   </table></div>
 
@@ -119,7 +124,7 @@
       <tr><td><code>python3 build_site.py</code></td><td>17 pages · markets=1399/1399 · closed=2469/2469 (2117 with result · 352 awaiting) · link check: OK</td></tr>
       <tr><td><code>python3 tools/verify_site.py</code></td><td>PASS · 0 errors · markets=250, resolved=250, topics=600, liquidity=48, index-figures=10 rows re-derived</td></tr>
       <tr><td><code>node tools/check-links.mjs</code></td><td>PASS (internal links + source-citation audit)</td></tr>
-      <tr><td><code>node tests/alerts.test.mjs</code> (new)</td><td>29/29 PASS</td></tr>
+      <tr><td><code>node tests/alerts.test.mjs</code> (new — regression suite for the shipped alerts page)</td><td>23/23 PASS (incl. the two bug-fix acceptances)</td></tr>
       <tr><td><code>node tests/dashboard.test.mjs</code></td><td>46/46 PASS</td></tr>
       <tr><td><code>node tests/dashboard-jumps.test.mjs</code></td><td>9/9 PASS</td></tr>
       <tr><td><code>npm test</code> (exec-desk DOM)</td><td>ALL ASSERTIONS PASSED</td></tr>
@@ -143,7 +148,7 @@
   <h2>7. Links for manual review</h2>
   <ul class="plain">
     <li>Official docs: <a href="https://docs.kalshi.com/getting_started/api_environments">API environments</a> · <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a> · <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">candlesticks</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">create order (V2)</a></li>
-    <li>This session's pages: <a href="../alerts.html">alert desk</a> · <a href="../audit/index.html">API audit</a> · <a href="../site/index.html">verified site overview</a> · <a href="../site/resolved.html">resolved outcomes</a></li>
+    <li>This session's pages: <a href="../alerts.html">price-swing alerts (repaired + regression-tested)</a> · <a href="../audit/index.html">API audit</a> · <a href="../site/index.html">verified site overview</a> · <a href="../site/resolved.html">resolved outcomes</a></li>
     <li>Coordination record: <code>COORDINATION.md</code> (session arena/b62e8188-demo1)</li>
   </ul>
 </main>
