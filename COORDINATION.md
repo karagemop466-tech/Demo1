@@ -28,8 +28,8 @@ Session ID convention: `arena-a443fb8f-demo1` (this session's branch `arena/a443
 | 8 | Suggestions section (review before implementing) | done | arena-a443fb8f-demo1 | pages/suggestions.html | — | n/a | — |
 | 9 | Questions / information / answers for decision-making | done | arena-a443fb8f-demo1 | pages/questions.html | docs/sources.md | Pending live data | — |
 | 10 | Flagged for Review page (unverified items + irregularities) | done | arena-a443fb8f-demo1 | pages/flagged-review.html | — | n/a | — |
-| 11 | GitHub Pages: enable, build check, broken-link check, publish | in progress | arena-a443fb8f-demo1 | Pages settings via gh API | docs.github.com | Pending | — |
-| 12 | Final integration: re-verify combined data line by line, PR to main, merge, record PR link & merge result | unclaimed | arena-a443fb8f-demo1 | all | — | Pending | — |
+| 11 | GitHub Pages: enable, build check, broken-link check, publish | done | arena-a443fb8f-demo1 | Pages settings via gh API | docs.github.com | Pages already enabled on repo, serving main at https://karagemop466-tech.github.io/Demo1/ (status: built). Local broken-link check: none. Will re-deploy automatically when main is updated via merge. | Cannot change Pages source branch via gh API (403 integration permission); not needed since Pages serves main and the PR merges into main |
+| 12 | Final integration: re-verify combined data line by line, PR to main, merge, record PR link & merge result | in progress | arena-a443fb8f-demo1 | all | docs/sources.md; docs.kalshi.com | Internal links verified; all table rows carry official source links; unverified values left blank and flagged | PR not yet created |
 
 ## Claim log
 
