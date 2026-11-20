@@ -1,0 +1,47 @@
+{
+ "trades": [
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T11:30:00.000000Z",
+   "yes_price_dollars": "0.5000",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T11:40:00.000000Z",
+   "yes_price_dollars": "0.5100",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T11:50:00.000000Z",
+   "yes_price_dollars": "0.5200",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T12:00:00.000000Z",
+   "yes_price_dollars": "0.5300",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T12:10:00.000000Z",
+   "yes_price_dollars": "0.5400",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T12:20:00.000000Z",
+   "yes_price_dollars": "0.5500",
+   "count_fp": "10.00"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "created_time": "2026-11-20T12:30:00.000000Z",
+   "yes_price_dollars": "0.5600",
+   "count_fp": "10.00"
+  }
+ ],
+ "cursor": ""
+}

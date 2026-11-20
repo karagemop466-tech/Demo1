@@ -1,0 +1,16 @@
+{
+ "markets": [
+  {
+   "ticker": "KXNEXTNATOSECGEN-NATO-SEC-GEN",
+   "series_ticker": "KXNEXTNATOSECGEN",
+   "event_ticker": "KXNEXTNATOSECGEN",
+   "title": "Who will be the next NATO Secretary General?",
+   "volume_24h": "5000.00",
+   "volume": "5000.00",
+   "last_price_dollars": "0.3000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  }
+ ],
+ "cursor": ""
+}

@@ -187,3 +187,22 @@ A second, fully self-contained desk at [`exec-desk/`](exec-desk/index.html) focu
 - Sources & line-by-line verification: [`exec-desk/docs/SOURCES.md`](exec-desk/docs/SOURCES.md), [`exec-desk/docs/VERIFICATION.md`](exec-desk/docs/VERIFICATION.md).
 
 Link check for this desk: `python3 exec-desk/scripts/check_links.py`.
+
+---
+
+## Sim-desk (session 9dcbe7d4) — automated simulated-trading strategy runner
+
+An unattended, CI-scheduled simulator that no other desk covers: every 30 minutes `sim-desk/engine.py`
+reads the official Kalshi **demo** Trade API public endpoints, ranks open markets in the five tracked
+topics by computed 24h traded notional, evaluates three disclosed rule-based strategies
+(momentum-1h, mean-revert-24h, longshot-value), **simulates** fills at the implied best ask with the
+official taker fee `roundup(M×0.07×C×P×(1−P))`, marks open positions to the official last trade price,
+and **settles them automatically when the market resolves YES/NO** at $1 per winning contract.
+The append-only ledger is committed back, so `sim-desk/index.html` is a fully static, reproducible
+dashboard: equity curve, open positions "awaiting yes/no", settled-trade results, and per-strategy /
+per-topic / per-price-band rollups for categorizing trades and refining strategies.
+
+- Page: [`sim-desk/index.html`](sim-desk/index.html) · Engine: [`sim-desk/engine.py`](sim-desk/engine.py) · Rules: [`sim-desk/config.json`](sim-desk/config.json)
+- CI: `.github/workflows/sim-strategies.yml` (tests → live run → validate → commit ledger; push/PR/30-min schedule/manual)
+- Offline proof: `python3 sim-desk/tests/make_fixtures.py && python3 sim-desk/tests/test_engine.py` — 26 tests including a fee-formula check against the official fee schedule's own table and a two-run lifecycle replay (open → mark → settle YES).
+- Honest limits: all fills simulated (no orders, no credentials); demo prices may not reflect real markets (official warning); "highest dollar amount" ranking is a computed estimate (no official dollar-volume field); taker multiplier M=1 confirmed only for the fee-table rows relevant to tracked series.

@@ -1204,3 +1204,27 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 6. The shared board is the repo's main conflict source (3 rounds this session). `tools/resolve_board.py` now exists to resolve it by keeping both sides, and refuses to touch any other file.
 
 **Verification performed this session:** every API/lifecycle/fee claim above re-read from the official page or the published fee PDF during this session; the fee implementation is asserted against the PDF's own table; every table row the page renders carries the request URL that produced it; blanks are rendered as blanks (`.miss`) with a reason, never filled; `node tools/check-links.mjs` → **PASS** (256 files). Live-API behaviour could not be exercised from the sandbox (egress allowlist has no `*.kalshi.co`), so the collector runs on GitHub-hosted runners and the browser path is verified by the two test suites plus post-deploy fetch.
+---
+
+# Session arena/9dcbe7d4-demo1 — automated simulated-trading strategy engine (`sim-desk/`)
+
+## Session claim
+- **Session ID:** `9dcbe7d4` — branch `arena/9dcbe7d4-demo1` (platform-fixed; `session-<id>/<task>` naming not possible, recorded as deviation like all prior sessions).
+- **Claimed at:** 2026-11-20 (UTC), commit pushed before any implementation work.
+- **Overlap check done:** reviewed the board and all origin branches. Other active claims are: `3c2c8403` (T14 category-first root landing), `17f80f01` + `358db039` (final integration), `c1f56180` (post-merge source audit), `ca4f2da1` (A-1..A-4 official-source audit), `c9e75f2f` (full rebuild). None of them covers an automated strategy simulation; this session takes that unclaimed task instead, fully namespaced — no shared-output edits (root `index.html`, `data/`, `snapshot/`, other desks untouched).
+
+## Task board
+
+| # | Task | Status | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|------------------------|---------|--------------|----------------|
+| S-1 | Unattended simulated-trading engine: 3 rule-based strategies over official demo data (5 topics), simulated fills at implied ask, official fee formula, append-only ledger | done | `sim-desk/engine.py`, `sim-desk/data/*.json`, `sim-desk/README.md` | docs.kalshi.com (orderbook_responses, market_settlement, get-trades, get-markets, rate_limits); kalshi.com fee schedule PDF (fetched 2026-11-20) | 26 offline tests incl. fee values from the official table + two-run lifecycle replay; live CI run 44743423409+ (0 request errors) opened the first live simulated trade (KXAAAGASW-26NOV23-3.6200 NO @ $0.14 implied ask, fee $0.09) — ledger committed back by the bot | Simulated fills are not real fills; demo prices may not reflect real markets (official warning) |
+| S-2 | Position lifecycle: open positions carried across runs, marked to market, settled automatically when the market resolves `result = yes/no` at $1/$0 | done (settlement verified in replay; live settlement pending an actual demo resolution — disclosed) | `sim-desk/engine.py`, `sim-desk/data/ledger.json` | docs.kalshi.com/getting_started/market_settlement | Unit tests for settlement math (win/lose/fee/side-mismatch) + two-run replay settles a YES position at $10 payout | Resolution can take days; ledger persists across CI runs. Demo candlesticks return EMPTY arrays despite recent trades (flagged; signals moved to the official trades tape) |
+| S-3 | Performance page: bankroll equity curve (SVG, no deps), open positions, settled trades with YES/NO result, per-strategy rollups (trades, win rate, P&L, ROI), categorization topic × strategy × side × price band | done | `sim-desk/index.html`, `sim-desk/assets/app.js`, `sim-desk/assets/style.css` | per-row ledger provenance (run ts + official API URL) | 11-assertion jsdom boot test against the committed ledger bytes; `node --check`; repo link checker PASS; every number traced to committed JSON | Bankroll is a simulated constant start ($1,000 demo dollars), disclosed |
+| S-4 | CI wiring + integration: workflow (tests → DOM test → engine → validate → commit ledger) on push + 30-min schedule; additive README section; PR → main, merge, Pages verify | in progress (PR/merge/Pages record pending) | `.github/workflows/sim-strategies.yml`, `README.md` (additive append only), `COORDINATION.md` | docs.github.com Actions | Live push-triggered runs succeed and commit the ledger (guard prevents data-commit loops); run IDs on this board | Initial `paths-ignore` trigger shape was rejected by Actions (0-job failure); replaced with a checkout-guard step — logged for future sessions |
+
+## Integration requests (logged, not applied by this session)
+- Root landing owner (`3c2c8403`, T14): consider a tile/link for `sim-desk/index.html` once published.
+- Final-integration sessions (`17f80f01`, `358db039`): `sim-desk/` is additive and namespaced; no conflict expected.
+
+## Log
+- 2026-11-20 — session `9dcbe7d4` claimed S-1..S-4; claim pushed before implementation.

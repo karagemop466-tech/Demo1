@@ -1,0 +1,22 @@
+{
+ "markets": [
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "status": "settled",
+   "result": "yes",
+   "last_price_dollars": "1.0000",
+   "settlement_ts": "2026-11-20T10:00:00Z",
+   "settlement_value_dollars": "1.0000"
+  },
+  {
+   "ticker": "KXAAAGASM-26DEC31-3.80",
+   "status": "open",
+   "last_price_dollars": "0.3500"
+  },
+  {
+   "ticker": "KXBTCMAX150-BTC-150K",
+   "status": "open",
+   "last_price_dollars": "0.9000"
+  }
+ ]
+}

@@ -1,0 +1,143 @@
+{
+ "schema": 1,
+ "updated_ts": "2026-11-20T13:33:53Z",
+ "simulated": true,
+ "started_cash_dollars": 1000.0,
+ "cash": 990.36,
+ "open_value": 8.73,
+ "equity": 999.09,
+ "open_count": 2,
+ "settled_count": 0,
+ "realized_pnl": 0,
+ "roi_on_started_cash": -0.0009,
+ "equity_curve": [
+  {
+   "ts": "2026-11-20T13:15:12Z",
+   "equity": 1000.0
+  },
+  {
+   "ts": "2026-11-20T13:21:01Z",
+   "equity": 1000.0
+  },
+  {
+   "ts": "2026-11-20T13:26:19Z",
+   "equity": 1000.0
+  },
+  {
+   "ts": "2026-11-20T13:28:54Z",
+   "equity": 999.21
+  },
+  {
+   "ts": "2026-11-20T13:31:03Z",
+   "equity": 999.21
+  },
+  {
+   "ts": "2026-11-20T13:33:53Z",
+   "equity": 999.09
+  }
+ ],
+ "by_strategy": {
+  "longshot-value": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  "momentum-tape": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "by_topic": {
+  "gas": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  "elections": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "by_band": {
+  "0.00-0.20": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  "0.80-1.01": {
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ },
+ "category_matrix": [
+  {
+   "topic": "gas",
+   "strategy": "longshot-value",
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 1.4,
+   "fees": 0.09,
+   "realized_pnl": 0.0,
+   "roi": null
+  },
+  {
+   "topic": "elections",
+   "strategy": "momentum-tape",
+   "opened": 1,
+   "settled": 0,
+   "wins": 0,
+   "losses": 0,
+   "win_rate": null,
+   "invested": 8.03,
+   "fees": 0.12,
+   "realized_pnl": 0.0,
+   "roi": null
+  }
+ ],
+ "result_counts": {
+  "yes": 0,
+  "no": 0
+ }
+}

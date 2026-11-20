@@ -1,0 +1,122 @@
+name: sim-desk strategy runner
+
+# Unattended simulated-trading runs for sim-desk/. GitHub-hosted runners have
+# unrestricted outbound internet, so the engine talks to the official Kalshi DEMO
+# Trade API (public endpoints, no credentials, no orders) and commits the
+# append-only ledger back so the static page always shows the latest state.
+#
+# Loop protection: the first step exits when the push only touched sim-desk/data/**
+# (the directory the commit step writes), so ledger commits cannot retrigger work.
+on:
+  push:
+    branches:
+      - arena/9dcbe7d4-demo1
+      - main
+    paths:
+      - "sim-desk/**"
+      - ".github/workflows/sim-strategies.yml"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to run against (and commit the ledger to)"
+        required: false
+        default: main
+      publish:
+        description: "Set to true to commit and push the refreshed ledger"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sim-desk
+  cancel-in-progress: false
+
+jobs:
+  run-strategies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.ref_name }}
+          fetch-depth: 2
+
+      - name: Skip data-only commits (loop protection)
+        if: ${{ github.event_name == 'push' }}
+        id: guard
+        run: |
+          set -e
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "first push of this branch — running"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git fetch --no-tags --depth=1 origin "$BEFORE" 2>/dev/null || true
+          CHANGED=$(git diff --name-only "$BEFORE" HEAD 2>/dev/null | grep -v '^sim-desk/data/' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "only sim-desk/data changed — nothing to do"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code changes: $CHANGED"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        with:
+          python-version: "3.12"
+
+      - name: Offline engine tests (fixtures replay, fee/orderbook/settlement rules)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: |
+          python3 sim-desk/tests/make_fixtures.py
+          python3 sim-desk/tests/test_engine.py
+
+      - name: DOM boot test (page renders committed ledger values)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: |
+          npm ci --no-audit --no-fund
+          node sim-desk/tests/dom_test.mjs
+
+      - name: Run strategies against the official demo API (simulated fills only)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: python3 sim-desk/engine.py --out sim-desk/data
+
+      - name: Validate committed outputs
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: |
+          python3 -c "
+          import json
+          ledger = json.load(open('sim-desk/data/ledger.json'))
+          perf = json.load(open('sim-desk/data/performance.json'))
+          runlog = json.load(open('sim-desk/data/run_log.json'))
+          assert ledger.get('schema') == 1, 'ledger schema'
+          assert ledger['meta']['simulated'] is True, 'simulated flag'
+          assert perf.get('simulated') is True, 'performance simulated flag'
+          assert runlog['summary']['api_calls'] > 0, 'engine made no API calls'
+          assert isinstance(ledger['cash'], (int, float)), 'cash'
+          print('outputs OK:', runlog['summary'])
+          "
+
+      - name: Upload ledger artifact
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-desk-ledger
+          path: sim-desk/data
+
+      - name: Commit refreshed ledger (push / dispatch with publish)
+        if: ${{ steps.guard.outputs.skip != 'true' && github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.publish == 'true') }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sim-desk/data
+          if git diff --cached --quiet; then
+            echo "No ledger changes."
+            exit 0
+          fi
+          git commit -m "sim-desk: run strategies $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

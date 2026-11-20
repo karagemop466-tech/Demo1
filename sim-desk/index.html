@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sim-Desk — automated simulated strategy runner (Kalshi demo)</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Sim-Desk <span class="muted" style="font-weight:400">— automated simulated strategy runner</span></h1>
+  <div class="badges">
+    <span class="badge sim">SIMULATED FILLS — no orders placed</span>
+    <span class="badge demo">Kalshi DEMO environment</span>
+    <span class="badge ok">official public API data only</span>
+    <span class="badge ok">runs unattended on CI every 30 min</span>
+  </div>
+
+  <div id="load-error" class="error-box" style="display:none"></div>
+
+  <div class="banner">
+    <b>What this is.</b> A rule-based strategy engine runs unattended on GitHub Actions every 30 minutes. Each run
+    reads the official Kalshi <b>demo</b> Trade API (public endpoints, no keys), ranks open markets in the five
+    tracked topics (gas prices, elections, culture, crypto, golf) by computed 24h traded notional, evaluates three
+    disclosed strategies against the official public trades tape (<span class="mono">GET /markets/trades</span>; the demo candlesticks endpoint currently returns empty arrays for most markets — a flagged demo irregularity) and the official bids-only orderbook, and
+    <b>simulates</b> fills (entry = implied best ask; fee = official taker formula). Open positions are carried across
+    runs, marked to market, and settled automatically with the official $1-per-contract rule when the market resolves
+    <span class="pill yes">YES</span> or <span class="pill no">NO</span>. The append-only ledger is committed back to
+    this repository, so this page is fully static and reproducible. Every number below traces to a committed JSON file
+    and the official request URL that produced it.
+    <ul id="flags" style="margin-top:8px"></ul>
+  </div>
+
+  <div id="meta-line" class="muted small"></div>
+  <div id="kpis" class="kpis"></div>
+
+  <h2>Simulated bankroll — equity over engine runs</h2>
+  <div class="panel chart-wrap"><div id="equity-chart"></div>
+    <div class="muted small" style="margin-top:6px">X axis: engine run timestamp (UTC, one CI run per point). Y axis: simulated bankroll equity in dollars (cash + open positions marked to the official last trade price). Starts at $1,000 simulated demo dollars.</div>
+  </div>
+
+  <h2>Strategy performance (categorize → analyze → refine)</h2>
+  <div class="panel"><div id="strategy-rollup"></div>
+    <div class="muted small" style="margin-top:6px">Per-strategy rollups: trades opened/settled, win rate, invested dollars, fees paid, realized P&amp;L and ROI. Use this to decide which rules to keep, retune (config.json), or retire.</div>
+  </div>
+
+  <h3>By topic</h3>
+  <div class="panel"><div id="topic-rollup"></div></div>
+  <h3>By entry price band</h3>
+  <div class="panel"><div id="band-rollup"></div></div>
+  <h3>Category matrix — topic × strategy</h3>
+  <div class="panel"><div id="category-matrix"></div></div>
+
+  <h2>Open positions — tracked until the event resolves</h2>
+  <div class="panel"><div id="open-positions"></div></div>
+
+  <h2>Settled trades — how each event resolved (YES / NO)</h2>
+  <div class="panel"><div id="settled-trades"></div></div>
+
+  <h2>Run provenance</h2>
+  <div class="panel"><div id="runlog"></div></div>
+
+  <h2>Methodology (deterministic, disclosed)</h2>
+  <div class="panel">
+    <h3>1. Universe and "highest dollar amount" ranking</h3>
+    <div class="small">Open markets are listed from <span class="mono">GET /markets?status=open&amp;limit=1000</span> (official limit ≤ 1000). Topic classification uses the transparent keyword rules in
+      <a href="https://github.com/karagemop466-tech/Demo1/blob/main/sim-desk/config.json" target="_blank" rel="noreferrer">sim-desk/config.json</a>
+      (first rule wins; matched-by recorded per trade). Candidates need ≥ 100 contracts traded in 24h and ≥ 2h until close, and are ranked by
+      <b>computed 24h traded notional = volume_24h × last_price_dollars</b> — a disclosed estimate, because Kalshi publishes no official dollar-volume field.
+      Top 20 candidates (≤ 6 per topic) get signals evaluated.</div>
+    <h3>2. Strategies</h3>
+    <div class="small"><b>momentum-1h</b> — buy YES when the 6-hour trend of official 60-min closes is ≥ +$0.05, buy NO at ≤ −$0.05 (entry band $0.30–$0.85).
+      <b>mean-revert-24h</b> — fade moves ≥ $0.10 away from the mean of available hourly closes (entry band $0.10–$0.60).
+      <b>longshot-value</b> — buy NO when its implied ask ≤ $0.20 on markets with ≥ 5,000 contracts traded in 24h. Priority: momentum → mean-revert → longshot; one position per market+side; max 15 open, 4 per topic, 3 new trades per run, 10 contracts per trade.</div>
+    <h3>3. Fill, fee, mark, settlement</h3>
+    <div class="small">Fill price = implied best ask of the bought side (official reciprocal rule: a NO bid at Y is a YES ask at $1−Y). Fee = official taker fee
+      <span class="mono">roundup(M × 0.07 × C × P × (1−P))</span>, M = 1. Open positions are marked each run to the official <span class="mono">last_price_dollars</span>
+      (held side). When the market reports <span class="mono">status=settled</span> and <span class="mono">result ∈ {yes, no}</span>, the held side is paid
+      $1.00 per contract if it matches the result, else $0.00 — the official settlement rule; settlement fee is zero for simple yes/no determinations.</div>
+  </div>
+
+  <footer>
+    <h2>Sources (official, fetched 2026-11-20)</h2>
+    <ul class="src-list">
+      <li>Orderbook bids-only rule + implied asks — <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/orderbook_responses</a></li>
+      <li>Settlement: $1 per winning contract, YES/NO result — <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/market_settlement</a></li>
+      <li>Trades tape (public market data) — <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-trades</a></li>
+      <li>Candlesticks (1/60/1440 — currently empty on demo; flagged irregularity) — <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-market-candlesticks</a></li>
+      <li>Markets endpoint (status enum, limit ≤ 1000, tickers filter, demo hosts) — <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">docs.kalshi.com/api-reference/market/get-markets</a></li>
+      <li>Fee schedule: roundup(M × 0.07 × C × P × (1−P)); no settlement fee — <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noreferrer">kalshi.com/docs/kalshi-fee-schedule.pdf</a></li>
+      <li>Demo environment (mock funds; prices may not reflect real markets) — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/demo_env</a></li>
+      <li>Rate limits (public market data; back off on 429) — <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noreferrer">docs.kalshi.com/getting_started/rate_limits</a></li>
+      <li>This desk's committed data: <a href="data/ledger.json" target="_blank" rel="noreferrer">ledger.json</a> · <a href="data/performance.json" target="_blank" rel="noreferrer">performance.json</a> · <a href="data/run_log.json" target="_blank" rel="noreferrer">run_log.json</a> · <a href="README.md">sim-desk README</a></li>
+    </ul>
+    <div class="muted small" style="margin-top:10px">Sim-Desk is one of several independent dashboards in this repo (see the root index). All fills here are simulated; nothing in this desk places orders, holds credentials, or touches a real account. Unverifiable values render blank — they are never inferred.</div>
+  </footer>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+ "markets": [
+  {
+   "ticker": "KXAAAGASM-26DEC31-3.80",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26DEC",
+   "title": "Will the US national average gas price be above $3.80 on December 31?",
+   "volume_24h": "8000.00",
+   "volume": "8000.00",
+   "last_price_dollars": "0.4000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  }
+ ],
+ "cursor": ""
+}

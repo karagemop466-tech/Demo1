@@ -1,0 +1,71 @@
+{
+ "markets": [
+  {
+   "ticker": "KXETHMINMON-ETH-26NOV20-2800000",
+   "series_ticker": "KXETHMINMON",
+   "event_ticker": "KXETHMINMON-26NOV20",
+   "title": "Will Ethereum be above $2,800 at 8am EST on November 20?",
+   "volume_24h": "20000.00",
+   "volume": "20000.00",
+   "last_price_dollars": "0.9000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  },
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "series_ticker": "KXBTCMINMON",
+   "event_ticker": "KXBTCMINMON-26NOV20",
+   "title": "Will Bitcoin be above $67,500 at 8am EST on November 20?",
+   "volume_24h": "12000.00",
+   "volume": "12000.00",
+   "last_price_dollars": "0.5500",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  },
+  {
+   "ticker": "KXAAAGASM-26DEC31-3.80",
+   "series_ticker": "KXAAAGASM",
+   "event_ticker": "KXAAAGASM-26DEC",
+   "title": "Will the US national average gas price be above $3.80 on December 31?",
+   "volume_24h": "8000.00",
+   "volume": "8000.00",
+   "last_price_dollars": "0.4000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  },
+  {
+   "ticker": "KXNEXTNATOSECGEN-NATO-SEC-GEN",
+   "series_ticker": "KXNEXTNATOSECGEN",
+   "event_ticker": "KXNEXTNATOSECGEN",
+   "title": "Who will be the next NATO Secretary General?",
+   "volume_24h": "5000.00",
+   "volume": "5000.00",
+   "last_price_dollars": "0.3000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  },
+  {
+   "ticker": "KXBTCMAX150-BTC-150K",
+   "series_ticker": "KXBTCMAX150",
+   "event_ticker": "KXBTCMAX150",
+   "title": "Will Bitcoin hit $150K in 2026?",
+   "volume_24h": "6000.00",
+   "volume": "6000.00",
+   "last_price_dollars": "0.1800",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  },
+  {
+   "ticker": "KXOTHER-99",
+   "series_ticker": "KXOTHER",
+   "event_ticker": "KXOTHER-99",
+   "title": "Something unrelated to tracked topics",
+   "volume_24h": "90000.00",
+   "volume": "90000.00",
+   "last_price_dollars": "0.5000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  }
+ ],
+ "cursor": ""
+}
