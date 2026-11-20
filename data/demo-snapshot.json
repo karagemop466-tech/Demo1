@@ -3,7 +3,7 @@
   "title": "Kalshi DEMO environment - verified point-in-time snapshot",
   "environment": "demo",
   "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
-  "collected_at_utc": "2026-11-20T11:20:00Z to 2026-11-33:00Z window (individual trade records carry their exact API timestamps)",
+  "collected_at_utc": "2026-11-20T11:20:00Z to 11:33:00Z window (individual trade records carry their exact API timestamps)",
   "collected_by": "session arena-288e8741-demo1 via authenticated platform page fetcher (direct HTTPS GET, no Origin header, no credentials required - these are public market-data endpoints)",
   "verification_rule": "Every value below was copied verbatim from an official Kalshi demo Trade API JSON response. No value is estimated or invented. Fields the API did not return in the captured chunk are omitted (blank), not zero-filled. Computed fields are explicitly labeled 'computed' with their formula.",
   "coverage_note": "Large events return many markets (paginated). Only the markets captured in the first response chunk(s) are listed; the source URL returns the full list. This partial coverage is disclosed per event.",
