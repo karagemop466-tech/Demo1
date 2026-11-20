@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Tracker — Executive Summary</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%2338bdf8'/></svg>">
+</head>
+<body data-page="home">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Executive summary</div>
+  <h1>Kalshi Demo Tracker — Executive Summary</h1>
+  <p class="sub">Collects, organizes, and analyzes Kalshi <b>demo-environment</b> prediction markets. Live tracking of the highest-dollar events across <b>gas prices, elections, culture, crypto, and golf</b>; resolution (YES/NO) tracking through settlement; price analytics; and a clearly-labeled simulated portfolio for trade-strategy analysis.</p>
+
+  <div class="grid kpi">
+    <div class="card kpi"><div class="label">Environment</div><div class="value" style="font-size:16px">Kalshi <b>demo</b></div><div class="note">mock funds, official sandbox</div></div>
+    <div class="card kpi"><div class="label">REST endpoint</div><div class="value" style="font-size:13px"><span class="mono">external-api.demo.kalshi.co</span></div><div class="note">/trade-api/v2 · verified</div></div>
+    <div class="card kpi"><div class="label">WebSocket endpoint</div><div class="value" style="font-size:13px"><span class="mono">…ws.demo.kalshi.co</span></div><div class="note">/trade-api/ws/v2 · verified</div></div>
+    <div class="card kpi"><div class="label">API key needed for</div><div class="value" style="font-size:16px">Orders only</div><div class="note">public market data: no key</div></div>
+  </div>
+
+  <h2>1 · Objective</h2>
+  <div class="card">
+    <p>Build a live, interactive dashboard on GitHub Pages that:</p>
+    <ul>
+      <li><b>Tracks the highest-dollar live events</b> on the Kalshi demo exchange, restricted to five topics: <b>gas prices, elections, culture, crypto, golf</b> → <a href="markets.html">Live Markets</a></li>
+      <li><b>Follows each event through resolution</b> — showing whether it resolved <b>YES</b> or <b>NO</b> (official <span class="mono">result</span> field: <span class="mono">yes | no | scalar</span>) → <a href="markets.html">Live Markets</a>, resolution table</li>
+      <li><b>Charts price movements</b> with X = time (seconds / minutes / hours window) and Y = contract price in cents, plus orderbook depth: current liquidity and contracts available at each price → <a href="analytics.html">Analytics</a></li>
+      <li><b>Tracks portfolio performance</b> on the demo account, categorizes trades, and builds strategy analytics → <a href="portfolio.html">Portfolio (SIM)</a></li>
+      <li><b>Surfaces suggestions and open questions</b> that must be answered before decisions, with a review workflow → <a href="suggestions.html">Suggestions &amp; Open Questions</a></li>
+    </ul>
+  </div>
+
+  <h2>2 · Verified infrastructure facts (official sources)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Item</th><th>Value</th><th>Why it matters</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Demo REST (recommended)</td><td><span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span></td><td>All market data + trading</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com → API Environments ↗</a></td></tr>
+      <tr><td>Demo REST (also supported)</td><td><span class="mono">https://demo-api.kalshi.co/trade-api/v2</span></td><td>Fallback host</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com → API Environments ↗</a></td></tr>
+      <tr><td>Demo WebSocket</td><td><span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span></td><td>Real-time orderbook &amp; trade ticks</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com → API Environments ↗</a></td></tr>
+      <tr><td>Public market data</td><td>No API key required</td><td>Dashboards can read markets/orderbooks unauthenticated</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start" target="_blank" rel="noopener">docs.kalshi.com → Quick Start ↗</a></td></tr>
+      <tr><td>Authentication (orders/portfolio)</td><td>API key ID + Ed25519 (default since Oct 2026) or RSA private key; signs <span class="mono">timestamp + method + path</span>; three <span class="mono">KALSHI-ACCESS-*</span> headers</td><td>Cannot be done safely in a static site — see Flagged page</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">docs.kalshi.com → Authenticated Requests ↗</a></td></tr>
+      <tr><td>Resolution</td><td><span class="mono">result = yes | no | scalar</span>; YES holders receive $1/contract on YES, NO holders $1/contract on NO</td><td>Drives the resolution tracking table</td><td class="src"><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">docs.kalshi.com → Market Settlement ↗</a></td></tr>
+      <tr><td>Demo environment</td><td><a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> with mock funds</td><td>Where demo accounts &amp; funds live</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs.kalshi.com → Demo Environment ↗</a></td></tr>
+      <tr><td>Orderbook convention</td><td>Bids only for YES and NO sides; YES bid at p¢ ≡ NO ask at (100−p)¢</td><td>Depth/liquidity rendering is correct by construction</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">docs.kalshi.com → Get Market Orderbook ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3 · Method &amp; verification discipline</h2>
+  <div class="card">
+    <ul>
+      <li><b>Nothing is invented.</b> Every displayed market value comes from a live call to the official demo API at view time. Values that cannot be fetched are left blank and flagged <span class="flag">unverified</span>.</li>
+      <li><b>Series mapping is runtime-verified.</b> The topic→series map (gas/elections/culture/crypto/golf) is only trusted after <span class="mono">GET /series/{ticker}</span> returns 200; mismatches are excluded and shown on the <a href="flagged.html">Flagged page</a>. Candidates live in <a href="https://github.com/karagemop466-tech/Demo1/blob/main/data/series-map.json"><span class="mono">data/series-map.json</span></a>.</li>
+      <li><b>“Dollar volume” is an estimate.</b> Kalshi publishes volume in <i>contracts</i>, not dollars. The tables compute Σ(contracts × last price) and label it <b>Est. $ volume</b> everywhere.</li>
+      <li><b>Fees use the official formula</b> <span class="mono">fee = ⌈0.07 × C × P × (1−P)⌉</span> (next cent up), cited in the app and on <a href="sources.html">Sources</a>.</li>
+      <li><b>Portfolio is SIMULATED</b> and loudly labeled — see <a href="flagged.html">Flagged</a> item F1 for why real order placement needs a server-side credential proxy.</li>
+      <li><b>Parallel-session coordination</b> is maintained in <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md"><span class="mono">COORDINATION.md</span></a> (task board, claims, sources, irregularities).</li>
+    </ul>
+  </div>
+
+  <h2>4 · Key findings &amp; irregularities (headline)</h2>
+  <div class="card">
+    <ul>
+      <li><b>F1 (flagged):</b> Real demo-account trade execution requires signed authenticated requests. A browser-only site cannot hold private keys, so the portfolio module <i>simulates</i> execution against live demo prices. To execute real trades, a small server-side proxy (e.g., Cloudflare Worker) holding demo API credentials is required — costed and proposed on the Suggestions page. <a href="flagged.html">Review</a></li>
+      <li><b>F2 (flagged):</b> Sandbox/build environment network policy blocks <span class="mono">*.kalshi.co</span>, so live verification happened in-browser; automated tests fall back to fixture checks. <a href="flagged.html">Review</a></li>
+      <li><b>F3 (flagged):</b> Topic→series mapping cannot be fully confirmed offline; the site self-verifies at runtime and displays anything unconfirmed as blank + flagged. <a href="flagged.html">Review</a></li>
+      <li><b>Observation:</b> The repository contained only a stub <span class="mono">README.md</span> (“# Demo1”) before this work — no pre-existing data to audit. <a href="flagged.html">Review</a></li>
+    </ul>
+    Full list with links: <a href="flagged.html">⚠ Flagged for Review</a> · evidence per fact: <a href="sources.html">Sources &amp; Verification</a> · questions that gate decisions: <a href="suggestions.html">Suggestions &amp; Open Questions</a>
+  </div>
+
+  <h2>5 · How to use</h2>
+  <div class="card">
+    <ol>
+      <li><b><a href="markets.html">Live Markets</a></b> — pick a topic tab; tables auto-poll every 20 s and sort by estimated dollar volume. Click any row’s <i>Chart ▸</i> to open analytics.</li>
+      <li><b><a href="analytics.html">Analytics</a></b> — choose a market; pick a time window (15 s / 1 m / 10 m / 1 h / 6 h / 24 h); watch the live price line, and read the orderbook depth (contracts available at each price, YES and NO sides).</li>
+      <li><b><a href="portfolio.html">Portfolio (SIM)</a></b> — place simulated orders on live demo prices, assign a strategy tag, and review the analyzer (P&amp;L by category and strategy, win rate, fees). Export JSON anytime.</li>
+      <li><b><a href="suggestions.html">Suggestions</a></b> — review open questions with current best-known answers, then triage proposed improvements (accept/defer) before implementation.</li>
+    </ol>
+  </div>
+
+  <div class="updated" id="stamp"></div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi. Demo markets use mock funds.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> (official demo endpoint) · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a> · Coordination: <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md">COORDINATION.md</a></div>
+</div></footer>
+</body>
+</html>

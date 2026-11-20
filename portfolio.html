@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio (SIM) — Kalshi Demo Tracker</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23f59e0b'/></svg>">
+</head>
+<body data-page="portfolio" data-sim="1">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Portfolio (SIM)</div>
+  <h1>Portfolio — demo account performance &amp; strategy analysis</h1>
+  <p class="sub">Categorize trades, tag strategies, and analyze results. Fills are <b>simulated against live demo market prices</b>; see the warning below for why, and what it takes to execute real demo-account orders.</p>
+  <div id="simWarn"></div>
+
+  <div class="grid kpi">
+    <div class="card kpi"><div class="label">SIM equity</div><div class="value" id="kpiEquity">—</div><div class="note">cash + marked positions</div></div>
+    <div class="card kpi"><div class="label">SIM cash</div><div class="value" id="kpiCash">—</div><div class="note">uninvested</div></div>
+    <div class="card kpi"><div class="label">Total P&amp;L</div><div class="value" id="kpiPnl">—</div><div class="note">realized + unrealized</div></div>
+    <div class="card kpi"><div class="label">Realized P&amp;L</div><div class="value" id="kpiRealized">—</div><div class="note">closed trades</div></div>
+    <div class="card kpi"><div class="label">Unrealized P&amp;L</div><div class="value" id="kpiUnreal">—</div><div class="note">live marks (blank while API unreachable)</div></div>
+    <div class="card kpi"><div class="label">Win rate</div><div class="value" id="kpiWin">—</div><div class="note">closed trades only</div></div>
+    <div class="card kpi"><div class="label">Fees paid</div><div class="value" id="kpiFees">—</div><div class="note">official formula: ⌈0.07·C·P·(1−P)⌉</div></div>
+  </div>
+
+  <h2>Order ticket (SIMULATED execution)</h2>
+  <div class="card">
+    <div class="controls">
+      <span class="small">Market:</span><select id="ordTicker" style="max-width:330px"><option value="">loading…</option></select>
+      <span class="small">Side:</span>
+      <select id="ordSide"><option value="yes">YES</option><option value="no">NO</option></select>
+      <span class="small">Type:</span>
+      <select id="ordType"><option value="market">Market (fill at ask)</option><option value="limit">Limit</option></select>
+      <span class="small">Qty:</span><input type="number" id="ordQty" value="10" min="1" style="width:80px">
+      <span class="small">Limit ¢:</span><input type="number" id="ordLimit" placeholder="e.g. 52" min="1" max="99" style="width:80px">
+      <span class="small">Strategy:</span>
+      <select id="ordStrat"><option>Momentum</option><option>Mean-revert</option><option>Event-catalyst</option><option>Hedge</option><option>Arbitrage</option><option>Learning/other</option></select>
+      <span class="small">Category:</span>
+      <select id="ordCat"><option value="gas">Gas</option><option value="elections">Elections</option><option value="culture">Culture</option><option value="crypto">Crypto</option><option value="golf">Golf</option><option value="other" selected>Auto/other</option></select>
+      <button id="btnOrder" class="primary">Place SIM order</button>
+    </div>
+    <div class="small">Limit orders fill immediately if the live ask crosses your limit; otherwise they would rest — but this simulator only evaluates fills while this page is open (flagged limitation, <a href="flagged.html">F1</a>). Starting capital and reset:</div>
+    <div class="controls">
+      <span class="small">Start cash $:</span><input type="number" id="startCash" value="1000000" min="100" style="width:110px">
+      <button id="btnStart" class="small">Set &amp; reset</button>
+      <button id="btnReset" class="small">Reset portfolio</button>
+      <button id="btnExport" class="small">Export JSON</button>
+    </div>
+  </div>
+
+  <h2>Open positions</h2>
+  <div class="tablewrap" id="tblPos"></div>
+
+  <h2>Closed trades &amp; resolutions</h2>
+  <p class="small">“Settle” closes at $1.00/contract for the winning side using the official <span class="mono">result</span> field (YES resolves → YES contracts $1, NO contracts $0; and vice versa — <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">official settlement rules</a>). If the API hasn’t published the result yet, settlement is refused rather than guessed.</p>
+  <div class="tablewrap" id="tblClosed"></div>
+
+  <h2>Strategy analyzer — P&amp;L by category and strategy</h2>
+  <div class="two-col">
+    <div class="card"><h3 style="margin-top:0">By trade category</h3><div class="tablewrap" id="tblByCat" style="min-width:0"></div></div>
+    <div class="card"><h3 style="margin-top:0">By strategy tag</h3><div class="tablewrap" id="tblByStrat" style="min-width:0"></div></div>
+  </div>
+  <div class="card"><h3 style="margin-top:0">SIM P&amp;L by strategy</h3>
+    <svg id="pnlChart" style="width:100%;height:300px"></svg>
+    <div class="small" id="strategyText"></div>
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi. SIM portfolio only.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
+</div></footer>
+
+<script src="assets/app.js"></script>
+<script src="assets/portfolio.js"></script>
+</body>
+</html>

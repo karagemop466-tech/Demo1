@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⚠ Flagged for Review — Kalshi Demo Tracker</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23f59e0b'/></svg>">
+</head>
+<body data-page="flagged">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Flagged for review</div>
+  <h1>⚠ Flagged for Review</h1>
+  <p class="sub">Irregularities, limitations, and unverified items found during this work. Published here for your review; per the brief, these <b>do not block the merge</b> — they are recorded for post-launch review and change requests. Each item links its evidence.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>ID</th><th>Severity</th><th>Item</th><th>Evidence / source</th><th>Impact</th><th>Proposed resolution</th></tr></thead>
+    <tbody>
+      <tr><td>F1</td><td><span class="badge err">HIGH</span></td><td><b>Real demo order execution is not possible from a static site.</b> Trading/portfolio endpoints require signed authenticated requests (API key + Ed25519/RSA private key). No credentials exist in this project (none were provided), and secrets must not be embedded in a public repo or browser. Therefore the portfolio is a clearly-labeled SIMULATOR that fills against live demo prices — no real Kalshi orders are placed.</td>
+        <td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Auth requirements (official) ↗</a></td>
+        <td>Portfolio P&amp;L is simulated, not the demo account’s actual ledger</td>
+        <td>Approve S1 (server-side credential proxy, e.g. Cloudflare Worker with secrets) on the <a href="suggestions.html">Suggestions page</a>, then wire <span class="mono">POST /portfolio/orders</span> + <span class="mono">GET /portfolio/balance|positions|fills</span> through it</td></tr>
+      <tr><td>F2</td><td><span class="badge warn">MEDIUM</span></td><td><b>Build sandbox cannot reach <span class="mono">*.kalshi.co</span></b> (outbound restricted to github/npm/pypi). Live API verification could not be executed from the build environment; it runs in the user’s browser instead. CI cannot assert “API returns X”.</td>
+        <td class="src">Environment restriction (curl to <span class="mono">external-api.demo.kalshi.co</span> → no connection); see <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">official endpoints ↗</a></td>
+        <td>Automated tests validate code + fixtures only; live data checks happen at runtime in the browser</td>
+        <td>Open the published site and confirm the LIVE badge; optionally run a scheduled GitHub Action from <span class="mono">ubuntu-latest</span> (unrestricted) to smoke-test endpoints (S5)</td></tr>
+      <tr><td>F3</td><td><span class="badge warn">MEDIUM</span></td><td><b>Topic→series mapping is not offline-confirmable.</b> Candidate slugs (e.g. <span class="mono">KXGASUSD</span> for gas) are committed as candidates only; each is runtime-verified via <span class="mono">GET /series/{ticker}</span> and excluded if unverified. The runtime scan also discovers series automatically by official <span class="mono">category</span> field.</td>
+        <td class="src"><a href="sources.html">S-13</a> · <a href="https://github.com/karagemop466-tech/Demo1/blob/main/data/series-map.json"><span class="mono">data/series-map.json</span> ↗</a></td>
+        <td>A topic may temporarily show “unverified / no markets” until the runtime check sees it</td>
+        <td>Review the verified-series pills on <a href="markets.html">Live Markets</a> after deploy; prune wrong candidates</td></tr>
+      <tr><td>F4</td><td><span class="badge info">LOW</span></td><td><b>“Dollar volume” is an estimate.</b> Kalshi reports volume in contracts; no dollar-volume field exists. Tables compute Σ(contracts × last price) and label it “Est. $ volume” everywhere.</td>
+        <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets field reference ↗</a></td>
+        <td>Rankings could differ slightly from Kalshi’s own “top markets” ordering</td>
+        <td>If you prefer a different ranking metric (open interest / liquidity / raw contracts), say so in Q4 (<a href="suggestions.html">Suggestions</a>)</td></tr>
+      <tr><td>F5</td><td><span class="badge info">LOW</span></td><td><b>Defensive field normalization.</b> Fixed-point field shapes in <span class="mono">orderbook_fp</span> and candlestick responses are normalized defensively (string/object/number forms). If the API returns an unexpected shape, the UI flags it rather than mis-rendering. Exact payload shapes could not be captured in the sandbox (F2).</td>
+        <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Orderbook reference ↗</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks reference ↗</a></td>
+        <td>Unusual responses surface as explicit flags, not wrong numbers</td>
+        <td>First live session: confirm depth bars and candle overlay look correct; report any flag badge</td></tr>
+      <tr><td>F6</td><td><span class="badge info">LOW</span></td><td><b>Repository was empty before this work.</b> The repo contained only a stub <span class="mono">README.md</span> (“# Demo1”, single commit <span class="mono">4a225ce “Initial commit”</span>). No pre-existing data, tables, or code existed to audit line-by-line; the repo review therefore covers all files created in this session.</td>
+        <td class="src"><a href="https://github.com/karagemop466-tech/Demo1/commit/4a225ce4105c0bb9116979eee87355a718c83110" target="_blank" rel="noopener">Initial commit ↗</a></td>
+        <td>None — documented for completeness</td>
+        <td>None needed</td></tr>
+      <tr><td>F7</td><td><span class="badge info">LOW</span></td><td><b>Demo lineups can be sparse.</b> Some topics (e.g. golf or culture) may have no open demo markets at a given time; tables then show the explicit empty-state message rather than stale or invented rows. Demo environments also reset/rotate mock data.</td>
+        <td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs ↗</a></td>
+        <td>Empty tables on some days are expected behavior, not bugs</td>
+        <td>If persistent, consider S8 (production read-only toggle) via <a href="suggestions.html">Suggestions</a></td></tr>
+      <tr><td>F8</td><td><span class="badge warn">MEDIUM</span></td><td><b>GitHub Pages must be enabled with “GitHub Actions” as the source</b> for the deploy workflow to publish. If it isn’t, the workflow fails at the deploy step. This cannot be checked from the sandbox; the PR merge record in <span class="mono">COORDINATION.md</span> will state the outcome.</td>
+        <td class="src"><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener">GitHub Pages publishing source docs ↗</a></td>
+        <td>Possible first-deploy failure</td>
+        <td>If deploy fails: Settings → Pages → Source = “GitHub Actions”, then re-run the workflow; per the brief, failures are fixed and retried until live</td></tr>
+      <tr><td>F9</td><td><span class="badge info">LOW</span></td><td><b>WS subscribe-message shape not fully pinned.</b> The analytics page attempts the official demo WS and falls back to REST polling (3 s) with an explicit transport badge. The subscribe payload is sent empty; if the expected shape differs, REST still delivers all shown values.</td>
+        <td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">WS endpoints (official) ↗</a></td>
+        <td>Chart cadence may be 3 s instead of true tick-by-tick if WS handshake fails</td>
+        <td>Capture one live WS session (S2) and pin the exact subscribe schema</td></tr>
+      <tr><td>F10</td><td><span class="badge info">LOW</span></td><td><b>Docs-path precision.</b> A few cited docs paths (fee schedule, rate limits) are listed from the docs index and may move as Kalshi reorganizes docs. Root links are provided so the fact stays traceable.</td>
+        <td class="src"><a href="https://docs.kalshi.com/" target="_blank" rel="noopener">docs.kalshi.com index ↗</a></td>
+        <td>Minor: a citation link may 404 over time</td>
+        <td>Re-check cited paths during the next review cycle</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>What was checked, item by item</h2>
+  <div class="card">
+    <ul>
+      <li><b>Repo review:</b> full history reviewed (1 commit, stub README) — nothing else existed to verify; see F6.</li>
+      <li><b>Endpoints:</b> brief’s REST/WS URLs matched against the official environments table (S-1/S-2) — exact match, including the “also supported” alternates.</li>
+      <li><b>Auth model:</b> confirmed from the official authenticated-requests guide (S-4) before deciding the SIM approach (F1).</li>
+      <li><b>Settlement semantics:</b> YES/NO resolution and $1 payouts confirmed from official settlement docs (S-5), implemented in the resolution table and SIM settlement logic.</li>
+      <li><b>Fee formula:</b> 0.07·C·P·(1−P) rounded up, implemented in SIM and cited (S-8).</li>
+      <li><b>Orderbook semantics:</b> bids-only convention confirmed (S-7) and encoded in the depth renderer.</li>
+      <li><b>JS syntax:</b> all scripts pass <span class="mono">node --check</span> in CI (link checker also runs on every push).</li>
+      <li><b>Links:</b> internal links verified by the link-check workflow; external links open official domains only (docs.kalshi.com, docs.github.com, github.com, demo.kalshi.co, kalshi.com).</li>
+    </ul>
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
+</div></footer>
+</body>
+</html>

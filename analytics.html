@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analytics — Kalshi Demo Tracker</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%2338bdf8'/></svg>">
+</head>
+<body data-page="analytics">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Analytics</div>
+  <h1>Analytics — price chart &amp; orderbook depth</h1>
+  <p class="sub">X axis = time (choose the window: seconds, minutes, hours) · Y axis = current contract price (¢). Liquidity and contracts-available-at-price come from the official orderbook endpoint.</p>
+
+  <div class="statusbar">
+    <span class="dotlive" id="connDot"></span><span id="connTxt">—</span>
+    <span id="transport"></span>
+    <label style="margin-left:auto"><input type="checkbox" id="chkLive" checked> <span id="liveLbl">Live</span></label>
+    <label><input type="checkbox" id="chkFill" checked> Fill area</label>
+  </div>
+
+  <div class="controls">
+    <span class="small">Market:</span>
+    <select id="mktPick" style="max-width:340px"><option value="">loading live markets…</option></select>
+    <span class="small">or ticker:</span>
+    <input type="text" id="mktInput" placeholder="e.g. KXBTCD-26DEC31-…" style="width:230px">
+    <button id="btnLoad" class="primary">Load</button>
+    <span id="discErr"></span>
+  </div>
+
+  <div id="mktDetail"></div>
+
+  <div class="controls"><span class="small">Time window (X axis):</span>
+    <div class="seg" id="winSeg">
+      <button data-ms="60000" class="active">1 min</button>
+      <button data-ms="15000">15 s</button>
+      <button data-ms="600000">10 min</button>
+      <button data-ms="3600000">1 hr</button>
+      <button data-ms="21600000">6 hr</button>
+      <button data-ms="86400000">24 hr</button>
+    </div>
+    <select id="windowSel" style="display:none"><option value="60000" selected></option></select>
+    <span class="small">windows &lt;10 min use in-page live samples; longer windows pull official candlesticks (1 m/1 h/1 d intervals)</span>
+  </div>
+
+  <div class="card"><div class="chartbox"><svg id="chart" style="width:100%;height:100%"></svg></div>
+    <div class="chart-legend">
+      <span><span class="sw" style="background:#38bdf8"></span>YES contract price (¢)</span>
+      <span id="chartNote" class="small"></span>
+    </div>
+  </div>
+
+  <h2>Orderbook — liquidity &amp; contracts available at each price</h2>
+  <p class="small">Official convention: the book returns <b>bids</b> for both sides — a YES bid at p¢ is identical to a NO ask at (100−p)¢. Depth bars show quantity available at each price level. Values are normalized defensively; any field the API returns in an unexpected shape is flagged rather than mis-rendered.</p>
+  <div id="bookStats"></div>
+  <div class="ob-grid">
+    <div class="card"><h3 style="margin-top:0">YES side (bids, best first)</h3><div id="obYes"></div></div>
+    <div class="card"><h3 style="margin-top:0">NO side (bids, best first)</h3><div id="obNo"></div></div>
+  </div>
+
+  <div class="note-box">
+    <b>How liquidity is computed:</b> “Resting bids” = Σ quantity across all price levels on each side (from <span class="mono">GET /markets/{ticker}/orderbook</span>, field <span class="mono">orderbook_fp</span>). The market’s own <span class="mono">liquidity</span> field is shown as reported in the market details card. If the two disagree, both are shown — no reconciliation guess is made.
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
+</div></footer>
+
+<script src="assets/app.js"></script>
+<script src="assets/analytics.js"></script>
+</body>
+</html>
