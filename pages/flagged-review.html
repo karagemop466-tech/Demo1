@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flagged for Review — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a class="active" href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill unverified">Review required</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Flagged for review — unverified items &amp; irregularities</div>
+  <h1>Flagged for review</h1>
+  <p>All items that could not be verified against an official source, plus observed irregularities. These do <strong>not</strong> block the site going live; they are published here so you can review them after launch and request changes. Every data row on this site carries a source link to the official Kalshi API docs; values that could not be confirmed are left blank and flagged unverified.</p>
+
+  <h2>Unverified data items (values left blank — never inferred)</h2>
+  <table>
+    <thead><tr><th>#</th><th>Item</th><th>Where it appears</th><th>Official source link</th><th>Why unverified</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Live gas-price events, prices, volume, resolutions</td><td>pages/gas.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td>Build environment cannot reach kalshi.co; no live data fetched</td></tr>
+      <tr><td>2</td><td>Live election events, prices, volume, resolutions</td><td>pages/elections.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td>Build environment cannot reach kalshi.co</td></tr>
+      <tr><td>3</td><td>Live culture events, prices, volume, resolutions</td><td>pages/culture.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td>Build environment cannot reach kalshi.co</td></tr>
+      <tr><td>4</td><td>Live crypto events, prices, volume, resolutions</td><td>pages/crypto.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td>Build environment cannot reach kalshi.co</td></tr>
+      <tr><td>5</td><td>Live golf events, prices, volume, resolutions</td><td>pages/golf.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td>Build environment cannot reach kalshi.co</td></tr>
+      <tr><td>6</td><td>Live contract price graph and liquidity (contracts available at each price)</td><td>pages/dashboard.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}">GET /markets/{ticker} (demo)</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}/orderbook">orderbook (demo)</a></td><td>No live API connection; no credentials</td></tr>
+      <tr><td>7</td><td>Demo-account balance, positions, orders, fills, settlements</td><td>pages/portfolio.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/balance">GET /portfolio/* (demo)</a></td><td>Authenticated endpoints; no credentials stored</td></tr>
+      <tr><td>8</td><td>Executed trades and trade results</td><td>pages/trades.html</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/events/orders">POST /portfolio/events/orders (demo)</a></td><td>No trades executed; no credentials in repo; no manual input from user</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Irregularities</h2>
+  <table>
+    <thead><tr><th>#</th><th>Irregularity</th><th>Detail</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>kalshi.co unreachable from build environment</td><td>Outbound internet is limited to github.com, npm, and PyPI hosts; the Kalshi demo API could not be fetched or empirically verified during this session</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a> (endpoints themselves verified via web-search of docs.kalshi.com)</td></tr>
+      <tr><td>2</td><td>No Kalshi API credentials in repository</td><td>No key ID or private key was created or stored; all authenticated endpoints are documented only</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (authentication)</a></td></tr>
+      <tr><td>3</td><td>liquidity / liquidity_dollars deprecated</td><td>Kalshi changelog: these fields return 0; contract availability must be read from the order book</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Next steps for review</h2>
+  <ol>
+    <li>Connect your own demo API key to the portfolio and trades pages (mock funds — no real money).</td>
+    <li>Populate the category tables from GET /events and GET /markets, tracking each event until it resolves (Yes/No) with settlement_source URLs.</td>
+    <li>Connect the dashboard graph to the WebSocket ticker channel and the liquidity table to orderbook_delta.</td>
+    <li>Review the <a href="suggestions.html">Suggestions</a> page and approve/defer/reject each item before implementing.</td>
+  </ol>
+  <p class="center source-list">Sources: <a href="https://docs.kalshi.com">https://docs.kalshi.com</a> · <a href="../docs/sources.md">docs/sources.md — consolidated verified endpoint table</a></p>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Flagged for review</footer>
+</body>
+</html>

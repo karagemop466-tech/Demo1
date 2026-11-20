@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golf — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a class="active" href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill unverified">Live data: unverified</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Focus topic — Golf</div>
+  <h1>Golf events — Kalshi demo market table</h1>
+  <p>Tracks Kalshi event contracts related to golf until each event resolves (resolved Yes or No). All values below are blank and flagged <strong>unverified</strong>: the build environment cannot reach kalshi.co, so no live market data was fetched from the official Kalshi API. Nothing here is inferred or filled in.</p>
+
+  <table>
+    <thead><tr>
+      <th>Topic</th><th>Event / market</th><th>Ticker</th><th>Yes bid (¢)</th><th>Yes ask (¢)</th><th>Last price (¢)</th><th>Volume</th><th>Event status</th><th>Resolved (Yes/No)</th><th>Resolution source</th><th>Market data source (official API)</th><th>Verification status</th>
+    </tr></thead>
+    <tbody>
+      <tr class="flagged">
+        <td>Golf</td><td>Highest-dollar golf event — pending live data</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events">GET /events (demo)</a></td><td><span class="badge unverified">Unverified</span></td>
+      </tr>
+      <tr class="flagged">
+        <td>Golf</td><td>Golf market — pending live data</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets">GET /markets (demo)</a></td><td><span class="badge unverified">Unverified</span></td>
+      </tr>
+      <tr class="flagged">
+        <td>Golf</td><td>Golf order book — pending live data</td><td>—</td><td colspan="3">—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}/orderbook">GET /markets/{ticker}/orderbook (demo)</a></td><td><span class="badge unverified">Unverified</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="center source-list">Sources: <a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo environment</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start</a> · <a href="../docs/sources.md">docs/sources.md — full verified endpoint table</a></p>
+
+  <h2>Findings</h2>
+  <ul>
+    <li>No live golf events confirmed from the official API in this build.</li>
+  </ul>
+  <div class="callout warn">
+    <strong>To populate this table:</strong> call <code>GET https://external-api.demo.kalshi.co/trade-api/v2/events</code> and <code>/markets</code> (no API key needed for public market data), filter to golf series/events, and record each row with a link to <code>/markets/{ticker}</code> as the source. Track each event until it resolves; record the resolution (Yes/No) and the event's <code>settlement_sources[*].url</code> (official source used to determine the market).
+  </div>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Golf · Unverified items listed on the <a href="../pages/flagged-review.html">Flagged for review</a> page</footer>
+</body>
+</html>

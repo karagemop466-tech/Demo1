@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalshi Demo Dashboard — Executive Summary</title>
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="pages/dashboard.html">Live dashboard</a>
+      <a href="pages/gas.html">Gas prices</a>
+      <a href="pages/elections.html">Elections</a>
+      <a href="pages/culture.html">Culture</a>
+      <a href="pages/crypto.html">Crypto</a>
+      <a href="pages/golf.html">Golf</a>
+      <a href="pages/portfolio.html">Portfolio</a>
+      <a href="pages/trades.html">Trades</a>
+      <a href="pages/suggestions.html">Suggestions</a>
+      <a href="pages/questions.html">Questions &amp; answers</a>
+      <a class="active" href="pages/flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill unverified">Live data: unverified — Kalshi API not connected from build environment</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Executive summary</div>
+  <h1>Kalshi Demo Dashboard — project overview</h1>
+  <p>This site is a static dashboard for the Kalshi demo (paper-money) environment. It collects, organizes, and analyzes event-contract data across five focus topics: <strong>gas prices, elections, culture, crypto, and golf</strong>. It tracks live events until they resolve (resolved Yes or No), tracks demo-account portfolio performance, analyzes trades by type, executes trades through the documented Kalshi API, and maintains a suggestions and questions section so changes are reviewed before implementation.</p>
+
+  <section>
+    <h2>Data source — Kalshi Trade API v2 (official)</h2>
+    <table>
+      <thead><tr><th>Interface</th><th>Demo — recommended</th><th>Demo — also supported</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>REST Trade API</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><code>https://demo-api.kalshi.co/trade-api/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com — demo environment</a></td></tr>
+        <tr><td>WebSocket API</td><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td><code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com — demo environment</a></td></tr>
+        <tr><td>Official documentation</td><td colspan="3"><a href="https://docs.kalshi.com">https://docs.kalshi.com</a> (demo guide, quick start, changelog)</td></tr>
+      </tbody>
+    </table>
+    <p class="center">Endpoints verified against the official Kalshi API documentation: <a href="docs/sources.md">docs/sources.md</a> with full endpoint table and source links.</p>
+  </section>
+
+  <section>
+    <h2>Access model (verified from official docs)</h2>
+    <ul>
+      <li><strong>Public market data — no API key:</strong> GET /events, /events/{ticker}, /markets, /markets/{ticker}, order books, trades, candlesticks.</li>
+      <li><strong>Authenticated — API key required:</strong> portfolio balance/positions/orders/fills/settlements, order placement (POST /portfolio/events/orders), cancel, amend, and all WebSocket connections. Signing uses <code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code> (Ed25519 or RSA signature of timestamp + method + path).</li>
+      <li><strong>Demo = mock funds:</strong> no real money at risk. Demo API keys work only against demo endpoints.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Site sections</h2>
+    <table>
+      <thead><tr><th>Section</th><th>Page</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td>Live dashboard</td><td><a href="pages/dashboard.html">pages/dashboard.html</a></td><td>Interactive price graph (time X-axis, contract price Y-axis, selectable seconds/minutes/hours window) and liquidity table (contracts available at each price).</td></tr>
+        <tr><td>Focus categories</td><td>pages/{gas,elections,culture,crypto,golf}.html</td><td>Event tables for gas prices, elections, culture, crypto, golf — every row carries a source link to the official API docs; unconfirmed values are blank and flagged unverified.</td></tr>
+        <tr><td>Portfolio performance</td><td><a href="pages/portfolio.html">pages/portfolio.html</a></td><td>Demo-account balance, positions, orders, fills, settlements via the authenticated /portfolio endpoints.</td></tr>
+        <tr><td>Trade execution</td><td><a href="pages/trades.html">pages/trades.html</a></td><td>Order form mapped to POST /portfolio/events/orders; requires the user's own demo API key (no credentials stored in this repo).</td></tr>
+        <tr><td>Suggestions</td><td><a href="pages/suggestions.html">pages/suggestions.html</a></td><td>Improvement suggestions to review and choose a path from before implementing.</td></tr>
+        <tr><td>Questions &amp; answers</td><td><a href="pages/questions.html">pages/questions.html</a></td><td>Questions that must be answered before decisions, with missing-information discovery suggestions.</td></tr>
+        <tr><td>Flagged for review</td><td><a href="pages/flagged-review.html">pages/flagged-review.html</a></td><td>All unverified items and irregularities with source links.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Verification status (this build)</h2>
+    <div class="callout warn">
+      <strong>Environmental limitation:</strong> the build sandbox cannot reach kalshi.co (outbound internet is limited to github.com, npm, and PyPI hosts). Live market values, event resolutions (Yes/No), portfolio balances, fills, and trade results were <em>not</em> fetched from the official Kalshi API and could not be empirically verified. Per the project verification standard, every such value is left <strong>blank</strong> and flagged <strong>unverified</strong> with a source link to the official documentation; nothing is inferred or filled in.
+    </div>
+    <div class="callout bad">
+      <strong>Credentials:</strong> no Kalshi API credentials exist in this repository and none were created or stored. Trade execution and live portfolio reads require you to supply your own demo API key. See <a href="pages/trades.html">pages/trades.html</a> and <a href="pages/portfolio.html">pages/portfolio.html</a>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Official sources used (for manual review)</h2>
+    <ul class="source-list">
+      <li><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi docs — Test in the demo environment</a> (demo REST and WebSocket base URLs)</li>
+      <li><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi docs — Quick start: create your first order</a> (public market data without auth; signed POST /portfolio/events/orders)</li>
+      <li><a href="https://docs.kalshi.com/changelog">Kalshi docs — API changelog</a> (dedicated demo hosts; liquidity deprecated; settlement_sources on events)</li>
+      <li><a href="https://docs.kalshi.com/llms-full.txt">Kalshi docs — full API reference (llms-full.txt)</a></li>
+      <li><a href="docs/sources.md">docs/sources.md</a> in this repo — consolidated, line-by-line verified endpoint table</li>
+    </ul>
+  </section>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Built on the official Kalshi Trade API v2 docs · All unverified items are listed on the <a href="pages/flagged-review.html">Flagged for review</a> page</footer>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a class="active" href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill credential">Portfolio: credentials required</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Portfolio performance — Kalshi demo account</div>
+  <h1>Demo-account portfolio tracking</h1>
+  <p>Tracks the Kalshi demo account (mock funds — no real money). Portfolio reads require an authenticated demo API key: <code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code> (Ed25519/RSA signature of timestamp + method + path). No credentials are stored in this repository, so all values below are blank and flagged.</p>
+
+  <div class="callout bad">
+    <strong>Not connected.</strong> No demo API key exists in this repo and none was created. Live portfolio data (<code>GET /portfolio/balance</code>, <code>/portfolio/positions</code>, <code>/portfolio/orders</code>, <code>/portfolio/fills</code>, <code>/portfolio/settlements</code>) could not be fetched. Per the verification standard, every value is left blank and flagged unverified until you connect your own demo credentials.
+  </div>
+
+  <h2>Balance</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Value</th><th>Official endpoint</th><th>Credentials</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>Demo-account cash balance</td><td>—</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/balance">GET /portfolio/balance (demo)</a></td><td>Yes — signed demo API key</td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Open positions</h2>
+  <table>
+    <thead><tr><th>Market ticker</th><th>Position (contracts)</th><th>Average entry price (¢)</th><th>Current value (¢)</th><th>Unrealized P&L (¢)</th><th>Endpoint</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td colspan="5">No positions fetched — credentials required</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/positions">GET /portfolio/positions (demo)</a></td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Order history</h2>
+  <table>
+    <thead><tr><th>Order ID</th><th>Ticker</th><th>Side</th><th>Count</th><th>Price (¢)</th><th>Status</th><th>Endpoint</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td colspan="6">No orders fetched — credentials required</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/orders">GET /portfolio/orders (demo)</a></td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Fills</h2>
+  <table>
+    <thead><tr><th>Fill ID</th><th>Order ID</th><th>Ticker</th><th>Side</th><th>Count</th><th>Price (¢)</th><th>Filled at</th><th>Endpoint</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td colspan="7">No fills fetched — credentials required</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/fills">GET /portfolio/fills (demo)</a></td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Settlements (resolved markets)</h2>
+  <table>
+    <thead><tr><th>Market ticker</th><th>Settled value (¢)</th><th>Resolution (Yes/No)</th><th>Settled at</th><th>P&L (¢)</th><th>Endpoint</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td colspan="5">No settlements fetched — credentials required</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/settlements">GET /portfolio/settlements (demo)</a></td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Trade-type analysis (planned)</h2>
+  <p>Once connected, trades will be categorized by type — bid (buy YES) vs ask (sell YES), limit vs market, time-in-force — and P&L analyzed per type so strategies can be compared. This section is empty until live fills exist.</p>
+  <p class="center source-list">Sources: <a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (authenticated endpoints)</a> · <a href="https://docs.kalshi.com/changelog">Kalshi changelog</a> · <a href="../docs/sources.md">docs/sources.md — full verified endpoint table</a></p>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Portfolio · Unverified items listed on the <a href="../pages/flagged-review.html">Flagged for review</a> page</footer>
+</body>
+</html>

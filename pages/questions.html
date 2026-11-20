@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questions &amp; answers — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a class="active" href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill unverified">Answers pending live data</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Decisions that cannot reasonably be made yet</div>
+  <h1>Questions, information needed, and answers</h1>
+  <p>Clear list of questions that must be answered — with the information we have and do not have — before any decision can reasonably be made. Suggestions are included for discovering each missing item.</p>
+
+  <table>
+    <thead><tr>
+      <th>#</th><th>Question</th><th>Information needed</th><th>Answer / status</th><th>Source (official)</th><th>How to discover missing information</th>
+    </tr></thead>
+    <tbody>
+      <tr class="flagged">
+        <td>1</td><td>Which live events have the highest dollar amount right now, per focus topic (gas, elections, culture, crypto, golf)?</td><td>GET /events + GET /markets volume and last price from the Kalshi demo API</td><td>No answer — API not reachable from build environment; no data fetched</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a></td><td>Connect to https://external-api.demo.kalshi.co/trade-api/v2 with a demo account and record top events per topic with source links</td>
+      </tr>
+      <tr class="flagged">
+        <td>2</td><td>How did each tracked event resolve — Yes or No?</td><td>Event resolution + settlement_sources[*].url for each event</td><td>No answer — no events were tracked to resolution</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (settlement_sources on events)</a></td><td>Poll /events/{event_ticker} until status = settled, record resolution and settlement source URL</td>
+      </tr>
+      <tr class="flagged">
+        <td>3</td><td>What is the demo-account portfolio performance (balance, positions, P&L)?</td><td>GET /portfolio/balance, /portfolio/positions, /portfolio/fills, /portfolio/settlements</td><td>No answer — authenticated endpoints; no credentials in repo</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (auth)</a></td><td>Supply your own demo API key; query the /portfolio endpoints</td>
+      </tr>
+      <tr class="flagged">
+        <td>4</td><td>Which trade types perform best (bid vs ask, limit, time-in-force)?</td><td>Trade history categorized by type with P&L per type</td><td>No answer — no trades were executed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (order placement)</a></td><td>Execute demo trades, then analyze fills by type</td>
+      </tr>
+      <tr class="flagged">
+        <td>5</td><td>How many contracts are available at each price (live liquidity)?</td><td>GET /markets/{ticker}/orderbook or WebSocket orderbook_delta</td><td>No answer — no order book fetched</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (liquidity deprecated; read order book)</a></td><td>Connect WebSocket orderbook_delta for the tracked tickers</td>
+      </tr>
+      <tr class="flagged">
+        <td>6</td><td>Are demo API credentials shared with production?</td><td>Environment credentials policy</td><td>No — demo keys work only against demo endpoints; production keys do not work in demo</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a></td><td>Read the official demo-environment documentation</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Information we do have</h2>
+  <ul>
+    <li>Official demo REST base URL: <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (also supported: <code>https://demo-api.kalshi.co/trade-api/v2</code>).</li>
+    <li>Official demo WebSocket URL: <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> (also supported: <code>wss://demo-api.kalshi.co/trade-api/ws/v2</code>).</li>
+    <li>Public market data (events, markets, order books, trades, candlesticks) needs no API key.</li>
+    <li>Portfolio, orders, trading, and WebSocket need a signed Ed25519/RSA demo API key.</li>
+    <li>Demo uses mock funds; no real money at risk.</li>
+  </ul>
+  <p class="center source-list">All sources: <a href="https://docs.kalshi.com">docs.kalshi.com</a> · consolidated table: <a href="../docs/sources.md">docs/sources.md</a></p>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Questions &amp; answers</footer>
+</body>
+</html>

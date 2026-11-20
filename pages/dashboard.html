@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Dashboard — Kalshi Demo</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/3.6.0/date_fns.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a class="active" href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill unverified">Live data: not connected — demo API credentials required</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Live dashboard — price movements &amp; liquidity</div>
+  <h1>Kalshi event-contract price graph</h1>
+  <p>Tracks contract price over time (X-axis = time, Y-axis = current contract price in cents, 0–100). Window length is selectable in seconds, minutes, or hours. The liquidity table shows how many contracts are available at each price from the order book.</p>
+
+  <div class="callout warn">
+    <strong>No live data connected.</strong> This build cannot reach the Kalshi demo API (kalshi.co is not reachable from the build environment) and no API credentials are stored here. The graph below is empty until connected to <code>GET /markets/{ticker}</code> and the WebSocket <code>ticker</code> channel at <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> (docs: <a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com</a>). The "Show simulated example" button draws clearly labeled fake data only to demonstrate the graph controls — it is <strong>not</strong> real Kalshi data.
+  </div>
+
+  <div class="controls">
+    <label>Market ticker: <input type="text" id="tickerInput" placeholder="e.g. KXBTCD-... (unverified — enter manually)"></label>
+    <label>Window:
+      <select id="windowSelect">
+        <option value="60">Last 60 seconds</option>
+        <option value="300">Last 5 minutes</option>
+        <option value="3600" selected>Last 1 hour</option>
+        <option value="14400">Last 4 hours</option>
+        <option value="86400">Last 24 hours</option>
+      </select>
+    </label>
+    <button id="simBtn" type="button">Show simulated example</button>
+    <button id="clearBtn" type="button">Clear graph</button>
+    <span id="feedStatus" style="font-size:0.8rem;color:#6b7280">Feed: disconnected</span>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="priceChart"></canvas>
+    <div id="chartNotice" style="margin-top:8px; font-size:0.9rem; color:#6b7280; text-align:center">No price data. Enter a market ticker and connect live credentials, or press "Show simulated example" to try the controls.</div>
+  </div>
+
+  <h2>Liquidity — contracts available at each price</h2>
+  <p>From <code>GET /markets/{ticker}/orderbook</code> (or the WebSocket <code>orderbook_delta</code> channel). Values below are blank because no live order book was fetched.</p>
+  <table>
+    <thead><tr><th>Price (¢, YES)</th><th>Contracts available — bid side</th><th>Contracts available — ask side</th><th>Source link</th><th>Status</th></tr></thead>
+    <tbody id="liquidityBody">
+      <tr class="flagged"><td colspan="4">No live order-book data — connect the Kalshi demo API with credentials</td><td><span class="badge unverified">Unverified</span></td></tr>
+    </tbody>
+  </table>
+  <p class="center source-list">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi docs — public market data (no key)</a> · <a href="https://docs.kalshi.com/changelog">Changelog — <code>liquidity</code>/<code>liquidity_dollars</code> deprecated, return 0; read the order book instead</a> · <a href="docs/sources.md">Full endpoint table</a></p>
+
+  <h3>How to connect live (for your review)</h3>
+  <pre><code>// 1. Public market data — no key needed
+fetch('https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}')
+  .then(r =&gt; r.json())
+
+// 2. Live price stream — requires signed demo API key (WebSocket)
+// wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2
+// Subscribe: { "id": 1, "cmd": "subscribe", "params": { "channels": ["ticker"], "market_tickers": ["{ticker}"] } }
+// Docs: https://docs.kalshi.com/getting_started/demo_env</code></pre>
+
+  <canvas id="simCanvas" style="display:none"></canvas>
+</main>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const Chart = window.Chart;
+  if (!Chart) { return; } // CDN failed: leave notice as-is
+
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  const notice = document.getElementById('chartNotice');
+  const feedStatus = document.getElementById('feedStatus');
+  const simBtn = document.getElementById('simBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const windowSelect = document.getElementById('windowSelect');
+
+  let chart = null;
+  let simTimer = null;
+
+  const now = Date.now();
+
+  function clearChart() {
+    if (simTimer) { clearInterval(simTimer); simTimer = null; }
+    if (chart) { chart.destroy(); chart = null; }
+    notice.textContent = 'No price data. Enter a market ticker and connect live credentials, or press "Show simulated example" to try the controls.';
+    notice.style.color = '#6b7280';
+    feedStatus.textContent = 'Feed: disconnected';
+    feedStatus.style.color = '#6b7280';
+  }
+
+  function drawSimulated() {
+    clearChart();
+    const end = now;
+    const start = end - 3600 * 1000;
+    const points = [];
+    let price = 52;
+    for (let t = start; t <= end; t += 60000) {
+      price += (Math.random() - 0.48) * 3;
+      price = Math.min(95, Math.max(5, price));
+      points.push({ t, y: Math.round(price * 100) / 100 });
+    }
+
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { datasets: [{ label: 'SIMULATED YES price (¢) — NOT real Kalshi data', data: points,
+        borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.12)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.3 }] },
+      options: {
+        animation: false,
+        interaction: { mode: 'nearest', intersect: false },
+        scales: {
+          x: { type: 'time', time: { unit: 'minute', tooltipFormat: 'MMM d, HH:mm:ss' }, title: { display: true, text: 'Time' } },
+          y: { min: 0, max: 100, title: { display: true, text: 'Contract price (¢, YES)' } }
+        },
+        plugins: {
+          title: { display: true, text: 'Illustrative only — simulated data, not live Kalshi prices', color: '#b45309', font: { size: 13, weight: '600' } },
+          legend: { display: false }
+        }
+      }
+    });
+    notice.innerHTML = '<strong style="color:#b45309">SIMULATED EXAMPLE — NOT real Kalshi data.</strong> Live prices require a signed demo API key and the WebSocket ticker channel.';
+    notice.style.color = '#b45309';
+  }
+
+  function drawLiveWindow() {
+    const windowMs = parseInt(windowSelect.value, 10) * 1000;
+    const end = now;
+    const start = end - windowMs;
+    clearChart();
+
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { datasets: [{ label: 'Waiting for live data…', data: [],
+        borderColor: '#0f62fe', backgroundColor: 'rgba(15,98,254,0.10)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.3 }] },
+      options: {
+        animation: false,
+        scales: {
+          x: { type: 'time', time: { unit: 'minute', tooltipFormat: 'MMM d, HH:mm:ss' }, title: { display: true, text: 'Time' } },
+          y: { min: 0, max: 100, title: { display: true, text: 'Contract price (¢, YES)' } }
+        },
+        plugins: {
+          title: { display: true, text: 'Live price graph — connect demo API credentials to stream', color: '#6b7280', font: { size: 13 } },
+          legend: { display: false }
+        }
+      }
+    });
+    notice.textContent = `Graph ready (${windowSelect.options[windowSelect.selectedIndex].text}). No live feed connected — Kalshi demo API credentials required.`;
+    notice.style.color = '#6b7280';
+  }
+
+  simBtn.addEventListener('click', drawSimulated);
+  clearBtn.addEventListener('click', clearChart);
+  windowSelect.addEventListener('change', drawLiveWindow);
+
+  drawLiveWindow();
+});
+</script>
+</body>
+</html>
