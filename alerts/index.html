@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live alert chat · Kalshi Demo</title>
+<meta name="description" content="Two scrolling chats for Kalshi demo markets: every contract-price move of $0.10 or more, and a model-ranked shortlist of the events worth trading first.">
+<link rel="stylesheet" href="assets/alerts.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="../index.html"><span class="mark">K</span> Kalshi <b>Demo</b> · Alerts</a>
+    <nav class="main" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="index.html" aria-current="page">Alert chat</a>
+      <a href="../desk/index.html">Desk</a>
+      <a href="../desk/live.html">Live dashboard</a>
+      <a href="../site/liquidity.html">Chart &amp; liquidity</a>
+      <a href="../site/resolved.html">Resolutions</a>
+      <a href="../desk/strategy.html">Strategies</a>
+      <a href="../desk/requirements.html">Requirements</a>
+      <a href="../integration/flagged-review.html">Flagged for review</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <section class="head">
+    <p class="kicker">Official Kalshi demo Trade API · <span id="asof">loading the committed feed…</span></p>
+    <h1>Live alert chat</h1>
+    <p class="lead">Two scrolling chats, updated as you watch. The left chat shows <b>every</b> contract-price move
+      of <b>$0.10 or more in either direction</b> across the five tracked topics. The right chat is the same feed
+      filtered by a published scoring model, so you can see first which events it likes. Every line carries the
+      official API request that produced it.</p>
+    <div class="banner warn" id="demo-banner">
+      <b>Demo venue.</b> Kalshi's demo environment uses mock funds and Kalshi states that its prices and behaviour
+      “may not be reflective of those in real markets”
+      (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official page ↗</a>).
+      Nothing here is investment advice.
+    </div>
+  </section>
+
+  <section class="controls" aria-label="Filters">
+    <label class="field">Threshold
+      <select id="threshold">
+        <option value="0.10" selected>$0.10 (required)</option>
+        <option value="0.05">$0.05</option>
+        <option value="0.20">$0.20</option>
+        <option value="0.50">$0.50</option>
+      </select>
+    </label>
+    <label class="field">Window
+      <select id="window">
+        <option value="1m/6h" selected>1-minute candles (sudden moves)</option>
+        <option value="1h/7d">1-hour candles</option>
+        <option value="1d/90d">1-day candles</option>
+        <option value="all">All windows</option>
+      </select>
+    </label>
+    <label class="field">Topic
+      <select id="topic">
+        <option value="all" selected>All five topics</option>
+        <option value="gas_prices">Gas prices</option>
+        <option value="elections">Elections</option>
+        <option value="culture">Culture</option>
+        <option value="crypto">Crypto</option>
+        <option value="golf">Golf</option>
+      </select>
+    </label>
+    <label class="field inline"><input type="checkbox" id="live-toggle"> Poll the live API every 30 s</label>
+    <span class="status" id="status"><span class="dot"></span>loading…</span>
+  </section>
+
+  <div class="chats">
+    <section class="chat" aria-labelledby="all-h">
+      <header>
+        <h2 id="all-h">All alerts</h2>
+        <span class="pill" id="all-count">—</span>
+      </header>
+      <p class="chat-sub">Every move of at least the selected threshold, newest first. “Cause” is never asserted:
+        each line links to the market, to the official request, and to a news search you can check yourself.</p>
+      <div class="stream" id="all-stream" tabindex="0" aria-live="polite" aria-relevant="additions">
+        <p class="empty">Loading the committed feed…</p>
+      </div>
+      <button class="more" id="all-more" hidden>Show older alerts</button>
+    </section>
+
+    <section class="chat" aria-labelledby="model-h">
+      <header>
+        <h2 id="model-h">Model shortlist</h2>
+        <span class="pill" id="model-count">—</span>
+      </header>
+      <p class="chat-sub">The same events, ranked by the published <b>QLM score</b> — move size, fee efficiency,
+        resting depth, money behind the market, time to close and freshness. It is a ranking heuristic over official
+        API fields; it is not a probability and it does not predict an outcome. The full model card is below the chats.</p>
+      <div class="stream" id="model-stream" tabindex="0" aria-live="polite" aria-relevant="additions">
+        <p class="empty">Loading the committed feed…</p>
+      </div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Model card</h2>
+    <p class="fine">Everything below is reproducible by hand from the committed snapshot and the official
+      responses it points at. The weights are fixed in
+      <code>alerts/tools/build_alerts.py</code> and asserted by <code>alerts/tools/test_alerts.py</code>.</p>
+    <div class="tablewrap">
+      <table id="model-table">
+        <thead><tr><th>Component</th><th class="num">Weight</th><th>What it measures</th><th>Official source</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="tablewrap">
+      <table id="limits-table">
+        <thead><tr><th>Limit of the model</th><th>Why it matters</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>How each number on this page is produced</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Shown value</th><th>Formula / field</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr><td>Move (from → to, Δ)</td><td>Adjacent official candlesticks; the close that changed by at least the threshold. Null closes are skipped, never filled.</td>
+            <td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ Get Market Candlesticks</a></td></tr>
+          <tr><td>Candle close used</td><td><code>price.close_dollars</code> (traded) or the mid of <code>yes_bid</code>/<code>yes_ask</code> (book). Each line states which basis it used.</td>
+            <td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ Get Market Candlesticks</a></td></tr>
+          <tr><td>Resting depth</td><td>Order-book level <code>[price_dollars, count_fp]</code> within $0.02 of the post-move price. Kalshi publishes bids only; a YES ask is <code>1 − best NO bid</code>.</td>
+            <td><a class="src" href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">↗ Orderbook responses</a></td></tr>
+          <tr><td>24 h traded notional</td><td>Σ(<code>yes_price_dollars</code> × <code>count_fp</code>) over public trades in the window. Kalshi publishes no “dollar volume” field, so this is a computed measure.</td>
+            <td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">↗ Get Trades</a></td></tr>
+          <tr><td>Fee in the score</td><td><code>fees = round up(M × 0.07 × C × P × (1−P))</code> for a 10-contract clip, twice (in and out). M is the published per-series multiplier, otherwise 1.</td>
+            <td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ Fee schedule (PDF)</a></td></tr>
+          <tr><td>Time to close</td><td><code>close_time</code> from the market object, against the snapshot time.</td>
+            <td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">↗ Get Markets</a></td></tr>
+          <tr><td>Resolved YES / NO</td><td><code>status</code> and <code>result</code> on the market object. <code>result</code> can be <code>yes</code>, <code>no</code> or <code>scalar</code>; a YES holder is paid $1 per contract, a NO holder $1 per contract on the other side.</td>
+            <td><a class="src" href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">↗ Market lifecycle</a> · <a class="src" href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">↗ Settlement</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Coverage and known limits</h2>
+    <div class="tablewrap">
+      <table id="coverage-table">
+        <thead><tr><th>Item</th><th>Value</th><th>Note</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Flagged for review</h2>
+    <ul class="plain">
+      <li><b>No credentials, no orders.</b> This page uses only public market data. Authenticated balance, position
+        and fill figures need a demo API key, which is deliberately not part of this static site.
+        <a href="../integration/flagged-review.html">Flagged for review ↗</a></li>
+      <li><b>No cause is asserted.</b> The news-search link on each line is a starting point for your own check,
+        not evidence of what moved a price.</li>
+      <li><b>Multipliers beyond the transcribed series.</b> Only the series used by this feed were transcribed from
+        the published non-standard fee table; any other series falls back to the document's default M = 1.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><b>Data:</b> official Kalshi demo Trade API
+      <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>
+      · <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">endpoints</a>
+      · <a href="verification.html">line-by-line verification ↗</a>
+      · <a href="README.md">build notes ↗</a></p>
+    <p class="fine">Demo environment, mock funds, prices may not reflect real markets. The committed feed is a
+      point-in-time collection; the live poller adds newer moves when your browser can reach the API.</p>
+  </div>
+</footer>
+
+<script src="assets/alerts.js"></script>
+</body>
+</html>
