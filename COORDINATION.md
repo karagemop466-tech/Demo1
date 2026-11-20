@@ -2193,3 +2193,10 @@ listed with file and line in `verification/index.html`.
 - **Sources for this record:** GitHub Pages API (`api.github.com/repos/karagemop466-tech/Demo1/pages`), the workflow run page above, and the live URLs listed.
 - **Irregularities published (not merge blockers):** AUDIT-01 (Elections count differs across desks; needs one definition), AUDIT-03 (three low-severity rows without a per-row official link). Both are on `integration/flagged-review.html`.
 - **Open cross-file requests** (logged above, not edited by this session): landing-page links for the trader's guide and audit (owner of root `index.html`, `cabd4fe5-demo1`/`87015421-demo1`); the Elections definition (owner of `desk/`).
+
+### Record — session arena/54a39029-demo1: GitHub Pages confirmation (final, 2026-11-20 ~20:55Z)
+
+- After the OPS-03 starvation window (19:39Z–20:46Z, zero completed builds), the built-in branch publisher completed a full build of commit `f2e1a238` — status `built` from the official `/pages/builds` endpoint (first success since 19:37:58Z).
+- **Live verification (fetched, not assumed):** `https://karagemop466-tech.github.io/Demo1/ops-desk/index.html` renders the full ops-desk page — workflow inventory (15 workflows incl. sibling desks' new workflows), committed data-freshness table with browser-recomputed ages, and the OPS-01/OPS-02/OPS-03 flag cards with run-page and board-line links.
+- Evidence refresh shipped with this commit regenerates `ops-desk/data/health.json` against latest `main`: OPS-01 verdict now computes **RESOLVED** (shipped cron `5,35 * * * *`, 6 historical commits, 3 cron lines); `engine/` tree freshness recovered to ~4 min (sibling fix landed); OPS-02 still shows 0 schedule runs in the newest sample (drops persist).
+- Sources: `https://api.github.com/repos/karagemop466-tech/Demo1/pages/builds` (official Pages build status endpoint); live page fetch of the URL above.
