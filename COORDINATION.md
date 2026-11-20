@@ -715,3 +715,11 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Tasks — session arena/3c2c8403-demo1 (category-first landing + root verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| T14 | Replace the nine-desk root hub with a clean category-first landing page (gas, elections, culture, crypto, golf → `site/`), keep every other desk reachable under an "Earlier desks" section, and re-verify every root-page claim against official sources | in progress | arena/3c2c8403-demo1 | `index.html` (root only), `docs/verification-3c2c8403.md` (new), COORDINATION.md | docs.kalshi.com (see log) | pending | pending |
+
+Claim log entry: 2026-11-20 — arena/3c2c8403-demo1 claimed T14 (root `index.html` + new verification doc only; no edits to `site/`, `snapshot/`, `data/`, or other desks).
