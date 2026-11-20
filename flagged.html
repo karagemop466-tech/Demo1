@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flagged for Review · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Flagged for Review</h1>
+  <p class="lead">Unverified items, irregularities, and gaps. These do not block publication. Review them, then request changes. Each item links to the source it came from.</p>
+
+  <h2>A. Data and verification</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Item</th><th>Detail</th><th>Status</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>F-01</td><td>Culture: no verified open market</td><td>Culture series exist (e.g. KXXBANNEDMURRAYHILLGUY1, KXXBANNEDGROK) but had no open markets when queried. Row left blank.</td><td><span class="tag t-unv">Unverified</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Culture&limit=20" target="_blank" rel="noopener">Series: Culture</a></td></tr>
+      <tr><td>F-02</td><td>Partial coverage</td><td>The table is a sample of 15 verified rows across 4 categories. A full market list was not retrieved. The events endpoint returned 93 pages at 40 events per page, and its <code>category</code> parameter was ignored in our test.</td><td><span class="tag t-unv">Partial</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Events (open, nested markets)</a></td></tr>
+      <tr><td>F-03</td><td>Golf category not confirmed from the series record</td><td>Golf rows use ticker prefix KXPGATOUR and the title "The RSM Classic". The series' own category/tag was not read. Grouping is our mapping.</td><td><span class="tag t-unv">Unverified mapping</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=12" target="_blank" rel="noopener">Markets: KXPGATOUR</a></td></tr>
+      <tr><td>F-04</td><td>Gas "above $3.65" price versus AAA average</td><td>Last trade $0.02 with AAA's national regular average at $3.6898 on 11/20/26. The trade timestamp was not checked. Could be stale or thin.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a> · <a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA</a></td></tr>
+      <tr><td>F-05</td><td>BTC range contracts: displayed size, no trades</td><td>All four sampled strikes show YES ask size 28,346–28,699 at $0.01, with zero volume and zero open interest. The displayed size is not confirmed as fillable depth.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></td></tr>
+      <tr><td>F-06</td><td>Golf winner prices: displayed size far above volume</td><td>E.g. Ryan Brehm ask size 159,757.20 against volume 7,500.25. Needs orderbook check.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></td></tr>
+      <tr><td>F-07</td><td>Long-dated "active" markets</td><td>NATO Secretary General contracts close 2099-01-08. Elon Musk Mars (KXELONMARS-99) closes 2099-08-01. Both are "active" but are not near-term events.</td><td><span class="tag t-unv">Note</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Events (open)</a></td></tr>
+      <tr><td>F-08</td><td>Demo data: placeholder-like values</td><td>Demo market titles include "x" (KXNOMINEECONF); demo elections markets have <code>custom_strike</code> "demo strike". Demo values should not be read as market data.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto" target="_blank" rel="noopener">Demo: series Crypto</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=3&with_nested_markets=true" target="_blank" rel="noopener">Demo: events</a></td></tr>
+      <tr><td>F-09</td><td>Same event, different category by environment</td><td>KXELONMARS-99 is category "World" in the demo environment and "Science and Technology" in production.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=3&category=Crypto" target="_blank" rel="noopener">Demo: events</a> · <a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Production: events</a></td></tr>
+      <tr><td>F-10</td><td>Settlement sources that are search pages, not official sources</td><td>Several culture series (KXXBANNED*) list sources such as "account holder of" and "Ars Technica" linked to google.com search URLs, and "Barchart" linked to a quote page.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Culture&limit=20" target="_blank" rel="noopener">Series: Culture</a></td></tr>
+      <tr><td>F-11</td><td>Malformed or staging contract links</td><td>KXHYPEPERP ("0.1 HYPE"): contract_terms_url is <code>.../contract_terms/.pdf</code>, contract_url is empty, settlement_sources is null. Several series point <code>contract_url</code> at <code>kalshi-public-docs-staging.s3.us-east-1.amazonaws.com</code>.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto" target="_blank" rel="noopener">Demo: series Crypto</a></td></tr>
+      <tr><td>F-12</td><td>Placeholder titles in production</td><td>HOUSENJ09 has title "x" in the production elections series list. KXNOMINEECONF title "x" appears in the demo crypto list.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Elections&limit=20" target="_blank" rel="noopener">Production: series Elections</a></td></tr>
+      <tr><td>F-13</td><td>Possible broken documentation link</td><td>The orderbook responses page links to <code>/api-reference/market/get-market-order-book</code>. The API reference page we read is <code>get-market-orderbook</code>. The first path was not opened, so it may be broken.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td></tr>
+      <tr><td>F-14</td><td>Fees not verified</td><td>Series show <code>fee_type: quadratic</code>. The fee schedule was not read.</td><td><span class="tag t-unv">Open</span></td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding (listed, not read)</a></td></tr>
+      <tr><td>F-15</td><td>Browser CORS not verified</td><td>The dashboard calls Kalshi's public endpoints from the browser. The build environment cannot reach those hosts, so this was not tested.</td><td><span class="tag t-unv">Needs check</span></td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Environments</a></td></tr>
+      <tr><td>F-16</td><td>Rate limits not read</td><td>The dashboard polls every 5 seconds. Your tier and budget are unknown.</td><td><span class="tag t-unv">Open</span></td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits (listed, not read)</a></td></tr>
+    </tbody></table></div>
+
+  <h2>B. Blocked items</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Item</th><th>Detail</th><th>Status</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>B-01</td><td>Portfolio performance (demo account)</td><td>Needs an API key. Demo keys work only on demo endpoints. A call to <code>/portfolio/balance</code> returned an error without credentials.</td><td><span class="tag t-blk">Blocked</span></td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td></tr>
+      <tr><td>B-02</td><td>Trade execution</td><td>Needs an API key and your permission. No orders were placed.</td><td><span class="tag t-blk">Blocked</span></td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Environments</a></td></tr>
+    </tbody></table></div>
+
+  <h2>C. Repository review</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Item</th><th>Detail</th><th>Status</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>R-01</td><td>README is one line</td><td><code>README.md</code> contains only "# Demo1". No setup or description.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/README.md" target="_blank" rel="noopener">README.md</a></td></tr>
+      <tr><td>R-02</td><td>No license, no .gitignore, no CI</td><td>Only file on <code>main</code> is README.md. No LICENSE, .gitignore, or workflow.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">Repository</a></td></tr>
+      <tr><td>R-03</td><td>Overlapping session branches</td><td>Five branches claimed the same Kalshi dashboard task. Now merged to main: arena/e41f6700 (PRs #1, #2) and arena/a443fb8f (PRs #4, #6). Still open or unmerged: arena/ff423a65 (PR #3 open) and arena/0135085b and arena/0cc392e4 (no PR).</td><td><span class="tag t-unv">Needs decision</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/pulls?q=is%3Apr" target="_blank" rel="noopener">Pull requests</a></td></tr>
+      <tr><td>R-05</td><td>Duplicate site versions on one Pages site</td><td>Three versions now coexist: this landing and category pages (root), the single-page monitor (<code>monitor/</code>, session e41f6700), and the multi-page site (<code>pages/</code>, session a443fb8f). Their category tables and dashboards overlap. All were kept; none deleted.</td><td><span class="tag t-unv">Needs decision</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
+      <tr><td>R-06</td><td>Other session pages contain blank or simulated values</td><td>Per their coordination log, <code>pages/</code> category tables are blank and unverified, and its dashboard uses labelled simulated data. This integration did not re-verify those pages.</td><td><span class="tag t-unv">Flagged</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
+      <tr><td>R-04</td><td>Branch naming instructions conflict</td><td>The coordination rules name branches <code>session-&lt;id&gt;/&lt;task&gt;</code>. This session's branch is fixed as <code>arena/175cafdf-demo1</code>; the fixed name was kept.</td><td><span class="tag t-unv">Noted</span></td><td><a href="https://github.com/karagemop466-tech/Demo1/blob/arena/175cafdf-demo1/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
+    </tbody></table></div>
+
+  <h2>D. Decisions that can change this site</h2>
+  <div class="card"><ul class="tight">
+    <li>Which environment is "live" (production, demo, or both).</li>
+    <li>Whether to proceed with demo credentials, and where signing happens.</li>
+    <li>Which suggestions in <a href="suggestions.html">Suggestions</a> to build.</li>
+  </ul></div>
+</main>
+<footer>Flagged items do not block publication. Request changes by naming the item number.</footer>
+<script src="assets/common.js"></script>
+</body></html>
