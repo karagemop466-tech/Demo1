@@ -1,6 +1,6 @@
 {
   "schema": "ops-desk/health v1",
-  "generated_at_utc": "2026-11-20T20:26:42Z",
+  "generated_at_utc": "2026-11-20T20:53:44Z",
   "repo": "karagemop466-tech/Demo1",
   "method": "Evidence re-collected from the official GitHub REST API (unauthenticated; public resources). Every record carries its API URL. Expected cron-start counts are computed arithmetic, labelled as such.",
   "docs": {
@@ -32,22 +32,22 @@
       "path": ".github/workflows/alert-desk-check.yml",
       "state": "active",
       "runs_sample": {
-        "count": 25,
+        "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:07Z",
-          "oldest": "2026-11-20T19:39:09Z"
+          "newest": "2026-11-20T20:53:10Z",
+          "oldest": "2026-11-20T19:40:05Z"
         },
         "by_event": {
-          "push": 22,
+          "push": 27,
           "pull_request": 3
         },
         "last_run": {
-          "id": 44811332225,
+          "id": 44815359077,
           "event": "push",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:07Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811332225"
+          "created_at": "2026-11-20T20:53:10Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815359077"
         },
         "schedule_runs": [],
         "recent_failures": [
@@ -196,20 +196,20 @@
       "runs_sample": {
         "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
-          "oldest": "2026-11-20T19:42:15Z"
+          "newest": "2026-11-20T20:50:00Z",
+          "oldest": "2026-11-20T19:58:50Z"
         },
         "by_event": {
-          "push": 10,
-          "pull_request": 20
+          "push": 12,
+          "pull_request": 18
         },
         "last_run": {
-          "id": 44811404992,
+          "id": 44814889066,
           "event": "push",
-          "status": "pending",
+          "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404992"
+          "created_at": "2026-11-20T20:50:00Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814889066"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -224,19 +224,19 @@
       "runs_sample": {
         "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
-          "oldest": "2026-11-20T19:59:05Z"
+          "newest": "2026-11-20T20:53:43Z",
+          "oldest": "2026-11-20T20:26:07Z"
         },
         "by_event": {
           "push": 30
         },
         "last_run": {
-          "id": 44811404983,
+          "id": 44815436872,
           "event": "push",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404983"
+          "created_at": "2026-11-20T20:53:43Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436872"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -285,21 +285,21 @@
       "runs_sample": {
         "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
-          "oldest": "2026-11-20T19:20:32Z"
+          "newest": "2026-11-20T20:53:43Z",
+          "oldest": "2026-11-20T20:18:28Z"
         },
         "by_event": {
-          "push": 21,
-          "pull_request": 8,
+          "push": 13,
+          "pull_request": 16,
           "workflow_dispatch": 1
         },
         "last_run": {
-          "id": 44811404990,
+          "id": 44815436925,
           "event": "push",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404990"
+          "created_at": "2026-11-20T20:53:43Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436925"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -312,24 +312,31 @@
       "path": ".github/workflows/repo-audit.yml",
       "state": "active",
       "runs_sample": {
-        "count": 6,
+        "count": 11,
         "window": {
-          "newest": "2026-11-20T20:18:14Z",
+          "newest": "2026-11-20T20:53:43Z",
           "oldest": "2026-11-20T19:31:58Z"
         },
         "by_event": {
-          "push": 6
+          "push": 11
         },
         "last_run": {
-          "id": 44810117890,
+          "id": 44815436873,
           "event": "push",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:18:14Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810117890"
+          "created_at": "2026-11-20T20:53:43Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436873"
         },
         "schedule_runs": [],
-        "recent_failures": []
+        "recent_failures": [
+          {
+            "id": 44810097508,
+            "created_at": "2026-11-20T20:18:06Z",
+            "conclusion": "failure",
+            "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810097508"
+          }
+        ]
       },
       "runs_api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/actions/workflows/425361468/runs?per_page=30"
     },
@@ -375,20 +382,20 @@
       "runs_sample": {
         "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
-          "oldest": "2026-11-20T20:13:22Z"
+          "newest": "2026-11-20T20:53:43Z",
+          "oldest": "2026-11-20T20:32:16Z"
         },
         "by_event": {
-          "push": 19,
-          "pull_request": 11
+          "push": 21,
+          "pull_request": 9
         },
         "last_run": {
-          "id": 44811405486,
+          "id": 44815436934,
           "event": "push",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811405486"
+          "created_at": "2026-11-20T20:53:43Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436934"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -401,22 +408,22 @@
       "path": ".github/workflows/tape-desk-check.yml",
       "state": "active",
       "runs_sample": {
-        "count": 4,
+        "count": 6,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
+          "newest": "2026-11-20T20:35:32Z",
           "oldest": "2026-11-20T20:15:59Z"
         },
         "by_event": {
-          "push": 1,
-          "pull_request": 3
+          "push": 2,
+          "pull_request": 4
         },
         "last_run": {
-          "id": 44811404970,
+          "id": 44812750487,
           "event": "push",
-          "status": "queued",
-          "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404970"
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-20T20:35:32Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812750487"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -429,22 +436,22 @@
       "path": ".github/workflows/trade-desk.yml",
       "state": "active",
       "runs_sample": {
-        "count": 11,
+        "count": 12,
         "window": {
-          "newest": "2026-11-20T20:06:16Z",
+          "newest": "2026-11-20T20:53:10Z",
           "oldest": "2026-11-20T19:35:32Z"
         },
         "by_event": {
-          "push": 9,
+          "push": 10,
           "pull_request": 2
         },
         "last_run": {
-          "id": 44808291971,
+          "id": 44815358968,
           "event": "push",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-11-20T20:06:16Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44808291971"
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-20T20:53:10Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815358968"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -459,19 +466,19 @@
       "runs_sample": {
         "count": 30,
         "window": {
-          "newest": "2026-11-20T20:26:37Z",
-          "oldest": "2026-11-20T13:40:50Z"
+          "newest": "2026-11-20T20:53:43Z",
+          "oldest": "2026-11-20T19:44:06Z"
         },
         "by_event": {
           "dynamic": 30
         },
         "last_run": {
-          "id": 44811404911,
+          "id": 44815436459,
           "event": "dynamic",
           "status": "queued",
           "conclusion": null,
-          "created_at": "2026-11-20T20:26:37Z",
-          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404911"
+          "created_at": "2026-11-20T20:53:43Z",
+          "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436459"
         },
         "schedule_runs": [],
         "recent_failures": []
@@ -489,7 +496,8 @@
     ".github/workflows/alert-desk-check.yml": {
       "triggers": [
         "push",
-        "pull_request"
+        "pull_request",
+        "workflow_dispatch"
       ],
       "crons": []
     },
@@ -549,18 +557,39 @@
     ".github/workflows/pages.yml": {
       "triggers": [
         "push",
+        "pull_request",
         "workflow_dispatch"
       ],
       "crons": []
+    },
+    ".github/workflows/repo-audit.yml": {
+      "triggers": [
+        "push",
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "crons": [
+        "23 */6 * * *"
+      ]
     },
     ".github/workflows/sim-strategies.yml": {
       "triggers": [
         "push",
+        "schedule",
         "workflow_dispatch"
+      ],
+      "crons": [
+        "5,35 * * * *"
+      ]
+    },
+    ".github/workflows/site-check.yml": {
+      "triggers": [
+        "push",
+        "pull_request"
       ],
       "crons": []
     },
-    ".github/workflows/site-check.yml": {
+    ".github/workflows/tape-desk-check.yml": {
       "triggers": [
         "push",
         "pull_request"
@@ -579,14 +608,14 @@
   "repo_sample": {
     "count": 200,
     "window": {
-      "oldest": "2026-11-20T19:49:09Z",
-      "newest": "2026-11-20T20:26:37Z",
-      "minutes": 37.5
+      "oldest": "2026-11-20T20:15:59Z",
+      "newest": "2026-11-20T20:53:43Z",
+      "minutes": 37.7
     },
     "by_event": {
-      "push": 133,
-      "dynamic": 14,
-      "pull_request": 52,
+      "push": 125,
+      "dynamic": 20,
+      "pull_request": 54,
       "workflow_dispatch": 1
     },
     "schedule_runs_observed": [],
@@ -611,7 +640,7 @@
         "message_first_line": "chore(data): refresh Kalshi demo snapshot 2026-11-20T19:12Z",
         "html_url": "https://github.com/karagemop466-tech/Demo1/commit/cb6f8b77bf1a5f282797db0368170ff75435f8db"
       },
-      "age_minutes_at_build": 73.9,
+      "age_minutes_at_build": 100.9,
       "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=data&per_page=1"
     },
     {
@@ -623,7 +652,7 @@
         "message_first_line": "data: Kalshi demo snapshot 2026-11-20T11:47:27Z",
         "html_url": "https://github.com/karagemop466-tech/Demo1/commit/cb8ae05142f1208293fa862139733bc3a0ae3837"
       },
-      "age_minutes_at_build": 519.2,
+      "age_minutes_at_build": 546.3,
       "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=snapshot&per_page=1"
     },
     {
@@ -635,19 +664,19 @@
         "message_first_line": "sim-desk: run strategies 2026-11-20T20:16Z",
         "html_url": "https://github.com/karagemop466-tech/Demo1/commit/2ffd4e6276068c75979b3c3b8c7daee12054ca26"
       },
-      "age_minutes_at_build": 10.3,
+      "age_minutes_at_build": 37.4,
       "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=sim-desk/data&per_page=1"
     },
     {
       "path": "engine",
       "last_commit": {
-        "sha": "a7e6c812aa15c173491811401aa92171e0fdec0a",
-        "sha_short": "a7e6c812",
-        "date": "2026-11-20T13:29:50Z",
-        "message_first_line": "engine: regenerate computed outputs against the merged snapshot (counts unchanged: 662 jumps, 16 simulated trades, 2,469 settled examined)",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/commit/a7e6c812aa15c173491811401aa92171e0fdec0a"
+        "sha": "f143259e7f9125ef00002016fb30d89d246518d0",
+        "sha_short": "f143259e",
+        "date": "2026-11-20T20:49:43Z",
+        "message_first_line": "fix(docs): repair 4 broken docs.kalshi.com links verified against the official page index",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/commit/f143259e7f9125ef00002016fb30d89d246518d0"
       },
-      "age_minutes_at_build": 416.9,
+      "age_minutes_at_build": 4.0,
       "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=engine&per_page=1"
     },
     {
@@ -659,128 +688,128 @@
         "message_first_line": "desk: consolidated dashboard, paper-trading engine, resolution log, requirements matrix (14 pages, 105 DOM checks)",
         "html_url": "https://github.com/karagemop466-tech/Demo1/commit/dd3bb3832c313ce769bfce686aca6a81f6b00eb8"
       },
-      "age_minutes_at_build": 440.5,
+      "age_minutes_at_build": 467.5,
       "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/commits?path=desk/data&per_page=1"
     }
   ],
   "pages_deploys": {
     "sample_count": 30,
     "cancelled_in_sample": 23,
-    "queued_or_in_progress_in_sample": 1,
+    "queued_or_in_progress_in_sample": 2,
     "last_success": {
-      "id": 44809383670,
-      "created_at": "2026-11-20T20:13:27Z",
-      "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44809383670",
-      "head_sha": "b7c23735a72d1ef77771b2e6b1b4648ab52081e5"
+      "id": 44814889055,
+      "created_at": "2026-11-20T20:50:00Z",
+      "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814889055",
+      "head_sha": "f2e1a238a925b72a02f18141535f46cabd586c79"
     },
     "recent": [
       {
-        "id": 44811404990,
+        "id": 44815436925,
         "event": "push",
         "status": "queued",
         "conclusion": null,
-        "created_at": "2026-11-20T20:26:37Z",
-        "head_sha": "92578f212fe83a80399c2331268f184fda0b54dc",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404990"
+        "created_at": "2026-11-20T20:53:43Z",
+        "head_sha": "92f68eb4f13424cebef3488a52d9414eb0bf1875",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436925"
       },
       {
-        "id": 44811344631,
+        "id": 44815432235,
+        "event": "pull_request",
+        "status": "queued",
+        "conclusion": null,
+        "created_at": "2026-11-20T20:53:41Z",
+        "head_sha": "c5276da59acfdf8f5c2f25e27638c5bb9c0d00e1",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815432235"
+      },
+      {
+        "id": 44814889055,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T20:50:00Z",
+        "head_sha": "f2e1a238a925b72a02f18141535f46cabd586c79",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814889055"
+      },
+      {
+        "id": 44814887324,
         "event": "pull_request",
         "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:26:11Z",
-        "head_sha": "a581bb224d1daa1697ab0ad0ca2b812e1b09a66d",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811344631"
+        "conclusion": "success",
+        "created_at": "2026-11-20T20:50:00Z",
+        "head_sha": "71aaf04ace63a37343c08ca0d8c640805df5aac3",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814887324"
       },
       {
-        "id": 44811343858,
+        "id": 44813872483,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T20:43:07Z",
+        "head_sha": "453d4a84f6fe769b17ed3be59fe5e1ed97907168",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813872483"
+      },
+      {
+        "id": 44813784676,
         "event": "pull_request",
         "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:26:11Z",
-        "head_sha": "55d0ef6458485c1d15286b5d1685039189ea4ce5",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811343858"
+        "conclusion": "success",
+        "created_at": "2026-11-20T20:42:32Z",
+        "head_sha": "3c7ca3a8e13f0c36d3ba5e8ba4e6ecb90bdbc611",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813784676"
       },
       {
-        "id": 44810948604,
-        "event": "pull_request",
-        "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:23:36Z",
-        "head_sha": "c37ab7e72b8192a6b5a5d1be4d3b1d4437a14d17",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810948604"
-      },
-      {
-        "id": 44810800833,
+        "id": 44813225044,
         "event": "push",
         "status": "completed",
         "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:22:40Z",
-        "head_sha": "bb67820a2f578522901586cfe51299e71b4f23b4",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810800833"
+        "created_at": "2026-11-20T20:38:45Z",
+        "head_sha": "dfca2680080a785656bc8b5a02a8f9174f43b8b9",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813225044"
       },
       {
-        "id": 44810800465,
+        "id": 44813164576,
         "event": "pull_request",
         "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:22:40Z",
-        "head_sha": "3566bc57eab984f0e1a604663daa644210b563e5",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810800465"
+        "conclusion": "success",
+        "created_at": "2026-11-20T20:38:21Z",
+        "head_sha": "221d51d21154b27a4ef99cdd29f96028a221e58b",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813164576"
       },
       {
-        "id": 44810283673,
+        "id": 44812964532,
         "event": "push",
         "status": "completed",
         "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:19:18Z",
-        "head_sha": "e02eef4e60fc11594ed61f798097a1329c0f9b1f",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810283673"
+        "created_at": "2026-11-20T20:36:58Z",
+        "head_sha": "743ee4a3282ece3c083294600af5fba1727d5522",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812964532"
       },
       {
-        "id": 44810172830,
+        "id": 44812953638,
         "event": "pull_request",
         "status": "completed",
         "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:18:36Z",
-        "head_sha": "66bcefb44252ccc6c1708bc7b3c5f0e16bee85fd",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810172830"
+        "created_at": "2026-11-20T20:36:53Z",
+        "head_sha": "9071c2b48ec828016269c36deabb879ba430a076",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812953638"
       },
       {
-        "id": 44810150966,
-        "event": "workflow_dispatch",
-        "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:18:28Z",
-        "head_sha": "2ffd4e6276068c75979b3c3b8c7daee12054ca26",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810150966"
-      },
-      {
-        "id": 44810128737,
-        "event": "pull_request",
-        "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:18:19Z",
-        "head_sha": "692b20f41cbbfc3080d4a9e60176b5d772c4ccea",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810128737"
-      },
-      {
-        "id": 44810109988,
-        "event": "pull_request",
-        "status": "completed",
-        "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:18:11Z",
-        "head_sha": "fbe003c4d377ccd5ce28f4665e7e1bfb10e4dc8b",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810109988"
-      },
-      {
-        "id": 44809834756,
+        "id": 44812926662,
         "event": "push",
         "status": "completed",
         "conclusion": "cancelled",
-        "created_at": "2026-11-20T20:16:23Z",
-        "head_sha": "7f7c74944a15b0080fd5bf02c4d8c10f3d900ac1",
-        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44809834756"
+        "created_at": "2026-11-20T20:36:42Z",
+        "head_sha": "2ced6428637a23eb4d7a4b250f5d9dfdb1a60887",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812926662"
+      },
+      {
+        "id": 44812926451,
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "created_at": "2026-11-20T20:36:42Z",
+        "head_sha": "15a959a77eb0e21f0b765774d28a751f3190467d",
+        "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812926451"
       }
     ],
     "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/actions/workflows/pages.yml/runs?per_page=30"
@@ -797,11 +826,11 @@
               "excerpt": "| S-4 | CI wiring + integration: workflow (tests \u2192 DOM test \u2192 engine \u2192 validate \u2192 commit ledger) on push + 30-min schedule; additive README section; PR \u2192 main, merge, Pages verify | in progress (PR/merge/Pages record pen"
             },
             {
-              "line": 1615,
+              "line": 1695,
               "excerpt": "| O-1 | Ops-health desk (`ops-desk/`): inventory every scheduled/push-triggered data workflow as shipped, audit actual GitHub Actions run history from the official API, measure committed-data freshness, and publish a liv"
             },
             {
-              "line": 1626,
+              "line": 1706,
               "excerpt": "- Declared vs shipped: sim-strategies.yml declares push + workflow_dispatch only; full `git log --follow` history = 1 commit, 0 `cron` lines; board claim at COORDINATION.md line 1223 (S-4) says \"on push + 30-min schedule"
             }
           ]
@@ -809,15 +838,18 @@
         "shipped_triggers": {
           "triggers": [
             "push",
+            "schedule",
             "workflow_dispatch"
           ],
-          "crons": []
+          "crons": [
+            "5,35 * * * *"
+          ]
         },
         "git_history": {
-          "commits_examined": 5,
-          "cron_lines_total": 2
+          "commits_examined": 6,
+          "cron_lines_total": 3
         },
-        "verdict": "MISMATCH \u2014 board record says the workflow runs on push + 30-min schedule; the shipped file declares no schedule trigger. Cron lines across 5 historical commit(s): 2."
+        "verdict": "RESOLVED \u2014 the shipped file now declares schedule ['5,35 * * * *']; cron lines across 6 historical commit(s): 3. Re-check the runs sample to confirm schedule-event runs are actually firing."
       }
     },
     "OPS-02": {
@@ -839,121 +871,121 @@
         "pages_deploys": {
           "sample_count": 30,
           "cancelled_in_sample": 23,
-          "queued_or_in_progress_in_sample": 1,
+          "queued_or_in_progress_in_sample": 2,
           "last_success": {
-            "id": 44809383670,
-            "created_at": "2026-11-20T20:13:27Z",
-            "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44809383670",
-            "head_sha": "b7c23735a72d1ef77771b2e6b1b4648ab52081e5"
+            "id": 44814889055,
+            "created_at": "2026-11-20T20:50:00Z",
+            "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814889055",
+            "head_sha": "f2e1a238a925b72a02f18141535f46cabd586c79"
           },
           "recent": [
             {
-              "id": 44811404990,
+              "id": 44815436925,
               "event": "push",
               "status": "queued",
               "conclusion": null,
-              "created_at": "2026-11-20T20:26:37Z",
-              "head_sha": "92578f212fe83a80399c2331268f184fda0b54dc",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811404990"
+              "created_at": "2026-11-20T20:53:43Z",
+              "head_sha": "92f68eb4f13424cebef3488a52d9414eb0bf1875",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815436925"
             },
             {
-              "id": 44811344631,
+              "id": 44815432235,
+              "event": "pull_request",
+              "status": "queued",
+              "conclusion": null,
+              "created_at": "2026-11-20T20:53:41Z",
+              "head_sha": "c5276da59acfdf8f5c2f25e27638c5bb9c0d00e1",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44815432235"
+            },
+            {
+              "id": 44814889055,
+              "event": "push",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-11-20T20:50:00Z",
+              "head_sha": "f2e1a238a925b72a02f18141535f46cabd586c79",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814889055"
+            },
+            {
+              "id": 44814887324,
               "event": "pull_request",
               "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:26:11Z",
-              "head_sha": "a581bb224d1daa1697ab0ad0ca2b812e1b09a66d",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811344631"
+              "conclusion": "success",
+              "created_at": "2026-11-20T20:50:00Z",
+              "head_sha": "71aaf04ace63a37343c08ca0d8c640805df5aac3",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44814887324"
             },
             {
-              "id": 44811343858,
+              "id": 44813872483,
+              "event": "push",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-11-20T20:43:07Z",
+              "head_sha": "453d4a84f6fe769b17ed3be59fe5e1ed97907168",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813872483"
+            },
+            {
+              "id": 44813784676,
               "event": "pull_request",
               "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:26:11Z",
-              "head_sha": "55d0ef6458485c1d15286b5d1685039189ea4ce5",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44811343858"
+              "conclusion": "success",
+              "created_at": "2026-11-20T20:42:32Z",
+              "head_sha": "3c7ca3a8e13f0c36d3ba5e8ba4e6ecb90bdbc611",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813784676"
             },
             {
-              "id": 44810948604,
-              "event": "pull_request",
-              "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:23:36Z",
-              "head_sha": "c37ab7e72b8192a6b5a5d1be4d3b1d4437a14d17",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810948604"
-            },
-            {
-              "id": 44810800833,
+              "id": 44813225044,
               "event": "push",
               "status": "completed",
               "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:22:40Z",
-              "head_sha": "bb67820a2f578522901586cfe51299e71b4f23b4",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810800833"
+              "created_at": "2026-11-20T20:38:45Z",
+              "head_sha": "dfca2680080a785656bc8b5a02a8f9174f43b8b9",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813225044"
             },
             {
-              "id": 44810800465,
+              "id": 44813164576,
               "event": "pull_request",
               "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:22:40Z",
-              "head_sha": "3566bc57eab984f0e1a604663daa644210b563e5",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810800465"
+              "conclusion": "success",
+              "created_at": "2026-11-20T20:38:21Z",
+              "head_sha": "221d51d21154b27a4ef99cdd29f96028a221e58b",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44813164576"
             },
             {
-              "id": 44810283673,
+              "id": 44812964532,
               "event": "push",
               "status": "completed",
               "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:19:18Z",
-              "head_sha": "e02eef4e60fc11594ed61f798097a1329c0f9b1f",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810283673"
+              "created_at": "2026-11-20T20:36:58Z",
+              "head_sha": "743ee4a3282ece3c083294600af5fba1727d5522",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812964532"
             },
             {
-              "id": 44810172830,
+              "id": 44812953638,
               "event": "pull_request",
               "status": "completed",
               "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:18:36Z",
-              "head_sha": "66bcefb44252ccc6c1708bc7b3c5f0e16bee85fd",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810172830"
+              "created_at": "2026-11-20T20:36:53Z",
+              "head_sha": "9071c2b48ec828016269c36deabb879ba430a076",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812953638"
             },
             {
-              "id": 44810150966,
-              "event": "workflow_dispatch",
-              "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:18:28Z",
-              "head_sha": "2ffd4e6276068c75979b3c3b8c7daee12054ca26",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810150966"
-            },
-            {
-              "id": 44810128737,
-              "event": "pull_request",
-              "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:18:19Z",
-              "head_sha": "692b20f41cbbfc3080d4a9e60176b5d772c4ccea",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810128737"
-            },
-            {
-              "id": 44810109988,
-              "event": "pull_request",
-              "status": "completed",
-              "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:18:11Z",
-              "head_sha": "fbe003c4d377ccd5ce28f4665e7e1bfb10e4dc8b",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44810109988"
-            },
-            {
-              "id": 44809834756,
+              "id": 44812926662,
               "event": "push",
               "status": "completed",
               "conclusion": "cancelled",
-              "created_at": "2026-11-20T20:16:23Z",
-              "head_sha": "7f7c74944a15b0080fd5bf02c4d8c10f3d900ac1",
-              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44809834756"
+              "created_at": "2026-11-20T20:36:42Z",
+              "head_sha": "2ced6428637a23eb4d7a4b250f5d9dfdb1a60887",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812926662"
+            },
+            {
+              "id": 44812926451,
+              "event": "pull_request",
+              "status": "completed",
+              "conclusion": "cancelled",
+              "created_at": "2026-11-20T20:36:42Z",
+              "head_sha": "15a959a77eb0e21f0b765774d28a751f3190467d",
+              "html_url": "https://github.com/karagemop466-tech/Demo1/actions/runs/44812926451"
             }
           ],
           "api_url": "https://api.github.com/repos/karagemop466-tech/Demo1/actions/workflows/pages.yml/runs?per_page=30"
