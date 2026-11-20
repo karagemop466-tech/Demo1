@@ -705,3 +705,54 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **PR #30** (deterministic DOM test, 10/10 assertions): **MERGED** 2026-11-20T12:30:06Z, merge commit `08d51940d53e169fc1283504263985615364d7fb`.
 - **Pages after final merge:** build for `08d5194` → **built**, no error; exec-desk verified live at https://karagemop466-tech.github.io/Demo1/exec-desk/ (landing, dashboard, flagged all fetch clean; connection badge LIVE · official API).
 - **All T01–T13 marked done on this board; this session's work is complete.**
+
+---
+
+# Session arena/b10c4954-demo1 — final integration, line-by-line verification, ≥$0.10 jump detector
+
+## Session claim
+
+- **Session ID:** `arena/b10c4954-demo1`
+- **Branch:** `arena/b10c4954-demo1` (platform-fixed; starts at `origin/main` commit `0ed3ff6`; the `session-<id>/<task>` naming rule is replaced by the fixed branch name — recorded as a deviation, branch not renamed)
+- **Claimed at:** 2026-11-20 (UTC), before any implementation commit.
+- **Role:** final integration session. All prior sessions' work was already merged to `main`; this session verifies the combined data line by line, fills the one explicit user requirement still missing (≥$0.10 sharp-jump detection with event + website links), then runs the final PR/merge/Pages gate.
+
+## File scope (this session)
+
+- `COORDINATION.md` (append-only board sections — shared by convention)
+- **New (additive):** `pages/price-jumps.html`, `assets/js/price-jumps.js`
+- **Integration edits (additive only):** `assets/common.js` (nav entry), `index.html` (hub tile), `flagged.html` (new flagged rows F-17…F-19), `suggestions.html` (mark the jump-alert suggestion as implemented, additive row)
+
+## Task board
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| 24 | Coordination board claim for this session | done | arena/b10c4954-demo1 | `COORDINATION.md` | — | Self-verified | Branch name fixed by platform |
+| 25 | Line-by-line verification of the combined site + build gates (build_site.py link check, repo-wide link audit, JS syntax, JSON validity, official-doc re-check) | done | arena/b10c4954-demo1 | repo-wide (read-only checks) | docs.kalshi.com candlesticks/trades/api-environments; kalshi.com venue pages | Re-ran `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS (236 files); `node --check` on all JS; JSON validity on all data files; fetched official doc pages this session | Demo venue caveats carried forward (see flagged pages) |
+| 26 | Sharp-jump detector page: ≥$0.10 moves (either direction) from official candlesticks, per topic, with event + website links and a simplified jump chart | done | arena/b10c4954-demo1 | `pages/price-jumps.html`, `assets/js/price-jumps.js`, additive nav/hub/flagged edits | docs.kalshi.com/api-reference/market/get-market-candlesticks; get-trades; kalshi.com/events/{event_ticker} (venue link pattern verified 2026-11-20) | Jump math tested against committed snapshot (`snapshot/charts.json`); LIVE mode fetches only the documented candlestick endpoint; unverified causation links left blank + flagged | No official causal field exists in the API; demo candle data is thin/synthetic (flagged) |
+| 27 | Final integration: PR to main, merge, confirm GitHub Pages deploy, record result | in progress | arena/b10c4954-demo1 | GitHub PR + this board | — | — | — |
+
+## Verification performed (this session)
+
+- **Official docs re-checked (fetched this session, 2026-11-20):**
+  - `https://docs.kalshi.com/api-reference/market/get-market-candlesticks` — endpoint `GET /series/{series_ticker}/markets/{ticker}/candlesticks`, required `start_ts`/`end_ts`, `period_interval` valid values **1 | 60 | 1440**, response fields `price.{open,low,high,close}_dollars`, `yes_bid`, `yes_ask`, `volume_fp`, `open_interest_fp`. Demo base URL `https://external-api.demo.kalshi.co/trade-api/v2` listed on the page.
+  - `https://docs.kalshi.com/api-reference/market/get-trades` — `GET /markets/trades?limit&cursor&ticker&min_ts&max_ts`, trade fields `yes_price_dollars`, `count_fp`, `created_time`.
+- **Official venue link pattern verified this session:** `https://kalshi.com/events/{event_ticker}` resolves (tested with `KXAAAGASM-26NOV30` and the full-slug `KXAAAGASMIN-26DEC31` market page). Venue pages publish related-news digests ("AI Digest" + sources) — used only as the *venue* link, never asserted as a verified cause of a jump.
+- **Build gates re-run on the merged tree:** `python3 build_site.py` → `built 16 pages … link check: OK` (exit 0); `node tools/check-links.mjs` → `result: PASS` (236 files scanned, source-link audit on 11 pages); `node --check` clean on `app.js`, `assets/js/demo-live.js`, `assets/js/paper-trading.js`, and the new `assets/js/price-jumps.js`; all `data/*.json` / `snapshot/*.json` parse as valid JSON.
+- **Data line check:** every rendered row on the verified pages links its official request URL (audit by `check-links.mjs`); values that could not be confirmed from an official source are blank and flagged.
+
+## Gap found and filled (task 26)
+
+The user's requirement "Live charts should include events and website links that may have caused a sharp jump in contract price, greater than or equal to $0.10 in either direction" had **no implementation anywhere in the repo** (searched all desks for jump/spike/threshold/sharp). Implemented as `pages/price-jumps.html`:
+
+- Detects |Δ close| ≥ threshold (default **$0.10**, either direction) between consecutive official candle closes; interval selectable 1/60/1440 minutes (official `period_interval` values; seconds-level moves are not offered by the official candlestick endpoint — labeled, not faked).
+- LIVE mode fetches the documented candlestick endpoint from the browser (CORS evidence: `data/cors.json`); falls back to the verified snapshot `snapshot/charts.json` with a clear mode banner.
+- Each jump row carries: time (UTC), topic, market, event, before/after prices, signed Δ, and links to the **official candlestick API URL** and the **official venue event page** (`kalshi.com/events/{event_ticker}`, pattern verified this session). Causative news/website links are **not** provided because the API has no causal field — blank + flagged (F-17).
+- Simplified SVG price chart per market with jump points marked, topic filters, and KPI summary.
+
+## Irregularities (added this session, published on flagged.html)
+
+- **F-17:** No official causal field: the API cannot confirm what caused a price jump; "possible cause" website links are left blank and flagged. Only the official venue event page (which may list related news) is linked.
+- **F-18:** Seconds-level jump detection is not possible from the official REST candlestick endpoint (`period_interval` ∈ {1,60,1440}); the detector works on 1-minute and longer closes.
+- **F-19:** Demo candle data is thin/synthetic (open interest injected on zero-volume candles, per earlier session findings) — jump counts on the demo venue are exercise data, not market signal.
+
