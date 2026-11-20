@@ -125,13 +125,18 @@
       state.statusOk = !!(st.ok && st.data && st.data.trading_active);
       if (!st.ok) {
         state.statusOk = false;
-        banner("Exchange status request failed: " + st.error + ". Showing the last successful snapshot; nothing is estimated.");
+        banner((st.unreachable ? "Cannot reach " + new URL(st.url).host + ". " : "Exchange status request failed. ") +
+          st.error + " Nothing on this page is estimated; rows either come from the API or they are absent.");
       }
       return Api.markets({ limit: 1000 });
     }).then(function (res) {
       if (!res.ok) {
-        banner("Open-markets request failed: " + res.error + ". The tables below are from the previous poll.");
-        finishPoll(started);
+        banner((res.unreachable ? "Cannot reach the official demo API. " : "Open-markets request failed. ") +
+          res.error + (state.markets.length
+            ? " The tables below are from the previous successful poll and are not estimated."
+            : " No market data has loaded yet, so the tables stay empty rather than showing guesses.") +
+          ' Retrying automatically. <a href="' + TD.attr(res.url) + '" target="_blank" rel="noopener">request</a>');
+        finishPoll(started, res.error);
         return null;
       }
       var raw = (res.data && res.data.markets) || [];
@@ -144,8 +149,8 @@
       var since = state.lastTradesTs ? state.lastTradesTs - 1 : nowSec - 15 * 60;
       return Api.trades({ limit: 1000, min_ts: since }).then(function (tr) {
         if (!tr.ok) {
-          banner("Trades request failed: " + tr.error + ". Jump detection is paused, not simulated.");
-          finishPoll(started);
+          banner("Trades request failed: " + tr.error + ". Jump detection is paused, not simulated — an empty feed here means the feed is down, not that the market is quiet.");
+          finishPoll(started, tr.error);
           return null;
         }
         var trades = (tr.data && tr.data.trades) || [];
@@ -172,7 +177,7 @@
     });
   }
 
-  function finishPoll(started) {
+  function finishPoll(started, error) {
     state.polling = false;
     state.pollCount += 1;
     state.lastPollAt = new Date();
@@ -183,7 +188,7 @@
     if (dot) dot.className = "dot " + (state.statusOk && Api.stats().consecutiveErrors === 0 ? "live" : "err");
     setText("api-state", state.statusOk
       ? "connected · trading active · " + Math.round((Date.now() - started) / 100) / 10 + "s"
-      : "not connected · retrying with backoff");
+      : "not connected" + (error ? " · " + error.slice(0, 70) : " · retrying"));
     setText("watch-count", String(state.markets.length));
     setText("window-label", state.windowMs / 60000 + "m");
   }
@@ -300,7 +305,14 @@
   function runAlerts(jumps) {
     var fresh = jumps.filter(function (j) { return Date.now() - j.last_ts < 10 * 60 * 1000; });
     if (!fresh.length) {
-      if (!state.alertsA.length) emptyFeed("feed-a-empty", "no move of $0.10 or more has printed in the last " + state.windowMs / 60000 + " minutes on the five topics.");
+      if (!state.alertsA.length) {
+        emptyFeed("feed-a-empty", state.statusOk
+          ? "no move of $0.10 or more has printed in the last " + state.windowMs / 60000 + " minutes on the five topics. A quiet tape is a result, not a missing one."
+          : "the trade feed is not connected, so there is nothing to show. This is not a quiet market — it is a missing connection.");
+        emptyFeed("feed-b-empty", state.statusOk
+          ? "nothing has cleared the screen yet in this window."
+          : "the trade feed is not connected, so no market has been screened.");
+      }
       return;
     }
 

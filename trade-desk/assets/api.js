@@ -72,6 +72,11 @@
 
     var attempt = 0;
     var maxAttempts = opts.retries === undefined ? 3 : opts.retries;
+    /* A network failure (DNS, offline, CORS block, blocked host) is not a transient
+     * server condition: retrying twice more only delays telling the reader that the
+     * venue is unreachable. Those fail after one quick retry; 429/5xx keep the
+     * documented exponential backoff. */
+    var maxNetworkAttempts = 2;
     var started = Date.now();
 
     var p = (async function () {
@@ -145,10 +150,15 @@
             state.stopped = true;
             return { ok: false, error: msg + " — polling stopped after repeated failures", url: full, data: null, network: true };
           }
-          if (attempt >= maxAttempts) {
-            return { ok: false, error: msg, url: full, data: null, network: true };
+          if (attempt >= maxNetworkAttempts) {
+            return {
+              ok: false,
+              error: msg + " (the browser could not reach " + new URL(full).host +
+                "; check your connection, an ad-blocker, or the venue's status)",
+              url: full, data: null, network: true, unreachable: true
+            };
           }
-          await sleep(Math.min(8000, 400 * Math.pow(2, attempt)));
+          await sleep(300);
         }
       }
       return { ok: false, error: "no attempt made", url: full, data: null };
