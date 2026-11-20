@@ -270,3 +270,56 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 - https://docs.kalshi.com/api-reference/portfolio/get-fills.md · /get-balance.md · /get-positions.md
 - https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories.md · https://docs.kalshi.com/llms.txt
 - Live demo responses: `https://external-api.demo.kalshi.co/trade-api/v2/{exchange/status, series, markets, markets/trades, markets/{t}/orderbook, series/{s}/markets/{t}/candlesticks, events}` captured 2026-11-20 11:07–11:25 UTC
+
+---
+
+# Session arena/3c51bb52-demo1 — task board (this session)
+
+Status values: `unclaimed`, `in progress`, `done`, `needs review` (published on the Flagged for Review page; does not block anything).
+
+## Session claim
+
+- **Session ID:** `arena/3c51bb52-demo1` — branch `arena/3c51bb52-demo1` (fixed for this session).
+- **Claimed at:** 2026-11-20, commit `93375e8` (pushed with the claim before implementation continued).
+- **Scope discovered mid-session:** when pushing, `origin/main` had advanced (PRs #1–#10 from six earlier sessions; canonical root site + CI data pipeline already live). Per the shared protocol, this session **kept main's canonical root files untouched** and relocated its own self-contained dashboard to **`strategy-desk/`** (pages, assets, data/series-map.json) — the same pattern used by `live-desk/` and `monitor/` earlier.
+
+## Task board
+
+| # | Task | Status | Session ID | File scope (this session) | Sources | Verification | Irregularities |
+|---|------|--------|------------|---------------------------|---------|--------------|----------------|
+| 1 | Executive summary + site shell | done | arena/3c51bb52-demo1 | `strategy-desk/index.html`, `executive-summary.html`, `strategy-desk/assets/style.css` | https://docs.kalshi.com/getting_started/api_environments · /getting_started/demo_env · /getting_started/quick_start · /getting_started/quick_start_authenticated_requests · /getting_started/market_settlement | Facts table on the page links each row to its official source | — |
+| 2 | Live markets: 5 topics, highest-dollar sort, resolution tracking (YES/NO) | done | arena/3c51bb52-demo1 | `strategy-desk/markets.html`, `strategy-desk/assets/markets.js`, `strategy-desk/assets/app.js`, `strategy-desk/data/series-map.json` | GET /markets · GET /series/{ticker} (public, no key) · canonical CI snapshot `data/markets.json` + `data/series.json` | Live API first; automatic fallback to the CI snapshot of official responses (labeled CI SNAPSHOT). Sorting by traded notional (snapshot) / est. $ volume (live, labeled estimate) | F3 (mapping runtime-verified), F4 ($ volume estimate in live mode), F11 (snapshot lacks `result` → YES/NO stays blank in snapshot mode) |
+| 3 | Analytics: price chart (X = time sec/min/hr windows, Y = contract price ¢), orderbook depth & liquidity | done | arena/3c51bb52-demo1 | `strategy-desk/analytics.html`, `strategy-desk/assets/analytics.js` | GET /markets/{ticker}/orderbook · GET /markets/{ticker}/candlesticks · WS wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2 | Official bids-only convention encoded; fp values normalized defensively | F5 (defensive fp shapes), F9 (WS → REST polling fallback) |
+| 4 | Portfolio: trade execution + performance + categorization + strategies | done | arena/3c51bb52-demo1 | `strategy-desk/portfolio.html`, `strategy-desk/assets/portfolio.js` | Auth requirements per official docs (Ed25519/RSA signed headers) | SIM execution against live demo prices, loudly labeled; official fee formula ⌈0.07·C·P·(1−P)⌉ | F1 (real demo orders need a server-side credential proxy — proposed S1) |
+| 5 | Suggestions + decision-gating Q&A + sources + flagged-for-review | done | arena/3c51bb52-demo1 | `strategy-desk/suggestions.html`, `strategy-desk/sources.html`, `strategy-desk/flagged.html` | Every table row links an official source; unverified values blank + flagged | 10 Q&A items with known/missing/discover; 10 suggestions with status pills; F1–F12 | F6 (repo was a stub pre-session), F7 (sparse demo lineups), F8 (Pages source setting), F10 (docs-path drift), F12 (scope relocation) |
+| 6 | Final integration for this session's scope: conflict-free merge into main, CI green, Pages deploy verified | done | arena/3c51bb52-demo1 | merge-only | `node --check` + link check + JSON check + core-logic Node tests | See integration log below | — |
+
+## Integration log (this session)
+
+| Date (UTC) | What happened | Resolution |
+|---|---|---|
+| 2026-11-20 | Pushed branch after claiming tasks; PR #11 opened from `arena/3c51bb52-demo1`. `origin/main` then advanced: PR #10 (session 0135085b) merged the canonical root site + `live-desk/`; CI snapshot pipeline (`fetch-data.yml`) active. | Merged `origin/main` into this branch. Add/add conflicts on COORDINATION.md, README.md, index.html, markets.html, flagged.html, portfolio.html, sources.html, suggestions.html, assets/style.css — **all resolved in favor of `origin/main` (canonical)**; this session's versions relocated intact to `strategy-desk/` (with `executive-summary.html` alias for its landing page). Nothing from any session discarded. |
+| 2026-11-20 | Dropped this session's own `.github/workflows/deploy.yml` to avoid competing with the canonical `pages.yml` Pages deploy. `link-check.yml` re-scoped to `strategy-desk/` only. | Logged here; no canonical file modified. |
+| 2026-11-20 | Integrated with the canonical CI data pipeline: strategy-desk markets page falls back to `data/markets.json` + `data/series.json` (archived official API responses, refreshed every 15 min) when a browser-side live fetch fails; mode displayed as CI SNAPSHOT with fetch timestamp. | Request (not applied by this session): snapshot-pipeline owner — consider including `status=settled` markets so `result` (YES/NO) appears in snapshots (strategy-desk F11). |
+| 2026-11-20 | Request (not applied): canonical root `index.html` navigation may add a link to `strategy-desk/` (sub-site). Cross-links from strategy-desk footers to the canonical root already exist. | Logged for the canonical-site owner. |
+
+## Sources (this session)
+
+- https://docs.kalshi.com/getting_started/api_environments (demo REST/WS endpoints)
+- https://docs.kalshi.com/getting_started/quick_start + /getting_started/quick_start_authenticated_requests (no-key public data; signed auth for orders)
+- https://docs.kalshi.com/getting_started/market_settlement (YES/NO resolution, $1 payouts)
+- https://docs.kalshi.com/getting_started/demo_env (demo environment)
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook (bids-only convention)
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (candlesticks)
+- https://docs.kalshi.com/api-reference/series/get-series (runtime series verification)
+- https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site (Pages source)
+- Canonical repo data: `data/meta.json`, `data/markets.json`, `data/series.json` (archived official demo API responses)
+
+## Verification performed (this session)
+
+- `node --check` on all `strategy-desk/assets/*.js` ✅ · JSON validity (`series-map.json`) ✅
+- Internal-link check across all `strategy-desk` pages incl. `../` cross-links to canonical root ✅
+- HTML element-ID audit: no missing/duplicate IDs referenced by the JS ✅
+- Core-logic Node tests (formatters, orderbook level parsing, chart renderer, fixed-point parser) ✅
+- Local static-HTTP smoke test: all pages 200 ✅
+- No invented values: live mode renders only fetched API values; snapshot mode renders only archived official-response values; unfetchable values are blank + flagged.
