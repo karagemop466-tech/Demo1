@@ -19,8 +19,8 @@ Setup
        export KALSHI_API_KEY_ID="<key id uuid>"
        export KALSHI_PRIVATE_KEY_PATH="/secure/path/kalshi-demo.key"
 3. Run:
-       python tools/account_worker.py --out data/account.json
-4. Commit only data/account.json (it contains derived numbers, no secrets).
+       python tools/account_worker.py --out snapshot/account.json
+4. Commit only snapshot/account.json (it contains derived numbers, no secrets).
    The site renders whatever is in it; if the file is absent the pages show an
    explicit "not connected" state instead of inventing figures.
 
@@ -166,7 +166,7 @@ def analyse(positions, fills, settlements):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="data/account.json")
+    ap.add_argument("--out", default="snapshot/account.json")
     args = ap.parse_args()
 
     key_id = __import__("os").environ.get("KALSHI_API_KEY_ID", "").strip()

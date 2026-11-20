@@ -1,7 +1,7 @@
 name: Collect Kalshi demo data
 
 # GitHub-hosted runners have unrestricted outbound internet, so this is where
-# live official Kalshi demo data is collected. The collector writes data/*.json
+# live official Kalshi demo data is collected. The collector writes snapshot/*.json
 # plus a full request log, which the job commits back to this branch so the
 # values can be reviewed (and each row keeps the exact API URL it came from).
 on:
@@ -52,7 +52,7 @@ jobs:
           {
             echo "### Kalshi demo collection log"
             echo '```'
-            tail -c 12000 data/collect-log.txt 2>/dev/null || echo "no log written"
+            tail -c 12000 snapshot/collect-log.txt 2>/dev/null || echo "no log written"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Commit collected data back to the branch
@@ -60,7 +60,7 @@ jobs:
         run: |
           git config user.name "kalshi-collector"
           git config user.email "actions@users.noreply.github.com"
-          git add -f data/ || true
+          git add -f snapshot/ || true
           if git diff --cached --quiet; then
             echo "no data changes to commit"
           else

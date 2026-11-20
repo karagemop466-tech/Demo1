@@ -14,9 +14,9 @@ Every figure on the site comes from the official Kalshi **demo** Trade API v2
 | Layer | Where | What it does |
 |---|---|---|
 | Collector | `tools/collect_kalshi.py` | Reads series, markets, order books, candlesticks and public trades on a GitHub Actions runner (the authoring sandbox cannot reach kalshi.com). Stores the **exact request URL** with every record. |
-| Verified snapshot | `data/*.json`, `data/collect-log.txt` | Committed output of one collection run, incl. a request-by-request log (counts, errors, timings). |
+| Verified snapshot | `snapshot/*.json`, `snapshot/collect-log.txt` | Committed output of one collection run, incl. a request-by-request log (counts, errors, timings). |
 | Site builder | `build_site.py` | Renders `site/` from the snapshot only. Refuses to build on a broken internal link; missing API fields render as “—”, never as invented values. |
-| Account worker | `tools/account_worker.py` | Optional, **read-only**, standard-library signing client for portfolio/fills/settlements. Writes a derived, secret-free `data/account.json`. |
+| Account worker | `tools/account_worker.py` | Optional, **read-only**, standard-library signing client for portfolio/fills/settlements. Writes a derived, secret-free `snapshot/account.json`. |
 
 Each table row links to the official request that produced it (market record, event record, order book,
 candlestick query or trades query). Values absent from the API are blank and listed on the
@@ -32,7 +32,7 @@ candlestick query or trades query). Values absent from the API are blank and lis
 | `site/resolved.html` | Markets followed to settlement: YES/NO result, settlement value, timestamp, resolution source |
 | `site/liquidity.html` | Candlestick price chart (time on X, contract price on Y, 1 m / 1 h / 1 d buckets) + contracts available at each price |
 | `site/explore.html` | Raw data browser: every collected record, filterable, each linked to its official record |
-| `site/portfolio.html` | Portfolio performance: live figures when `data/account.json` exists, otherwise the exact endpoints and methodology |
+| `site/portfolio.html` | Portfolio performance: live figures when `snapshot/account.json` exists, otherwise the exact endpoints and methodology |
 | `site/strategies.html` | Strategy catalogue by trade type, with the inputs each one needs |
 | `site/suggestions.html` | Review queue — nothing is auto-applied |
 | `site/questions.html` | The 10 questions that must be answered before a decision; known vs missing |

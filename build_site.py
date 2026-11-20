@@ -2,7 +2,7 @@
 """Build the static dashboard site from the collected Kalshi demo dataset.
 
 Rules enforced by this builder:
-  * A value is printed only if it exists in data/*.json (collected from the
+  * A value is printed only if it exists in snapshot/*.json (collected from the
     official API). Missing values render as an em dash and inherit the row's
     verification status.
   * Every row links to the official request URL recorded for it.
@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-DATA = ROOT / "data"
+DATA = ROOT / "snapshot"
 SITE = ROOT / "site"
 
 DOCS = "https://docs.kalshi.com"
@@ -599,7 +599,7 @@ Request URLs: {esc(json.dumps(acct.get('sources', {})))}</p>"""
 <div class="callout warm">
   <b>Not connected yet — and this is the only thing standing between you and a working portfolio page.</b>
   A read-only worker is already written and tested: <code>tools/account_worker.py</code>. Give it a demo key
-  (two environment variables) and it writes <code>data/account.json</code>; this page then renders real
+  (two environment variables) and it writes <code>snapshot/account.json</code>; this page then renders real
   balances, realised P&amp;L, fees and fill statistics automatically on the next build. It never places orders.
   Setup is documented in <a href="sources.html">Sources</a> and on <a href="questions.html">Questions (Q1)</a>.
 </div>"""
@@ -999,7 +999,7 @@ def build_explore(meta, markets_all, resolved_all):
 <div class="callout">
   <b>Everything collected, nothing hidden.</b> The snapshot holds <b>{total_records}</b> records
   (open + resolved). This browser loads <b>{len(slim_m)}</b> of them with the core fields; the complete record
-  for any ticker — including full quote, volume and source metadata — is in <code>data/</code> and linked per row. Filter by topic, status or ticker. Each row links to its
+  for any ticker — including full quote, volume and source metadata — is in <code>snapshot/</code> and linked per row. Filter by topic, status or ticker. Each row links to its
   official market record. Fields are fixed-point strings exactly as the API returned them; an em dash means the
   field was absent.
 </div>
@@ -1075,13 +1075,13 @@ def main():
     markets_all = (load("markets.json", {}) or {}).get("markets", [])
     resolved_all = (load("resolved.json", {}) or {}).get("markets", [])
     # Tables are capped for page weight only; no record is altered or dropped from
-    # data/*.json, and every collected record is browsable on explore.html.
+    # snapshot/*.json, and every collected record is browsable on explore.html.
     markets = markets_all
     resolved = resolved_all
     pruned_out = 0
     charts = (load("charts.json", {}) or {}).get("series", [])
     if not meta:
-        print("WARNING: data/metadata.json missing — building empty-state site")
+        print("WARNING: snapshot/metadata.json missing — building empty-state site")
     build_index(meta, markets, resolved)
     build_markets(meta, markets, len(markets_all))
     for key in TOPIC_ORDER:

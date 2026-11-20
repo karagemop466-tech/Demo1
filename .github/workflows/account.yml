@@ -39,7 +39,7 @@ jobs:
         env:
           KALSHI_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
           KALSHI_PRIVATE_KEY_PATH: /tmp/kalshi-demo.key
-        run: python tools/account_worker.py --out data/account.json
+        run: python tools/account_worker.py --out snapshot/account.json
       - name: Always remove the key from disk
         if: always()
         run: rm -f /tmp/kalshi-demo.key
@@ -49,6 +49,6 @@ jobs:
           python build_site.py
           git config user.name "account-worker"
           git config user.email "actions@users.noreply.github.com"
-          git add data/account.json site/
+          git add snapshot/account.json site/
           git diff --cached --quiet || git commit -m "portfolio: demo account snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push origin HEAD:main

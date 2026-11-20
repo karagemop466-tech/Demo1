@@ -10,7 +10,7 @@ Design rules:
 
 Modes:
     explore   print the data landscape (writes nothing outside the log)
-    collect   write data/*.json + data/collect-log.txt
+    collect   write snapshot/*.json + snapshot/collect-log.txt
 
 Official documentation verified for this script (all fetched 2026-11-20):
   https://docs.kalshi.com/getting_started/api_environments            (base URLs)
@@ -41,7 +41,7 @@ BASE = "https://external-api.demo.kalshi.co/trade-api/v2"
 PROD = "https://external-api.kalshi.com/trade-api/v2"
 UA = "kalshi-demo-research/1.0 (github.com/karagemop466-tech/Demo1)"
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data"
+DATA = ROOT / "snapshot"
 
 MAX_SERIES_PER_TOPIC = int(os.environ.get("MAX_SERIES_PER_TOPIC", "10"))
 MAX_MARKETS_PER_SERIES = int(os.environ.get("MAX_MARKETS_PER_SERIES", "60"))
