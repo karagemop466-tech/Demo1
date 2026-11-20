@@ -1571,3 +1571,13 @@ All live values in the site are drawn from the committed snapshot collected from
 ### Irregularity added after merge
 
 6. **Post-merge Pages build not confirmed.** GitHub API rate limit (HTTP 403) blocked `pages/builds/latest` and the Actions run list; the deploy result for `b1b7ff1` is therefore unconfirmed by this session. The previous build reading (`errored` for `6aa1ed5`) is also unexplained. The next integration session should re-check `gh api repos/karagemop466-tech/Demo1/pages/builds/latest` and the `pages-build-deployment` run and record the result here.
+## Session arena/fdc47dc1-demo1 — coordination review and endpoint verification (claim)
+
+- **Session ID:** `fdc47dc1` — branch `arena/fdc47dc1-demo1` (platform-fixed name; `session-<id>/<task>` naming not usable, same deviation as earlier sessions).
+- **Claimed at:** 2026-11-20 (UTC), claim pushed before any other work.
+- **Basis:** board reviewed end-to-end; `gh pr list --state all` checked. Open PRs at claim time belong to other sessions: #61 (`arena/65df996f-demo1`, live alert tapes / topic fixes), #62 (`arena/fe12c4c4-demo1`, repo-wide consistency audit and flagged register), #63 (`arena/54a39029-demo1`, ops pipeline monitor), #64 (`arena/d372e97e-demo1`, close-out record). Every brief item already has merged or claimed work, so this session does **not** start a duplicate desk.
+- **Scope (exclusive):** `COORDINATION.md` (this section only). No other file is edited.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| CR-1 | Verify the brief's recommended demo endpoints against the official Kalshi docs and confirm the live Pages landing still matches them | in progress | arena/fdc47dc1-demo1 | `COORDINATION.md` (this section) | https://docs.kalshi.com/getting_started/demo_env ; https://karagemop466-tech.github.io/Demo1/ (live) | see record below | see record below |
