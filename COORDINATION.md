@@ -83,3 +83,11 @@ Session arena/e41f6700-demo1:
 - Sandbox outbound internet is restricted to github.com / npm / pypi hosts; kalshi.co is NOT reachable from this environment. Live Kalshi API data cannot be fetched or empirically verified here. All market values are therefore left blank and flagged `unverified` with source links to the official Kalshi API docs, per the verification requirement ("never infer or fill in values").
 - No Kalshi API credentials exist in this repository and none will be added. Trade execution and portfolio reads require authenticated endpoints; the site documents the official endpoints and leaves execution as a credential-gated, flagged item.
 - Both sessions' sites flag: contract volume is not "dollar amount"; topic matching is heuristic; historical price points are not fabricated; private account performance and trading need secure authenticated backend and user-defined permissions/limits; browser-only Pages must not hold private keys.
+
+## Tasks — session arena/ff423a65-demo1 (extension)
+
+| Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|
+| Add a public REST live-market monitor with a session price chart, selected-market resolution polling and orderbook depth without exposing credentials | in progress | arena/ff423a65-demo1 | `pages/live-market-monitor.html`, `assets/js/live-market-monitor.js`, `assets/css/live-market-monitor.css`, existing dashboard cross-link | https://docs.kalshi.com/getting_started/api_environments ; https://docs.kalshi.com/api-reference/market/get-markets ; https://docs.kalshi.com/api-reference/market/get-market ; https://docs.kalshi.com/getting_started/orderbook_responses | Local syntax/HTML/link checks and official REST endpoint fetch performed; deployed browser CORS is unverified | Contract volume is not dollar notional; topic matching and bounded API sampling are not exhaustive; private portfolio and order execution remain unavailable from static hosting |
+
+This extension began from a stale base before PR #4 completed. After recognizing the overlap, it is being integrated additively under `pages/` without replacing the deployed root monitor or the other session's multi-page site.
