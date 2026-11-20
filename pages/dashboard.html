@@ -15,6 +15,7 @@
     <a class="brand" href="../">Kalshi<span>Demo</span> Dashboard</a>
     <nav>
       <a class="active" href="dashboard.html">Live dashboard</a>
+      <a href="live-market-monitor.html">Public REST monitor</a>
       <a href="gas.html">Gas prices</a>
       <a href="elections.html">Elections</a>
       <a href="culture.html">Culture</a>
@@ -26,7 +27,7 @@
       <a href="questions.html">Questions &amp; answers</a>
       <a href="flagged-review.html">Flagged for review</a>
     </nav>
-    <span class="status-pill unverified">Live data: not connected — demo API credentials required</span>
+    <span class="status-pill unverified">WebSocket feed: not connected</span>
   </div>
 </header>
 <main>
@@ -35,7 +36,7 @@
   <p>Tracks contract price over time (X-axis = time, Y-axis = current contract price in cents, 0–100). Window length is selectable in seconds, minutes, or hours. The liquidity table shows how many contracts are available at each price from the order book.</p>
 
   <div class="callout warn">
-    <strong>No live data connected.</strong> This build cannot reach the Kalshi demo API (kalshi.co is not reachable from the build environment) and no API credentials are stored here. The graph below is empty until connected to <code>GET /markets/{ticker}</code> and the WebSocket <code>ticker</code> channel at <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> (docs: <a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com</a>). The "Show simulated example" button draws clearly labeled fake data only to demonstrate the graph controls — it is <strong>not</strong> real Kalshi data.
+    <strong>This graph is a simulation unless explicitly connected.</strong> Kalshi documents public REST market-data requests that do not require API keys. Use the <a href="live-market-monitor.html">Public REST monitor</a> for real demo market snapshots and a session-only sampled price chart (subject to browser/network access). The separate authenticated WebSocket ticker feed is not connected here; no credentials are collected. The "Show simulated example" button draws clearly labeled fake data only to demonstrate the graph controls — it is <strong>not</strong> real Kalshi data. Sources: <a href="https://docs.kalshi.com/getting_started/quick_start_market_data">public market-data guide</a> and <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket guide</a>.
   </div>
 
   <div class="controls">
