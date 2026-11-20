@@ -39,7 +39,7 @@
         const res = await Promise.all(top.map(s =>
           K.get("/events", { series_ticker: s.ticker, status: "open", with_nested_markets: "true", limit: 200 }).catch(() => null)));
         res.forEach(d => { if (d) (d.events || []).forEach(e => (e.markets || []).forEach(m =>
-          candidates.push({ m, e, topic, seriesTicker: e.series_ticker })))); });
+          candidates.push({ m, e, topic, seriesTicker: e.series_ticker })); });
       }));
       candidates.sort((a, b) => (K.dollarVolume24h(b.m) || 0) - (K.dollarVolume24h(a.m) || 0));
       const top = candidates.slice(0, 30); // cap requests; noted on page
