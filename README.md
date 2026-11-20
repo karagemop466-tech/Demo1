@@ -31,7 +31,7 @@ blank and listed on the Flagged for Review page.
 | `index.html` | Landing page |
 | `executive-summary.html` | Executive summary, blocked items, decisions needed |
 | `markets.html` | Verified market rows, each linked to its API source |
-| `dashboard.html` | Live chart (seconds / minutes / hours) and orderbook liquidity |
+| `dashboard.html` | Live chart (seconds / minutes / hours) with ≥ $0.10 sharp-move markers, and orderbook liquidity |
 | `portfolio.html` | Demo-account portfolio and trade log (blocked: no API key) |
 | `analysis.html` | Snapshot findings and trade-categorization framework |
 | `questions.html` | Questions, answers so far, and missing information |

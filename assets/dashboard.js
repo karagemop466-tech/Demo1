@@ -10,6 +10,7 @@
     demo: "https://external-api.demo.kalshi.co/trade-api/v2"
   };
   var POLL_MS = 5000;
+  var JUMP_THRESHOLD = 0.10; // a "sharp move" is a consecutive price change of >= $0.10
   var WINDOWS = {
     seconds: [["1m", 60], ["5m", 300], ["15m", 900]],
     minutes: [["30m", 1800], ["2h", 7200], ["6h", 21600], ["24h", 86400]],
@@ -19,8 +20,12 @@
 
   var state = {
     env: "production", ticker: "", series: "", gran: "minutes", windowSec: 21600,
-    ticks: [], timer: null, lastOk: null, lastErr: ""
+    ticks: [], timer: null, lastOk: null, lastErr: "",
+    marketLink: "", marketSource: ""
   };
+
+  // ticker -> {url, source} built from data/markets.json (each row's own official links)
+  var marketIndex = {};
 
   var $ = function (id) { return document.getElementById(id); };
   var esc = window.KD.esc;
@@ -84,7 +89,7 @@
     return (d.getMonth() + 1) + "/" + d.getDate() + " " + p(d.getHours()) + ":00";
   }
 
-  function drawChart(points) {
+  function drawChart(points, jumps) {
     var svg = $("chart");
     var W = 1000, H = 340, L = 64, R = 16, T = 14, B = 40;
     if (!points.length) {
@@ -117,13 +122,68 @@
       return '<circle cx="' + X(p.t).toFixed(1) + '" cy="' + Y(p.y).toFixed(1) + '" r="2.5" fill="#0b7a5a"><title>' +
         fmtTime(p.t) + " — $" + p.y.toFixed(4) + '</title></circle>';
     }).join("") : "";
+    // vertical markers at each sharp move (jump delta >= $0.10)
+    var jumpMarkers = "";
+    if (jumps && jumps.length) {
+      jumpMarkers = jumps.map(function (j) {
+        var xx = X(j.t);
+        var col = j.delta >= 0 ? "#0b7a5a" : "#c0392b";
+        return '<line x1="' + xx.toFixed(1) + '" x2="' + xx.toFixed(1) + '" y1="' + T + '" y2="' + (H - B) +
+          '" stroke="' + col + '" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.85"/>' +
+          '<circle cx="' + xx.toFixed(1) + '" cy="' + Y(j.to).toFixed(1) + '" r="4" fill="' + col +
+          '" stroke="#fff" stroke-width="1.2"><title>' + fmtTime(j.t) + " — " + (j.delta >= 0 ? "up" : "down") +
+          " $" + Math.abs(j.delta).toFixed(4) + '</title></circle>';
+      }).join("");
+    }
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-    svg.innerHTML = g +
+    svg.innerHTML = g + jumpMarkers +
       '<line x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (H - B) + '" stroke="#9aa3b2"/>' +
       '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '" stroke="#9aa3b2"/>' +
       '<path d="' + line + '" fill="none" stroke="#0b7a5a" stroke-width="2"/>' + dots +
       '<text x="' + (W / 2) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="12" fill="#5b6474">Time (' + state.gran + ' view)</text>' +
       '<text transform="translate(14,' + (H / 2) + ') rotate(-90)" text-anchor="middle" font-size="12" fill="#5b6474">YES contract price (USD)</text>';
+  }
+
+  // Consecutive price changes of >= JUMP_THRESHOLD in either direction.
+  function detectJumps(points) {
+    var out = [];
+    for (var i = 1; i < points.length; i++) {
+      var a = points[i - 1].y, b = points[i].y;
+      if (a === null || b === null) continue;
+      var d = b - a;
+      if (Math.abs(d) >= JUMP_THRESHOLD) {
+        out.push({ t: points[i].t, from: a, to: b, delta: d });
+      }
+    }
+    return out;
+  }
+
+  function renderJumps(jumps) {
+    var tb = $("jumps");
+    if (!jumps.length) {
+      tb.innerHTML = '<tr><td colspan="5" class="note">No move of ≥ $0.10 in this window.</td></tr>';
+      return;
+    }
+    var linkHtml = "";
+    if (state.marketLink) {
+      linkHtml = '<a href="' + esc(state.marketLink) + '" target="_blank" rel="noopener">market page</a>' +
+        (state.marketSource ? ' · <a href="' + esc(state.marketSource) + '" target="_blank" rel="noopener">API source</a>' : "");
+    } else {
+      linkHtml = '<span class="blank">no link returned</span>';
+    }
+    tb.innerHTML = jumps.map(function (j) {
+      var d = new Date(j.t);
+      var p = function (n) { return (n < 10 ? "0" : "") + n; };
+      var ts = d.getUTCFullYear() + "-" + p(d.getUTCMonth() + 1) + "-" + p(d.getUTCDate()) + " " +
+        p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + ":" + p(d.getUTCSeconds());
+      return '<tr><td>' + ts + '</td>' +
+        '<td style="color:' + (j.delta >= 0 ? "#0b7a5a" : "#c0392b") + ';font-weight:600">' +
+        (j.delta >= 0 ? "▲ up" : "▼ down") + '</td>' +
+        '<td>$' + j.from.toFixed(4) + " → $" + j.to.toFixed(4) + '</td>' +
+        '<td class="num" style="color:' + (j.delta >= 0 ? "#0b7a5a" : "#c0392b") + '">$' +
+        Math.abs(j.delta).toFixed(4) + '</td>' +
+        '<td>' + linkHtml + '</td></tr>';
+    }).join("");
   }
 
   function renderSummary(m) {
@@ -186,12 +246,12 @@
         state.ticks.push({ t: Date.now(), y: mid != null ? mid : y, last: num(m.last_price_dollars) });
         var cutoff = Date.now() - state.windowSec * 1000;
         state.ticks = state.ticks.filter(function (p) { return p.t >= cutoff; });
-        drawChart(state.ticks);
+        var jp = detectJumps(state.ticks); drawChart(state.ticks, jp); renderJumps(jp);
         setBanner("ok", "Live: polling every " + POLL_MS / 1000 + "s from Kalshi (" + state.env + "). Y = mid of YES bid/ask; " +
           "points collected in this browser session only. Updated " + new Date().toLocaleTimeString() + ".");
       } else {
         return fetchCandles().then(function (pts) {
-          drawChart(pts);
+          var jp = detectJumps(pts); drawChart(pts, jp); renderJumps(jp);
           setBanner("ok", "Live: candlesticks (" + (state.gran === "minutes" ? "1-minute" : "1-hour") + " periods) and current orderbook from Kalshi (" +
             state.env + "). Updated " + new Date().toLocaleTimeString() + ".");
         });
@@ -237,11 +297,20 @@
     state.ticker = ticker.trim();
     state.series = (series && series.trim()) || seriesOf(state.ticker);
     state.ticks = [];
+    var mi = marketIndex[state.ticker];
+    state.marketLink = mi && mi.url ? mi.url : "";
+    state.marketSource = mi && mi.source ? mi.source : "";
     $("ticker-label").textContent = state.ticker + "  (series " + state.series + ")";
+    renderJumps([]);
     refresh(); restartTimer();
   }
 
   function init() {
+    window.KD_MARKETS.forEach(function (m) {
+      if (m.ticker && !marketIndex[m.ticker]) {
+        marketIndex[m.ticker] = { url: m.market_url, source: m.source_markets };
+      }
+    });
     var sel = $("market");
     var seen = {};
     window.KD_MARKETS.forEach(function (m) {
