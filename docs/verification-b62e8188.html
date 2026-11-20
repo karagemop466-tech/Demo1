@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session verification: repo review + API claims · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../site/assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
+    <nav class="nav"><a href="../index.html">Home</a><a href="../alerts.html">Alert chats</a><a href="../audit/index.html">API audit</a><a href="../site/flagged.html">Flagged for review</a><a href="../site/verification.html">Automated verification</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Line-by-line check · 2026-11-20 (UTC) · session arena/b62e8188-demo1</p>
+    <h1>Session verification: repo review, API claims, fixes</h1>
+    <p class="lede">Every claim this session checked or changed, with its official source and result. Values that could not be confirmed from an official source are left blank and flagged. This page is the evidence record for the pull request of this session.</p>
+  </div>
+
+  <h2>1. Official-source checks performed this session (2026-11-20)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Claim under review</th><th>Result</th><th>What the official page says (quoted)</th><th>Official source</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Raw REST market statuses are <code>initialized, active, inactive, closed, determined, disputed, amended, finalized</code>; filter <code>open</code> maps to <code>active</code>, <code>settled</code> maps to <code>finalized</code></td>
+        <td><b>CONFIRMED</b> — and the repo's strategy-desk compared raw statuses with <code>open</code>/<code>settled</code> (audit finding F-01 was correct; fixed this session)</td>
+        <td>“The REST API returns these statuses on <code>GET /markets</code> and <code>GET /markets/{ticker}</code>” — the eight values above. “When filtering with <code>GET /markets?status=</code>… <code>open</code> → <code>active</code>… <code>settled</code> → <code>finalized</code>.”</td>
+        <td><a href="https://docs.kalshi.com/getting_started/market_lifecycle">docs.kalshi.com · market lifecycle ↗</a></td>
+      </tr>
+      <tr>
+        <td>“Legacy <code>/portfolio/orders</code> write endpoints are removed and return HTTP 410 Gone” (used in EXECUTIVE_SUMMARY.md, SOURCES.md, exec-desk/flagged.html, verified-desk/index.html, docs/pages/sources.html)</td>
+        <td><b>CONFIRMED</b> — the repo wording is correct; audit finding F-02 (which disputed it) is withdrawn</td>
+        <td>“The legacy <code>/portfolio/orders</code> write endpoints (create, cancel, amend, decrease and their batch forms) have been removed and now return <code>410 Gone</code> with code <code>deprecated_v1_order_endpoint</code>; use this path instead.” (page description, <code>create-order-v2.md</code>)</td>
+        <td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">docs.kalshi.com · create order (V2) ↗</a></td>
+      </tr>
+      <tr>
+        <td>“Candlesticks: at most 5,000 periods per request” (docs/api-verification.md row 10; verified-desk/index.html)</td>
+        <td><b>CONFIRMED</b> — audit finding F-03 (which disputed it) is withdrawn</td>
+        <td>“One request can span at most 5,000 periods. If the minutes between <code>start_ts</code> and <code>end_ts</code> divided by <code>period_interval</code> exceed 5,000, the request is rejected with 400 <code>bad_request</code> and the <code>details</code> field gives the requested and maximum counts.”</td>
+        <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">docs.kalshi.com · get market candlesticks ↗</a></td>
+      </tr>
+      <tr>
+        <td>Candlestick interval values <code>1, 60, 1440</code> minutes; no sub-minute candles on REST</td>
+        <td><b>CONFIRMED</b></td>
+        <td>“Time period length of each candlestick in minutes. Valid values are 1 (1 minute), 60 (1 hour), or 1440 (1 day).”</td>
+        <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">docs.kalshi.com · get market candlesticks ↗</a></td>
+      </tr>
+      <tr>
+        <td>Markets settled before the historical cutoff are only available via <code>GET /historical/markets/{ticker}/candlesticks</code> (audit F-05 basis)</td>
+        <td><b>CONFIRMED</b> (the cutoff date itself is not stated on this page — remains UNVERIFIED)</td>
+        <td>“Candlesticks for markets that settled before the historical cutoff are only available via <code>GET /historical/markets/{ticker}/candlesticks</code>. See Historical Data for details.”</td>
+        <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">docs.kalshi.com · get market candlesticks ↗</a></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>2. Snapshot re-derivations (no value taken on trust)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Figure</th><th>Value re-derived this session</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Closed records collected (settled + awaiting)</td><td>2,469</td><td><code>snapshot/resolved.json</code> (recorded official demo-API responses, <a href="https://external-api.demo.kalshi.co/trade-api/v2">demo REST base ↗</a>)</td></tr>
+      <tr><td>Settled with YES/NO <code>result</code></td><td>2,117 (222 YES · 1,895 NO)</td><td><code>snapshot/resolved.json</code>; result semantics from <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle ↗</a></td></tr>
+      <tr><td>Closed — awaiting result (status <code>closed</code>, null <code>result</code>)</td><td>352</td><td><code>snapshot/resolved.json</code></td></tr>
+      <tr><td>Open markets collected (raw status <code>active</code>)</td><td>1,399</td><td><code>snapshot/markets.json</code></td></tr>
+      <tr><td>Raw status values present in the CI data snapshot</td><td><code>active</code> 23,993 · <code>closed</code> 928 · <code>determined</code> 273</td><td><code>data/markets.json</code> (archived official API responses)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3. Fixes applied by this session (each logged in COORDINATION.md)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Open request</th><th>Fix</th><th>Files</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>V-3 / F6 — generated <code>site/</code> labelled all 2,469 closed records “Resolved” (352 are awaiting result)</td>
+        <td>Counts split into “Settled with YES/NO result” and “Closed — awaiting result”, computed from the snapshot at build time (overview, topic coverage and resolved pages); automated verifier updated in tandem</td>
+        <td><code>build_site.py</code>, <code>tools/verify_site.py</code>, regenerated <code>site/**</code></td>
+        <td><a href="../site/index.html">site overview ↗</a>; <a href="../site/verification.html">automated verification ↗</a> (PASS, 0 errors)</td>
+      </tr>
+      <tr>
+        <td>CR-1 / F-01 — strategy-desk compared raw REST statuses with <code>open</code>/<code>settled</code>, labelling live events “closed”</td>
+        <td><code>normStatus()</code> maps raw statuses to the app's three buckets (active/initialized/inactive → open; determined/disputed/amended/finalized → settled; closed/unknown → closed) in both the live and snapshot paths</td>
+        <td><code>strategy-desk/assets/app.js</code></td>
+        <td>Mapping table in <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle ↗</a>; 12/12 mapping assertions pass</td>
+      </tr>
+      <tr>
+        <td>CR-3 — audit said “≤ 5,000 periods” was unverified</td>
+        <td>Audit rows corrected: B-02 and B-06 moved to Confirmed with the verbatim current quotes; F-02/F-03 withdrawn; F-01 marked fixed</td>
+        <td><code>audit/build_audit.py</code>, regenerated <code>audit/index.html</code>, <code>audit/flagged.html</code></td>
+        <td><a href="../audit/index.html">audit table ↗</a> (21 confirmed · 3 mismatch · 2 unverified · 1 new)</td>
+      </tr>
+      <tr>
+        <td>CR-4 — root hub had no tile for <code>audit/</code></td>
+        <td>Hub tiles added for the API audit + its flagged items</td>
+        <td><code>index.html</code></td>
+        <td><a href="../index.html">hub ↗</a></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2>4. New requirement implementation: dual scrolling-chat alert desk</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Brief requirement</th><th>Implementation</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>“Live alerting system to sudden swings in contract prices ≥ $0.10 in either direction”</td><td><code>alerts.html</code> + <code>assets/js/alerts.js</code>: baseline-reset swing detector, threshold $0.05/$0.10/$0.20</td><td><b>Done</b> — 29/29 headless assertions</td></tr>
+      <tr><td>“Simplified scrolling chat so someone can view in real time”</td><td>Chat-style message feed, newest at bottom, auto-scroll, pause/resume</td><td><b>Done</b></td></tr>
+      <tr><td>“Two scrolling chats — one all events, one filtered to high-ROI model picks”</td><td>Chat A (every alert) + Chat B (published deterministic ROI model, score ≥ 60; formula shown on the page)</td><td><b>Done</b></td></tr>
+      <tr><td>“Track live events until resolved yes or no”</td><td>Watch table + resolution chat messages when the API's <code>result</code> field reports yes/no</td><td><b>Done</b></td></tr>
+      <tr><td>Live charts label jumps with event + website links; no hallucinated causes</td><td>Each alert links the official API request, the official Kalshi venue event page, and a news search labelled “cause unverified”</td><td><b>Done</b> (cause links are leads, never asserted)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>5. Test and gate results (this session, on the combined tree)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Gate</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>python3 build_site.py</code></td><td>17 pages · markets=1399/1399 · closed=2469/2469 (2117 with result · 352 awaiting) · link check: OK</td></tr>
+      <tr><td><code>python3 tools/verify_site.py</code></td><td>PASS · 0 errors · markets=250, resolved=250, topics=600, liquidity=48, index-figures=10 rows re-derived</td></tr>
+      <tr><td><code>node tools/check-links.mjs</code></td><td>PASS (internal links + source-citation audit)</td></tr>
+      <tr><td><code>node tests/alerts.test.mjs</code> (new)</td><td>29/29 PASS</td></tr>
+      <tr><td><code>node tests/dashboard.test.mjs</code></td><td>46/46 PASS</td></tr>
+      <tr><td><code>node tests/dashboard-jumps.test.mjs</code></td><td>9/9 PASS</td></tr>
+      <tr><td><code>npm test</code> (exec-desk DOM)</td><td>ALL ASSERTIONS PASSED</td></tr>
+      <tr><td><code>python3 -m unittest discover -s tests</code></td><td>7/7 PASS</td></tr>
+      <tr><td><code>node --check</code> / <code>py_compile</code></td><td>PASS (all JS / all Python touched)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>6. Irregularities flagged for review (not blocking)</h2>
+  <ul class="plain">
+    <li><b>Demo venue only.</b> All values are demo-book values with mock funds; <a href="https://docs.kalshi.com/getting_started/demo_env">official caveat</a>.</li>
+    <li><b>No demo API key exists in the repo.</b> Authenticated portfolio/fill/order cells stay blank and flagged; a static GitHub Pages site must never hold a key (SEC-01/AUTH-01/KEY-01 carried forward).</li>
+    <li><b>No official causal field for price jumps.</b> News-search links are leads labelled “cause unverified” (F-17 carried forward).</li>
+    <li><b>Sub-minute swings are not in REST candles</b> (fastest official interval = 1 minute); seconds-level detection exists only while the alert page is polling (F-18 carried forward).</li>
+    <li><b>ROI model is a transparent heuristic</b> — published formula, deterministic, not backtested, not investment advice.</li>
+    <li><b>Historical-cutoff date is not stated</b> in the candlestick docs text read (audit F-05 remains open, still listed on <a href="../audit/flagged.html">audit flagged ↗</a>).</li>
+    <li><b>Site fragmentation persists</b> — several earlier dashboards coexist; consolidation is the owner's call (carried forward).</li>
+    <li><b>Error-code case disagreement</b> (<code>MARKET_INACTIVE</code> vs <code>market_inactive</code>) between official pages remains unverified (audit F-07 open).</li>
+  </ul>
+
+  <h2>7. Links for manual review</h2>
+  <ul class="plain">
+    <li>Official docs: <a href="https://docs.kalshi.com/getting_started/api_environments">API environments</a> · <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a> · <a href="https://docs.kalshi.com/getting_started/market_lifecycle">market lifecycle</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">candlesticks</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">create order (V2)</a></li>
+    <li>This session's pages: <a href="../alerts.html">alert desk</a> · <a href="../audit/index.html">API audit</a> · <a href="../site/index.html">verified site overview</a> · <a href="../site/resolved.html">resolved outcomes</a></li>
+    <li>Coordination record: <code>COORDINATION.md</code> (session arena/b62e8188-demo1)</li>
+  </ul>
+</main>
+<footer class="wrap small">
+  Not investment advice. The Kalshi demo exchange uses mock funds and its prices may not reflect real markets.
+  Values not confirmed from an official source are left blank and listed on <a href="../site/flagged.html">Flagged for review</a>.
+</footer>
+</body>
+</html>

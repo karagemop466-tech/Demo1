@@ -126,3 +126,47 @@ re-verification against the official Kalshi sources, one missing feature, and th
   matched." Confirmed it fails identically on the pristine tree; it is not run by the Pages workflow.
   Flagged, not fixed (test owned by an earlier session; left untouched per the coordination protocol).
 - **Publish.** PR from `arena/5487be47-demo1` → `main`, merged, GitHub Pages redeploy confirmed.
+
+## 9. Session `arena/b62e8188-demo1` — repo review, verification fixes, dual alert-chat (2026-11-20)
+
+Line-by-line review of the merged tree with re-verification against the official docs, four open
+board requests closed, and the one brief requirement still unimplemented anywhere in the repo
+implemented. Full evidence: [`docs/verification-b62e8188.html`](docs/verification-b62e8188.html).
+
+- **Dual scrolling-chat alert system (implemented — the brief's "simplified scrolling chat" alerting
+  requirement).** [`alerts.html`](alerts.html) + [`assets/js/alerts.js`](assets/js/alerts.js):
+  Chat A posts every watched-event swing of **≥ $0.10 in either direction** as real-time chat
+  messages; Chat B posts only events the **published, deterministic ROI model** scores ≥ 60
+  (formula shown on the page — momentum, order-book depth, 24 h volume, price extremeness;
+  not backtested, not investment advice). Watches the five topics only, tracks each event until the
+  API's `result` field resolves YES/NO (resolution messages in the feed), and links every alert to
+  the official API request, the official venue event page, and a news search labelled *cause
+  unverified*. LIVE mode polls the official demo API from the visitor's browser every 15 s;
+  unreachable → SNAPSHOT REPLAY of the committed official candles with a clear banner.
+  Headless test [`tests/alerts.test.mjs`](tests/alerts.test.mjs) **29/29 PASS**.
+- **V-3/F6 fixed.** `build_site.py` no longer labels all 2,469 closed records "Resolved": the
+  snapshot-derived split (2,117 settled with YES/NO result — 222 YES / 1,895 NO — and 352 closed
+  awaiting result) now renders on the overview, topic and resolved pages, and
+  `tools/verify_site.py` re-derives the split (PASS, 0 errors).
+- **CR-1/F-01 fixed.** `strategy-desk/assets/app.js` now normalizes raw REST statuses
+  (`active`/`initialized`/`inactive` → open, `determined`/`disputed`/`amended`/`finalized` → settled,
+  `closed`/unknown → closed) per the official lifecycle page — live events are no longer mislabelled
+  "closed".
+- **Audit F-02/F-03 withdrawn as wrong; repo claims confirmed.** The current official
+  [create-order-v2](https://docs.kalshi.com/api-reference/orders/create-order-v2) description states
+  the legacy `/portfolio/orders` writes "have been removed and now return `410 Gone` with code
+  `deprecated_v1_order_endpoint`" — the repo's "410 Gone" wording was correct all along (the audit's
+  partial search-index excerpt was stale). The candlestick page confirms "One request can span at
+  most 5,000 periods" — `docs/api-verification.md` was correct. Corrected rows are published on
+  [`audit/index.html`](audit/index.html).
+- **CR-4 fixed.** Root hub now tiles the API audit and its flagged items.
+- **Gates (combined tree):** `build_site.py` link check OK · `tools/verify_site.py` PASS ·
+  `check-links.mjs` PASS · `tests/alerts.test.mjs` 29/29 · `tests/dashboard.test.mjs` 46/46 ·
+  `tests/dashboard-jumps.test.mjs` 9/9 · `npm test` PASS · unittest 7/7 · syntax checks PASS.
+- **Carried-forward irregularities:** demo venue only (mock funds); no demo API key → authenticated
+  cells blank + flagged; jump causes unverified (no official causal field); sub-minute swings not in
+  REST candles; historical-cutoff date unstated in docs (audit F-05); error-code case disagreement
+  (audit F-07); multi-desk site fragmentation (consolidation remains the owner's call).
+- **Note for reviewers:** the earlier `tests/dashboard.test.mjs` time-sensitive fixture issue
+  (section 8) was subsequently fixed by session `arena/358db039-demo1` (time-relative fixtures) and
+  the suite passes 46/46 on this tree.
