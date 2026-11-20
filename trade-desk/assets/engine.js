@@ -22,6 +22,15 @@
   var TD = root.TD;
 
   var JUMP_THRESHOLD = 0.10;      /* brief: >= $0.10 either direction */
+  /* Prices arrive as dollar strings ("0.6000") and are compared in floating point,
+   * where 0.60 - 0.50 is 0.09999999999999998. The brief's threshold is inclusive,
+   * so the comparison uses a one-tenth-of-a-cent tolerance: a move within $0.001
+   * of the threshold counts as reaching it, and nothing smaller does. */
+  var THRESHOLD_EPS = 0.001;
+
+  function reachesThreshold(move, threshold) {
+    return Math.abs(move) >= threshold - THRESHOLD_EPS;
+  }
   var DEFAULT_WINDOW_MIN = 15;    /* look-back used for "sudden" */
   var MAX_MARKETS_SCORED = 60;    /* keep the alert loop cheap and rate-limit safe */
 
@@ -85,7 +94,7 @@
         mode = "peak";
         from = move >= 0 ? lo.price : hi.price;
       }
-      if (Math.abs(move) < threshold) return;
+      if (!reachesThreshold(move, threshold)) return;
       var volume = rows.reduce(function (s, r) { return s + r.count; }, 0);
       var notional = rows.reduce(function (s, r) { return s + r.count * r.price; }, 0);
       out.push({
@@ -573,6 +582,8 @@
     LEDGER_KEY: LEDGER_KEY,
     STRATEGIES: STRATEGIES,
     scanTrades: scanTrades,
+    reachesThreshold: reachesThreshold,
+    THRESHOLD_EPS: THRESHOLD_EPS,
     score: score,
     isHighRoi: isHighRoi,
     jumpAlert: jumpAlert,

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper trading &amp; strategies — Kalshi demo trade desk</title>
+<meta name="description" content="Automated simulated trades on Kalshi demo markets: four disclosed strategies, an equity curve, and performance broken down by strategy, topic, side and entry-price band. No real orders.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · paper only</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html" class="active" aria-current="page">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Automated paper trading — strategies, portfolio and analysis</h1>
+  <p class="lede">
+    Simulated orders only. Every fill is priced at the official implied YES ask, charged the official taker
+    fee, written to an append-only local ledger, and settled only when the API reports a result.
+    No order is ever sent to Kalshi and no key is used.
+  </p>
+
+  <div class="callout warn">
+    <p><b>Read this before trusting a number.</b> Paper fills are not fills. The demo book is a test venue with
+      thin depth, so an order this page would take may not have been fillable at that size in a real book.
+      Results here are a way to compare rules, not evidence of profit.</p>
+  </div>
+
+  <div class="statusbar">
+    <span class="pill"><span class="dot live" id="dot-ledger"></span><span id="ledger-state">ledger loaded</span></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">equity <b id="eq">—</b></span>
+    <span class="pill">cash <b id="cash">—</b></span>
+    <span class="pill">open <b id="open-count">0</b></span>
+    <span class="pill">settled <b id="settled-count">0</b></span>
+    <span class="pill" style="margin-left:auto">
+      <button id="run-now" class="primary" type="button">Run the strategies now</button>
+      <button id="settle-now" type="button">Check settlements</button>
+      <button id="reset" class="ghost" type="button">reset ledger</button>
+    </span>
+  </div>
+
+  <div id="banner" class="callout warn" hidden></div>
+
+  <div class="kpis" id="kpis" style="margin:14px 0">
+    <div class="kpi"><div class="label">Equity</div><div class="value" id="kpi-equity">—</div><div class="note">cash + open positions at the last mark</div></div>
+    <div class="kpi"><div class="label">Realized P&amp;L</div><div class="value" id="kpi-pnl">—</div><div class="note">after the official fee on every fill</div></div>
+    <div class="kpi"><div class="label">Win rate</div><div class="value" id="kpi-win">—</div><div class="note" id="kpi-win-note">settled trades only</div></div>
+    <div class="kpi"><div class="label">Realized ROI</div><div class="value" id="kpi-roi">—</div><div class="note">P&amp;L ÷ capital committed</div></div>
+    <div class="kpi"><div class="label">Fees paid</div><div class="value" id="kpi-fees">—</div><div class="note">official taker formula</div></div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="panel">
+      <header>
+        <h3>Equity curve</h3>
+        <span class="sub">one point per run or settlement, local ledger</span>
+      </header>
+      <div class="body">
+        <svg class="chart" id="equity-chart" viewBox="0 0 100 100" preserveAspectRatio="none" style="height:200px"></svg>
+        <div class="chart-readout" id="equity-readout">—</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h3>Strategies</h3>
+        <span class="sub">each is a rule over the same published screen</span>
+      </header>
+      <div class="body tight">
+        <table id="strategy-table">
+          <thead><tr><th>Strategy</th><th>Rule</th><th class="num">Trades</th><th class="num">Open</th></tr></thead>
+          <tbody><tr><td colspan="4" class="blank">run the strategies to populate this table</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section">Analysis by category</h2>
+  <p class="small" style="margin-top:-4px">P&amp;L and ROI are computed from settled trades only, so a fresh ledger shows zeros rather than a projection.</p>
+  <div class="grid cols-2">
+    <div class="panel">
+      <header><h3>By strategy</h3></header>
+      <div class="body tight"><table id="by-strategy"><thead><tr><th>Strategy</th><th class="num">n</th><th class="num">win%</th><th class="num">P&amp;L</th><th class="num">ROI</th></tr></thead><tbody><tr><td colspan="5" class="blank">no settled trades yet</td></tr></tbody></table></div>
+    </div>
+    <div class="panel">
+      <header><h3>By topic</h3></header>
+      <div class="body tight"><table id="by-topic"><thead><tr><th>Topic</th><th class="num">n</th><th class="num">win%</th><th class="num">P&amp;L</th><th class="num">ROI</th></tr></thead><tbody><tr><td colspan="5" class="blank">no settled trades yet</td></tr></tbody></table></div>
+    </div>
+    <div class="panel">
+      <header><h3>By entry-price band</h3></header>
+      <div class="body tight"><table id="by-band"><thead><tr><th>Entry ask</th><th class="num">n</th><th class="num">win%</th><th class="num">P&amp;L</th><th class="num">ROI</th></tr></thead><tbody><tr><td colspan="5" class="blank">no settled trades yet</td></tr></tbody></table></div>
+    </div>
+    <div class="panel">
+      <header><h3>By result</h3></header>
+      <div class="body tight"><table id="by-result"><thead><tr><th>Result</th><th class="num">n</th><th class="num">win%</th><th class="num">P&amp;L</th><th class="num">ROI</th></tr></thead><tbody><tr><td colspan="5" class="blank">no settled trades yet</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <h2 class="section">Open positions</h2>
+  <div class="panel">
+    <header>
+      <h3>Carried until the API resolves them</h3>
+      <span class="sub" id="open-note">—</span>
+    </header>
+    <div class="body tight">
+      <div class="table-scroll short">
+        <table id="open-table">
+          <thead><tr><th>Topic</th><th>Market</th><th class="num">Contracts</th><th class="num">Entry</th><th class="num">Fee</th><th class="num">Cost</th><th>Strategy</th><th>Mark / status</th><th>Evidence</th></tr></thead>
+          <tbody><tr><td colspan="9" class="blank">no open positions</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section">Settled trades</h2>
+  <div class="panel">
+    <header><h3>Every close, newest first</h3><span class="sub" id="settled-note">—</span></header>
+    <div class="body tight">
+      <div class="table-scroll">
+        <table id="settled-table">
+          <thead><tr><th>Topic</th><th>Market</th><th class="num">Entry</th><th class="num">Payout</th><th class="num">Fee</th><th class="num">P&amp;L</th><th class="num">ROI</th><th>Result</th><th>Strategy</th><th>Settled</th></tr></thead>
+          <tbody><tr><td colspan="10" class="blank">no settled trades yet</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <details class="meth" style="margin-top:16px">
+    <summary>How the simulation works, line by line</summary>
+    <dl class="defs">
+      <dt>Entry price</dt>
+      <dd>The official implied YES ask from the order-book response (or the market's <span class="mono">yes_ask_dollars</span> when no book is loaded). Never the last trade, because the last trade is not a price you can buy at.
+        <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Source ↗</a></dd>
+      <dt>Fee</dt>
+      <dd>Official taker fee: <span class="mono">ceil_to_cent(M × 0.07 × C × P × (1−P))</span>. The fee implementation is asserted against all 21 rows of the published table in the test suite.
+        <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Fee schedule ↗</a></dd>
+      <dt>Payout</dt>
+      <dd>$1.00 per contract on the winning side of a simple binary market; zero on the losing side. A <span class="mono">scalar</span> result uses the API's <span class="mono">settlement_value_dollars</span>.
+        <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Source ↗</a></dd>
+      <dt>Universe</dt>
+      <dd>Open markets in the five topics only, after the screen. At most six open positions at a time, ten contracts each, so the rules are comparable on a $1,000 paper bankroll.</dd>
+      <dt>What is NOT modelled</dt>
+      <dd>Queue position, partial fills, slippage beyond the touch price, borrow or margin, and market impact. Real fills would be worse or absent.</dd>
+    </dl>
+  </details>
+</main>
+
+<footer class="foot">
+  <p>The ledger lives in this browser (localStorage key <span class="mono">tradeDesk.ledger.v1</span>). Clearing site data erases it.
+     No Kalshi account, key or order is involved.</p>
+</footer>
+
+<script src="assets/util.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/chart.js"></script>
+<script src="assets/strategies.js"></script>
+</body>
+</html>

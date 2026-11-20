@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The model — Kalshi demo trade desk</title>
+<meta name="description" content="The exact, auditable screen behind the high-ROI alert feed: five weighted terms, both ROI figures, the selection bar, and measured calibration against the official trade tape.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html" class="active" aria-current="page">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>The model behind Feed B</h1>
+  <p class="lede">
+    Feed B is a <b>screen</b>, not a forecast. Five terms, each with a fixed weight, produce a score out of 100.
+    A row appears in Feed B only when the score clears the bar <b>and</b> both ROI figures clear theirs.
+    Everything is printed below so any row can be recomputed by hand, and the screen's own hit rate is
+    measured against the official trade tape rather than asserted.
+  </p>
+
+  <div class="callout">
+    <p><b>Why a screen and not "alpha".</b> The demo venue is a test exchange whose books are thin and whose
+      prices are not real-money prices. A model that claimed predictive edge here would be claiming something the
+      data cannot support. What the screen does claim is narrower and checkable: after a ≥ $0.10 move, it prefers
+      markets where entering is cheap in spread, deep enough to fill, and far enough from the $1 cap to pay for
+      the fee.</p>
+  </div>
+
+  <h2 class="section">The score</h2>
+  <div class="panel">
+    <header><h3>Five terms, fixed weights, no hidden inputs</h3><span class="sub">score = Σ points, 0 – 100</span></header>
+    <div class="body tight">
+      <table>
+        <thead><tr><th>Term</th><th class="num">Weight</th><th>How the points are computed</th><th>Why it is there</th></tr></thead>
+        <tbody>
+          <tr><td><b>Jump size</b></td><td class="num">30</td><td><span class="mono">min(1, |move| / $0.30) × 30</span></td><td>A bigger printed move is a bigger signal that something changed.</td></tr>
+          <tr><td><b>Spread</b></td><td class="num">25</td><td><span class="mono">max(0, 1 − spread / 10¢) × 25</span></td><td>A wide spread eats the entire move on entry and exit.</td></tr>
+          <tr><td><b>Depth at touch</b></td><td class="num">20</td><td><span class="mono">min(1, contracts at touch / 200) × 20</span></td><td>A price you cannot fill is not a price.</td></tr>
+          <tr><td><b>Room to $1</b></td><td class="num">15</td><td><span class="mono">min(1, 1 − entry ask) × 15</span></td><td>Binary contracts pay at most $1, so a 90¢ entry cannot pay much.</td></tr>
+          <tr><td><b>Freshness</b></td><td class="num">10</td><td><span class="mono">max(0, 1 − age / 15m) × 10</span></td><td>A move from an hour ago is history, not an alert.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top:14px">
+    <div class="panel">
+      <header><h3>The selection bar</h3></header>
+      <div class="body">
+        <dl class="defs">
+          <dt>Score ≥ <span id="bar-score">55</span></dt>
+          <dd>Sum of the five terms above.</dd>
+          <dt>Net ROI ≥ <span id="bar-roi">25%</span></dt>
+          <dd><span class="mono">((1 − ask) − feePerContract) / (ask + feePerContract)</span> — the return if the position wins, after the official taker fee. This is the term that keeps 5¢ contracts with a 2¢ fee out of the feed.</dd>
+          <dt>Entry ask ≤ <span id="bar-ask">$0.85</span></dt>
+          <dd>Above 85¢, a win pays less than 18¢ per contract before fees, so the trade cannot clear the ROI bar anyway.</dd>
+          <dt>Also shown: <b>max ROI</b></dt>
+          <dd><span class="mono">1 / ask − 1</span> — the conventional prediction-market payout figure, fee-free. A 20¢ contract shows +400%. It is displayed for context but the screen filters on net ROI, because fees are real.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header><h3>Fee term, verified against the official table</h3></header>
+      <div class="body">
+        <p class="small" style="margin-top:0">Taker fee per contract from the official schedule,
+          <span class="mono">ceil(M × 0.07 × C × P × (1−P))</span>. The three columns are computed live in your browser by the same
+          function the paper ledger uses.</p>
+        <table>
+          <thead><tr><th class="num">Price</th><th class="num">fee / 1 contract</th><th class="num">fee / 100 contracts</th><th class="num">official 100-contract fee</th></tr></thead>
+          <tbody id="fee-table"><tr><td colspan="4" class="blank">loading</td></tr></tbody>
+        </table>
+        <p class="small">
+          <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Official fee schedule (PDF) ↗</a>
+          · asserted row by row in <span class="mono">trade-desk/tests/engine.test.mjs</span>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section">Measured behaviour of this screen</h2>
+  <div class="panel">
+    <header>
+      <h3>Calibration on the committed official snapshot</h3>
+      <span class="sub" id="calib-asof">—</span>
+    </header>
+    <div class="body">
+      <p class="small" style="margin-top:0">
+        The table below is computed by <span class="mono">trade-desk/tools/calibrate.py</span> from the committed
+        official demo snapshot (<span class="mono">snapshot/resolved.json</span> and
+        <span class="mono">snapshot/markets.json</span>, collected from
+        <span class="mono">external-api.demo.kalshi.co</span>, 494 requests, 0 failures).
+        It answers one question honestly: on the demo book, what does the screen have to beat?
+      </p>
+      <div id="calib" class="grid cols-3"></div>
+      <div id="calib-table" style="margin-top:12px"></div>
+      <div id="calib-limits" class="callout warn" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <h2 class="section">Worked example</h2>
+  <div class="panel">
+    <div class="body">
+      <p>A real row from the demo API, scored exactly as the page scores it:</p>
+      <pre class="mono" id="worked" style="white-space:pre-wrap;background:#f8fafc;padding:10px;border-radius:8px;border:1px solid var(--line)">loading…</pre>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <p>Sources for every rule on this page are on <a href="sources.html">Sources</a>. Nothing on this page is a recommendation to trade.</p>
+</footer>
+
+<script src="assets/util.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/model.js"></script>
+</body>
+</html>

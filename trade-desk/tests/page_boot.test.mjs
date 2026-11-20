@@ -57,6 +57,8 @@ const MARKETS = [
   }
 ];
 
+const ORDERBOOK_ALT = { orderbook_fp: { yes_dollars: [["0.1500", "120.00"]], no_dollars: [["0.8300", "90.00"]] } };
+
 const SETTLED = [
   {
     ticker: "KXAAAGASW-26NOV16-3.5000", event_ticker: "KXAAAGASW-26NOV16",
@@ -141,6 +143,9 @@ function resolveUrl(u) {
   }
   const bookMatch = /^\/markets\/([^/]+)\/orderbook$/.exec(p);
   if (bookMatch) return book(decodeURIComponent(bookMatch[1]));
+  if (p === "/series/KXPGAR2LEAD/markets/KXPGAR2LEAD-THRC26-MGRE/candlesticks" || p.startsWith("/series/")) {
+    return { ticker: "x", candlesticks: [] };
+  }
   if (/^\/series\/[^/]+\/markets\/[^/]+\/candlesticks$/.test(p)) return { ticker: "x", candlesticks: [] };
   const evMatch = /^\/events\/([^/]+)$/.exec(p);
   if (evMatch) return EVENTS[decodeURIComponent(evMatch[1])] || { event: {} };
@@ -312,8 +317,90 @@ check("resolutions page boots with no jsdom errors", () => {
   assert(reso.errors.length === 0, reso.errors.join(" | "));
 });
 
+/* ---------------------------------------------------------- strategies page */
+const strat = await boot("strategies.html");
+const sw = strat.win;
+
+/* seed an open paper position from a real fixture, then settle it through the page */
+sw.eval(`
+  (function(){
+    var l = window.Engine.loadLedger();
+    l.cash = 1000;
+    window.Engine.openPosition(l, {ticker:"KXAAAGASW-26NOV16-3.5000", event_ticker:"KXAAAGASW-26NOV16",
+      title:"US gas price above $3.50?", topic:"gas", strategy:"balanced", ask:0.20, contracts:10,
+      max_roi:4, score:70, evidence:"https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASW-26NOV16-3.5000"},
+      {now:new Date().toISOString()});
+    window.Engine.saveLedger(l);
+    window.__strategies.state.ledger = l;
+    window.__strategies.render();
+  })();
+`);
+await waitFor(() => /KXAAAGASW-26NOV16-3\.5000/.test(sw.document.querySelector("#open-table tbody").textContent), "the seeded open position");
+check("strategies page lists an open paper position with its cost and fee", () => {
+  const text = sw.document.querySelector("#open-table tbody").textContent;
+  assert(/KXAAAGASW/.test(text), "open position missing");
+  /* 10 contracts x $0.20 = $2.00 fill; official fee ceil(0.07*10*0.20*0.80) = $0.12; cost $2.12 */
+  assert(/\$0\.12/.test(text), "expected the $0.12 official fee in the row: " + text.slice(0, 200));
+  assert(/\$2\.12/.test(text), "expected total cost $2.12 in the row: " + text.slice(0, 200));
+});
+sw.document.querySelector("#settle-now").dispatchEvent(new sw.MouseEvent("click", { bubbles: true }));
+await waitFor(() => sw.__strategies.state.ledger.trades.some((t) => t.kind === "settle"), "the settlement to land");
+check("settlement used the API's own YES result and paid $1 per contract", () => {
+  const t = sw.__strategies.state.ledger.trades.find((x) => x.kind === "settle");
+  assert(t.result === "yes", "result not yes: " + t.result);
+  assert(t.payout_per === 1, "payout per contract not $1: " + t.payout_per);
+  /* 10 contracts at $0.20 = $2.00 + fee ceil(0.07*10*0.2*0.8)=ceil(0.112)=0.12 → cost 2.12; payout 10 → +7.88 */
+  assert(Math.abs(t.pnl - 7.88) < 0.011, "P&L wrong: " + t.pnl);
+});
+check("settled table and analytics updated from the settled trade", () => {
+  const text = sw.document.querySelector("#settled-table tbody").textContent;
+  assert(/YES/.test(text), "settled table has no YES result");
+  const kpi = sw.document.querySelector("#kpi-pnl").textContent;
+  assert(/7\.88/.test(kpi), "realized P&L KPI wrong: " + kpi);
+  const byTopic = sw.document.querySelector("#by-topic tbody").textContent;
+  assert(/gas/i.test(byTopic), "topic breakdown missing the gas trade: " + byTopic);
+});
+check("strategies page boots with no jsdom errors", () => {
+  assert(strat.errors.length === 0, strat.errors.join(" | "));
+});
+
+/* --------------------------------------------------------------- chart page */
+const chartPage = await boot("chart.html");
+await waitFor(() => chartPage.win.__chartPage && chartPage.win.__chartPage.state.current, "the chart page to load a market");
+check("chart page renders a window selector with seconds, minutes and hours", () => {
+  const btns = Array.from(chartPage.win.document.querySelectorAll("#windows button")).map((b) => b.getAttribute("data-window"));
+  ["30s", "2m", "15m", "1h", "6h", "24h"].forEach((w) => assert(btns.includes(w), "missing window " + w));
+});
+check("chart page draws the price line and prices 10 contracts off the ladder", () => {
+  assert(chartPage.win.document.querySelector("#chart path"), "no chart path");
+  const walk = chartPage.win.document.querySelector("#walk-table tbody").textContent;
+  assert(/Total to pay/.test(walk), "no total in the walk table: " + walk.slice(0, 160));
+});
+check("chart page states the official candle limitation", () => {
+  const t = chartPage.win.document.querySelector("#resolution-note").textContent;
+  assert(/1-minute/.test(t) && /trades/.test(t), "candle limitation not disclosed");
+});
+check("chart page boots with no jsdom errors", () => {
+  assert(chartPage.errors.length === 0, chartPage.errors.join(" | "));
+});
+
+/* --------------------------------------------------------------- model page */
+const modelPage = await boot("model.html");
+await waitFor(() => /All 21 rows|differ/.test(modelPage.win.document.querySelector("#fee-table").textContent), "the fee table");
+check("model page reproduces all 21 rows of the official fee table", () => {
+  const t = modelPage.win.document.querySelector("#fee-table").textContent;
+  assert(/All 21 rows of the official table reproduce exactly/.test(t), "fee table mismatch: " + t.slice(-200));
+});
+check("model page publishes the screen bar", () => {
+  assert(/55/.test(modelPage.win.document.querySelector("#bar-score").textContent), "score bar not published");
+  assert(/25%/.test(modelPage.win.document.querySelector("#bar-roi").textContent), "ROI bar not published");
+});
+
 dashboard.dom.window.close();
 reso.dom.window.close();
+strat.dom.window.close();
+chartPage.dom.window.close();
+modelPage.dom.window.close();
 
 console.log("");
 const failed = results.filter((r) => !r.ok);
