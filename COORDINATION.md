@@ -642,6 +642,7 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 
 ## Conflict log (this session)
 - Round 1 (pre-PR): add/add on `README.md`, `COORDINATION.md`, `.gitignore` vs `origin/main` — resolved by keeping `main`'s versions and appending this session's sections; site relocated to `exec-desk/`. No other session's work discarded.
+- Round 3 (PR #29 open, merge rejected with conflicts): `main` advanced with a `data: refresh Kalshi demo snapshot` commit that also touched this board; resolved by keeping **both** sides (this session's post-merge record + the cron's entry). No other session's work discarded.
 - Round 2 (PR #25 open, merge attempt rejected with conflicts): `main` advanced via PRs #23 and #24 while #25 was open. `index.html` auto-merged; `COORDINATION.md` conflicted — resolved by keeping **both** sides (this session's section + publish records of sessions s-8344abc8 and arena/4df8be5b). No other session's work discarded.
 
 ## PR & deploy record
@@ -690,4 +691,13 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 | GitHub Pages | API `status: built`, source `{branch: main, path: /}`; builds for `11de1f1` (superseded by a later session's merge under `cancel-in-progress`) and `0263ec5` **built** with no error; site URL https://karagemop466-tech.github.io/Demo1/ |
 | Live verification | Fetched https://karagemop466-tech.github.io/Demo1/exec-desk/ post-deploy: page serves exec-desk content, and its runtime status reads **"LIVE official demo API reachable directly"** — browser→demo-API CORS confirmed end-to-end from the deployed origin (matches `data/cors.json` header evidence) |
 | Conflict handling | Both conflict rounds resolved without discarding any other session's work; logged in the Conflict log above |
+## Integration record — final (follow-up board commit, PR #6/#10 convention)
 
+| Item | Value |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/24 — "Decision desk: live demo trading/tracking tools, requirements matrix, per-endpoint API verification record" |
+| Merge result | MERGED via `gh pr merge 24 --merge` on 2026-11-20; merge commit `e6f0456`; PR checks `check` + `fetch` both PASS before merge |
+| Pages deploy | Workflow "Deploy static site to GitHub Pages" run `44732371628`: success (build + deploy jobs ✓) |
+| Live verification | https://karagemop466-tech.github.io/Demo1/decision/index.html fetched post-deploy: desk renders with desk-contents links + flagged F-09 banner; `decision/data/meta.json` served with full provenance block; hub tile "Decision desk (decision/)" present at main `e6f0456` |
+| Rebase conflicts during session | Two rounds vs concurrently-merged main (PRs #14–#23). Resolution every time: main's versions kept verbatim (COORDINATION.md, README.md, pages.yml, root files, six site/*.html add/add collisions); my duplicate-page content dropped in favor of merged sessions' versions; unique tools relocated to `decision/`. No session's content discarded. |
+| Tasks D-1…D-6 | All done. Sources, verification and irregularities recorded in the session section above and in `decision/api-notes.html` |
