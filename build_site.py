@@ -41,6 +41,14 @@ def esc(v):
     return html.escape("" if v is None else str(v), quote=True)
 
 
+def title_html(text):
+    """Kalshi titles sometimes contain **markdown bold**. Render it as <b>."""
+    if not text:
+        return ""
+    safe = esc(text)
+    return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", safe)
+
+
 def dash(v, suffix=""):
     """Render a value or an em dash. Never substitutes an inferred number."""
     if v is None or v == "":
@@ -181,7 +189,7 @@ def pill(text, kind="ok"):
 # --------------------------------------------------------------------------
 def market_link(m):
     return (f"<a href='explore.html?q={esc(m['market_ticker'])}'>"
-            f"{esc(m.get('title') or m['market_ticker'])}</a>")
+            f"{title_html(m.get('title')) or esc(m['market_ticker'])}</a>")
 
 
 def topic_label(key, meta):
@@ -262,9 +270,10 @@ def build_index(meta, markets, resolved):
     Dollar notional is computed as the sum of <code>yes_price_dollars × count_fp</code> over the last
     24 hours of public trades, and the record count behind every total is shown.</li>
     <li><b>Portfolio, trade analysis and order execution are credential-gated.</b> No Kalshi API key
-    exists in this repository or in the build environment, so those pages document the exact endpoints
-    and payment logic instead of inventing figures. This is listed as a blocker on
-    <a href="flagged.html">Flagged for review</a>.</li>
+    exists in this repository or in the build environment. Rather than invent figures, the portfolio page
+    ships a tested <b>read-only</b> worker (<code>tools/account_worker.py</code>) that renders real balances,
+    realised P&amp;L, fees and fill statistics as soon as a demo key is provided — it has no order-placement
+    code path. See <a href="flagged.html">Flagged for review</a> and <a href="questions.html">Q1/Q2</a>.</li>
   </ul>
 </div>
 
@@ -377,7 +386,7 @@ def build_topic(key, meta, markets, resolved):
             return pill(f"{f}-only match", "warn")
         return pill(f or "match", "warn")
 
-    series_rows = [[f"<code>{esc(s['ticker'])}</code>", esc(s.get("title")),
+    series_rows = [[f"<code>{esc(s['ticker'])}</code>", title_html(s.get("title")),
                     esc(", ".join(s.get("tags") or []) or "—"),
                     esc(s.get("match_reason")),
                     dash(s.get("volume_contracts")), quality(s)]
@@ -882,9 +891,20 @@ def build_flagged(meta, markets):
     ]
     rows = [[esc(a), esc(b), esc(c), src(d, "docs"), esc(e)] for a, b, c, d, e in items]
     ticker_only = [m for m in markets if m.get("topic_matched_weakly")]
-    to_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
-                esc(m.get("topic_match_reason")), esc((m.get("title") or "")[:70])]
-               for m in ticker_only[:40]]
+    groups = {}
+    for m in ticker_only:
+        g = groups.setdefault(m["series_ticker"], {
+            "series": m["series_ticker"], "topic": m["topic"],
+            "reason": m.get("topic_match_reason"), "n": 0,
+            "example": m, "field": m.get("topic_match_field")})
+        g["n"] += 1
+    to_rows = [[f"<code>{esc(g['series'])}</code>",
+                f"<a href='{TOPIC_PAGES.get(g['topic'], 'markets.html')}'>{esc(topic_label(g['topic'], meta))}</a>",
+                esc(g.get("field")),
+                esc(g["reason"]),
+                dash(g["n"]),
+                f"<a href='explore.html?q={esc(g['series'])}'>browse records</a>"]
+               for g in sorted(groups.values(), key=lambda x: -x["n"])]
     empties = [m for m in markets if not (m.get("quotes", {}).get("yes", {}).get("bid_is_live"))]
     empty_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
                    dash(m.get("quotes", {}).get("yes", {}).get("bid")),
@@ -902,8 +922,8 @@ def build_flagged(meta, markets):
 <p class="fine">These records belong to a series whose <i>series</i> title did not match the topic rule — the match came
 from the series ticker or its tags. They are usually correct (e.g. a series titled “US gas price up” whose tags say
 “gas prices”), but the classification rests on metadata rather than the title, so they are listed for review.
-Showing {len(to_rows)} of {len(ticker_only)} open-market records.</p>
-{table(["Market", "Ticker", "Why it matched", "Title (truncated)"], to_rows, "wide")}
+{len(ticker_only)} of {len(markets)} open-market records come from {len(to_rows)} such series.</p>
+{table(["Series ticker", "Topic", "Matched on", "Why it matched", "Records affected", "Records"], to_rows, "wide")}
 
 <h2>Open markets whose YES bid is not a live level</h2>
 <p class="fine">These markets were returned with no size behind the YES bid (or no bid at all), so no tradeable
