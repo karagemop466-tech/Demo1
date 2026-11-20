@@ -642,6 +642,7 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 
 ## Conflict log (this session)
 - Round 1 (pre-PR): add/add on `README.md`, `COORDINATION.md`, `.gitignore` vs `origin/main` — resolved by keeping `main`'s versions and appending this session's sections; site relocated to `exec-desk/`. No other session's work discarded.
+- Round 3 (PR #29 open, merge rejected with conflicts): `main` advanced with a `data: refresh Kalshi demo snapshot` commit that also touched this board; resolved by keeping **both** sides (this session's post-merge record + the cron's entry). No other session's work discarded.
 - Round 2 (PR #25 open, merge attempt rejected with conflicts): `main` advanced via PRs #23 and #24 while #25 was open. `index.html` auto-merged; `COORDINATION.md` conflicted — resolved by keeping **both** sides (this session's section + publish records of sessions s-8344abc8 and arena/4df8be5b). No other session's work discarded.
 
 ## PR & deploy record
@@ -680,6 +681,16 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
 - Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.
 
+### Post-merge record (written after merges completed — session arena-3a5f6f1d)
+
+| Item | Result |
+|---|---|
+| PR #25 (main delivery) | **MERGED** 2026-11-20T12:03:11Z, merge commit `11de1f12b8cd0125dc8f4ea84c67c8ea45fa11c0`; one conflict round while open (main advanced via PRs #23/#24) resolved by keeping both sessions' COORDINATION sections — logged above |
+| PR #28 (parallel fetch + CORS record) | **MERGED** 2026-11-20T12:10:06Z, merge commit `0263ec5cfdb42fa50e6235c4cc375b07b963bf04` |
+| CI | `site-check` and `Strategy-desk link & syntax check` **pass** on both PR heads; repo-wide `node tools/check-links.mjs` PASS; all `pages.yml` deploy steps verified locally (`python3 build_site.py` → "link check: OK") |
+| GitHub Pages | API `status: built`, source `{branch: main, path: /}`; builds for `11de1f1` (superseded by a later session's merge under `cancel-in-progress`) and `0263ec5` **built** with no error; site URL https://karagemop466-tech.github.io/Demo1/ |
+| Live verification | Fetched https://karagemop466-tech.github.io/Demo1/exec-desk/ post-deploy: page serves exec-desk content, and its runtime status reads **"LIVE official demo API reachable directly"** — browser→demo-API CORS confirmed end-to-end from the deployed origin (matches `data/cors.json` header evidence) |
+| Conflict handling | Both conflict rounds resolved without discarding any other session's work; logged in the Conflict log above |
 ## Integration record — final (follow-up board commit, PR #6/#10 convention)
 
 | Item | Value |
