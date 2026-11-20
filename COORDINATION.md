@@ -2200,3 +2200,37 @@ listed with file and line in `verification/index.html`.
 - **Live verification (fetched, not assumed):** `https://karagemop466-tech.github.io/Demo1/ops-desk/index.html` renders the full ops-desk page — workflow inventory (15 workflows incl. sibling desks' new workflows), committed data-freshness table with browser-recomputed ages, and the OPS-01/OPS-02/OPS-03 flag cards with run-page and board-line links.
 - Evidence refresh shipped with this commit regenerates `ops-desk/data/health.json` against latest `main`: OPS-01 verdict now computes **RESOLVED** (shipped cron `5,35 * * * *`, 6 historical commits, 3 cron lines); `engine/` tree freshness recovered to ~4 min (sibling fix landed); OPS-02 still shows 0 schedule runs in the newest sample (drops persist).
 - Sources: `https://api.github.com/repos/karagemop466-tech/Demo1/pages/builds` (official Pages build status endpoint); live page fetch of the URL above.
+
+### P-2 / P-3 results and publish record — session arena/1cbe8309-demo1
+
+**P-2 closing verification (all run on the merged tree; results verbatim):**
+
+| Gate | Result |
+|---|---|
+| `python3 build_site.py` | `built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10` · `link check: OK` |
+| `python3 desk/tools/desk_data.py` + `build_pages.py` | `built 14 pages (601 KiB) from 2026-11-20T11:43:59Z snapshot · trades=16 · resolutions=2394` · `link check: OK` |
+| `node desk/tools/dom_test.mjs` | 105 passed, 0 failed |
+| `node tools/check-links.mjs` | PASS — 411 files, source-link audit on 11 pages |
+| `python3 tools/verify_site.py` | errors=0, warnings=2 (pre-existing: liquidity section-level source link; external official settlement sources) |
+| `node alert-desk/test_boot.mjs` | 35/35 |
+| `python3 engine/test_engine.py` | 11/11 |
+| `node trade-desk/tests/*.test.mjs` | 45/45 + 13/13 + 24/24 |
+| `node tests/dashboard.test.mjs` / `dashboard-jumps.test.mjs` | 46/46 · 9/9 |
+| `npm test` (exec-desk DOM) | PASS |
+| PR checks for this session's PR | `check` pass (run 44811330626 job …3141641 lineage), `links` pass (run 44811343984) |
+
+**Live spot checks (page-fetch tool, post-deploy, 2026-11-20 ~20:27–20:58Z):** landing `/` (hub-reconciled "Start here" structure from PR #61), `trade-desk/index.html` (live browser polling, last poll 20:26:52Z), `alert-desk/index.html` (live tape bubbles stamped 20:29:58Z), `site/gas-prices.html` (topic table + per-row API source links), `integration/flagged-review.html` (flagged register), `executive-summary.html`, `trader-guide/index.html`, `ops-desk/index.html` (workflow inventory with runs-API links), `tape-desk/index.html` (two feeds + full methodology), `verification/index.html` (consistency audit verdict PASS, 454 files). Every checked page renders with source links; none returned a 404 once fetch caching was bypassed.
+
+**P-3 publish:** PR https://github.com/karagemop466-tech/Demo1/pull/74 — "board: session 1cbe8309 Pages-deploy diagnosis (10 builds/hour limit) + overlap record" — **MERGED** 2026-11-20T20:43Z, merge commit `453d4a84`. Conflict handling: two rebase rounds against a fast-moving `main` (board tail conflicts); each resolved with `python3 tools/resolve_board.py COORDINATION.md` (both sides kept, no sibling content discarded), force-push with `--force-with-lease`, checks re-run green (`check`, `links`) before merge. Board diff at merge = `COORDINATION.md` only (38 added lines; no workflow/data/site file changed by this session's PR).
+
+**Pages confirmation (P-1 evidence refined after merge — appended, not rewritten):**
+- The deploy carrying this session's merge (`453d4a84`) was itself superseded before completion: the internal `pages build and deployment` run for it (id 44813872005) reports **`conclusion: cancelled`**, which the Pages builds API surfaces as `"Page build failed."` / `duration: 0`. Pulling the internal run history showed **every** failed build from 20:28Z onward had run conclusion `cancelled` (ids 44811635697, 44811742829, 44811845177, 44812274980, 44812750231, 44812854690, 44812926256, 44812964359, 44813225178, 44813872005, 44814371441) — i.e. **pushes arriving every 1–3 minutes superseded builds that take 30–192 s**, so no build could finish during the merge storm. This refines the diagnosis: cancellation-by-supersession (session `fab3e340`'s cancel-pair evidence, now extended past their policy change) is the dominant observed mechanism; the official 10-builds/hour soft limit (https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) remains a real documented compounding constraint for this push volume, with an identical API error string — both are recorded, neither is inferred away.
+- **Recovery observed live:** once push cadence dropped below build duration, the built-in publisher went green again — `bb67820a` built 20:22:39Z (192.5 s), `f2e1a238` built ~20:53Z, `babb7ae2` built 20:56Z, and `b5566f3c` built at 20:57Z (24.6 s). `GET /repos/karagemop466-tech/Demo1/pages` now reports **`status: built`**, `build_type: legacy` (single-publisher policy per `fab3e340`), and the live landing fetch above serves the newest merged content (through PR #84 + data refresh `b5566f3c`).
+- Manual mitigations available to this session's token were tested and are permission-denied, verbatim: `POST /repos/…/pages/builds` → `403 {"message":"Resource not accessible by integration"}` (same class as `fab3e340`'s `PUT` 403). Recorded as irregularity, not worked around.
+
+**Irregularities flagged by this session (non-blocking, for the Flagged pages):**
+1. **Deploy starvation is real and recurs while push rate exceeds build duration.** Official soft limit: 10 builds/hour (docs link above); observed supersession cancellations with run IDs above. Under the merged single-publisher policy the site self-heals in quiet windows (proven by the recovery sequence), but a merge storm longer than the quiet gaps will keep the site stale. Owner options (both outside this session's scope): reduce data-cron push frequency, or grant the admin "manage GitHub Pages settings" permission so `build_type: workflow` can be enabled (documented exemption from the limit).
+2. **Claim-scope correction:** this session initially claimed `.github/workflows/pages.yml` believing it unclaimed; session `fab3e340`'s claim predates it by 7 minutes and their PRs #70/#73/#77/#78 landed the single-publisher policy first. This session dropped its planned edit in full before pushing (diff at merge = board only) and logged the correction in its claim section.
+3. **Sandbox egress:** `github.io` is not reachable from bash (allowlist); all live checks used the page-fetch tool. `curl` to the live site returns no response from the sandbox — noted so future sessions do not read that as an outage.
+
+**Open sibling state at close-out:** PR #79 (`2db27b09`, alert-desk dual-feed reconciliation) remains open and its branch was last pushed at 20:55Z — its session is actively working (its own conflict resolution with `0ad208bf`'s merged `alert-desk/` is visible in its commit history), so it is left to its owner per the no-overlap rule; it was `CONFLICTING` at 20:57Z and no other PR was open. This session's tasks P-1..P-3 are **done**.
