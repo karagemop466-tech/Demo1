@@ -126,8 +126,8 @@
         <td><span class="tag t-unv">Open by nature</span></td>
         <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/api-verification.md" target="_blank" rel="noopener">docs/api-verification.md</a></td></tr>
 
-      <tr><td>E-08</td><td>Five pages now implement the same $0.10 requirement</td>
-        <td>Five sessions built the brief’s two-chat alert feed in parallel against the same branch and could not see each other; two collided on the
+      <tr><td>E-08</td><td>Six pages now implement the same $0.10 requirement</td>
+        <td>Six sessions built the brief’s two-chat alert feed in parallel against the same branch and could not see each other; two collided on the
         filename <code>alerts.html</code>. Nothing was discarded. As merged: <a href="alerts-live.html">alerts-live.html</a> (this session — browser polling every
         15&nbsp;s, five-gate screen, rule stated in <a href="docs/alerts-model.html">the model spec</a>),
         <a href="alerts.html">alerts.html</a> (session d973ced5, official candlestick capture; regression suite <code>tests/alerts.test.mjs</code>),
@@ -135,8 +135,12 @@
         official candlesticks”), <a href="trade-desk/index.html">trade-desk/</a> (session 87015421, print-to-print on the trades tape, with a documented
         reason for not using candles: <code>trade-desk/assets/engine.js</code> lines 13–16 record that the demo returned empty candle arrays for the
         markets it checked on 2026-11-20), and <a href="alert-desk/index.html">alert-desk/</a> (session 0ad208bf, also print-to-print,
-        <code>alert-desk/app.js</code> line 25, with a committed-snapshot fallback).</td>
-        <td><span class="tag t-unv">Empty candlesticks reported by one session vs. candle-driven pages by two others — unresolved</span></td>
+        <code>alert-desk/app.js</code> line 25, with a committed-snapshot fallback), and <a href="tape-desk/index.html">tape-desk/</a>
+        (browser-polled tape, a fee-aware pick list, a simulated ledger and its own <a href="tape-desk/consolidation-map.html">consolidation map</a> of which desk does what).
+        The <code>alerts.html</code> path collision was settled in the root page owner’s favour: this session’s page moved to
+        <code>alerts-live.html</code> rather than overwrite <code>alerts.html</code>, whose DOM is pinned by another session’s regression suite
+        (<code>tests/alerts.test.mjs</code>, 23 checks).</td>
+        <td><span class="tag t-unv">Empty candlesticks reported by one session vs. candle-driven pages by two others — unresolved</span> <span class="note">six feeds, one requirement</span></td>
         <td><a href="https://github.com/karagemop466-tech/Demo1/tree/main/trade-desk/assets/engine.js" target="_blank" rel="noopener">trade-desk/assets/engine.js</a> ·
         <a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/data/history.json" target="_blank" rel="noopener">docs/data/history.json (candles: [] in the CI capture)</a> ·
         <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>

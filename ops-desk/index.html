@@ -304,6 +304,17 @@ function renderFlags(h) {
         const div = el("div", "small"); div.appendChild(link(r.html_url, "run " + r.id + " — " + r.name + " — " + r.created_at + " · " + (r.conclusion || "in progress"))); ev.appendChild(div);
       }
     }
+    if (e.pages_deploys) {
+      const pd = e.pages_deploys;
+      if (pd.recent) {
+        ev.appendChild(el("div", "", "Most recent " + pd.sample_count + " pages.yml runs: " +
+          pd.cancelled_in_sample + " cancelled, " + pd.queued_or_in_progress_in_sample + " queued/in-progress; last successful deploy: " +
+          (pd.last_success ? pd.last_success.created_at + " (run " + pd.last_success.id + ", commit " + String(pd.last_success.head_sha).slice(0, 8) + ")" : "none in sample")));
+        for (const r of pd.recent.slice(0, 6)) {
+          const div = el("div", "small"); div.appendChild(link(r.html_url, "run " + r.id + " — " + (r.conclusion || r.status) + " — " + r.created_at + " · " + String(r.head_sha).slice(0, 8))); ev.appendChild(div);
+        }
+      }
+    }
     if (e.note) ev.appendChild(el("div", "small muted", e.note));
     c.appendChild(ev);
     c.appendChild(el("div", "small muted", "Change request logged on the board for the owning session; not applied by 54a39029."));

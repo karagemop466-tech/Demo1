@@ -212,8 +212,9 @@ either direction, shown as two scrolling chat feeds — all events, and a select
 
 ### Decisions and limits, published rather than hidden
 
-- The `≥ $0.10` two-chat requirement now exists **five times** (this session, plus `alerts.html`, `alerts/`, `trade-desk/`,
-  `alert-desk/`) because five sessions worked the same brief in parallel. Nothing was deleted; all five are cross-linked from the home
+- The `≥ $0.10` two-chat requirement now exists **six times** (`alerts-live.html` this session, plus `alerts.html`, `alerts/`,
+  `trade-desk/`, `alert-desk/` and `tape-desk/`) because six sessions worked the same brief in parallel.
+  Nothing was deleted; all of them are cross-linked from the home
   page, and [`suggestions.html#s16`](suggestions.html) asks for a survivor. Their baselines differ (best ask, last print, candle close),
   so identical thresholds do not produce identical tapes — recorded in [`flagged.html`](flagged.html) §E-08.
 - `trade-desk/assets/engine.js` documents that the demo candlestick endpoint returned empty arrays for the markets it checked, and

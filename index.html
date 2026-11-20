@@ -75,12 +75,13 @@
     <a class="tile" href="site/liquidity.html"><b>Price chart &amp; liquidity</b><span>Price over time from official 1-minute, 1-hour and 1-day candles (no seconds resolution exists on the REST endpoint), and the contracts bid at each price.</span></a>
     <a class="tile" href="site/markets.html"><b>Live markets table</b><span>Open markets, ranked by computed 24-hour notional. Each topic page shows up to 60 rows, with the API source of each row.</span></a>
     <a class="tile" href="alerts.html"><b>Price swing alerts (two scrolling chats)</b><span>Consecutive official candle closes compared at the selected threshold (default ≥ $0.10 either direction); Chat 2 ranks by a disclosed relative-move heuristic. Official API + venue + news-search links per message; cause unverified. (page and 23-check regression suite by sessions d973ced5 / b62e8188; the data-pipeline fix behind it is this session’s.)</span></a>
+    <a class="tile" href="tape-desk/index.html"><b>Live tape desk (chat + chart + book)</b><span>Browser-polled demo API: two ≥ $0.10 scrolling feeds (all events, then the fee-aware model picks), a time-axis price chart in seconds/minutes/hours, contracts resting at each price, YES/NO tracking at the terminal status only, and a simulated ledger that grades each pick. Degrades to the committed snapshot when the API is unreachable; the map of which desk does what is at <a href="tape-desk/consolidation-map.html">tape-desk/consolidation-map.html</a>.</span></a>
   </div>
-  <p class="small">The ≥ $0.10 two-chat requirement is implemented <b>five times</b> on this site, because five sessions built it in
+  <p class="small">The ≥ $0.10 two-chat requirement is implemented <b>six times</b> on this site, because six sessions built it in
   parallel against the same brief: <a href="alerts-live.html">alerts-live.html</a> (this session: browser polling, five-gate screen,
   <a href="docs/alerts-model.html">model spec</a>), <a href="alerts.html">alerts.html</a> (committed candlestick capture, sessions d973ced5 + b62e8188),
   <a href="alerts/index.html">alerts/index.html</a> (its own generated feed and QLM score), <a href="trade-desk/index.html">trade-desk/</a> and
-  <a href="alert-desk/index.html">alert-desk/</a>. All five share the $0.10 threshold and none places an order — but each measures a “move” against a
+  <a href="alert-desk/index.html">alert-desk/</a> and <a href="tape-desk/index.html">tape-desk/</a> (which also keeps a <a href="tape-desk/consolidation-map.html">map of which desk does what</a>). All six share the $0.10 threshold and none places an order — but each measures a “move” against a
   different price (best ask, last print, candle close), so a flag on one page need not appear on another at the same minute.
   Nothing was deleted; <a href="suggestions.html#s16">S16</a> asks you to pick the survivor.
   Data freshness: <code>snapshot/*.json</code> is the source of the counts below (collected 2026-11-20T11:43:59Z), and CI refreshes

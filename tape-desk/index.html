@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live tape desk — Kalshi demo · ≥ $0.10 swings, two feeds, one chart</title>
+<meta name="description" content="Scrolling alert feeds for Kalshi demo contract swings of $0.10 or more on gas prices, elections, culture, crypto and golf, with a live price chart, order-book depth and a simulated trade ledger. Every number links to the official demo API response it came from.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a id="skiplink" href="#main">Skip to the desk</a>
+<header class="top">
+  <div class="brand">
+    <a href="../index.html" class="back">← Kalshi demo landing</a>
+    <strong>tape&nbsp;desk</strong>
+    <span class="fine">live swings · five topics · demo venue</span>
+  </div>
+  <nav class="desknav">
+    <a href="index.html" class="on" aria-current="page">Desk</a>
+    <a href="verified.html">Line-by-line verification</a>
+    <a href="consolidation-map.html">Which page does what</a>
+    <a href="README.md">README</a>
+    <a href="data/watchlist.json">data</a>
+  </nav>
+</header>
+
+<div class="statusbar" id="statusbar">
+  <span class="badge" id="modeBadge">BOOTING</span>
+  <span class="stat">watchlist <b id="stWatch">–</b> markets</span>
+  <span class="stat">poll <b id="stInterval">–</b></span>
+  <span class="stat">last request <b id="stLast">–</b></span>
+  <span class="stat">requests <b id="stReq">0</b> · failures <b id="stFail">0</b></span>
+  <span class="stat">snapshot <b id="stSnap">–</b></span>
+  <span class="stat">swings <b id="stSwings">0</b> · picks <b id="stPicks">0</b> · off-topic dropped <b id="stOff">0</b></span>
+  <label class="ctl"><input type="checkbox" id="follow" checked> auto-scroll</label>
+</div>
+<p class="banner" id="banner" hidden></p>
+
+<main id="main">
+  <h1>Two scrolling feeds of every ≥&nbsp;$0.10 move — and a model-filtered one</h1>
+  <p class="lede">
+    This page polls the official Kalshi <b>demo</b> REST API from your browser. Chat&nbsp;1 shows every contract
+    swing of <b>$0.10 or more in either direction</b> on the five topics; Chat&nbsp;2 shows only the swings a
+    transparent, published rule rates as worth a look. Click a bubble to load that market into the chart, the
+    order-book ladder and the cause panel. Everything is mock-funds demo data —
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official demo-environment page</a>.
+  </p>
+
+  <section class="controls card" id="controls">
+    <div class="ctl-group" id="topicChips" role="group" aria-label="Topic filter">
+      <span class="ctl-label">topic</span>
+    </div>
+    <label class="ctl">feed basis
+      <select id="basis">
+        <option value="traded">traded price (tape)</option>
+        <option value="mid">book mid (live quotes)</option>
+      </select>
+    </label>
+    <label class="ctl">poll every
+      <select id="interval">
+        <option value="10000">10 s</option>
+        <option value="20000" selected>20 s</option>
+        <option value="30000">30 s</option>
+        <option value="60000">60 s</option>
+      </select>
+    </label>
+    <button id="pause" class="btn">pause</button>
+    <button id="clearLive" class="btn">clear live bubbles</button>
+    <span class="fine" id="rateNote"></span>
+  </section>
+
+  <div class="chats">
+    <section class="card chat" id="chatAll">
+      <header>
+        <h2>Chat 1 · ALL EVENTS <span class="pill" id="allCount">0</span></h2>
+        <p class="fine">every ≥ $0.10 swing the desk can see, either direction, both up and down</p>
+      </header>
+      <div class="feed" id="feedAll" role="log" aria-live="polite" aria-label="All-event swing feed"></div>
+    </section>
+    <section class="card chat" id="chatPicks">
+      <header>
+        <h2>Chat 2 · MODEL PICKS <span class="pill" id="pickCount">0</span></h2>
+        <p class="fine" id="pickRule"></p>
+      </header>
+      <div class="feed" id="feedPicks" role="log" aria-live="polite" aria-label="Model-pick feed"></div>
+      <details class="rulebox">
+        <summary>the rule, in full</summary>
+        <ul id="ruleList"></ul>
+      </details>
+    </section>
+  </div>
+
+  <section class="card" id="chartCard">
+    <header class="cardhead">
+      <h2>Price of one contract over time</h2>
+      <div class="row">
+        <label class="ctl">market <select id="marketPick"></select></label>
+        <label class="ctl">x-axis window <select id="windowPick"></select></label>
+        <label class="ctl">y scale
+          <select id="yscale">
+            <option value="full" selected>0 – $1.00</option>
+            <option value="auto">zoom to data</option>
+          </select>
+        </label>
+        <span class="fine" id="chartNote"></span>
+      </div>
+    </header>
+    <div id="chart"></div>
+    <p class="fine" id="chartSrc"></p>
+  </section>
+
+  <div class="two">
+    <section class="card" id="ladderCard">
+      <header class="cardhead">
+        <h2>Liquidity at each price</h2>
+        <p class="fine" id="ladderNote"></p>
+      </header>
+      <div id="ladder"></div>
+    </section>
+    <section class="card" id="causeCard">
+      <header class="cardhead">
+        <h2>What this market settles on</h2>
+        <p class="fine">the market's own official rule text (<code>rules_primary</code>) and a news lead for the moment it jumped — a lead, not proof of cause</p>
+      </header>
+      <div id="cause"></div>
+    </section>
+  </div>
+
+  <section class="card" id="boardCard">
+    <header class="cardhead">
+      <h2>Topic board — biggest money first</h2>
+      <p class="fine">markets grouped by event, so strikes of the same event stay together. Snapshot columns are the
+      committed values this session re-checked against the live API
+      (<a href="verified.html">verification table</a>); live columns replace them as requests succeed.</p>
+    </header>
+    <div id="board"></div>
+  </section>
+
+  <div class="two">
+    <section class="card" id="resCard">
+      <header class="cardhead">
+        <h2>Resolution tracker</h2>
+        <p class="fine">watched markets are followed until they end. YES/NO is reported only at the terminal
+        <code>finalized</code> status; <code>determined</code>/<code>disputed</code> results may still change —
+        <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">official lifecycle</a>.</p>
+      </header>
+      <div id="resTable"></div>
+    </section>
+    <section class="card" id="paperCard">
+      <header class="cardhead">
+        <h2>Simulated trades <span class="tag">SIMULATED — no orders are placed</span></h2>
+        <p class="fine">one contract per pick at the executable quote, charged the official taker fee, settled at the
+        market's own <code>settlement_value_dollars</code>.</p>
+      </header>
+      <div class="kpis" id="paperKpis"></div>
+      <div id="paperTable"></div>
+      <div id="paperCats"></div>
+    </section>
+  </div>
+
+  <section class="card" id="howCard">
+    <details>
+      <summary><b>How this desk works, and what it deliberately does not do</b></summary>
+      <ul class="srcs" id="howList"></ul>
+    </details>
+  </section>
+</main>
+<footer class="foot">
+  <p class="fine">Built from the official demo API by session <code>arena/5bfa283b-demo1</code>. Values that could not
+  be confirmed from an official response are left blank and listed on
+  <a href="verified.html#blank">the verification page</a> — never filled in.</p>
+</footer>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

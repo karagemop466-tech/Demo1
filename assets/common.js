@@ -4,6 +4,7 @@
     ["index.html", "Home"],
     ["alerts.html", "Price swing alerts"],
     ["alerts-live.html", "Alert tapes (live)"],
+    ["tape-desk/index.html", "Tape desk"],
     ["site/gas-prices.html", "Gas prices"],
     ["site/elections.html", "Elections"],
     ["site/culture.html", "Culture"],

@@ -1,0 +1,1594 @@
+{
+ "meta": {
+  "generated_utc": "2026-11-20T19:50Z",
+  "markets_checked": 10,
+  "markets_total": 45,
+  "fields_compared": 104,
+  "fields_match": 56,
+  "fields_differ": 33,
+  "rest_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "docs": {
+   "demo_env": "https://docs.kalshi.com/getting_started/demo_env",
+   "environments": "https://docs.kalshi.com/getting_started/api_environments",
+   "market_data_qs": "https://docs.kalshi.com/getting_started/quick_start_market_data",
+   "get_markets": "https://docs.kalshi.com/api-reference/market/get-markets",
+   "get_market": "https://docs.kalshi.com/api-reference/market/get-market",
+   "get_trades": "https://docs.kalshi.com/api-reference/market/get-trades",
+   "get_orderbook": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+   "orderbook_responses": "https://docs.kalshi.com/getting_started/orderbook_responses",
+   "get_candlesticks": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+   "lifecycle": "https://docs.kalshi.com/getting_started/market_lifecycle",
+   "settlement": "https://docs.kalshi.com/getting_started/market_settlement",
+   "sharding": "https://docs.kalshi.com/getting_started/exchange_sharding",
+   "rate_limits": "https://docs.kalshi.com/getting_started/rate_limits",
+   "fee_rounding": "https://docs.kalshi.com/getting_started/fee_rounding",
+   "quick_start_ws": "https://docs.kalshi.com/getting_started/quick_start_websockets",
+   "fee_schedule": "https://kalshi.com/docs/kalshi-fee-schedule.pdf"
+  },
+  "method": "For each market the committed snapshot value (collected by tools/collect_kalshi.py from the same official demo API at 2026-11-20T11:43:59Z) is compared field by field with a value fetched live in this session. A DIFFER is not an error: prices move. It is reported so the reader can see that the snapshot was real and how far it has drifted.",
+  "probes": [
+   {
+    "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+    "fetched_utc": "2026-11-20T19:46Z",
+    "observed": "exchange_active=true; trading_active=true; intra_exchange_transfers_active=true; four index statuses returned (Default, Demo shard 1, Demo shard 2, one without a description), each with trading_active=true"
+   },
+   {
+    "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=8",
+    "fetched_utc": "2026-11-20T19:46Z",
+    "observed": "HTTP 200 without credentials; newest trade stamped 2026-11-20T19:46:42.691948Z (i.e. the tape is live); fields seen per trade: ticker, yes_price_dollars, no_price_dollars, count_fp, created_time, taker_side, taker_book_side, taker_outcome_side, is_block_trade, trade_id; a `cursor` is returned"
+   },
+   {
+    "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=3&exchange_index=2",
+    "fetched_utc": "2026-11-20T19:49Z",
+    "observed": "HTTP 200; a different, valid trade set (KXMARMAD-27-UVA, KXPGAR2LEAD-THRC26-HLEB, KXPRESPERSON-28-JVAN) stamped 2026-11-20T19:49:16Z. The five markets checked with GET /markets/... all report exchange_index 0, so on the demo venue the production shard table on the official sharding page does not describe these series."
+   }
+  ]
+ },
+ "rows": [
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+   "title": "Will average **gas prices** be above $3.6200?",
+   "kind": "open",
+   "verdict": "HAS-DELTA",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV23-3.6200",
+   "fetched_utc": "2026-11-20T19:50Z",
+   "match": 2,
+   "differ": 9,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "active",
+     "live": "active",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": null,
+     "live": "",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.89",
+     "live": "0.97",
+     "verdict": "DIFFER",
+     "delta": 0.08
+    },
+    {
+     "field": "previous_price",
+     "snapshot": "0.81",
+     "live": "0.92",
+     "verdict": "DIFFER",
+     "delta": 0.11
+    },
+    {
+     "field": "yes_bid",
+     "snapshot": "0.87",
+     "live": "0.96",
+     "verdict": "DIFFER",
+     "delta": 0.09
+    },
+    {
+     "field": "yes_ask",
+     "snapshot": "0.89",
+     "live": "0.97",
+     "verdict": "DIFFER",
+     "delta": 0.08
+    },
+    {
+     "field": "yes_bid_size",
+     "snapshot": "5",
+     "live": "173.61",
+     "verdict": "DIFFER",
+     "delta": 168.61
+    },
+    {
+     "field": "yes_ask_size",
+     "snapshot": "18.04",
+     "live": "168.43",
+     "verdict": "DIFFER",
+     "delta": 150.39
+    },
+    {
+     "field": "volume_24h",
+     "snapshot": "4368.84",
+     "live": "3611.15",
+     "verdict": "DIFFER",
+     "delta": -757.69
+    },
+    {
+     "field": "volume",
+     "snapshot": "14015.7",
+     "live": "14958.24",
+     "verdict": "DIFFER",
+     "delta": 942.54
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "10871.86",
+     "live": "11779.61",
+     "verdict": "DIFFER",
+     "delta": 907.75
+    },
+    {
+     "field": "close_time",
+     "snapshot": "2026-11-23T04:59:00Z",
+     "live": "2026-11-23T04:59:00Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ]
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+   "title": "Will average **gas prices** be above $3.6400?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASW-26NOV23",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6000",
+   "title": "Will average **gas prices** be above $3.6000?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "market_ticker": "KXAAAGASM-26NOV30-3.50",
+   "title": "Will average **gas prices** be above $3.50?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "market_ticker": "KXAAAGASM-26NOV30-3.40",
+   "title": "Will average **gas prices** be above $3.40?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASM-26NOV30",
+   "market_ticker": "KXAAAGASM-26NOV30-3.60",
+   "title": "Will average **gas prices** be above $3.60?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASM-26DEC31",
+   "market_ticker": "KXAAAGASM-26DEC31-3.30",
+   "title": "Will average **gas prices** be above $3.30?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASM-26DEC31",
+   "market_ticker": "KXAAAGASM-26DEC31-3.10",
+   "title": "Will average **gas prices** be above $3.10?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESNOMR-28",
+   "market_ticker": "KXPRESNOMR-28-MTG",
+   "title": "Will Marjorie Taylor Greene be the nominee for the Presidency for the Republican party?",
+   "kind": "open",
+   "verdict": "HAS-DELTA",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-MTG",
+   "fetched_utc": "2026-11-20T19:51Z",
+   "match": 5,
+   "differ": 6,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "active",
+     "live": "active",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": null,
+     "live": "",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.005",
+     "live": "0.005",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "previous_price",
+     "snapshot": "0.008",
+     "live": "0.005",
+     "verdict": "DIFFER",
+     "delta": -0.003
+    },
+    {
+     "field": "yes_bid",
+     "snapshot": "0.004",
+     "live": "0.004",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "yes_ask",
+     "snapshot": "0.005",
+     "live": "0.005",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "yes_bid_size",
+     "snapshot": "166666.64",
+     "live": "83333.32",
+     "verdict": "DIFFER",
+     "delta": -83333.32
+    },
+    {
+     "field": "yes_ask_size",
+     "snapshot": "94454.95",
+     "live": "66633.72",
+     "verdict": "DIFFER",
+     "delta": -27821.23
+    },
+    {
+     "field": "volume_24h",
+     "snapshot": "129953.85",
+     "live": "8245.8",
+     "verdict": "DIFFER",
+     "delta": -121708.05
+    },
+    {
+     "field": "volume",
+     "snapshot": "38237647.43",
+     "live": "38240378.44",
+     "verdict": "DIFFER",
+     "delta": 2731.01
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "18714262.43",
+     "live": "18714295.37",
+     "verdict": "DIFFER",
+     "delta": 32.94
+    },
+    {
+     "field": "close_time",
+     "snapshot": "2028-11-07T15:00:00Z",
+     "live": "2028-11-07T15:00:00Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ]
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESNOMR-28",
+   "market_ticker": "KXPRESNOMR-28-LHOG",
+   "title": "Will Larry Hogan be the nominee for the Presidency for the Republican party?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESNOMR-28",
+   "market_ticker": "KXPRESNOMR-28-ETRU",
+   "title": "Will Eric Trump be the nominee for the Presidency for the Republican party?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESNOMD-28",
+   "market_ticker": "KXPRESNOMD-28-AYAN",
+   "title": "Will Andrew Yang be the nominee for the Presidency for the Democratic party?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESNOMD-28",
+   "market_ticker": "KXPRESNOMD-28-JAM",
+   "title": "Will Jamie Dimon be the nominee for the Presidency for the Democratic party?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESPERSON-28",
+   "market_ticker": "KXPRESPERSON-28-MOBA",
+   "title": "Who will win the next presidential election?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESPERSON-28",
+   "market_ticker": "KXPRESPERSON-28-MTAY",
+   "title": "Who will win the next presidential election?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXPRESPERSON-28",
+   "market_ticker": "KXPRESPERSON-28-JDIM",
+   "title": "Who will win the next presidential election?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-HUN",
+   "market_ticker": "KXRT-HUN-72",
+   "title": "The Hunger Games: Sunrise on the Reaping Rotten Tomatoes score?",
+   "kind": "open",
+   "verdict": "HAS-DELTA",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-HUN-72",
+   "fetched_utc": "2026-11-20T19:51Z",
+   "match": 3,
+   "differ": 8,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "active",
+     "live": "active",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": null,
+     "live": "",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.03",
+     "live": "0.03",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "previous_price",
+     "snapshot": "0.59",
+     "live": "0.65",
+     "verdict": "DIFFER",
+     "delta": 0.06
+    },
+    {
+     "field": "yes_bid",
+     "snapshot": "0.02",
+     "live": "0",
+     "verdict": "DIFFER",
+     "delta": -0.02
+    },
+    {
+     "field": "yes_ask",
+     "snapshot": "0.03",
+     "live": "1",
+     "verdict": "DIFFER",
+     "delta": 0.97
+    },
+    {
+     "field": "yes_bid_size",
+     "snapshot": "8333.33",
+     "live": "0",
+     "verdict": "DIFFER",
+     "delta": -8333.33
+    },
+    {
+     "field": "yes_ask_size",
+     "snapshot": "5555.55",
+     "live": "0",
+     "verdict": "DIFFER",
+     "delta": -5555.55
+    },
+    {
+     "field": "volume_24h",
+     "snapshot": "6425.87",
+     "live": "6676.26",
+     "verdict": "DIFFER",
+     "delta": 250.39
+    },
+    {
+     "field": "volume",
+     "snapshot": "22430.27",
+     "live": "24736.53",
+     "verdict": "DIFFER",
+     "delta": 2306.26
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "17180.03",
+     "live": "18494.94",
+     "verdict": "DIFFER",
+     "delta": 1314.91
+    },
+    {
+     "field": "close_time",
+     "snapshot": "2026-11-23T15:00:00Z",
+     "live": "2026-11-23T15:00:00Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ]
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-HUN",
+   "market_ticker": "KXRT-HUN-77",
+   "title": "The Hunger Games: Sunrise on the Reaping Rotten Tomatoes score?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-FUR",
+   "market_ticker": "KXRT-FUR-85",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-FUR",
+   "market_ticker": "KXRT-FUR-75",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-FUR",
+   "market_ticker": "KXRT-FUR-70",
+   "title": "The Further Mis-Adventures of Cliff Booth Rotten Tomatoes score?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXOSCARPIC-27",
+   "market_ticker": "KXOSCARPIC-27-INV",
+   "title": "Will The Invite win Best Picture at the Oscars?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXOSCARPIC-27",
+   "market_ticker": "KXOSCARPIC-27-WIL",
+   "title": "Will Wild Horse Nine win Best Picture at the Oscars?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXOSCARPIC-27",
+   "market_ticker": "KXOSCARPIC-27-ART",
+   "title": "Will Artificial win Best Picture at the Oscars?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "market_ticker": "KXBTCY-27JAN0100-T149999.99",
+   "title": "BTC price  on Jan 1, 2027?",
+   "kind": "open",
+   "verdict": "HAS-DELTA",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-T149999.99",
+   "fetched_utc": "2026-11-20T19:51Z",
+   "match": 7,
+   "differ": 4,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "active",
+     "live": "active",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": null,
+     "live": "",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.03",
+     "live": "0.03",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "previous_price",
+     "snapshot": "0.01",
+     "live": "0.03",
+     "verdict": "DIFFER",
+     "delta": 0.02
+    },
+    {
+     "field": "yes_bid",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "yes_ask",
+     "snapshot": "0.01",
+     "live": "1",
+     "verdict": "DIFFER",
+     "delta": 0.99
+    },
+    {
+     "field": "yes_bid_size",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "yes_ask_size",
+     "snapshot": "16666.66",
+     "live": "0",
+     "verdict": "DIFFER",
+     "delta": -16666.66
+    },
+    {
+     "field": "volume_24h",
+     "snapshot": "92031.97",
+     "live": "61111.08",
+     "verdict": "DIFFER",
+     "delta": -30920.89
+    },
+    {
+     "field": "volume",
+     "snapshot": "56105512.48",
+     "live": "56105512.48",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "11453252.92",
+     "live": "11453252.92",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "close_time",
+     "snapshot": "2027-01-01T05:00:00Z",
+     "live": "2027-01-01T05:00:00Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ]
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "market_ticker": "KXBTCY-27JAN0100-B127500",
+   "title": "BTC price  on Jan 1, 2027?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCY-27JAN0100",
+   "market_ticker": "KXBTCY-27JAN0100-B112500",
+   "title": "BTC price  on Jan 1, 2027?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCD-26NOV2101",
+   "market_ticker": "KXBTCD-26NOV2101-T70799.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCD-26NOV2101",
+   "market_ticker": "KXBTCD-26NOV2101-T70699.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCD-26NOV2101",
+   "market_ticker": "KXBTCD-26NOV2101-T70599.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCMAXMON-BTC-26NOV30",
+   "market_ticker": "KXBTCMAXMON-BTC-26NOV30-9750000",
+   "title": "Will BTC trimmed mean be above $97500.00 by 11:59 PM ET on Nov 30, 2026?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCMAXMON-BTC-26NOV30",
+   "market_ticker": "KXBTCMAXMON-BTC-26NOV30-9500000",
+   "title": "Will BTC trimmed mean be above $95000.00 by 11:59 PM ET on Nov 30, 2026?",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "market_ticker": "KXPGATOUR-THRC26-SSTR",
+   "title": "The RSM Classic: Sepp Straka wins",
+   "kind": "open",
+   "verdict": "HAS-DELTA",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR",
+   "fetched_utc": "2026-11-20T19:50Z",
+   "match": 5,
+   "differ": 6,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "active",
+     "live": "active",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": null,
+     "live": "",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.025",
+     "live": "0.025",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "previous_price",
+     "snapshot": "0.011",
+     "live": "0.028",
+     "verdict": "DIFFER",
+     "delta": 0.017
+    },
+    {
+     "field": "yes_bid",
+     "snapshot": "0.022",
+     "live": "0.021",
+     "verdict": "DIFFER",
+     "delta": -0.001
+    },
+    {
+     "field": "yes_ask",
+     "snapshot": "0.025",
+     "live": "0.025",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "yes_bid_size",
+     "snapshot": "549",
+     "live": "7936.5",
+     "verdict": "DIFFER",
+     "delta": 7387.5
+    },
+    {
+     "field": "yes_ask_size",
+     "snapshot": "6519.44",
+     "live": "3740.76",
+     "verdict": "DIFFER",
+     "delta": -2778.68
+    },
+    {
+     "field": "volume_24h",
+     "snapshot": "515192.51",
+     "live": "8280.31",
+     "verdict": "DIFFER",
+     "delta": -506912.2
+    },
+    {
+     "field": "volume",
+     "snapshot": "758769.06",
+     "live": "761547.74",
+     "verdict": "DIFFER",
+     "delta": 2778.68
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "681894.62",
+     "live": "681894.62",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "close_time",
+     "snapshot": "2026-12-06T00:00:00Z",
+     "live": "2026-12-06T00:00:00Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ]
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "market_ticker": "KXPGATOUR-THRC26-TMOO",
+   "title": "The RSM Classic: Taylor Moore wins",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOUR-THRC26",
+   "market_ticker": "KXPGATOUR-THRC26-MPEN",
+   "title": "The RSM Classic: Marco Penge wins",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXLPGATOUR-CMEGTC26",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-PATTAV",
+   "title": "CME Group Tour Championship: Patty Tavatanakit wins",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXLPGATOUR-CMEGTC26",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-ROSZHA",
+   "title": "CME Group Tour Championship: Rose Zhang wins",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXLPGATOUR-CMEGTC26",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-ALIKIM",
+   "title": "CME Group Tour Championship: A Lim Kim wins",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOP20-THRC26",
+   "market_ticker": "KXPGATOP20-THRC26-RCAM",
+   "title": "Rafael Campos finishes top 20",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOP20-THRC26",
+   "market_ticker": "KXPGATOP20-THRC26-PCOO",
+   "title": "Pierceson Coody finishes top 20",
+   "kind": "open",
+   "verdict": "NOT-FETCHED",
+   "request_url": null,
+   "fetched_utc": null,
+   "match": null,
+   "differ": null,
+   "fields": []
+  },
+  {
+   "topic": "Gas prices",
+   "event_ticker": "KXAAAGASW-26NOV16",
+   "market_ticker": "KXAAAGASW-26NOV16-4.2000",
+   "title": "Will average **gas prices** be above $4.2000?",
+   "kind": "resolution",
+   "verdict": "ALL-MATCH",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASW-26NOV16-4.2000",
+   "fetched_utc": "2026-11-20T19:50Z",
+   "match": 7,
+   "differ": 0,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "finalized",
+     "live": "finalized",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": "no",
+     "live": "no",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "volume",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_value",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_ts",
+     "snapshot": "2026-11-16T14:32:51.060078Z",
+     "live": "2026-11-16T14:32:51.060078Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ],
+   "stage": "FINAL (finalized)"
+  },
+  {
+   "topic": "Elections",
+   "event_ticker": "KXGOVCA-26",
+   "market_ticker": "KXGOVCA-26-MMAH",
+   "title": "Who will win the governorship in California?",
+   "kind": "resolution",
+   "verdict": "ALL-MATCH",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOVCA-26-MMAH",
+   "fetched_utc": "2026-11-20T19:50Z",
+   "match": 7,
+   "differ": 0,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "finalized",
+     "live": "finalized",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": "no",
+     "live": "no",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.9",
+     "live": "0.9",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "volume",
+     "snapshot": "68919632.99",
+     "live": "68919632.99",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "8589776.59",
+     "live": "8589776.59",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_value",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_ts",
+     "snapshot": "2026-11-04T04:58:49.9578Z",
+     "live": "2026-11-04T04:58:49.9578Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ],
+   "stage": "FINAL (finalized)"
+  },
+  {
+   "topic": "Culture",
+   "event_ticker": "KXRT-MON",
+   "market_ticker": "KXRT-MON-5",
+   "title": "The Mongoose Rotten Tomatoes score?",
+   "kind": "resolution",
+   "verdict": "ALL-MATCH",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXRT-MON-5",
+   "fetched_utc": "2026-11-20T19:52Z",
+   "match": 7,
+   "differ": 0,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "finalized",
+     "live": "finalized",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": "no",
+     "live": "no",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.96",
+     "live": "0.96",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "volume",
+     "snapshot": "2.7",
+     "live": "2.7",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "1.8",
+     "live": "1.8",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_value",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_ts",
+     "snapshot": "2026-11-02T17:29:26.016067Z",
+     "live": "2026-11-02T17:29:26.016067Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ],
+   "stage": "FINAL (finalized)"
+  },
+  {
+   "topic": "Crypto",
+   "event_ticker": "KXBTCD-26JUN0521-7880A5B48E",
+   "market_ticker": "KXBTCD-26JUN0521-7880A5B48E-T99499.99-7880A5B48E",
+   "title": "Bitcoin price on Jun 5, 2026?",
+   "kind": "resolution",
+   "verdict": "ALL-MATCH",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26JUN0521-7880A5B48E-T99499.99-7880A5B48E",
+   "fetched_utc": "2026-11-20T19:52Z",
+   "match": 6,
+   "differ": 0,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "disputed",
+     "live": "disputed",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": "yes",
+     "live": "yes",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "volume",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_value",
+     "snapshot": "1",
+     "live": "1",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ],
+   "stage": "NOT TERMINAL \u2014 live status 'disputed'"
+  },
+  {
+   "topic": "Golf",
+   "event_ticker": "KXPGATOUR-AUCPBCS26",
+   "market_ticker": "KXPGATOUR-AUCPBCS26-WGOR",
+   "title": "Austin Championship presented by Compliance Solutions: Will Gordon wins",
+   "kind": "resolution",
+   "verdict": "ALL-MATCH",
+   "request_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-AUCPBCS26-WGOR",
+   "fetched_utc": "2026-11-20T19:50Z",
+   "match": 7,
+   "differ": 0,
+   "fields": [
+    {
+     "field": "status",
+     "snapshot": "finalized",
+     "live": "finalized",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "result",
+     "snapshot": "no",
+     "live": "no",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "last_price",
+     "snapshot": "0.016",
+     "live": "0.016",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "volume",
+     "snapshot": "13635.01",
+     "live": "13635.01",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "open_interest",
+     "snapshot": "13541.22",
+     "live": "13541.22",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_value",
+     "snapshot": "0",
+     "live": "0",
+     "verdict": "MATCH",
+     "delta": 0.0
+    },
+    {
+     "field": "settlement_ts",
+     "snapshot": "2026-11-16T22:33:33.370951Z",
+     "live": "2026-11-16T22:33:33.370951Z",
+     "verdict": "MATCH",
+     "delta": null
+    },
+    {
+     "field": "exchange_index",
+     "snapshot": null,
+     "live": "0",
+     "verdict": "SNAPSHOT-BLANK",
+     "delta": null
+    }
+   ],
+   "stage": "FINAL (finalized)"
+  }
+ ],
+ "unverified_rows": [
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6200",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6400",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.50",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.50",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASW-26NOV23-3.6000",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26DEC31-3.30",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26DEC31-3.30",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.40",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26NOV30-3.60",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "gas_prices",
+   "market_ticker": "KXAAAGASM-26DEC31-3.10",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESNOMD-28-AYAN",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESPERSON-28-MOBA",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESNOMR-28-LHOG",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESNOMR-28-ETRU",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESPERSON-28-MTAY",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESNOMD-28-JAM",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "elections",
+   "market_ticker": "KXPRESPERSON-28-JDIM",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXRT-FUR-85",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXRT-HUN-77",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXOSCARPIC-27-INV",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXOSCARPIC-27-WIL",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXOSCARPIC-27-ART",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXRT-FUR-75",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "culture",
+   "market_ticker": "KXRT-FUR-70",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B127500",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCY-27JAN0100-B112500",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70799.99",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70799.99",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70699.99",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70699.99",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70599.99",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26NOV2101-T70599.99",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCMAXMON-BTC-26NOV30-9750000",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCMAXMON-BTC-26NOV30-9500000",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXPGATOUR-THRC26-TMOO",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXPGATOUR-THRC26-MPEN",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-PATTAV",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-ROSZHA",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXLPGATOUR-CMEGTC26-ALIKIM",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXPGATOP20-THRC26-RCAM",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXPGATOP20-THRC26-PCOO",
+   "missing": "model inputs (no entry price or no settlement band of >= 20 resolved markets)"
+  },
+  {
+   "topic": "golf",
+   "market_ticker": "KXPGATOP20-THRC26-PCOO",
+   "missing": "no live re-fetch this session \u2014 snapshot values only"
+  },
+  {
+   "topic": "crypto",
+   "market_ticker": "KXBTCD-26JUN0521-7880A5B48E-T99499.99-7880A5B48E",
+   "missing": "terminal YES/NO (live status is not `finalized`)"
+  }
+ ]
+}

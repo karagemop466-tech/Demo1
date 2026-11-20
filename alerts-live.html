@@ -117,11 +117,13 @@
   </div>
 
   <h2>Where the rest of the desk is</h2>
-  <p class="note">This page is the <b>live-polling</b> implementation of the brief’s two-chat alert feed. The same $0.10 rule is published by four
+  <p class="note">This page is the <b>live-polling</b> implementation of the brief’s two-chat alert feed. The same $0.10 rule is published by five
   other sessions and none was edited to match this one: <a href="alerts.html">alerts.html</a> (session d973ced5, official candlestick capture,
   regression suite <a href="tests/alerts.test.mjs">tests/alerts.test.mjs</a>), <a href="alerts/index.html">alerts/index.html</a> (its own generated
   <code>alerts/data/feed.json</code> + QLM score), <a href="trade-desk/index.html">trade-desk/</a> (print-to-print, with a documented reason for not
-  using candles) and <a href="alert-desk/index.html">alert-desk/</a> (trades tape with a committed-snapshot fallback). All five apply ≥ $0.10 in either
+  using candles), <a href="alert-desk/index.html">alert-desk/</a> (trades tape with a committed-snapshot fallback) and
+  <a href="tape-desk/index.html">tape-desk/</a> (browser-polled tape with a simulated ledger and a
+  <a href="tape-desk/consolidation-map.html">consolidation map</a> of which desk does what). All six apply ≥ $0.10 in either
   direction, none places an order, and each measures a “move” against a different price — so a flag on this page need not appear on another in the same
   minute. Picking one survivor is <a href="suggestions.html#s16">S16</a>. Topic tables and per-row sources:
   <a href="site/index.html">snapshot desks</a>; the model behind Tape B: <a href="docs/alerts-model.html">model spec</a>; candle-level jump scan:
