@@ -1,79 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Markets — Kalshi Demo Tracker</title>
-<link rel="stylesheet" href="assets/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%2338bdf8'/></svg>">
-</head>
-<body data-page="markets">
-<header class="site">
-  <div class="navwrap">
-    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
-    <nav class="main">
-      <a href="index.html" data-page="home">Summary</a>
-      <a href="markets.html" data-page="markets">Live Markets</a>
-      <a href="analytics.html" data-page="analytics">Analytics</a>
-      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
-      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
-      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
-      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
-    </nav>
-  </div>
-</header>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markets by category · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Markets by category</h1>
+  <p class="lead">Verified rows from Kalshi's production REST API, snapshot 2026-11-20 (UTC). Prices are dollars per $1 contract. Volume and open interest are contract counts. A sample, not the full market list.</p>
+  <div class="banner">Each row links to the API response it came from. A blank cell means the value could not be confirmed, and the row is marked <b>Unverified</b>. Nothing is inferred.</div>
 
-<div class="wrap">
-  <div class="breadcrumb">Home / Live markets</div>
-  <h1>Live Markets — highest-dollar events by topic</h1>
-  <p class="sub">Live polling (every 20 s) of the official Kalshi <b>demo</b> REST API. Sorted by <b>estimated dollar volume</b> (contracts × last price — Kalshi reports volume in contracts; the $ figure is an estimate, always labeled as such).</p>
+  <div class="filters" id="filters"></div>
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>Category</th><th>Market (ticker)</th><th>Outcome</th>
+      <th class="num">YES bid</th><th class="num">YES ask</th><th class="num">Last trade</th>
+      <th class="num">Volume (contracts)</th><th class="num">Open interest (contracts)</th><th class="num">YES ask size</th>
+      <th>Close (UTC)</th><th>Verification</th><th>Source</th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="12">Loading data/markets.json…</td></tr></tbody>
+  </table></div>
 
-  <div class="statusbar">
-    <span class="dotlive" id="connDot"></span><span id="connTxt">connecting…</span>
-    <button id="btnRefresh">Refresh now</button>
-    <button id="btnReverify">Re-verify series map</button>
-    <button id="btnAlt">Toggle alt host</button>
-    <label style="margin-left:auto"><input type="checkbox" id="chkLive" checked> <span id="liveLbl">Live (20s poll)</span></label>
-    <button id="btnExport">Export JSON</button>
-  </div>
-  <div id="fetchErr"></div>
-
-  <div class="controls"><span class="small">Topics:</span>
-    <div class="seg" id="topicSeg">
-      <button class="active" data-topic="all">All</button>
-      <button data-topic="gas">Gas prices</button>
-      <button data-topic="elections">Elections</button>
-      <button data-topic="culture">Culture</button>
-      <button data-topic="crypto">Crypto</button>
-      <button data-topic="golf">Golf</button>
-    </div>
-  </div>
-
-  <div class="grid kpi">
-    <div class="card kpi"><div class="label">Live events (tracked topics)</div><div class="value" id="kpiLive">—</div><div class="note">status = open, from API</div></div>
-    <div class="card kpi"><div class="label">Est. $ volume (open)</div><div class="value" id="kpiVol">—</div><div class="note">Σ contracts × last price (estimate)</div></div>
-    <div class="card kpi"><div class="label">Open contracts traded</div><div class="value" id="kpiContracts">—</div><div class="note">Σ volume, as reported by API</div></div>
-    <div class="card kpi"><div class="label">Resolved (YES / NO)</div><div class="value" id="kpiSettled">—</div><div class="note">official <span class="mono">result</span> field</div></div>
-  </div>
-
-  <div class="card"><div class="label small">Runtime-verified series per topic (via <span class="mono">GET /series/{ticker}</span>):</div><div id="discInfo" class="small">verifying…</div><div id="apiNote" class="small" style="margin-top:6px"></div></div>
-
-  <h2>Open events — sorted by estimated dollar volume</h2>
-  <div class="tablewrap" id="tblOpen"></div>
-
-  <h2>Resolution tracking — how each event resolved (YES / NO)</h2>
-  <p class="small">Markets appear here once the demo API reports <span class="mono">status = closed/settled</span>. The <b>Resolved</b> column shows the official <span class="mono">result</span> field (<span class="mono">yes | no</span>; <span class="mono">scalar</span> for scalar-settled markets). If the API has not published a result yet, the cell stays blank — no guessing.</p>
-  <div class="tablewrap" id="tblResolved"></div>
-
-  <div class="updated" id="stamp"></div>
-</div>
-
-<footer class="site"><div class="wrap">
-  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi.</div>
-  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
-</div></footer>
-
-<script src="assets/app.js"></script>
-<script src="assets/markets.js"></script>
-</body>
-</html>
+  <h2>Category totals (verified rows only)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Category</th><th class="num">Rows</th><th class="num">Volume (contracts)</th><th class="num">Open interest (contracts)</th><th>Note</th></tr></thead>
+    <tbody id="totals"></tbody>
+  </table></div>
+  <p class="note">Totals sum only the sampled rows. They are not category totals for Kalshi. Golf and gas rows are the sampled strikes or contracts, not every contract in the series.</p>
+</main>
+<footer>Source for every row: Kalshi REST API (production, external-api.kalshi.com) · Field definitions: docs.kalshi.com · See Sources.</footer>
+<script src="assets/common.js"></script>
+<script>
+(function () {
+  var all = [];
+  var cats = ["All"];
+  function num(v) { return v === "" || v == null ? null : Number(v); }
+  function render(filter) {
+    var rows = all.filter(function (m) { return filter === "All" || m.category === filter; });
+    var html = rows.map(function (m) {
+      var blank = m.verification !== "verified";
+      var cell = function (v, isPrice) {
+        if (v === "" || v == null) return '<td class="num"><span class="blank">blank</span></td>';
+        return '<td class="num">' + (isPrice ? "$" + Number(v).toFixed(4) : KD.fmtNum(v)) + "</td>";
+      };
+      var title = m.ticker ? KD.esc(m.title) + '<br><span class="note">' + KD.esc(m.ticker) + "</span>" +
+        (m.rule ? '<details><summary class="note">Rule text (from API)</summary><div class="note">' + KD.esc(m.rule) + "</div></details>" : "") +
+        (m.note ? '<div class="note">' + KD.esc(m.note) + "</div>" : "")
+        : '<span class="blank">No verified open market</span>' + (m.note ? '<div class="note">' + KD.esc(m.note) + "</div>" : "");
+      return "<tr>" +
+        "<td>" + KD.esc(m.category) + "</td>" +
+        "<td>" + title + "</td>" +
+        "<td>" + (m.outcome ? KD.esc(m.outcome) : '<span class="blank">blank</span>') + "</td>" +
+        cell(m.yes_bid, true) + cell(m.yes_ask, true) + cell(m.last_price, true) +
+        cell(m.volume_contracts, false) + cell(m.open_interest_contracts, false) + cell(m.yes_ask_size, false) +
+        "<td>" + (m.close_time ? KD.esc(m.close_time) : '<span class="blank">blank</span>') + "</td>" +
+        "<td>" + (blank ? '<span class="tag t-unv">Unverified</span>' : '<span class="tag t-ver">Verified</span>') + "</td>" +
+        '<td><a href="' + KD.esc(m.source_url) + '" target="_blank" rel="noopener">API response</a></td>' +
+        "</tr>";
+    }).join("");
+    document.getElementById("rows").innerHTML = html || '<tr><td colspan="12">No rows.</td></tr>';
+    Array.prototype.forEach.call(document.querySelectorAll("#filters button"), function (b) {
+      b.className = b.getAttribute("data-c") === filter ? "on" : "";
+    });
+  }
+  function totals() {
+    var byCat = {};
+    all.forEach(function (m) {
+      if (m.verification !== "verified") { byCat[m.category] = byCat[m.category] || { n: 0, v: 0, oi: 0 }; return; }
+      var c = byCat[m.category] = byCat[m.category] || { n: 0, v: 0, oi: 0 };
+      c.n += 1; c.v += num(m.volume_contracts) || 0; c.oi += num(m.open_interest_contracts) || 0;
+    });
+    var notes = {
+      "Gas prices": "Monthly AAA national-average strikes (Nov 30, 2026).",
+      "Golf": "RSM Classic winner contracts, sampled.",
+      "Crypto": "BTC price-range contracts closing Nov 20, 2026 12:00 UTC. All zero volume in this sample.",
+      "Elections": "NATO Secretary General contracts (long-dated, close 2099).",
+      "Culture": "No verified open market found. See Flagged."
+    };
+    document.getElementById("totals").innerHTML = Object.keys(byCat).map(function (k) {
+      var c = byCat[k];
+      return "<tr><td>" + KD.esc(k) + '</td><td class="num">' + c.n + '</td><td class="num">' + KD.fmtNum(c.v) +
+        '</td><td class="num">' + KD.fmtNum(c.oi) + "</td><td class=\"note\">" + KD.esc(notes[k] || "") + "</td></tr>";
+    }).join("");
+  }
+  fetch("data/markets.json").then(function (r) { return r.json(); }).then(function (d) {
+    all = d.markets;
+    var seen = {};
+    all.forEach(function (m) { if (!seen[m.category]) { seen[m.category] = 1; cats.push(m.category); } });
+    document.getElementById("filters").innerHTML = cats.map(function (c) {
+      return '<button data-c="' + KD.esc(c) + '">' + KD.esc(c) + "</button>";
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("#filters button"), function (b) {
+      b.onclick = function () { render(b.getAttribute("data-c")); };
+    });
+    render("All"); totals();
+  }).catch(function (e) {
+    document.getElementById("rows").innerHTML = '<tr><td colspan="12">Could not load data/markets.json: ' + KD.esc(e.message) + "</td></tr>";
+  });
+})();
+</script>
+</body></html>

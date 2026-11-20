@@ -1,4 +1,4 @@
-name: Link & syntax check
+name: Strategy-desk link & syntax check
 
 on:
   push:
@@ -14,40 +14,49 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: JS syntax check
+      - name: JS syntax check (strategy-desk)
         run: |
           fail=0
-          for f in assets/*.js; do
+          for f in strategy-desk/assets/*.js; do
             node --check "$f" || fail=1
           done
           exit $fail
 
-      - name: Internal link check
+      - name: Internal link check (strategy-desk)
         run: |
           python3 - <<'PY'
           import os, re, sys
           root = os.getcwd()
-          pages = [f for f in os.listdir(root) if f.endswith('.html')]
+          desk = os.path.join(root, 'strategy-desk')
+          pages = sorted(
+              os.path.join(dp, f)
+              for dp, _, fs in os.walk(desk)
+              for f in fs if f.endswith('.html')
+          )
           errors = []
           for page in pages:
+              pdir = os.path.dirname(page)
               text = open(page, encoding='utf-8').read()
               for m in re.finditer(r'(?:href|src)="([^"#]+)"', text):
                   url = m.group(1)
                   if url.startswith(('http://', 'https://', 'data:', 'mailto:')):
                       continue
                   path = url.split('?')[0].split('#')[0]
-                  if path and not os.path.exists(os.path.join(root, path)):
-                      errors.append(f'{page}: broken link -> {url}')
+                  if not path:
+                      continue
+                  target = os.path.normpath(os.path.join(pdir, path))
+                  if not os.path.exists(target):
+                      errors.append(f'{os.path.relpath(page, root)}: broken link -> {url}')
           if errors:
               print('\n'.join(errors))
               sys.exit(1)
-          print(f'OK: internal links valid across {len(pages)} pages')
+          print(f'OK: internal links valid across {len(pages)} strategy-desk pages (incl. ../ cross-links)')
           PY
 
       - name: JSON validity check
         run: |
           python3 - <<'PY'
           import json, sys
-          json.load(open('data/series-map.json'))
-          print('OK: data/series-map.json valid')
+          json.load(open('strategy-desk/data/series-map.json'))
+          print('OK: strategy-desk/data/series-map.json valid')
           PY

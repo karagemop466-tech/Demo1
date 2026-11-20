@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trades — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="../">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a class="active" href="trades.html">Trades</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill credential">Trading: credentials required</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Trade execution — Kalshi demo account</div>
+  <h1>Execute trades on events</h1>
+  <p>Places orders through the official Kalshi Trade API v2 demo endpoint: <code>POST https://external-api.demo.kalshi.co/trade-api/v2/portfolio/events/orders</code>. Requires a signed demo API key (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>). No credentials exist in this repository and none were created, so the form below is <strong>not connected</strong> and no trades were executed in this session.</p>
+
+  <div class="callout bad">
+    <strong>No trades executed.</strong> Trade execution is credential-gated and the build environment cannot reach kalshi.co. No API key, private key, or signature code is stored here. To execute trades, connect your own demo API key to this form (demo = mock funds, no real money at risk).
+  </div>
+
+  <h2>Order form (mapped to POST /portfolio/events/orders — not connected)</h2>
+  <form id="orderForm" onsubmit="return false;">
+    <div class="grid">
+      <div>
+        <label style="display:block;margin-bottom:4px">Market ticker <span style="color:#dc2626">*</span></label>
+        <input type="text" name="ticker" placeholder="e.g. KXBTCD-... (unverified ticker)" required disabled>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px">Side</label>
+        <select name="side" disabled>
+          <option value="bid">bid (buy YES)</option>
+          <option value="ask">ask (sell YES)</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px">Count (contracts)</label>
+        <input type="number" name="count" min="1" value="1" required disabled>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px">Price (¢, YES)</label>
+        <input type="number" name="price" min="0" max="100" step="0.01" required disabled>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px">Time in force</label>
+        <select name="time_in_force" disabled>
+          <option value="good_till_canceled">good_till_canceled</option>
+          <option value="fill_or_kill">fill_or_kill</option>
+          <option value="immediate_or_cancel">immediate_or_cancel</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px">Client order id (optional, for safe retries)</label>
+        <input type="text" name="client_order_id" placeholder="auto-generated uuid" disabled>
+      </div>
+    </div>
+    <p style="margin-top:12px"><button class="primary" type="submit" disabled>Place order (demo)</button> <button type="button" disabled>Cancel order</button> <button type="button" disabled>Amend order</button></p>
+    <p class="center" style="font-size:0.85rem;color:#6b7280">All inputs disabled until you supply your own demo API credentials. Never paste a real production key here — demo keys work only against demo endpoints.</p>
+  </form>
+
+  <h2>Official request-signing contract (documented only — do not run without your own key)</h2>
+  <pre><code>// Signs timestamp + method + path (path includes /trade-api/v2, no query string)
+ts = String(Date.now())
+message = ts + "POST" + "/trade-api/v2/portfolio/events/orders"
+signature = base64( privateKeyEd25519.sign(message) )   // or RSA-PSS/SHA-256
+headers = {
+  "KALSHI-ACCESS-KEY": "<your demo key id>",
+  "KALSHI-ACCESS-TIMESTAMP": ts,
+  "KALSHI-ACCESS-SIGNATURE": signature,
+  "Content-Type": "application/json"
+}
+body = {
+  "ticker": "<market ticker>",
+  "side": "bid",                 // bid = buy YES, ask = sell YES
+  "count": "1",
+  "price": "0.0100",             // dollars; must fit the market's price step
+  "time_in_force": "good_till_canceled",
+  "self_trade_prevention_type": "taker_at_cross",
+  "client_order_id": "<uuid>"
+}
+POST https://external-api.demo.kalshi.co/trade-api/v2/portfolio/events/orders</code></pre>
+  <p class="center source-list">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start — create your first order</a> · <a href="../docs/sources.md">docs/sources.md</a></p>
+
+  <h2>Order lifecycle (documented)</h2>
+  <table>
+    <thead><tr><th>Action</th><th>Endpoint</th><th>Method</th><th>Auth</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>Place order</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/portfolio/events/orders">/portfolio/events/orders</a></td><td>POST</td><td>Yes — signed demo key</td><td><span class="badge unverified">Not executed</span></td></tr>
+      <tr class="flagged"><td>Cancel order</td><td>/portfolio/events/orders/{order_id}</td><td>DELETE</td><td>Yes — signed demo key</td><td><span class="badge unverified">Not executed</span></td></tr>
+      <tr class="flagged"><td>Amend order</td><td>/portfolio/events/orders/{order_id}/amend</td><td>POST</td><td>Yes — signed demo key</td><td><span class="badge unverified">Not executed</span></td></tr>
+      <tr class="flagged"><td>Decrease order quantity</td><td>/portfolio/events/orders/{order_id}/decrease</td><td>POST</td><td>Yes — signed demo key</td><td><span class="badge unverified">Not executed</span></td></tr>
+    </tbody>
+  </table>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Trades · Unverified items listed on the <a href="../pages/flagged-review.html">Flagged for review</a> page</footer>
+</body>
+</html>

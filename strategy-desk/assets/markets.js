@@ -16,6 +16,8 @@
     return u.toString();
   };
 
+  let mode = 'live'; // 'live' | 'snapshot'
+
   function kpis(evs) {
     const open = evs.filter((e) => e.status === 'open');
     const settled = evs.filter((e) => e.status === 'settled' || e.result);
@@ -26,8 +28,15 @@
     setK('kpiVol', fmt$(open.reduce((a, e) => a + e.dollarVolume, 0), 0));
     setK('kpiContracts', fmtN(open.reduce((a, e) => a + e.volume, 0)));
     setK('kpiSettled', `${yes} <span class="badge yes">YES</span> · ${no} <span class="badge no">NO</span>`);
-    const st = Kalshi.stats();
-    const el = $('#apiNote'); if (el) el.innerHTML = `<span class="mono">${esc(st.base)}</span> · calls ok ${st.ok} / failed ${st.fail}`;
+    const el = $('#apiNote');
+    if (el) {
+      if (mode === 'live') {
+        const st = Kalshi.stats();
+        el.innerHTML = `<span class="mono">${esc(st.base)}</span> · calls ok ${st.ok} / failed ${st.fail}`;
+      } else {
+        el.innerHTML = `source: <span class="mono">../data/markets.json</span> (archived official API response; <span class="mono">fetched_at ${esc(Snapshot.fetchedAt)}</span>; ${fmtN(Snapshot.marketCount)} markets; refreshed every 15 min by <span class="mono">.github/workflows/fetch-data.yml</span>)`;
+      }
+    }
   }
 
   function renderDiscovery() {
@@ -41,10 +50,26 @@
     el.innerHTML = parts.join(' ');
   }
 
-  function updateTables() {
-    let evs = Store.events;
+  function renderDiscoverySnapshot() {
+    const el = $('#discInfo'); if (!el) return;
+    const evs = Snapshot.events();
+    const map = {};
+    for (const e of evs) {
+      if (!e.series) continue;
+      (map[e.categoryTopic] = map[e.categoryTopic] || new Set()).add(e.series);
+    }
+    const parts = TOPICS.map((t) => {
+      const list = [...(map[t.id] || [])];
+      if (!list.length) return `<span class="pill" title="No markets in the current snapshot for this topic">${topicLabel(t.id)}: <span class="flag">none in snapshot</span></span>`;
+      return `<span class="pill" title="Series present in the archived official series/market responses (data/series.json, data/markets.json)">${topicLabel(t.id)}: ${list.slice(0, 6).map((s) => `<span class="mono">${esc(s)}</span>`).join(', ')}${list.length > 6 ? ` +${list.length - 6} more` : ''}</span>`;
+    });
+    el.innerHTML = parts.join(' ') + ` <span class="small">(verified from archived official API responses — <span class="mono">data/series.json</span>, <span class="mono">data/markets.json</span>)</span>`;
+  }
+
+  function updateTables(events, stampHtml) {
+    let evs = events;
     if (topicFilter !== 'all') evs = evs.filter((e) => e.categoryTopic === topicFilter);
-    kpis(Store.events);
+    kpis(events);
     const open = evs.filter((e) => e.status === 'open').sort((a, b) => b.dollarVolume - a.dollarVolume);
     const resolved = evs.filter((e) => e.status === 'settled' || e.status === 'closed' || e.result)
       .sort((a, b) => String(b.close_time || '').localeCompare(String(a.close_time || '')));
@@ -76,7 +101,7 @@
     ];
     tables.res = sortableTable($('#tblResolved'), resCols, resolved);
     if ($('#tblResolved')) $('#tblResolved')._emptyMsg = 'No resolved (closed/settled) markets in this topic yet. Markets appear here once the demo API reports status closed/settled with a result field.';
-    $('#stamp').innerHTML = Store.lastFetch ? `Data refreshed <b>${fmtT(Store.lastFetch)}</b>${ago(Store.lastFetch)} · polling every 20s${Store.lastError ? ` · <span class="flag">partial errors: ${esc(Store.lastError)}</span>` : ''}` : '';
+    $('#stamp').innerHTML = stampHtml || '';
   }
 
   async function cycle(force) {
@@ -87,15 +112,28 @@
         renderDiscovery();
       }
       const r = await Store.refresh();
-      updateTables();
+      mode = 'live';
+      const stamp = Store.lastFetch ? `Data refreshed <b>${fmtT(Store.lastFetch)}</b>${ago(Store.lastFetch)} · polling every 20s${Store.lastError ? ` · <span class="flag">partial errors: ${esc(Store.lastError)}</span>` : ''}` : '';
+      updateTables(Store.events, stamp);
       setConn('on', Store.lastFetch ? new Date(Store.lastFetch).toLocaleTimeString() : '');
       if (r.lastError) setConn('err', 'partial — some series failed, see stamp');
     } catch (e) {
-      setConn('err', e.message);
-      const el = $('#fetchErr'); if (el) el.innerHTML = `<div class="note-box warn"><b>Live fetch failed:</b> ${esc(e.message)}.<br>
-      This static site fetches the Kalshi demo REST API directly from your browser. If your network blocks it (CORS or firewall), the tables cannot populate — no values are invented in the meantime.
-      Try the alternate host toggle below, or run a local proxy. Official endpoints are listed on the <a href="sources.html">Sources</a> page.</div>`;
-      if (force) toast('Fetch failed: ' + esc(e.message));
+      // live fetch failed (network/CORS) → fall back to the canonical CI snapshot
+      // (archived official API responses refreshed every 15 min by GitHub Actions)
+      try {
+        await Snapshot.load();
+        mode = 'snapshot';
+        renderDiscoverySnapshot();
+        updateTables(Snapshot.events(), `Mode: <span class="badge info">CI SNAPSHOT</span> — direct API fetch failed (${esc(e.message)}); showing archived official responses from <span class="mono">data/markets.json</span>, fetched_at <b>${fmtT(Snapshot.fetchedAt)}</b>, refreshed every 15 min by <span class="mono">.github/workflows/fetch-data.yml</span>. Live polling resumes automatically when the API becomes reachable.`);
+        setConn('snap', 'snapshot ' + Snapshot.fetchedAt);
+        const el = $('#fetchErr'); if (el) el.innerHTML = `<div class="note-box"><b>Live API fetch failed</b> (${esc(e.message)}) — switched to the <b>CI snapshot</b> of official API responses. Values shown are copied from the official demo API archive; nothing is invented. ${esc(Snapshot.marketCount)} markets loaded.</div>`;
+      } catch (e2) {
+        setConn('err', e.message);
+        const el = $('#fetchErr'); if (el) el.innerHTML = `<div class="note-box warn"><b>Live fetch failed:</b> ${esc(e.message)}.<br>Snapshot fallback also failed: ${esc(e2.message)}.<br>
+        This static site fetches the Kalshi demo REST API directly from your browser. If your network blocks it (CORS or firewall), the tables cannot populate — no values are invented in the meantime.
+        Try the alternate host toggle below, or run a local proxy. Official endpoints are listed on the <a href="sources.html">Sources</a> page.</div>`;
+        if (force) toast('Fetch failed: ' + esc(e.message));
+      }
     }
   }
 

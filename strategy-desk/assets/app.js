@@ -31,10 +31,13 @@ function toast(msg, ms = 3500) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), ms);
 }
 
-function setConn(state, note) { // state: on|off|err
+function setConn(state, note) { // state: on|off|err|snap
   const d = $('#connDot'), t = $('#connTxt');
   if (d) d.className = 'dotlive' + (state === 'on' ? ' on' : '');
-  if (t) t.innerHTML = (state === 'on' ? '<span class="badge live">LIVE</span>' : state === 'err' ? '<span class="badge err">FETCH FAILED</span>' : '<span class="badge">OFFLINE MODE</span>') + (note ? ` <span class="small">${esc(note)}</span>` : '');
+  if (t) t.innerHTML = (state === 'on' ? '<span class="badge live">LIVE</span>'
+    : state === 'snap' ? '<span class="badge info">CI SNAPSHOT</span>'
+    : state === 'err' ? '<span class="badge err">FETCH FAILED</span>'
+    : '<span class="badge">OFFLINE MODE</span>') + (note ? ` <span class="small">${esc(note)}</span>` : '');
 }
 
 /* ---------------- generic sortable table ---------------- */
@@ -128,6 +131,13 @@ const TOPICS = [
   { id: 'crypto', label: 'Crypto', cats: ['crypto', 'financial', 'finance'] },
   { id: 'golf', label: 'Golf', cats: ['sports', 'golf'] },
 ];
+
+// top-level classifier (used by Store and Snapshot)
+function classifyCategory(category) {
+  const c = String(category || '').toLowerCase();
+  for (const t of TOPICS) if (t.cats.some((k) => c.includes(k))) return t.id;
+  return null;
+}
 
 const Discovery = (() => {
   const CACHE_KEY = 'kd1:discovery:v3';
@@ -308,6 +318,96 @@ const Store = (() => {
     get lastError() { return lastError; },
     fetchEventMarkets,
   };
+})();
+
+/* =========================================================================
+   Snapshot fallback — consumes the canonical CI data snapshots at /data
+   (data/markets.json + data/series.json), which are archived official API
+   responses refreshed every 15 minutes by .github/workflows/fetch-data.yml.
+   Values copied from official responses only; mode is displayed as
+   "CI SNAPSHOT" (never passed off as a live browser fetch).
+   ========================================================================= */
+const Snapshot = (() => {
+  let data = null;
+
+  async function load() {
+    // relative to strategy-desk/*.html → repo-root data/
+    const [mkts, series] = await Promise.all([
+      fetch('../data/markets.json').then((r) => { if (!r.ok) throw new Error('markets.json HTTP ' + r.status); return r.json(); }),
+      fetch('../data/series.json').then((r) => { if (!r.ok) throw new Error('series.json HTTP ' + r.status); return r.json(); }).catch(() => null),
+    ]);
+    data = { mkts, series };
+    return data;
+  }
+
+  function topicOf(m) {
+    const t = String(m.topic || '').toLowerCase();
+    return TOPICS.some((x) => x.id === t) ? t : (classifyCategory({ category: m.series_category }) || 'other');
+  }
+
+  function events() {
+    if (!data) return [];
+    const byEvent = new Map();
+    for (const m of (data.mkts.markets || [])) {
+      const et = m.event_ticker || m.ticker;
+      if (!byEvent.has(et)) byEvent.set(et, {
+        event_ticker: et,
+        title: m.event_title || m.title || '',
+        markets: [],
+        series: m.series_ticker || '',
+        category: m.series_category || '',
+        categoryTopic: topicOf(m),
+      });
+      const ev = byEvent.get(et);
+      ev.markets.push({
+        ticker: m.ticker,
+        title: m.title || '',
+        status: String(m.status || '').toLowerCase() === 'active' ? 'open' : String(m.status || '').toLowerCase(),
+        result: m.result || '',           // snapshot results were empty at capture time → stays blank (flagged, never guessed)
+        volume: parseFP(m.volume_fp) || 0,
+        volume_24h: parseFP(m.volume_24h_fp) || 0,
+        open_interest: parseFP(m.open_interest_fp) || 0,
+        liquidity: 0,
+        last_price: (parseFP(m.last_price_dollars) ?? 0) * 100,
+        close_time: m.close_time || '',
+        traded_notional: parseFP(m.traded_notional_usd) ?? null,
+      });
+      if (!ev.title && m.title) ev.title = m.title;
+    }
+    return [...byEvent.values()].map((ev) => {
+      const statuses = ev.markets.map((x) => x.status);
+      const anyClosed = statuses.some((s) => s === 'closed' || s === 'settled');
+      const openCount = statuses.filter((s) => s === 'open').length;
+      const result = ev.markets.map((x) => x.result).find((r) => r);
+      // dollar volume: official traded_notional_usd when present; otherwise the
+      // documented ESTIMATE (Σ contracts × last price) — same labeling as live mode
+      const notionalKnown = ev.markets.every((x) => x.traded_notional != null);
+      return {
+        ...ev,
+        status: result ? 'settled' : anyClosed ? 'closed' : openCount ? 'open' : 'closed',
+        result: result || '',
+        volume: ev.markets.reduce((a, x) => a + x.volume, 0),
+        volume24h: ev.markets.reduce((a, x) => a + x.volume_24h, 0),
+        dollarVolume: notionalKnown
+          ? ev.markets.reduce((a, x) => a + x.traded_notional, 0)
+          : ev.markets.reduce((a, x) => a + x.volume * (x.last_price / 100), 0),
+        openInterest: ev.markets.reduce((a, x) => a + x.open_interest, 0),
+        liquidity: 0,
+        close_time: ev.markets.map((x) => x.close_time).filter(Boolean).sort()[0] || '',
+        lastUpdate: data.mkts.fetched_at || '',
+      };
+    });
+  }
+
+  function seriesVerification() {
+    // verify candidate mapping against the archived official series list
+    if (!data || !data.series) return null;
+    const all = data.series.series || [];
+    const byTicker = new Map(all.map((s) => [String(s.ticker || '').toUpperCase(), s]));
+    return byTicker;
+  }
+
+  return { load, events, seriesVerification, get fetchedAt() { return data?.mkts?.fetched_at || ''; }, get marketCount() { return (data?.mkts?.markets || []).length; } };
 })();
 
 /* =========================================================================

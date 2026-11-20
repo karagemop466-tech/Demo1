@@ -1,63 +1,92 @@
-# Demo1 — Kalshi Demo Tracker
+# Demo1 — Kalshi Demo Dashboard
 
-Live, interactive dashboard for the **official Kalshi demo environment** (mock-funds sandbox):
-tracks the highest-dollar live events across **gas prices, elections, culture, crypto, and golf**,
-follows each event through **YES/NO resolution**, charts **price movements over time**,
-and analyzes a **clearly-labeled simulated portfolio** with strategy tagging.
+A static GitHub Pages site (repository root, served from `main` at `/`) that tracks Kalshi prediction markets in five categories (gas prices, golf, crypto, elections, culture), with a source-linked table, a live price chart, an orderbook liquidity view, analysis, open questions, suggestions, and a Flagged for Review page.
 
-**Live site:** https://karagemop466-tech.github.io/Demo1/ (after Pages deploys)
+- **Live site:** GitHub Pages for this repository, served from the `main` branch, root folder (`/`).
+- **Coordination:** see [COORDINATION.md](COORDINATION.md) for task status, sources, verification, and irregularities.
 
-## Pages
+## Structure
 
-| Page | Purpose |
+| Path | Purpose |
 |---|---|
-| `index.html` | Landing page + executive summary |
-| `markets.html` | Live markets by topic, sorted by estimated dollar volume; resolution tracking (YES/NO) |
-| `analytics.html` | Price chart (X = time with sec/min/hr windows, Y = contract price in ¢), orderbook depth & liquidity |
-| `portfolio.html` | SIMULATED demo portfolio: order ticket, positions, P&L, strategy analyzer |
-| `suggestions.html` | Open questions (known / missing / how to discover) + suggestions awaiting review |
-| `sources.html` | Every fact with its official source and verification status |
-| `flagged.html` | Irregularities & unverified items for review (does not block merges) |
+| `index.html` | Landing page |
+| `executive-summary.html` | Executive summary, blocked items, decisions needed |
+| `markets.html` | Verified market rows, each linked to its API source |
+| `dashboard.html` | Live chart (seconds / minutes / hours) and orderbook liquidity |
+| `portfolio.html` | Demo-account portfolio and trade log (blocked: no API key) |
+| `analysis.html` | Snapshot findings and trade-categorization framework |
+| `questions.html` | Questions, answers so far, and missing information |
+| `suggestions.html` | Improvement proposals (none implemented; choose first) |
+| `flagged.html` | Flagged for Review: unverified items, irregularities, repo findings |
+| `sources.html` | Official sources and whether each was read |
+| `data/markets.json` | The verified market table (source of truth for the site) |
+| `assets/` | Shared CSS, navigation, and dashboard script (no external dependencies) |
 
-## Data sources (official)
+## Data sources
 
-- Demo REST (recommended): `https://external-api.demo.kalshi.co/trade-api/v2` — [docs](https://docs.kalshi.com/getting_started/api_environments)
-- Demo REST (alternate): `https://demo-api.kalshi.co/trade-api/v2`
-- Demo WebSocket: `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`
-- Public market data needs **no API key**; trading/portfolio endpoints require **Ed25519/RSA-signed** requests — [docs](https://docs.kalshi.com/getting_started/quick_start_authenticated_requests)
+All market values come from Kalshi's public REST API (no key needed for market data):
 
-## Verification discipline
+- Production: `https://external-api.kalshi.com/trade-api/v2`
+- Demo: `https://external-api.demo.kalshi.co/trade-api/v2`
 
-1. **No invented values.** All market numbers are fetched live from the official demo API at view time; anything unfetchable is blank + flagged.
-2. **Runtime verification** of topic→series mapping via `GET /series/{ticker}` (candidates in `data/series-map.json`).
-3. **“Est. $ volume”** is explicitly an estimate (Kalshi reports volume in contracts).
-4. **Fees** use the official formula `fee = ⌈0.07 × C × P × (1−P)⌉`.
-5. Sources & flagged items: see `sources.html` and `flagged.html`.
+Documentation: <https://docs.kalshi.com/llms.txt>. Gas settlement input: <https://gasprices.aaa.com/>.
 
-## Parallel-session coordination
+## Limits
 
-See [COORDINATION.md](COORDINATION.md) — shared task board with claims, scopes, sources, and the handoff log.
-Each session works its own branch (`session-<id>/<task>`), commits small & often, and runs `git pull --rebase` before every push.
-
-## Repo review (pre-existing content)
-
-The repository contained **only** a stub `README.md` (`# Demo1`, commit `4a225ce` “Initial commit”).
-There was no pre-existing data, code, or table content to audit. All files in this tree were created
-and reviewed in this session; flagged items are published on `flagged.html`.
-
-## CI
-
-- **Deploy** (`.github/workflows/deploy.yml`): builds & publishes to GitHub Pages on every push to `main` (requires Settings → Pages → Source: “GitHub Actions”).
-- **Link check** (`.github/workflows/link-check.yml`): validates internal links and JS syntax on every push.
+- The table is a sample (15 verified rows), not a full market list.
+- Culture has no verified open market; that row is blank and flagged.
+- Portfolio tracking and trading need a Kalshi API key, which is not stored in this repository.
+- Live browser requests to Kalshi were not verified from the build environment.
 
 ## Local preview
 
-```bash
+No build step. Serve the folder with any static server:
+
+```
 python3 -m http.server 8000
-# open http://localhost:8000
 ```
 
-No build step, no dependencies, no API key required for market data.
+Then open <http://localhost:8000/>.
 
----
-*Unofficial project. Not affiliated with, or endorsed by, Kalshi. Demo environment uses mock funds. Nothing here is investment advice.*
+## Other pages on this site
+
+- `monitor/` — single-page market monitor from session `arena/e41f6700-demo1` (moved here from the repository root; its files are unchanged except link paths).
+- `pages/` — multi-page site from session `arena/a443fb8f-demo1` (landing/executive summary, category pages, dashboard, portfolio, trades, suggestions, questions, flagged review). Linked from the landing page.
+
+## Single-page monitor (session arena/e41f6700-demo1)
+
+A static GitHub Pages research dashboard for Kalshi demo public market data, focused on gas prices, elections, culture, crypto and golf. Includes market scanning, order-book inspection, portfolio/strategy requirements, a suggestions review queue and an explicit flagged-unknowns register.
+
+## Executive summary
+
+- **Market discovery:** the page requests open demo markets from `https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000`, filters topic keywords, and ranks matching markets by the API-reported contract volume. It refreshes every 30 seconds. It does not label contract volume as dollars or claim it measures the “highest dollar amount.”
+- **Depth:** selecting “Inspect book” requests the public market order book and shows returned bid levels and quantities, when available. Displayed bids are not a guarantee of execution.
+- **History and resolution:** open market rows display returned status/result values when present. The price-history panel deliberately displays no fabricated graph: historical endpoint integration and timestamp/interval verification remain open work.
+- **Account and trading:** portfolio access is authenticated. This static site does not request, store, sign with credentials or submit orders. Secure account reporting and order entry require a server-side signing service, explicit demo account authorization, risk controls and verification.
+- **Decision support:** the site lists unanswered questions, source-linked official documentation, reviewable improvement suggestions, and known irregularities. Empty/unavailable data stays blank.
+
+## Use / deploy
+
+Open `monitor/index.html`, or enable GitHub Pages for the repository using the GitHub Actions workflow in `.github/workflows/pages.yml`. This is dependency-free static HTML/CSS/JavaScript. A browser may block API calls because of cross-origin policy or API availability; the dashboard reports that condition without inserting sample records. Deploying the site does not make authenticated endpoints or trade execution safe.
+
+## Verified official references
+
+| Detail used | Official source | Verification |
+|---|---|---|
+| Public unauthenticated market-data approach and markets/events/orderbook examples | [Quick Start: Market Data](https://docs.kalshi.com/getting_started/quick_start_market_data) | Official documentation page fetched and reviewed 2026-11-20. It documents public unauthenticated production data and examples for markets, events, and orderbook; demo endpoint base is shown in relevant API docs. |
+| Demo REST base URL, balance authentication headers | [Get Balance](https://docs.kalshi.com/api-reference/portfolio/get-balance) | Official page fetched and reviewed 2026-11-20; includes demo base URL alternatives and requires key, signature, timestamp headers. |
+| Markets endpoint | [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) | Official reference linked for manual review; its page could not be independently fetched in this session. The markets request follows the official quick-start example. |
+| Order book / bid depth | [Get Market Order Book](https://docs.kalshi.com/api-reference/market/get-market-order-book) | Official reference linked for manual review; quick-start page fetched and documents the market order-book endpoint and bid quantities. |
+| Positions and fills | [Get Positions](https://docs.kalshi.com/api-reference/portfolio/get-positions), [Get Fills](https://docs.kalshi.com/api-reference/portfolio/get-fills) | Official references linked for manual review; details were not independently fetched. |
+
+## Known limitations / flagged for review
+
+1. Topic matching currently uses keywords across returned titles/tickers/categories, not an authoritative taxonomy. It can omit or misclassify records.
+2. Volume is a contract count. No dollar ranking is shown because volume alone cannot establish current market liquidity, notional traded, open exposure or available dollars at a price.
+3. UI price-history controls are visual placeholders; no history series is plotted until the historical endpoint and its supported resolutions are verified and implemented.
+4. Resolution display uses returned `status` and `result` fields only; history, final settlement and timestamps are not independently reconciled.
+5. Portfolio performance and trade analytics are blank because no authenticated demo account data is available.
+6. Browser CORS and availability may block API calls. A proxy/server would be needed if confirmed. No proxy or credentials are included.
+7. No Github Pages deployment can be confirmed from this local change alone; publishing requires the repository’s Pages configuration and successful GitHub Actions run.
+
+See [COORDINATION.md](COORDINATION.md) and the site's **Questions & flagged for review** section for the audit trail and missing-information checklist.
