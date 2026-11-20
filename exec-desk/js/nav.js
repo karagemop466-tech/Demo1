@@ -4,6 +4,7 @@
     ["index.html", "Home"],
     ["executive-summary.html", "Executive summary"],
     ["dashboard.html", "Dashboard"],
+    ["jumps.html", "Jumps ≥$0.10"],
     ["markets.html", "Markets"],
     ["portfolio.html", "Portfolio"],
     ["trades.html", "Trades"],

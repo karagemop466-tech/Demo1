@@ -705,3 +705,13 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **PR #30** (deterministic DOM test, 10/10 assertions): **MERGED** 2026-11-20T12:30:06Z, merge commit `08d51940d53e169fc1283504263985615364d7fb`.
 - **Pages after final merge:** build for `08d5194` → **built**, no error; exec-desk verified live at https://karagemop466-tech.github.io/Demo1/exec-desk/ (landing, dashboard, flagged all fetch clean; connection badge LIVE · official API).
 - **All T01–T13 marked done on this board; this session's work is complete.**
+
+## Session arena/c8617443-demo1 — final integration + jump alerts
+
+- **Session ID:** `c8617443` — branch `arena/c8617443-demo1` (fixed). Claimed 2026-11-20 (UTC).
+- **Scope:** `exec-desk/jumps.html`, `exec-desk/js/jumps.js`, `exec-desk/js/nav.js`, `COORDINATION.md` (this section). No other session files touched.
+- **Task:** close the one unimplemented requirement found in review — live charts flagging sharp jumps ≥ $0.10 with event + news links. Everything else (executive summary, 5-topic dashboard, resolution tracking, simulated trades, portfolio gating, GitHub Pages) was verified already live on `main` (PRs #12–#31 merged; Pages `status: built`, source `main:/`).
+- **Implementation:** `exec-desk/jumps.html` + `js/jumps.js` scan top-30 markets by computed 24h $ volume across the 5 topics, fetch official 1-min candlesticks, flag consecutive closes differing by ≥ threshold (default $0.10; $0.05/$0.20 options; 1h/24h windows). Each jump links to the Kalshi market page and a Google News search — labeled "cause unverified", no cause asserted (per no-hallucination rule).
+- **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
+- **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
+- **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
