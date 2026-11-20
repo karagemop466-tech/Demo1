@@ -29,6 +29,7 @@
 If a session crashes or its claim is >60 min old with no commits, any other session may take over and note the handoff here.
 
 ## Final integration record (T6)
-- PR: _(pending)_
+- Checks before PR: `node --check` all JS ✅ · JSON validity ✅ · internal-link check (7 pages) ✅ · core-logic Node tests ✅ · element-ID audit ✅
+- PR: https://github.com/karagemop466-tech/Demo1/pull/11 (arena/3c51bb52-demo1 → main)
 - Merge result: _(pending)_
-- GitHub Pages deploy: _(pending)_
+- GitHub Pages deploy: _(pending — requires repo Settings → Pages → Source = “GitHub Actions”; see flagged F8)_
