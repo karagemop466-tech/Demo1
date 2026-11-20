@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "disclosure": "Every rule below is deterministic and disclosed here. Fills are SIMULATED (no orders are ever placed). All inputs come from the official Kalshi demo Trade API public endpoints; nothing is inferred or fabricated. If a required input is missing, the trade is skipped and the reason is logged in run_log.json.",
+  "started_cash_dollars": 1000.0,
+  "started_cash_note": "Simulated starting bankroll in demo dollars. Not real money, not an official Kalshi balance.",
+  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "universe": {
+    "markets_status": "open",
+    "list_pages": 3,
+    "page_limit": 1000,
+    "min_volume_24h_contracts": 100,
+    "min_hours_until_close": 2,
+    "candidates_max": 20,
+    "max_per_topic_candidates": 6,
+    "notional_basis": "computed 24h traded notional = volume_24h x last_price_dollars (both official market fields). 'Highest dollar amount' is not an official Kalshi field; this is a disclosed estimate, not an official metric."
+  },
+  "topics": {
+    "order": ["gas", "elections", "culture", "crypto", "golf"],
+    "note": "First matching rule wins; classification is by series/event ticker and title keywords. Official series category strings for the demo exchange are not published; keyword matching is disclosed per row via matched_by.",
+    "rules": {
+      "gas": {"ticker": "KXAAAGAS|KXGAS", "title": "gas price"},
+      "elections": {"ticker": "KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE", "title": "election|president|senate|governor|prime minister|nominee|parliament|chancellor"},
+      "culture": {"ticker": "KXOSCAR|KXEMMY|KXGRAMMY|KXGLOBE|KXBAFTA|KXSAG|KXBOXOFFICE|KXMOVIE|KXMETGALA|KXCANNES|KXRT|KXTIMEPERSON", "title": "oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"},
+      "crypto": {"ticker": "KXBTC|KXETH|KXSOL|KXXRP|KXDOGE|KXADA|KXCRYPTO|KXMEME|KXHYPE|KXLTC|KXAVAX|KXLINK|KXPERP|KXETHBULL|KXBTCD", "title": "bitcoin|ethereum|solana|ripple|xrp|dogecoin|crypto|cardano|litecoin"},
+      "golf": {"ticker": "KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT", "title": "golf|pga tour|ryder cup|the open championship|masters tournament"}
+    }
+  },
+  "strategies": [
+    {
+      "name": "momentum-1h",
+      "desc": "If the 6-hour YES price trend (last 60-min close minus the close 6 candles back) is >= +$0.05, buy YES; if <= -$0.05, buy NO. Entry only if the implied ask of that side is within the entry band.",
+      "trend_threshold_dollars": 0.05,
+      "trend_candles": 6,
+      "band_min": 0.30,
+      "band_max": 0.85,
+      "min_candles": 6
+    },
+    {
+      "name": "mean-revert-24h",
+      "desc": "If the last 60-min close deviates from the mean of available hourly closes (up to 24) by <= -$0.10, buy YES (fade the drop); if >= +$0.10, buy NO (fade the rise). Entry only if the implied ask of that side is within the entry band.",
+      "deviation_threshold_dollars": 0.10,
+      "mean_candles": 24,
+      "band_min": 0.10,
+      "band_max": 0.60,
+      "min_candles": 6
+    },
+    {
+      "name": "longshot-value",
+      "desc": "If the implied NO ask is <= $0.20 and the market traded >= 5000 contracts in 24h, buy NO. Runs only when no other strategy fired on that market.",
+      "no_ask_max": 0.20,
+      "min_volume_24h_contracts": 5000
+    }
+  ],
+  "strategy_priority": ["momentum-1h", "mean-revert-24h", "longshot-value"],
+  "sizing": {
+    "contracts_per_trade": 10,
+    "max_open_positions": 15,
+    "max_open_per_topic": 4,
+    "max_new_trades_per_run": 3
+  },
+  "fill_rule": {
+    "entry_price": "implied best ask of the bought side = 1.00 - best bid of the opposite side (official rule from docs.kalshi.com/getting_started/orderbook_responses: a NO bid at Y equals a YES ask at $1.00 - Y). Simulated as an immediately-matched (taker) fill, so the official taker fee applies.",
+    "limitations": "The REST book lists bids only, so ask-side depth is implied, not observed. A simulated fill does not move the market and may not be achievable in real size. Demo books are thin (official demo-environment warning)."
+  },
+  "fee_rule": {
+    "formula": "fee = roundup(M x 0.07 x C x P x (1-P)), M = 1",
+    "multiplier_note": "Taker multiplier M=1 is confirmed for KXAAAGASM (gas) and KXBTCMAX150 (crypto) in the official non-standard-fee table; the full table's other rows are not machine-readable from the PDF (flagged IR), so M=1 is assumed and disclosed for all simulated trades.",
+    "source": "https://kalshi.com/docs/kalshi-fee-schedule.pdf"
+  },
+  "mark_rule": "Open positions are marked to market with the official last_price_dollars field (held-side value = last YES price for YES, 1 - last YES price for NO). Marks are last-trade based and can lag the book (official responses-cached caveat).",
+  "settlement_rule": "When a market with an open simulated position reports status=settled and result in {yes,no}: payout = $1.00 per contract if the held side matches result, else $0.00 (official market-settlement rule). Settlement fee = $0 for simple yes/no determinations (official fee schedule).",
+  "api_politeness": {
+    "sleep_seconds_between_calls": 0.15,
+    "retry_on_429": 1,
+    "backoff_seconds": 2.0,
+    "note": "Unauthenticated public market data; rate limits per docs.kalshi.com/getting_started/rate_limits (10 tokens/request default). Call budget per run is bounded by candidates_max."
+  },
+  "ledger_caps": {"runs_kept": 250, "equity_points_kept": 500, "requests_kept": 200}
+}

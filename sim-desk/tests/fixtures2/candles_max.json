@@ -1,0 +1,84 @@
+{
+ "candlesticks": [
+  {
+   "end_period_ts": 1700000000,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700003600,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700007200,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700010800,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700014400,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700018000,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700021600,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700025200,
+   "price": {
+    "open_dollars": "0.8200",
+    "low_dollars": "0.8200",
+    "high_dollars": "0.8200",
+    "close_dollars": "0.8200"
+   },
+   "volume_fp": "10.00"
+  }
+ ]
+}

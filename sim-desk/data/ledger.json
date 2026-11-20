@@ -1,0 +1,29 @@
+{
+ "schema": 1,
+ "meta": {
+  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "started_cash_dollars": 1000.0,
+  "updated_ts": "2026-11-20T13:09:40Z",
+  "runs": 0,
+  "simulated": true,
+  "notes": [
+   "All fills are SIMULATED \u2014 no orders were placed and no Kalshi account was touched.",
+   "Demo environment: mock funds; prices may not reflect real markets (official demo-env warning).",
+   "Entry prices are implied asks derived from the bids-only orderbook (official rule).",
+   "Fees use the official taker formula roundup(M x 0.07 x C x P x (1-P)) with M=1.",
+   "Seed state committed before the first live CI run: zero trades, zero API calls. The sim-strategies workflow populates this ledger on its first scheduled/push run; nothing here is inferred or fabricated."
+  ],
+  "sources": {
+   "orderbook_rule": "https://docs.kalshi.com/getting_started/orderbook_responses",
+   "settlement_rule": "https://docs.kalshi.com/getting_started/market_settlement",
+   "candlesticks": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+   "markets": "https://docs.kalshi.com/api-reference/market/get-markets",
+   "fee_schedule": "https://kalshi.com/docs/kalshi-fee-schedule.pdf",
+   "demo_env": "https://docs.kalshi.com/getting_started/demo_env"
+  }
+ },
+ "cash": 1000.0,
+ "positions_open": [],
+ "trades_settled": [],
+ "runs": []
+}

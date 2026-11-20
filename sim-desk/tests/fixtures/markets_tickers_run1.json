@@ -1,0 +1,19 @@
+{
+ "markets": [
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "status": "open",
+   "last_price_dollars": "0.5600"
+  },
+  {
+   "ticker": "KXAAAGASM-26DEC31-3.80",
+   "status": "open",
+   "last_price_dollars": "0.4000"
+  },
+  {
+   "ticker": "KXBTCMAX150-BTC-150K",
+   "status": "open",
+   "last_price_dollars": "0.8200"
+  }
+ ]
+}

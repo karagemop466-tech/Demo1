@@ -1,0 +1,100 @@
+name: sim-desk strategy runner
+
+# Unattended simulated-trading runs for sim-desk/. GitHub-hosted runners have
+# unrestricted outbound internet, so the engine talks to the official Kalshi DEMO
+# Trade API (public endpoints, no credentials, no orders) and commits the
+# append-only ledger back so the static page always shows the latest state.
+#
+# Loop protection: this workflow's push trigger ignores sim-desk/data/** (the
+# directory the commit step writes), and scheduled runs land on main only.
+on:
+  push:
+    branches:
+      - arena/9dcbe7d4-demo1
+      - main
+    paths:
+      - "sim-desk/**"
+      - ".github/workflows/sim-strategies.yml"
+    paths-ignore:
+      - "sim-desk/data/**"
+  pull_request:
+    paths:
+      - "sim-desk/**"
+      - ".github/workflows/sim-strategies.yml"
+    paths-ignore:
+      - "sim-desk/data/**"
+  schedule:
+    # Offset from the repo's other data crons (*/15) to avoid Pages-build pileups.
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to run against (and commit the ledger to)"
+        required: false
+        default: main
+      publish:
+        description: "Set to true to commit and push the refreshed ledger"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sim-desk
+  cancel-in-progress: false
+
+jobs:
+  run-strategies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Offline engine tests (fixtures replay, fee/orderbook/settlement rules)
+        run: |
+          python3 sim-desk/tests/make_fixtures.py
+          python3 sim-desk/tests/test_engine.py
+
+      - name: Run strategies against the official demo API (simulated fills only)
+        run: python3 sim-desk/engine.py --out sim-desk/data
+
+      - name: Validate committed outputs
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          ledger = json.load(open("sim-desk/data/ledger.json"))
+          perf = json.load(open("sim-desk/data/performance.json"))
+          runlog = json.load(open("sim-desk/data/run_log.json"))
+          assert ledger.get("schema") == 1, "ledger schema"
+          assert ledger["meta"]["simulated"] is True, "simulated flag"
+          assert perf.get("simulated") is True, "performance simulated flag"
+          assert runlog["summary"]["api_calls"] > 0, "engine made no API calls"
+          assert isinstance(ledger["cash"], (int, float)), "cash"
+          print("outputs OK:", runlog["summary"])
+          PY
+
+      - name: Upload ledger artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-desk-ledger
+          path: sim-desk/data
+
+      - name: Commit refreshed ledger (push / schedule / dispatch with publish)
+        if: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.publish == 'true') }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sim-desk/data
+          if git diff --cached --quiet; then
+            echo "No ledger changes."
+            exit 0
+          fi
+          git commit -m "sim-desk: run strategies $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

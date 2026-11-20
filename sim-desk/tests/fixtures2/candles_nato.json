@@ -1,0 +1,34 @@
+{
+ "candlesticks": [
+  {
+   "end_period_ts": 1700000000,
+   "price": {
+    "open_dollars": "0.3000",
+    "low_dollars": "0.3000",
+    "high_dollars": "0.3000",
+    "close_dollars": "0.3000"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700003600,
+   "price": {
+    "open_dollars": "0.3100",
+    "low_dollars": "0.3100",
+    "high_dollars": "0.3100",
+    "close_dollars": "0.3100"
+   },
+   "volume_fp": "10.00"
+  },
+  {
+   "end_period_ts": 1700007200,
+   "price": {
+    "open_dollars": "0.3000",
+    "low_dollars": "0.3000",
+    "high_dollars": "0.3000",
+    "close_dollars": "0.3000"
+   },
+   "volume_fp": "10.00"
+  }
+ ]
+}
