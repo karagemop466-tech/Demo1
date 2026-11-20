@@ -1,0 +1,59 @@
+name: Collect Kalshi demo data
+
+# Runs on GitHub-hosted runners, which have unrestricted outbound internet and
+# can therefore reach the official Kalshi demo Trade API. The sandbox used to
+# author this repo cannot, so this workflow is how live official data is
+# obtained. Artifacts are inspected and committed deliberately, never blindly.
+on:
+  push:
+    branches:
+      - arena/4df8be5b-demo1
+    paths:
+      - tools/**
+      - .github/workflows/live-data.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "collect or explore"
+        required: false
+        default: "collect"
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Reachability check (official demo host)
+        run: |
+          curl -sS -m 20 -o /dev/null -w "demo exchange/status: %{http_code}\n" \
+            https://external-api.demo.kalshi.co/trade-api/v2/exchange/status
+          curl -sS -m 20 -o /dev/null -w "docs.kalshi.com: %{http_code}\n" \
+            https://docs.kalshi.com/llms.txt
+      - name: Explore data landscape
+        if: ${{ github.event.inputs.mode == 'explore' || github.event.inputs.mode == '' || github.event_name == 'push' }}
+        run: python tools/collect_kalshi.py explore
+      - name: Collect dataset
+        run: python tools/collect_kalshi.py collect
+      - name: Show collection log
+        run: cat data/collect-log.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kalshi-data
+          path: data/
+          if-no-files-found: warn
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### Kalshi demo collection";
+            echo '```';
+            cat data/collect-log.txt 2>/dev/null | tail -80 || echo "no log";
+            echo '```';
+          } >> "$GITHUB_STEP_SUMMARY"
