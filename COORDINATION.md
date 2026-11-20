@@ -2283,3 +2283,5 @@ Log:
 - F-17: news links are search leads, never asserted as causes.
 - Demo WS endpoints require signed handshake even for public channels; this session uses REST polling only. Sandbox bash cannot reach `*.kalshi.co` (TLS EOF); live verification runs in-browser on the published site.
 - 24h deltas (`previous_price_dollars` → `last_price_dollars`) are labelled "day Δ (prev→last)" — they are **not** tick-to-tick swings; true live tick swings come from poll-to-poll diffs at the $0.10 threshold.
+
+**Publish confirmation (2026-11-20 ~21:08 UTC):** PR #79 merged to main as `0643b4a`; GitHub Pages built that exact commit (`status: built`, no error, 21:07:48Z). Live verification by fetch: `https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html` renders both feeds with the 22-message SNAPSHOT seed (per-message API/Event/News-lead links intact) and starts live polling; root landing shows the session-2db27b09 tile → `alert-desk/chat.html`. CI on the merge head: alert-desk check ✓, exec-desk site check ✓, Strategy-desk ✓, Pages deploy validation ✓, data pipeline ✓, repo audit ✓. AD-1/AD-2 fully closed.
