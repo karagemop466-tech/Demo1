@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions for review · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html' class='on'>Suggestions</a><a href='questions.html'>Questions</a><a href='explore.html'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Review queue · nothing auto-applied</p>
+    <h1>Suggestions for review</h1>
+  </div>
+  
+<div class="callout">
+  <b>This page is a review queue, not a changelog.</b> Nothing here is implemented automatically. Each item states
+  the change, why it improves decisions, what is needed, and whether it is blocked on a decision from you.
+  Pick the ones worth doing and they can be sequenced.
+</div>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Suggestion</th><th>Value</th><th>Why it improves decisions</th><th>What it needs</th><th>Status</th></tr></thead><tbody><tr><td><b>Connect a read-only demo API key</b></td><td><span class='pill warn'>Highest value</span></td><td>Unlocks portfolio, fills, settlements and therefore real performance analysis.</td><td>A signed server-side worker (never the browser) with a read-only key; decide hosting.</td><td>Requires your decision — see Questions Q1</td></tr><tr><td><b>Add a signed execution service with hard risk caps</b></td><td><span class='pill warn'>High</span></td><td>Turns the documented order form into working demo trading with a full audit trail.</td><td>Per-order maximum, daily loss cap, allowed topics, kill switch.</td><td>Requires your decision — see Questions Q2</td></tr><tr><td><b>Upgrade the price chart to WebSocket streaming</b></td><td><span class='pill warn'>High</span></td><td>REST candlesticks are limited to 1/60/1440-minute buckets and can lag a few seconds.</td><td>Authenticated WebSocket session (documented: even public channels need the signed handshake).</td><td>Blocked on credentials</td></tr><tr><td><b>Use an official series taxonomy instead of keyword rules</b></td><td><span class='pill ok'>Medium</span></td><td>Removes false positives/negatives in topic assignment.</td><td>A curated list of series tickers per topic, reviewed by you.</td><td>Needs your input; interim rules are published on each topic page</td></tr><tr><td><b>Snapshot the dataset on a schedule and keep history</b></td><td><span class='pill ok'>Medium</span></td><td>Enables trends, liquidity drift and resolution-vs-price analysis over time.</td><td>A cron schedule plus committed snapshots; decide retention.</td><td>Safe to implement; grows repo size</td></tr><tr><td><b>Show fee-adjusted edge, not gross spreads</b></td><td><span class='pill ok'>Medium</span></td><td>Gross spread screens overstate profit because Kalshi fees are quadratic on price.</td><td>The official fee schedule values per series (fee_type / fee_multiplier are in Get Series).</td><td>Needs fee formula verification before any number is shown</td></tr><tr><td><b>Replace heuristic dollar notional with a defined metric</b></td><td><span class='pill ok'>Medium</span></td><td>“Highest dollar amount” is ambiguous; the current computed notional counts traded dollars.</td><td>Agree whether the metric should be traded dollars, dollars of resting depth, or open interest × price.</td><td>Requires your definition — Questions Q3</td></tr><tr><td><b>Add alerting on resolution and large price moves</b></td><td><span class='pill ok'>Low</span></td><td>Live events are only useful if someone is told when they resolve.</td><td>Notification channel and thresholds.</td><td>Requires your decision</td></tr></tbody></table></div>
+
+<h2>How to choose between them</h2>
+<ol class="tight">
+  <li><b>Unblock measurement first.</b> Items 1 and 2 are the only ones that turn this dashboard from a
+  market viewer into a performance tracker. Everything else is theory until fills exist.</li>
+  <li><b>Fix definitions before numbers.</b> Items 6 and 7 change what the headline figures mean; do them
+  before anyone makes a trading decision from the dashboard.</li>
+  <li><b>Then widen the data.</b> Streaming and historical snapshots (3 and 5) improve fidelity once the
+  definitions are stable.</li>
+</ol>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
+    <p>Data snapshot: <b>2026-11-20T11:43:59Z</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

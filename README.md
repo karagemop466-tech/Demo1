@@ -5,6 +5,24 @@ A static GitHub Pages site (repository root, served from `main` at `/`) that tra
 - **Live site:** GitHub Pages for this repository, served from the `main` branch, root folder (`/`).
 - **Coordination:** see [COORDINATION.md](COORDINATION.md) for task status, sources, verification, and irregularities.
 
+## Verified dashboard (this session)
+
+`site/` is a separate, fully source-linked dashboard built from a single, logged collection run against the
+**official Kalshi demo Trade API** (`snapshot/`). Open it at `/site/index.html`.
+
+| Path | Purpose |
+|---|---|
+| `tools/collect_kalshi.py` | Collector: series, markets (`open`/`settled`/`closed`), events, order books, candlesticks, public trades |
+| `snapshot/*.json`, `snapshot/collect-log.txt` | The verified snapshot + request-by-request log (485 requests, 0 failures) |
+| `build_site.py` | Renders `site/` from `snapshot/` only; fails on any broken internal link |
+| `tools/account_worker.py` | Optional **read-only** signed client for demo portfolio data (no write path, no orders) |
+| `site/` | Overview, live markets, 5 topic pages, resolved outcomes, liquidity + chart, data browser, portfolio, strategies, suggestions, questions, flagged, sources |
+
+Definitions used: dollar ranking = computed 24 h traded notional (Σ `yes_price_dollars` × `count_fp`, trade count
+shown); liquidity = order-book bids with contract counts (asks derived as 1.00 − opposite bid); resolution =
+API `result` field on settled markets; history = documented 1/60/1440-minute candlesticks only. Absent values are
+blank and listed on the Flagged for Review page.
+
 ## Structure
 
 | Path | Purpose |

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources and verification log · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='explore.html'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html' class='on'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Official references · how each value was obtained</p>
+    <h1>Sources and verification log</h1>
+  </div>
+  
+<div class="callout">
+  <b>Every published value traces to one of these.</b> API documentation pages were read directly during this
+  session; live figures are reproduced from the collected snapshot, and each row links to the exact request URL.
+</div>
+<h2>Official Kalshi documentation</h2>
+<div class='tablewrap'><table class='wide'><thead><tr><th>Reference</th><th>Link</th></tr></thead><tbody><tr><td>API environments &amp; base URLs</td><td><a href='https://docs.kalshi.com/getting_started/api_environments' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Quick start: market data (public, no auth)</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_market_data' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Quick start: authenticated requests (signing)</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_authenticated_requests' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Quick start: WebSockets (signed handshake)</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_websockets' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Markets</td><td><a href='https://docs.kalshi.com/api-reference/market/get-markets' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Market</td><td><a href='https://docs.kalshi.com/api-reference/market/get-market' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Market Order Book</td><td><a href='https://docs.kalshi.com/api-reference/market/get-market-order-book' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Market Candlesticks (1 / 60 / 1440 min)</td><td><a href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Trades</td><td><a href='https://docs.kalshi.com/api-reference/market/get-trades' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Series List (categories, fee_type)</td><td><a href='https://docs.kalshi.com/api-reference/market/get-series-list' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Events (settlement_sources)</td><td><a href='https://docs.kalshi.com/api-reference/events/get-events' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Balance</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-balance' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Positions (realized_pnl_dollars)</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-positions' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Fills</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-fills' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Get Settlements</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-settlements' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Create Order (V2)</td><td><a href='https://docs.kalshi.com/api-reference/orders/create-order-v2' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Orderbook responses (bid/ask reciprocity)</td><td><a href='https://docs.kalshi.com/getting_started/orderbook_responses' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Market lifecycle (status, result)</td><td><a href='https://docs.kalshi.com/getting_started/market_lifecycle' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Fixed-point representation</td><td><a href='https://docs.kalshi.com/getting_started/fixed_point_migration' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Rate limits and tiers</td><td><a href='https://docs.kalshi.com/getting_started/rate_limits' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Documentation index (llms.txt)</td><td><a href='https://docs.kalshi.com/llms.txt' target='_blank' rel='noreferrer'>open ↗</a></td></tr><tr><td>Exchange status (live request)</td><td><a href='https://external-api.demo.kalshi.co/trade-api/v2/exchange/status' target='_blank' rel='noreferrer'>open ↗</a></td></tr></tbody></table></div>
+
+<h2>Live data requests used for this snapshot</h2>
+<ul class="tight">
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/series?include_volume=true</code></li>
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=…&amp;status=open|settled</code></li>
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/events/{event_ticker}</code></li>
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}/orderbook</code></li>
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=…&amp;min_ts=…</code></li>
+  <li><code>GET https://external-api.demo.kalshi.co/trade-api/v2/series/{series}/markets/{ticker}/candlesticks?period_interval=1|60|1440</code></li>
+</ul>
+
+<h2>Verification method</h2>
+<ol class="tight">
+  <li>Documentation pages fetched from docs.kalshi.com and quoted in the collector's docstring.</li>
+  <li>Data collected by <code>tools/collect_kalshi.py</code> on a GitHub Actions runner with unrestricted egress.</li>
+  <li>Every JSON record stores the request URL that produced it; the site renders that URL as the row's source.</li>
+  <li>Absent fields render as “—” and are listed on <a href="flagged.html">Flagged for review</a>.</li>
+  <li>The build fails if any internal link is broken.</li>
+</ol>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
+    <p>Data snapshot: <b>2026-11-20T11:43:59Z</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

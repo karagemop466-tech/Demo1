@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raw data browser · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='explore.html' class='on'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Every collected record · searchable</p>
+    <h1>Raw data browser</h1>
+  </div>
+  
+<div class="callout">
+  <b>Everything collected, nothing hidden.</b> The snapshot holds <b>3868</b> records
+  (open + resolved). This browser loads <b>2500</b> of them with the core fields; the complete record
+  for any ticker — including full quote, volume and source metadata — is in <code>snapshot/</code> and linked per row. Filter by topic, status or ticker. Each row links to its
+  official market record. Fields are fixed-point strings exactly as the API returned them; an em dash means the
+  field was absent.
+</div>
+<div class="controls card">
+  <label>Topic<select id="fTopic">
+    <option value="">All topics</option>
+    <option value="gas_prices">Gas prices</option>
+    <option value="elections">Elections</option>
+    <option value="culture">Culture</option>
+    <option value="crypto">Crypto</option>
+    <option value="golf">Golf</option>
+  </select></label>
+  <label>Status<select id="fStatus">
+    <option value="">Any status</option>
+    <option value="active">active (open)</option>
+    <option value="closed">closed</option>
+    <option value="determined">determined</option>
+    <option value="finalized">finalized</option>
+  </select></label>
+  <label>Result<select id="fResult">
+    <option value="">Any result</option>
+    <option value="yes">yes</option>
+    <option value="no">no</option>
+    <option value="none">no result recorded</option>
+  </select></label>
+  <label>Search<input id="fQ" placeholder="ticker or title"></label>
+  <label>Rows<select id="fLimit">
+    <option value="100">100</option>
+    <option value="500">500</option>
+    <option value="2000">2000</option>
+  </select></label>
+</div>
+<p class="fine" id="fCount">—</p>
+<div class="tablewrap"><table class="wide"><thead><tr>
+<th>Topic</th><th>Ticker</th><th>Title</th><th>Status</th><th>Result</th><th>YES bid ¢</th>
+<th>Contracts at bid</th><th>Last ¢</th><th>24h vol</th><th>Volume</th><th>Open interest</th>
+<th>Notional 24h (USD)</th><th>Close time</th><th>Settled (UTC)</th><th>Book?</th><th>Source</th>
+</tr></thead><tbody id="fBody"><tr><td colspan="16" class="empty">Loading…</td></tr></tbody></table></div>
+<script src="assets/explore.js" data-src="explore-data.json"></script>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
+    <p>Data snapshot: <b>2026-11-20T11:43:59Z</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
