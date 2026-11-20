@@ -44,5 +44,10 @@
     else if (s.transport === "unavailable") { pill.classList.add("err"); txt.textContent = "BLOCKED · see Flagged"; }
     else txt.textContent = "connecting…";
   }
-  if (window.KALSHI) { KALSHI.onStatus(render); render(KALSHI.state); }
+  if (window.KALSHI) {
+    KALSHI.onStatus(render);
+    render(KALSHI.state);
+    // Probe once so pages that don't fetch data still show a truthful connection pill.
+    if (!KALSHI.state.transport) KALSHI.get("/markets", { limit: 1 }).catch(function () {});
+  }
 })();

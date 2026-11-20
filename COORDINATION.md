@@ -36,7 +36,7 @@
 | T10 | Questions / open decisions / missing-information list | done | arena-3a5f6f1d | questions.html, js/questions.js |
 | T11 | Flagged-for-Review page (unverified items + source links) | done | arena-3a5f6f1d | flagged.html, js/flagged.js |
 | T12 | Landing page + shared navigation + styles | done | arena-3a5f6f1d | index.html, css/styles.css, js/nav.js |
-| T13 | GitHub Pages integration: link check, build check, PR → main, merge, deploy confirmation | done | arena-3a5f6f1d | .github/workflows/pages.yml, PR (see log) |
+| T13 | GitHub Pages integration: link check, build check, PR → main, merge, deploy confirmation | in progress | arena-3a5f6f1d | .github/workflows/site-check.yml, PR (see log) |
 
 ## Task log (sources / verification / irregularities)
 
