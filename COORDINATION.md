@@ -1307,3 +1307,35 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pages state after merge | pending — `gh api /repos/karagemop466-tech/Demo1/pages` (confirm after merge) |
 
 ---
+
+---
+
+# Session arena/cabd4fe5-demo1 — final integration: live alert console (two chats) + simplified site
+
+## Session claim
+- **Session ID:** `cabd4fe5-demo1` — branch `arena/cabd4fe5-demo1` (platform-fixed; the `session-<id>/<task>` convention is recorded here as a documented deviation, as in every prior session).
+- **Base:** `main` at `de4c771` (PR #52 merged). Branch rebased onto it before any edit.
+- **Claimed at:** 2026-11-20 (UTC).
+- **Role:** final integration session per the brief — re-verify the combined tree line by line, confirm the site builds with no broken links, PR -> `main`, merge without waiting for approval, confirm the GitHub Pages deploy, and record the PR link and merge result here.
+- **Scope (exclusive):** `alert-desk/**` (new, self-contained), `.github/workflows/alert-desk.yml` (new), root `index.html` (landing/navigation — final-integration output), root `assets/common.js` (root nav), `COORDINATION.md` (this section, append-only), `EXECUTIVE_SUMMARY.md`, `README.md`, `SOURCES.md`, `REVIEW.md`.
+- **Deliberately NOT touched:** `desk/`, `site/`, `pages/`, `exec-desk/`, `verified-desk/`, `decision/`, `strategy-desk/`, `live-desk/`, `monitor/`, `docs/`, `engine/`, `sim-desk/`, `snapshot/`, `data/`, `build_site.py`, `tools/collect_kalshi.py`, `scripts/`, and every other session's directory. Their outputs stay reachable from the landing page as clearly-labelled earlier builds; nothing is deleted or rewritten.
+
+## Why this session exists (gap analysis against the brief)
+Every other line of the brief was implemented by an earlier session and is listed on the coordination board. Two lines were **not** implemented anywhere in the tree, and both are in the brief's core ask:
+1. **"The alert system should work as a simplified scrolling chat … two scrolling chats, one with all events and the other that is a selective filter based on events that our model likes as high ROI."** The tree has jump *tables* (`desk/live.html`, `pages/price-jumps.html`, `exec-desk/jumps.html`, `engine/jumps.json`) but **no chat-style feed and no ROI-preference filter**. This session builds it.
+2. **"Organize and simplify the website continuously … keep topics separate but keep events within the same topic organized together."** Seven-plus overlapping dashboard variants exist and the root landing links to all of them as an undifferentiated tile list. This session rewrites the root landing into a clean, category-organized dashboard and labels the earlier builds as such (nothing removed).
+
+## Task board
+
+| # | Task | Status | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|
+| C1 | Live alert console: two scrolling chats (all >= $0.10 events / model-preference feed), live polling, source links | in progress | `alert-desk/` | https://docs.kalshi.com/api-reference/market/get-trades, /get-markets, /get-market-orderbook, /get-market-candlesticks, https://docs.kalshi.com/getting_started/orderbook_responses, https://docs.kalshi.com/getting_started/demo_env | offline fixture tests + jsdom DOM test + parity test (Python <-> JavaScript model) | — |
+| C2 | Disclosed ROI-preference model (rule-based screen over official fields; every input source-linked) | in progress | `alert-desk/tools/roi.py`, `alert-desk/assets/roi.js` | https://kalshi.com/docs/kalshi-fee-schedule.pdf (fee formula + 21-row table) | fee table reproduced row-for-row; JS/Python parity test on a shared fixture | Model is a disclosed screen, not a forecast; thresholds are policy, published on the page |
+| C3 | Simulated trades from model picks, settled on YES/NO, P&L/ROI by strategy and topic | in progress | `alert-desk/tools/paper.py` | https://docs.kalshi.com/getting_started/market_settlement, fee schedule PDF | settlement and fee arithmetic unit-tested | Fills are simulated; no order is sent |
+| C4 | Resolution tracking until YES/NO with settlement fields | in progress | `alert-desk/tools/collect.py`, `alert-desk/data/resolutions.json` | https://docs.kalshi.com/api-reference/market/get-markets (`result`, `settlement_ts`, `settlement_value_dollars`) | per-row source URL; blanks never filled | — |
+| C5 | Root landing rewritten as a clean category-organized dashboard; earlier builds labelled, not removed | in progress | root `index.html`, `assets/common.js` | — | `node tools/check-links.mjs`; DOM check of the nav | — |
+| C6 | Line-by-line re-verification of the combined tree; build + link + test gates | pending | read-only | official docs listed in this session's record | `python3 build_site.py`, `node tools/check-links.mjs`, `node --check`, `py_compile`, unit + DOM tests | — |
+| C7 | PR -> `main`, merge, confirm GitHub Pages deploy, record PR link + merge result here | pending | `.github/workflows/*` (deploy only) | https://docs.github.com/en/pages | `gh api /repos/.../pages`, live fetch of the deployed pages | — |
+
+## Claim log
+- 2026-11-20 — session `cabd4fe5-demo1` claimed C1-C7; claim pushed to `arena/cabd4fe5-demo1` before implementation work.
