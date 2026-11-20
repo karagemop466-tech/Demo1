@@ -33,6 +33,7 @@ TOPIC_PAGES = {
 }
 
 BUILD_ERRORS = []
+EXPLORE_LIMIT = 2500
 
 
 # --------------------------------------------------------------------------
@@ -176,7 +177,7 @@ def pill(text, kind="ok"):
 # Build pages
 # --------------------------------------------------------------------------
 def market_link(m):
-    return (f"<a href='market.html?t={esc(m['market_ticker'])}'>"
+    return (f"<a href='explore.html?q={esc(m['market_ticker'])}'>"
             f"{esc(m.get('title') or m['market_ticker'])}</a>")
 
 
@@ -202,11 +203,17 @@ def build_index(meta, markets, resolved):
     per_topic = []
     for key in TOPIC_ORDER:
         t = meta.get("topics", {}).get(key, {})
+        n_open = len([m for m in markets if m["topic"] == key])
+        n_res = len([r for r in resolved if r["topic"] == key])
+        n_series = t.get("series_matched")
+        if n_series is None and (t.get("top_series") or t.get("series")):
+            n_series = len(t.get("series") or t.get("top_series"))
         per_topic.append([
-            f"<a href='{TOPIC_PAGES[key]}'>{esc(t.get('label', key))}</a>",
-            dash(t.get("series_matched")),
-            dash(t.get("open_market_count")),
-            dash(t.get("resolved_market_count")),
+            f"<a href='{TOPIC_PAGES[key]}'>{esc(t.get('label', key) or key.replace('_', ' ').title())}</a>",
+            dash(n_series) if n_series is not None else
+            "<span class='na' title='series count was not stored in this snapshot'>see topic page</span>",
+            dash(n_open) if n_open else dash(None),
+            dash(n_res) if n_res else dash(None),
         ])
     cat_rows = [[esc(k), dash(v)] for k, v in (meta.get("categories") or {}).items()]
 
@@ -276,7 +283,7 @@ Counts are series per discovery category as returned by the API; they are not a 
 def build_markets(meta, markets, total_records=None):
     rows = []
     ordered = sorted(markets, key=lambda x: -(float((x.get("dollar_notional_24h") or {}).get("value") or 0)))
-    for m in ordered[:200]:
+    for m in ordered[:250]:
         q = m.get("quotes", {})
         yb, ya = q.get("yes", {}), q.get("no", {})
         dn = m.get("dollar_notional_24h", {})
@@ -306,10 +313,9 @@ def build_markets(meta, markets, total_records=None):
 </div>
 <p class="fine">Collected {dash(meta.get('generated_utc'))} from <code>{esc(meta.get('rest_base'))}</code>.
 Market metadata: <a href="{DOCS}/api-reference/market/get-markets">Get Markets</a>.
-Showing <b>{len(rows)}</b> rows that have a retrieved order book. The snapshot holds
-<b>{dash(total_records)}</b> open market records in total; every one of them keeps its full JSON
-(quotes, volume, source URLs) in the <a href="explore.html">raw data browser</a>, and the topic
-pages count them. Rows are pruned from the rendered tables only for page weight — never altered.</p>
+Showing the <b>{len(rows)}</b> highest-ranked rows. The snapshot holds <b>{dash(total_records)}</b> open
+market records; all of them are searchable in the <a href="explore.html">data browser</a> and counted on the
+topic pages. Row caps exist for page weight only — no value is ever altered.</p>
 {table(["Topic", "Market / event", "Ticker", "YES bid ¢", "YES ask ¢", "Last ¢",
         "24h volume (contracts)", "Total volume (contracts)", "Open interest (contracts)",
         "Notional 24h (USD, computed)", "Trades counted", "Status", "Source"], rows, "wide")}
@@ -322,9 +328,10 @@ def build_topic(key, meta, markets, resolved):
     label = topic_label(key, meta)
     topic_meta = meta.get("topics", {}).get(key, {})
     rule = meta.get("topics", {}).get(key, {})
-    mine = [m for m in markets if m["topic"] == key]
-    mine.sort(key=lambda x: -(float(x.get("dollar_notional_24h", {}).get("value") or 0)
-                              if x.get("dollar_notional_24h", {}).get("value") is not None else 0))
+    mine_all = [m for m in markets if m["topic"] == key]
+    mine_all.sort(key=lambda x: -(float(x.get("dollar_notional_24h", {}).get("value") or 0)
+                                  if x.get("dollar_notional_24h", {}).get("value") is not None else 0))
+    mine = mine_all[:60]
     rows = []
     for m in mine:
         q = m.get("quotes", {})
@@ -340,11 +347,14 @@ def build_topic(key, meta, markets, resolved):
             dash(m.get("open_interest_contracts")),
             (f"${dn['value']:,.2f}" if dn.get("value") is not None else dash(None)),
             dash(when(m.get("close_time"))),
-            pill(m.get("status") or "unknown", "ok" if m.get("status") == "active" else "warn"),
+            pill(m.get("status") or "unknown", "ok" if m.get("status") == "active" else "warn")
+            + (" " + pill("ticker-only", "warn") if m.get("topic_matched_by_ticker_only") else ""),
             src(m.get("sources", {}).get("market"), "market"),
         ])
+    res_all = sorted([r for r in resolved if r["topic"] == key],
+                     key=lambda x: x.get("settlement_ts") or "", reverse=True)
     res_rows = []
-    for m in [r for r in resolved if r["topic"] == key]:
+    for m in res_all[:60]:
         res = (m.get("result") or "").lower()
         settle_src = m.get("settlement_sources") or []
         res_rows.append([
@@ -357,9 +367,12 @@ def build_topic(key, meta, markets, resolved):
             src(m.get("sources", {}).get("market"), "market"),
         ])
     series_rows = [[f"<code>{esc(s['ticker'])}</code>", esc(s.get("title")),
-                    esc(s.get("category")), esc(s.get("match_reason")),
-                    dash(s.get("volume_contracts"))]
-                   for s in (topic_meta.get("series") or [])]
+                    esc(s.get("match_reason")),
+                    dash(s.get("volume_contracts")),
+                    pill("ticker-only match", "warn") if ("ticker" in (s.get("match_reason") or "")
+                                                          and "title" not in (s.get("match_reason") or ""))
+                    else pill("title match", "ok")]
+                   for s in (topic_meta.get("top_series") or [])]
     errs = topic_meta.get("errors") or []
     err_html = ""
     if errs:
@@ -372,14 +385,18 @@ def build_topic(key, meta, markets, resolved):
   of these patterns; a match is recorded with its reason. The rule set is heuristic — it is not an official Kalshi
   taxonomy — so every matched series and its reason is listed below for review.
 </div>
-<p class="fine">{len(mine)} open markets and {len([r for r in resolved if r['topic'] == key])} resolved markets collected
-from <code>{esc(meta.get('rest_base'))}</code> at {dash(meta.get('generated_utc'))}.</p>
+<p class="fine">Collected from <code>{esc(meta.get('rest_base'))}</code> at {dash(meta.get('generated_utc'))}:
+<b>{len(mine_all)}</b> open markets and <b>{len(res_all)}</b> resolved/closed markets for this topic.
+Tables show at most 60 rows each, ranked by computed 24 h notional (open) and settlement time (resolved);
+every record is searchable in the <a href="explore.html">data browser</a>.</p>
 
 <h2>Live markets</h2>
 {table(["Market / event", "Ticker", "YES bid ¢", "YES ask ¢", "Last ¢", "24h volume", "Open interest",
         "Notional 24h (USD, computed)", "Close time", "Status", "Source"], rows, "wide")}
 
 <h2>Resolved markets (followed until settled)</h2>
+<p class="fine">Showing {len(res_rows)} of {len(res_all)}. A market with status <code>finalized</code> has paid out;
+<code>closed</code>/<code>determined</code> ones are tracked but have no final result yet.</p>
 {table(["Market / event", "Ticker", "Result", "Settlement value", "Settled (UTC)",
         "Resolution source (from event)", "Source"], res_rows, "wide")}
 
@@ -390,7 +407,7 @@ from <code>{esc(meta.get('rest_base'))}</code> at {dash(meta.get('generated_utc'
 <h2>Series matched by the topic rule</h2>
 <p class="fine">From <a href="{DOCS}/api-reference/market/get-series-list">Get Series List</a> and
 <a href="{DOCS}/api-reference/events/get-events">Get Events</a> metadata; <code>match_reason</code> records exactly why each series was included.</p>
-{table(["Series ticker", "Title", "Primary category", "Match reason", "Series volume (contracts)"], series_rows)}
+{table(["Series ticker", "Title", "Match reason", "Series volume (contracts)", "Match quality"], series_rows)}
 {err_html}
 """
     page(TOPIC_PAGES[key], f"{label} — Kalshi demo markets", body,
@@ -400,7 +417,7 @@ from <code>{esc(meta.get('rest_base'))}</code> at {dash(meta.get('generated_utc'
 def build_resolved(meta, resolved, total_records=None):
     rows = []
     ordered = sorted(resolved, key=lambda x: x.get("settlement_ts") or "", reverse=True)
-    for m in ordered[:200]:
+    for m in ordered[:250]:
         res = (m.get("result") or "").lower()
         settle_src = m.get("settlement_sources") or []
         rows.append([
@@ -422,10 +439,9 @@ def build_resolved(meta, resolved, total_records=None):
   event's <code>settlement_sources</code> give the official outside source used to determine the market.
   A market with an empty <code>result</code> is shown as “no result field” rather than guessed.
 </div>
-<p class="fine">Resolved/settled records in this snapshot: <b>{dash(total_records)}</b>.
-Showing the <b>{len(rows)}</b> most recent rows whose order book was also retrieved (each row's
-<code>market</code> link resolves the full official record); the complete set is in
-<a href="explore.html">raw data browser</a>.</p>
+<p class="fine">Resolved/closed records in this snapshot: <b>{dash(total_records)}</b>. Showing the
+<b>{len(rows)}</b> most recent; the complete set is searchable in the
+<a href="explore.html">data browser</a>.</p>
 {table(["Topic", "Market / event", "Ticker", "Result (YES/NO)", "Settlement value",
         "Expiration value", "Settled (UTC)", "Resolution source (from event)", "Source"], rows, "wide")}
 <div class="callout warn">
@@ -525,6 +541,7 @@ Only markets whose books were requested in this snapshot appear. “Levels” is
 
 
 def build_portfolio(meta):
+    acct = load("account.json", None)
     endpoints = [
         ["Cash balance", "GET /portfolio/balance",
          "balance_dollars, portfolio_value (fixed-point dollars)",
@@ -543,7 +560,42 @@ def build_portfolio(meta):
          f"{DOCS}/api-reference/orders/get-orders"],
     ]
     rows = [[esc(a), f"<code>{esc(b)}</code>", esc(c), src(d, "docs")] for a, b, c, d in endpoints]
+    if acct:
+        t = acct.get("analysis", {}).get("totals", {})
+        live_rows = [
+            ["Snapshot (UTC)", dash(acct.get("generated_utc"))],
+            ["Cash balance", dash(acct.get("balance_dollars"), " USD")],
+            ["Portfolio value", dash(acct.get("portfolio_value_dollars"), " USD")],
+            ["Realised P&L (sum of realized_pnl_dollars)", dash(t.get("realized_pnl_dollars"), " USD")],
+            ["Fees paid (positions + fills)", dash(t.get("fees_paid_dollars"), " USD")],
+            ["Open exposure (sum of market_exposure_dollars)", dash(t.get("open_exposure_dollars"), " USD")],
+            ["Positions counted", dash(t.get("positions_counted"))],
+            ["Fills counted", dash(t.get("fills_counted"))],
+            ["Settlements counted", dash(t.get("settlements_counted"))],
+            ["Maker / taker fills", dash(acct.get("analysis", {}).get("maker_taker"))],
+            ["Orders placed by this project", "<b>0</b> (worker is read-only)"],
+        ]
+        connected = f"""
+<h2>Connected demo account</h2>
+{table(["Metric", "Value"], live_rows)}
+<p class="fine">Derived by <code>tools/account_worker.py</code> from
+<a href="{DOCS}/api-reference/portfolio/get-balance">Get Balance</a>,
+<a href="{DOCS}/api-reference/portfolio/get-positions">Get Positions</a>,
+<a href="{DOCS}/api-reference/portfolio/get-fills">Get Fills</a> and
+<a href="{DOCS}/api-reference/portfolio/get-settlements">Get Settlements</a>.
+Request URLs: {esc(json.dumps(acct.get('sources', {})))}</p>"""
+    else:
+        connected = f"""
+<div class="callout warm">
+  <b>Not connected yet — and this is the only thing standing between you and a working portfolio page.</b>
+  A read-only worker is already written and tested: <code>tools/account_worker.py</code>. Give it a demo key
+  (two environment variables) and it writes <code>data/account.json</code>; this page then renders real
+  balances, realised P&amp;L, fees and fill statistics automatically on the next build. It never places orders.
+  Setup is documented in <a href="sources.html">Sources</a> and on <a href="questions.html">Questions (Q1)</a>.
+</div>"""
+
     body = f"""
+{connected}
 <div class="callout bad">
   <b>Blocker: no demo API credentials exist in this project.</b> Every portfolio endpoint requires signed
   requests (<code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>
@@ -819,6 +871,10 @@ def build_flagged(meta, markets):
          f"{DOCS}/api-reference/market/get-markets", "Displayed, not silently dropped"),
     ]
     rows = [[esc(a), esc(b), esc(c), src(d, "official"), esc(e)] for a, b, c, d, e in items]
+    ticker_only = [m for m in markets if m.get("topic_matched_by_ticker_only")]
+    to_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
+                esc(m.get("topic_match_reason")), esc((m.get("title") or "")[:70])]
+               for m in ticker_only[:40]]
     empties = [m for m in markets if not (m.get("quotes", {}).get("yes", {}).get("bid_is_live"))]
     empty_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
                    dash(m.get("quotes", {}).get("yes", {}).get("bid")),
@@ -831,6 +887,12 @@ def build_flagged(meta, markets):
   None of them block the site from being useful; all of them should be read before acting on a number.
 </div>
 {table(["Irregularity", "What the site shows", "Why it happens", "Official source", "Status"], rows, "wide")}
+
+<h2>Topic matches made on ticker prefix only (needs a human eye)</h2>
+<p class="fine">These were assigned to a topic because their series ticker matched the rule, while the title did not.
+They are almost certainly correct Kalshi series for the topic — but the classification rests on a naming
+convention rather than the market title, so they are listed for review. Showing {len(to_rows)} of {len(ticker_only)}.</p>
+{table(["Market", "Ticker", "Why it matched", "Title (truncated)"], to_rows, "wide")}
 
 <h2>Open markets whose YES bid is not a live level</h2>
 <p class="fine">These markets were returned with no size behind the YES bid (or no bid at all), so no tradeable
@@ -902,6 +964,9 @@ def build_sources(meta):
 
 def build_explore(meta, markets_all, resolved_all):
     """Raw data browser: every collected record, searchable, with its JSON intact."""
+    merged = markets_all + sorted(resolved_all, key=lambda x: x.get("settlement_ts") or "", reverse=True)
+    merged = merged[:EXPLORE_LIMIT]
+    total_records = len(markets_all) + len(resolved_all)
     slim_m = [{
         "t": m["topic"], "s": m["series_ticker"], "mt": m["market_ticker"],
         "tt": m.get("title"), "st": m.get("status"), "rs": m.get("result"),
@@ -916,14 +981,14 @@ def build_explore(meta, markets_all, resolved_all):
         "sts": m.get("settlement_ts"),
         "url": m.get("sources", {}).get("market"),
         "ob": bool((m.get("orderbook") or {}).get("yes_bids") or (m.get("orderbook") or {}).get("no_bids")),
-    } for m in markets_all + resolved_all]
+    } for m in merged]
     payload = json.dumps({"records": slim_m}, separators=(",", ":"))
     (SITE / "explore-data.json").write_text(payload, encoding="utf-8")
     body = f"""
 <div class="callout">
-  <b>Everything collected, nothing hidden.</b> This page contains all
-  <b>{len(slim_m)}</b> records in the snapshot — open and settled — including those whose order book was not
-  retrieved and those not shown in the pruned tables. Filter by topic, status or ticker. Each row links to its
+  <b>Everything collected, nothing hidden.</b> The snapshot holds <b>{total_records}</b> records
+  (open + resolved). This browser loads <b>{len(slim_m)}</b> of them with the core fields; the complete record
+  for any ticker — including full quote, volume and source metadata — is in <code>data/</code> and linked per row. Filter by topic, status or ticker. Each row links to its
   official market record. Fields are fixed-point strings exactly as the API returned them; an em dash means the
   field was absent.
 </div>
@@ -968,24 +1033,11 @@ def build_explore(meta, markets_all, resolved_all):
          subtitle="Every collected record · searchable")
 
 
-def build_market_detail(meta, markets, charts):
-    payload = {"markets": {m["market_ticker"]: m for m in markets},
-               "charts": {c["market_ticker"]: c for c in charts}}
-    (SITE / "market-data.json").write_text(
-        json.dumps(payload, separators=(",", ":")), encoding="utf-8")
-    body = f"""
-<p class="fine"><a href="markets.html">← Back to all markets</a></p>
-<div id="detail"><p class="empty">Select a market from the table.</p></div>
-<script src="assets/detail.js" data-src="market-data.json" data-explore="explore-data.json"></script>
-"""
-    page("market.html", "Market detail", body, subtitle="Quotes, ladder, history, resolution")
-
-
 # --------------------------------------------------------------------------
 def link_check():
     pages = sorted(p for p in SITE.glob("*.html"))
     existing = {p.name for p in pages} | {"assets/style.css", "assets/chart.js",
-                                          "assets/detail.js", "assets/explore.js"}
+                                          "assets/explore.js"}
     bad = []
     for p in pages:
         text = p.read_text(encoding="utf-8")
@@ -1011,13 +1063,11 @@ def main():
     meta = load("metadata.json", {}) or {}
     markets_all = (load("markets.json", {}) or {}).get("markets", [])
     resolved_all = (load("resolved.json", {}) or {}).get("markets", [])
-    # Every row shown in full must have a live order book; ALL records stay
-    # available in data/*.json and are browsable on markets.html (see explainer).
-    markets = [m for m in markets_all if (m.get("orderbook") or {}).get("yes_bids")
-               or (m.get("orderbook") or {}).get("no_bids")]
-    resolved = [m for m in resolved_all if (m.get("orderbook") or {}).get("yes_bids")
-                or (m.get("orderbook") or {}).get("no_bids")]
-    pruned_out = (len(markets_all) - len(markets)) + (len(resolved_all) - len(resolved))
+    # Tables are capped for page weight only; no record is altered or dropped from
+    # data/*.json, and every collected record is browsable on explore.html.
+    markets = markets_all
+    resolved = resolved_all
+    pruned_out = 0
     charts = (load("charts.json", {}) or {}).get("series", [])
     if not meta:
         print("WARNING: data/metadata.json missing — building empty-state site")
@@ -1034,9 +1084,8 @@ def main():
     build_explore(meta, markets_all, resolved_all)
     build_flagged(meta, markets)
     build_sources(meta)
-    build_market_detail(meta, markets + resolved, charts)
     # static assets
-    for asset in ("style.css", "chart.js", "detail.js", "explore.js"):
+    for asset in ("style.css", "chart.js", "explore.js"):
         src_asset = ROOT / "assets" / asset
         if not src_asset.exists():
             BUILD_ERRORS.append(f"missing source asset assets/{asset}")

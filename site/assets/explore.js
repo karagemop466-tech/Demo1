@@ -49,6 +49,8 @@
   }
   [fTopic, fStatus, fResult, fLimit].forEach(function (x) { x.addEventListener('change', render); });
   fQ.addEventListener('input', render);
+  var preset = new URLSearchParams(location.search).get('q');
+  if (preset) { fQ.value = preset; }
   fetch(me.getAttribute('data-src'))
     .then(function (r) { return r.json(); })
     .then(function (d) { recs = d.records || []; render(); })

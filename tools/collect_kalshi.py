@@ -412,7 +412,7 @@ def first(d, *keys):
 # ---------------------------------------------------------------------------
 # Market shaping — every field traceable
 # ---------------------------------------------------------------------------
-def shape_market(m, series_ticker, topic, market_url, event_cache):
+def shape_market(m, series_ticker, topic, market_url, event_cache, match_reason=""):
     event, event_url, event_err = fetch_event(m.get("event_ticker") or "", event_cache)
     quotes = {}
     for side in ("yes", "no"):
@@ -436,6 +436,9 @@ def shape_market(m, series_ticker, topic, market_url, event_cache):
                 settlement_sources.append({"name": s.get("name") or "", "url": s["url"]})
     return {
         "topic": topic,
+        "topic_match_reason": match_reason,
+        "topic_matched_by_ticker_only": bool(match_reason and "ticker" in match_reason
+                                             and "title" not in match_reason),
         "series_ticker": series_ticker,
         "event_ticker": m.get("event_ticker"),
         "event_title": (event or {}).get("title") if isinstance(event, dict) else None,
@@ -535,7 +538,8 @@ def collect():
             if err:
                 series_errors.append({"series": s["ticker"], "error": err, "url": murl})
             for m in mkts:
-                shaped = shape_market(m, s["ticker"], topic_key, murl, event_cache)
+                shaped = shape_market(m, s["ticker"], topic_key, murl, event_cache,
+                                      s.get("match_reason", ""))
                 shaped["series_volume_contracts"] = s["volume_contracts"]
                 open_markets.append(shaped)
             # resolved tracking: settled == finalized per market_lifecycle docs.
@@ -546,13 +550,15 @@ def collect():
             if cerr:
                 series_errors.append({"series": s["ticker"], "error": cerr, "url": curl})
             for m in closed:
-                shaped = shape_market(m, s["ticker"], topic_key, curl, event_cache)
+                shaped = shape_market(m, s["ticker"], topic_key, curl, event_cache,
+                                      s.get("match_reason", ""))
                 shaped["closed_pending"] = True
                 resolved_out.append(shaped)
             if serr:
                 series_errors.append({"series": s["ticker"], "error": serr, "url": surl})
             for m in settled:
-                shaped = shape_market(m, s["ticker"], topic_key, surl, event_cache)
+                shaped = shape_market(m, s["ticker"], topic_key, surl, event_cache,
+                                      s.get("match_reason", ""))
                 resolved_out.append(shaped)
             log(f"  {s['ticker']}: open={len(mkts)} settled={len(settled)} closed={len(closed)}"
                 f"{' err=' + str(err) if err else ''}")
@@ -641,6 +647,7 @@ def collect():
     if dupes:
         log(f"deduplicated {dupes} overlapping market records")
 
+    meta["topics"] = topics_out
     meta["request_stats"] = STATS
     meta["duplicate_records_removed"] = dupes
     meta["counts"] = {
