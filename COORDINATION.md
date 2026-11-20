@@ -716,6 +716,22 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
 
+
+## Session arena/3602732c-demo1 — final verification close-out
+
+- **Session ID:** `arena/3602732c-demo1` — branch `arena/3602732c-demo1`, branched from commit `f9fab19ffc9aeb7f74eae7f3177d2cb4d3c705d5` of `main` (== current `main`). Status: active.
+- **Scope:** Final verification + session close-out. No code changes required — all requirements from the brief (executive summary, 5-topic dashboard: gas/elections/culture/crypto/golf, resolution YES/NO tracking, simulated trades, demo-account portfolio gating, trade execution, live price graph with seconds/minutes/hours windows, liquidity-at-price, suggestions, questions, flagged-for-review, GitHub Pages live site, line-by-line source-linked verification) were already implemented and merged into `main` via PRs #1–#32. This session's work is limited to re-verifying the combined state on a fresh checkout and recording the result.
+- **Verification performed (this session, fresh checkout @ f9fab19):**
+  - `python3 build_site.py` → "built 16 pages; markets=1399/1399 resolved=2469/2469 charts=10 pruned=0; link check: OK"
+  - `node tools/check-links.mjs` → result: PASS (238 files scanned, html links checked, source-link audit on 11 pages)
+  - GitHub Pages API → status: `built`, source `{branch: main, path: /}`, URL https://karagemop466-tech.github.io/Demo1/
+  - Last Pages deploy on `main`: success (run 44739421132, 2026-11-20T12:52:28Z); all recent CI runs success
+  - Open PRs: none (all PRs #1–#32 merged into `main`)
+- **Sources:** https://docs.kalshi.com/ (api_environments, quick_start_market_data, get-markets, get-market-orderbook, get-market-candlesticks, get-trades, get-series-list, get-events, portfolio get-balance/positions/fills, orders create-order-v2, market_lifecycle, demo_env), https://external-api.demo.kalshi.co/trade-api/v2 (recommended demo REST), https://gasprices.aaa.com/ (gas settlement input).
+- **Irregularities:** none new. Pre-existing non-blocking flags remain published on the site's Flagged for Review page: demo venue only (mock funds, thin books), no demo API key stored (portfolio/fills blank by design), "highest dollar amount" is a computed 24h traded notional (no official USD field), topic matching via ticker/tags regexes, fee formula not yet verified against official fee schedule, sub-minute chart resolution not offered by REST candlesticks.
+- **Result:** All requirements met and verified. Site live at https://karagemop466-tech.github.io/Demo1/. No PR/merge required beyond this session's COORDINATION.md record (branch already == main); this record is committed and pushed to `arena/3602732c-demo1` only.
+
+
 ## Tasks — session arena/3c2c8403-demo1 (category-first landing + root verification)
 
 | # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
@@ -819,3 +835,16 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | Note | An early fetch of the root URL returned the pre-merge page from a cache; a second fetch with a query string returned the new page. |
 | Follow-up | Relabelled the verification page as "Flagged for Review: landing check" and added a tile to the landing page (follow-up PR, same session). |
 | Open requests (not in this session's scope) | V-6: older desks still show production/stale values. V-7: generated `site/*.html` still say "Resolved 2469" → fix label in `build_site.py`. |
+
+### Integration record — session arena/ca4f2da1-demo1 (A-4 done)
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/36 — "audit: official-source check of Kalshi API claims + Flagged for Review (session ca4f2da1)" |
+| Checks before merge | `check` and `links` both SUCCESS; mergeStateStatus CLEAN, mergeable MERGEABLE |
+| Merge result | MERGED via `gh pr merge 36 --merge` on 2026-11-20T12:58:08Z; merge commit `e529fed58ac3559fbeadcf1c05186f9125e5804f`. No approval waited on, per the brief. |
+| Conflicts | One rebase conflict on this board (main advanced via PR #34). Resolved by keeping main's sections and this session's section; nothing dropped. A stale earlier claim commit on the branch was kept as an ancestor by an "ours" merge (tree unchanged), so the push was a fast-forward. |
+| Pages deploy | `pages build and deployment` and `Deploy static site to GitHub Pages` for `e529fed`: both success. API `status: built`, `error: null`. |
+| Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
+| Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
+| Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
