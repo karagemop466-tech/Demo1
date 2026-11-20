@@ -16,6 +16,17 @@ Sessions in this repo:
 - Never mark anything verified without checking it against an official source; link that source.
 - Shared outputs (table data, site index/navigation) are changed only by the final integration session once all other tasks are done.
 
+
+## Tasks — session arena/4df8be5b-demo1 (live data + verification build)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 20 | Live official-market snapshot collection script + generated verified dataset (gas/elections/culture/crypto/golf), resolved-outcome tracking | in progress | arena/4df8be5b-demo1 | `tools/collect_kalshi.py`, `data/markets.json`, `data/metadata.json`, `.github/workflows/live-data.yml` | docs.kalshi.com (See sources log) | Live fetch from `external-api.demo.kalshi.co` on GitHub Actions runners; every value carries the API URL it came from | Demo environment is a test exchange; values are demo-book values, not real-money liquidity |
+| 21 | Verified static site build: landing + category pages + price-history chart (time axis, s/m/h windows) + depth-at-price + portfolio/trades documentation | in progress | arena/4df8be5b-demo1 | `build_site.py`, `site/**` (generated), `assets/**`, `pages/**` | docs.kalshi.com | Build validates every row has a source URL and every internal link resolves | Auth-only items (portfolio, order placement) cannot be verified without a demo API key — flagged, blank |
+| 22 | Final integration: pull combined data, broken-link check, PR to main, merge, confirm Pages deploy | unclaimed | — | GitHub Actions / repo settings | — | — | — |
+
+Claim log entry: 2026-11-20 — arena/4df8be5b-demo1 claimed tasks 20-21 (new file scope only; no edits to existing session files other than this board and the generated `site/` tree added by final integration).
+
 ## Tasks — session arena-a443fb8f-demo1
 
 | # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
