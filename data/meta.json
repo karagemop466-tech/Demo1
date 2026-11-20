@@ -1,0 +1,1012 @@
+{
+ "generated_at": "2026-11-20T11:22:36Z",
+ "completed_at": "2026-11-20T11:23:02Z",
+ "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "environment": "demo",
+ "public_endpoints_used": [
+  "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+  "https://external-api.demo.kalshi.co/trade-api/v2/series",
+  "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open",
+  "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed",
+  "https://external-api.demo.kalshi.co/trade-api/v2/events",
+  "https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}/orderbook",
+  "https://external-api.demo.kalshi.co/trade-api/v2/series/{series}/markets/{ticker}/candlesticks"
+ ],
+ "counts": {
+  "series_returned": 16643,
+  "markets_returned": 80000,
+  "open_markets_returned": 60000,
+  "closed_markets_returned": 20000,
+  "events_returned": 0,
+  "topic_markets": 27326,
+  "topic_counts": {
+   "gas": 1473,
+   "elections": 44,
+   "culture": 244,
+   "crypto": 25105,
+   "golf": 460
+  },
+  "orderbooks": 50,
+  "candle_series": 0
+ },
+ "pagination_pages": {
+  "series": 1,
+  "markets_open": 60,
+  "markets_closed": 20,
+  "events": 0
+ },
+ "errors": [
+  {
+   "step": "events",
+   "error": "GET https://external-api.demo.kalshi.co/trade-api/v2/events?limit=1000&with_nested_markets=false failed -> HTTP 400: {\"error\":{\"code\":\"bad_request\",\"message\":\"bad request\"}}"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+   "status": 200,
+   "bytes": 632,
+   "fetched_at": "2026-11-20T11:22:36Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1",
+   "status": 200,
+   "bytes": 2230,
+   "fetched_at": "2026-11-20T11:22:36Z",
+   "cors_allow_origin": "https://karagemop466-tech.github.io"
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?limit=200",
+   "status": 200,
+   "bytes": 21136309,
+   "fetched_at": "2026-11-20T11:22:36Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000",
+   "status": 200,
+   "bytes": 2386025,
+   "fetched_at": "2026-11-20T11:22:37Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI5cWA2AYQ2NXDAhIlS1hOQkFQUkEtMjZOT1YyMFNBQ0xBTC1TQUNaTEFWSU5FOC0yNQ",
+   "status": 200,
+   "bytes": 1907555,
+   "fetched_at": "2026-11-20T11:22:37Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgoI5MWA2AYQ4J0_EhhLWEhZUEUtMjZOT1YyMTAxLUI4My4zNzU",
+   "status": 200,
+   "bytes": 1803421,
+   "fetched_at": "2026-11-20T11:22:37Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI4sWA2AYQ2JqOrQMSGEtYU09MRS0yNk5PVjIxMDEtQjc3LjYyNQ",
+   "status": 200,
+   "bytes": 1830714,
+   "fetched_at": "2026-11-20T11:22:37Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI4cWA2AYQ-Oiw1wISFktYQlRDLTI2Tk9WMjEwMi1CNjM0NTA",
+   "status": 200,
+   "bytes": 1806792,
+   "fetched_at": "2026-11-20T11:22:37Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI4MWA2AYQ0JKGzgESGEtYQk5CRC0yNk5PVjIxMDMtVDQ1NC45OQ",
+   "status": 200,
+   "bytes": 1826773,
+   "fetched_at": "2026-11-20T11:22:38Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI38WA2AYQgJWVxwESGEtYSFlQRS0yNk5PVjIxMDMtQjYyLjYyNQ",
+   "status": 200,
+   "bytes": 1785834,
+   "fetched_at": "2026-11-20T11:22:38Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI3sWA2AYQ0MidbRIaS1hIWVBFRC0yNk5PVjIxMDQtVDc0Ljc0OTk",
+   "status": 200,
+   "bytes": 1816993,
+   "fetched_at": "2026-11-20T11:22:38Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI3cWA2AYQ6Nv8dBIaS1hCVENELTI2Tk9WMjEwNC1UNTQ0OTkuOTk",
+   "status": 200,
+   "bytes": 1823403,
+   "fetched_at": "2026-11-20T11:22:38Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI3MWA2AYQwJnuFxIUS1hCTkItMjZOT1YyMTA1LUI1Nzc",
+   "status": 200,
+   "bytes": 1785623,
+   "fetched_at": "2026-11-20T11:22:38Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI2sWA2AYQ2P-M2gMSGEtYSFlQRS0yNk5PVjIxMDYtQjc1LjYyNQ",
+   "status": 200,
+   "bytes": 1798451,
+   "fetched_at": "2026-11-20T11:22:39Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI2cWA2AYQiPv_7QISFktYQlRDLTI2Tk9WMjEwNi1CNjYwNTA",
+   "status": 200,
+   "bytes": 1787935,
+   "fetched_at": "2026-11-20T11:22:39Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI2MWA2AYQqI_PxAMSGktYU09MRC0yNk5PVjIxMDYtVDEwMC40OTk5",
+   "status": 200,
+   "bytes": 1852605,
+   "fetched_at": "2026-11-20T11:22:39Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI18WA2AYQ-KOwuAESGEtYSFlQRS0yNk5PVjIxMDctQjk1LjYyNQ",
+   "status": 200,
+   "bytes": 1773008,
+   "fetched_at": "2026-11-20T11:22:39Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI1sWA2AYQyIfCqQESGEtYU09MRS0yNk5PVjIxMDctQjg5LjM3NQ",
+   "status": 200,
+   "bytes": 1827415,
+   "fetched_at": "2026-11-20T11:22:39Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI1MWA2AYQ2M_zvQMSGktYSFlQRUQtMjZOT1YyMTA4LVQ5OS4yNDk5",
+   "status": 200,
+   "bytes": 1794604,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI08WA2AYQsOaKrAMSGUtYU09MRC0yNk5PVjIxMDgtVDkzLjI0OTk",
+   "status": 200,
+   "bytes": 1821395,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI0sWA2AYQyMqTygISFEtYQk5CLTI2Tk9WMjEwOS1CNjky",
+   "status": 200,
+   "bytes": 1780154,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI0cWA2AYQoOT2yAISGEtYU09MRS0yNk5PVjIxMDktQjYyLjYyNQ",
+   "status": 200,
+   "bytes": 1819495,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI0MWA2AYQ2PbpwgESGktYSFlQRUQtMjZOT1YyMTEwLVQ4NC4yNDk5",
+   "status": 200,
+   "bytes": 1787878,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIz8WA2AYQmIj2wwESGEtYSFlQRS0yNk5PVjIxMTEtQjU5LjYyNQ",
+   "status": 200,
+   "bytes": 1831536,
+   "fetched_at": "2026-11-20T11:22:40Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIzsWA2AYQsNXzgwESGktYSFlQRUQtMjZOT1YyMTExLVQ1My4yNDk5",
+   "status": 200,
+   "bytes": 1824378,
+   "fetched_at": "2026-11-20T11:22:41Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIzMWA2AYQ8InMwwMSGktYQlRDRC0yNk5PVjIxMTItVDY0NTk5Ljk5",
+   "status": 200,
+   "bytes": 1795136,
+   "fetched_at": "2026-11-20T11:22:41Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIy8WA2AYQiNz_qAMSFktYQlRDLTI2Tk9WMjExMi1CNTg1NTA",
+   "status": 200,
+   "bytes": 1801048,
+   "fetched_at": "2026-11-20T11:22:41Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIysWA2AYQiPuC7QISGEtYSFlQRS0yNk5PVjIxMTMtQjUzLjg3NQ",
+   "status": 200,
+   "bytes": 1797233,
+   "fetched_at": "2026-11-20T11:22:41Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIycWA2AYQ-N3rjQISGktYSFlQRUQtMjZOT1YyMTEzLVQ2Ni4yNDk5",
+   "status": 200,
+   "bytes": 1804888,
+   "fetched_at": "2026-11-20T11:22:41Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIyMWA2AYQsNCN6wESGktYSFlQRUQtMjZOT1YyMTE0LVQ0MS4yNDk5",
+   "status": 200,
+   "bytes": 1793618,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIx8WA2AYQwJq6RBIaS1hCVENELTI2Tk9WMjExNC1UNjM1OTkuOTk",
+   "status": 200,
+   "bytes": 1833995,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIxsWA2AYQgMClMhIYS1hTT0xFLTI2Tk9WMjExNS1CNTcuNjI1",
+   "status": 200,
+   "bytes": 1776340,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIxcWA2AYQqKPJMRIaS1hTT0xELTI2Tk9WMjExNS1UMTA3LjI0OTk",
+   "status": 200,
+   "bytes": 1829763,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIw8WA2AYQ2OP39AISGEtYU09MRS0yNk5PVjIxMTYtQjY0LjEyNQ",
+   "status": 200,
+   "bytes": 1787208,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIwsWA2AYQuK_e1QISGktYSFlQRUQtMjZOT1YyMTE2LVQ0OC4yNDk5",
+   "status": 200,
+   "bytes": 1835055,
+   "fetched_at": "2026-11-20T11:22:42Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIwcWA2AYQiN7SJBIWS1hCVEMtMjZOT1YyMTE4LUI2MTU1MA",
+   "status": 200,
+   "bytes": 1785400,
+   "fetched_at": "2026-11-20T11:22:43Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIwMWA2AYQ0I-aIRIaS1hIWVBFRC0yNk5PVjIxMTgtVDUxLjc0OTk",
+   "status": 200,
+   "bytes": 1803686,
+   "fetched_at": "2026-11-20T11:22:43Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIvsWA2AYQ0MjlzAMSGEtYU09MRS0yNk5PVjIxMTktQjQ1Ljg3NQ",
+   "status": 200,
+   "bytes": 1811168,
+   "fetched_at": "2026-11-20T11:22:43Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIvcWA2AYQgMWVlQISGEtYSFlQRS0yNk5PVjIxMTktQjk2LjM3NQ",
+   "status": 200,
+   "bytes": 1782603,
+   "fetched_at": "2026-11-20T11:22:43Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIvMWA2AYQ8Kmp3wESGktYWFJQLTI2Tk9WMjExOS1CMC44NDk5NTAw",
+   "status": 200,
+   "bytes": 1809048,
+   "fetched_at": "2026-11-20T11:22:43Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIu8WA2AYQ8MzhgwESFktYQlRDLTI2Tk9WMjEyMC1CNjgyNTA",
+   "status": 200,
+   "bytes": 1827704,
+   "fetched_at": "2026-11-20T11:22:44Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIucWA2AYQyOjc1QMSFEtYQk5CLTI2Tk9WMjEyMS1CNjky",
+   "status": 200,
+   "bytes": 1801120,
+   "fetched_at": "2026-11-20T11:22:44Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIucWA2AYQoJbMOxIYS1hTT0xFLTI2Tk9WMjEyMS1CMzQuNjI1",
+   "status": 200,
+   "bytes": 1806395,
+   "fetched_at": "2026-11-20T11:22:44Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIt8WA2AYQ-Jzb3wISGktYSFlQRUQtMjZOT1YyMTIyLVQ4NC4yNDk5",
+   "status": 429,
+   "error": "HTTP 429: {\"error\":{\"code\":\"too_many_requests\",\"message\":\"too many requests\"}}",
+   "fetched_at": "2026-11-20T11:22:44Z"
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIt8WA2AYQ-Jzb3wISGktYSFlQRUQtMjZOT1YyMTIyLVQ4NC4yNDk5",
+   "status": 200,
+   "bytes": 1803647,
+   "fetched_at": "2026-11-20T11:22:46Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwItsWA2AYQ2PzrlAISFEtYQk5CLTI2Tk9WMjEyMy1CNzAy",
+   "status": 200,
+   "bytes": 1811453,
+   "fetched_at": "2026-11-20T11:22:46Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwItcWA2AYQ8MWwnwISGEtYSFlQRS0yNk5PVjIxMjMtQjUzLjYyNQ",
+   "status": 200,
+   "bytes": 1798562,
+   "fetched_at": "2026-11-20T11:22:46Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwItMWA2AYQ4M_N1AESGktYSFlQRUQtMjZOT1YyMTIzLVQ0Ny4yNDk5",
+   "status": 200,
+   "bytes": 1819534,
+   "fetched_at": "2026-11-20T11:22:47Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIs8WA2AYQ8O_0XRIYS1hIWVBFLTI2Tk9WMjIwMC1CNjkuNjI1",
+   "status": 200,
+   "bytes": 1798564,
+   "fetched_at": "2026-11-20T11:22:47Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIscWA2AYQuO27uwMSGktYWFJQLTI2Tk9WMjIwMC1CMC45Njk5NTAw",
+   "status": 200,
+   "bytes": 2025411,
+   "fetched_at": "2026-11-20T11:22:47Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIr8WA2AYQ-MPX3wESF0tYV1RJSC0yNk5PVjIyMjMtVDgwLjc5",
+   "status": 200,
+   "bytes": 2055349,
+   "fetched_at": "2026-11-20T11:22:47Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIrcWA2AYQ8Nuw5QESGktYMzBZUlJBVEVILTIzTk9WMjYwNS1UNTM0",
+   "status": 200,
+   "bytes": 2064282,
+   "fetched_at": "2026-11-20T11:22:47Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIq8WA2AYQ6J-LygESF0tYV1RJSC0yNk5PVjIzMDgtVDgxLjg5",
+   "status": 200,
+   "bytes": 2068953,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIqcWA2AYQsMC5bxIXS1hXVElILTI2Tk9WMjMxMi1UODAuNDk",
+   "status": 200,
+   "bytes": 2031798,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIpsWA2AYQgJDHowMSGktYVFRGRC0yM05PVjI2MTY1OS1UOTFQMDAw",
+   "status": 200,
+   "bytes": 2017028,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIpcWA2AYQiPmqWBIeS1hQTEFUSU5VTUgtMjZOT1YyMzIxLVQxMzAwLjk5",
+   "status": 200,
+   "bytes": 1960464,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIo8WA2AYQyNv0jwESG0tYRE9HRS0yNk5PVjI3MTctVDAuMDEwMDAwMA",
+   "status": 200,
+   "bytes": 1998572,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsIl5uA2AYQ4O7DSRIqS1hOQkFCTEtQUk9ULTI2Tk9WMjBDSEFBVEwtQ0hBTURJQUJBVEUxNC0x",
+   "status": 200,
+   "bytes": 2414741,
+   "fetched_at": "2026-11-20T11:22:48Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwIqI6A2AYQsPiJ1wISMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNktaQ1FSSUxUTllYUDJYR00tU0NHWUxOU0VP",
+   "status": 200,
+   "bytes": 2355355,
+   "fetched_at": "2026-11-20T11:22:49Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI-fD_1wYQgOikmgISHUtYSkxFQUdVRTFILTI2Tk9WMjFLQVdBVkktS0FX",
+   "status": 200,
+   "bytes": 1967356,
+   "fetched_at": "2026-11-20T11:22:49Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI9fD_1wYQqI2dygISI0tYTkFTREFRMTAwVS0yNk5PVjIzSDExMDAtVDI2ODA5Ljk5",
+   "status": 200,
+   "bytes": 1765793,
+   "fetched_at": "2026-11-20T11:22:49Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI9fD_1wYQgPXVKhIjS1hOQVNEQVExMDBVLTI2Tk9WMjNIMTIwMC1UMjQ4MDkuOTk",
+   "status": 200,
+   "bytes": 1764255,
+   "fetched_at": "2026-11-20T11:22:49Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgsI9PD_1wYQ0Pm0UhIjS1hOQVNEQVExMDBVLTI2Tk9WMjNIMTYwMC1UMjY4MDkuOTk",
+   "status": 200,
+   "bytes": 2017051,
+   "fetched_at": "2026-11-20T11:22:49Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000&cursor=CgwI7cb_1wYQ4OrK0gESKUtYTkJBQVNUUFJPVC0yNk5PVjIwQ0hBQVRMLUFUTEREQU5JRUxTNS00",
+   "status": 200,
+   "bytes": 2171281,
+   "fetched_at": "2026-11-20T11:22:50Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000",
+   "status": 200,
+   "bytes": 1847218,
+   "fetched_at": "2026-11-20T11:22:50Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIsNCA2AYSGktYSFlQRUQtMjZOT1YyMDA2LVQ4MC43NDk5",
+   "status": 200,
+   "bytes": 1835664,
+   "fetched_at": "2026-11-20T11:22:50Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIsNCA2AYSFUtYRVRILTI2Tk9WMjAwNi1CMTg2Nw",
+   "status": 200,
+   "bytes": 1883607,
+   "fetched_at": "2026-11-20T11:22:50Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIoLSA2AYSG0tYU0lMVkVSSC0yNk5PVjIwMDUtVDQ0LjU0OQ",
+   "status": 200,
+   "bytes": 2376080,
+   "fetched_at": "2026-11-20T11:22:50Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYImY__1wYSJEtYTkJBQVNULTI2Tk9WMTlQT1JNSUwtUE9SREFWRElKQTgtOA",
+   "status": 200,
+   "bytes": 2298677,
+   "fetched_at": "2026-11-20T11:22:51Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIlIT61wYSHUtYWVREQUlMWVRPUFZJREVPLTI2Tk9WMTgtVTJU",
+   "status": 200,
+   "bytes": 2284530,
+   "fetched_at": "2026-11-20T11:22:51Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYI4Jzz1wYSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNjNJTzZCRUZZSkUyVEpVMlYtWFNaSk1NWkxa",
+   "status": 200,
+   "bytes": 2163065,
+   "fetched_at": "2026-11-20T11:22:51Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYI36Lv1wYSJUtYTkJBUkVCLTI2Tk9WMTZIT1VNSUEtTUlBUExBUlNTT045LTY",
+   "status": 200,
+   "bytes": 2472199,
+   "fetched_at": "2026-11-20T11:22:51Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIvcXp1wYSKUtYTkJBM1BUUFJPVC0yNk5PVjE1REFMQk9TLURBTEtJUlZJTkcxMS0z",
+   "status": 200,
+   "bytes": 2558225,
+   "fetched_at": "2026-11-20T11:22:51Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIqvXk1wYSJUtYTkJBU1RMLTI2Tk9WMTRERVRNSUEtTUlBUExBUlNTT045LTI",
+   "status": 200,
+   "bytes": 2472714,
+   "fetched_at": "2026-11-20T11:22:52Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIwsfe1wYSH0tYTFBHQVIyTEVBRC1USEVBREJHQVAyNi1KRU9MRUU",
+   "status": 200,
+   "bytes": 2053047,
+   "fetched_at": "2026-11-20T11:22:52Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIxOfc1wYSGUtYNVlSUkFURUgtMTNOT1YyNjExLVQ0ODM",
+   "status": 200,
+   "bytes": 2127471,
+   "fetched_at": "2026-11-20T11:22:52Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYI87Pa1wYSK0tYTkZMRkZQVFNMQURERVItMjZOT1YxMldBU05ZRy1XQVNKREFOSUVMUzU",
+   "status": 200,
+   "bytes": 2146137,
+   "fetched_at": "2026-11-20T11:22:52Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIxsPX1wYSJEtYTElHQVBST01BVENILTI2Tk9WMTIxNzAwQ0hBQ0hFLUNIRQ",
+   "status": 429,
+   "error": "HTTP 429: {\"error\":{\"code\":\"too_many_requests\",\"message\":\"too many requests\"}}",
+   "fetched_at": "2026-11-20T11:22:52Z"
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIxsPX1wYSJEtYTElHQVBST01BVENILTI2Tk9WMTIxNzAwQ0hBQ0hFLUNIRQ",
+   "status": 200,
+   "bytes": 2251531,
+   "fetched_at": "2026-11-20T11:22:54Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIwPPU1wYSHktYUExBVElOVU1ILTI2Tk9WMTEyMy1UMTU1MS45OQ",
+   "status": 200,
+   "bytes": 2085278,
+   "fetched_at": "2026-11-20T11:22:55Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIsJXR1wYSHktYUExBVElOVU1ILTI2Tk9WMTEwNi1UMTU1OC40OQ",
+   "status": 200,
+   "bytes": 2196028,
+   "fetched_at": "2026-11-20T11:22:55Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIhO_N1wYSGUtYN1lSUkFURUgtMTBOT1YyNjE1LVQ0NzI",
+   "status": 200,
+   "bytes": 2139080,
+   "fetched_at": "2026-11-20T11:22:55Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYI_u_K1wYSK0tYTkJBUkVCUFJPVC0yNk5PVjA5Tk9QR1NXLUdTV0JXSUxMSUFNUzEwLTI",
+   "status": 200,
+   "bytes": 2250980,
+   "fetched_at": "2026-11-20T11:22:55Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIoPXJ1wYSHktYUExBVElOVU1ILTI2Tk9WMDkyMS1UMTUzNi45OQ",
+   "status": 200,
+   "bytes": 2038045,
+   "fetched_at": "2026-11-20T11:22:55Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=1000&cursor=CgYIkPjH1wYSGktYR09MREgtMjZOT1YwOTEyLVQ0MDkxLjk5",
+   "status": 200,
+   "bytes": 2108980,
+   "fetched_at": "2026-11-20T11:22:56Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=1000&with_nested_markets=false",
+   "status": 400,
+   "error": "HTTP 400: {\"error\":{\"code\":\"bad_request\",\"message\":\"bad request\"}}",
+   "fetched_at": "2026-11-20T11:22:56Z"
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV20-3.6900/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV20-T5.895/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV20-T5.960/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV20-T5.955/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.79/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.69/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.59/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.49/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.39/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.29/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATECHILE-25-UNIDAD/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATECHILE-25-VAMOS/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-UNIDAD/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-VAMOS/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JKAS/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-MOMI/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-CPC/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JKAI/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JJAR/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-HNIC/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:00Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXYTVIEWSW-TAY26NOV15-14.6M/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-TRE/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-TIE/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-NOP/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-HEA/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-FRO/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-BLX/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXYTVIEWSW-TAY26NOV15-15.6M/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXYTVIEWSW-TAY26NOV15-15.3M/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXYTVIEWSW-TAY26NOV15-15.2M/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-2/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV20H12-UP/orderbook",
+   "status": 200,
+   "bytes": 69,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-1/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-3/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026B75IPSR3DS4K5RC6-3K3UH46OJ/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026EDTOGEX74OQDDM4E-REQW4NBTC/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026BPXSMBUX6ELNINIG-KDYQ7AP7O/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026P6G2MRB3BWUMXYLW-2C6WGEYUA/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026HXIOLT335ND6UCBH-WSDWR3UVD/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026LP5ZCWL4ZKBKEC43-BTCRGU6AB/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLNBPGAME-26NOV081900PANSOL-PAN/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2APUTDWUCCHA-DWU/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:01Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2APUTDWUCCHA-CCHA/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2APUTDWUCCHA-APUT/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2TDUNMMEICVIL-TDUN/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2TDUNMMEICVIL-MMEI/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGA3BALL-THRC26R2TDUNMMEICVIL-CVIL/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLPGAR1LEAD-CMEGTC26-YURYOS/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLPGAR1LEAD-CMEGTC26-YUNNIS/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLPGAR1LEAD-CMEGTC26-YOUHWA/orderbook",
+   "status": 200,
+   "bytes": 51,
+   "fetched_at": "2026-11-20T11:23:02Z",
+   "cors_allow_origin": null
+  }
+ ],
+ "unmatched_topic_sample": [
+  "KXMVECROSSCATEGORY-S2026XALGBIDR7TEWCIOA-AUNLVB233 | yes Tie,yes Tie",
+  "KXMVECROSSCATEGORY-S20267NXEGNNVJWYQF6XQ-WYE2AVLHX | yes Middle Tennessee,yes Liverpool M",
+  "KXMVECROSSCATEGORY-S2026BXHLSIMUUENWLJFA-FBDEPXY4T | yes Tarleton St.,yes Oregon St.",
+  "KXMVECROSSCATEGORY-S2026TBR5JITTFQYVJDKB-TWPUZAMJK | yes Missouri,yes Miami",
+  "KXMVECROSSCATEGORY-S2026LNE5S7BPNTML5DXK-4XKO3UNXB | no Collin Gillespie: 4+,yes Michael Porter Jr.: 20+",
+  "KXMVECROSSCATEGORY-S202665ZBRAWNKMEZVJMD-TD7D5NES6 | yes Brooklyn,yes Charleston Southern",
+  "KXMVECROSSCATEGORY-S2026ZIULQMNB3YSI32RS-VQI2XIEGC | yes Saint Mary's,yes LIU",
+  "KXMVECROSSCATEGORY-S2026KS7D5LSGJVUH6K4T-VO3FIEKLQ | yes Michael Porter Jr.: 20+,yes Naz Reid: 8+",
+  "KXMVECROSSCATEGORY-S2026TJXOFAVXESY465UE-V5LEX7NDZ | yes Tristan da Silva: 3+,no Collin Gillespie: 4+",
+  "KXMVECROSSCATEGORY-S2026W4SUQ4CKONN5XCUV-4KQPVXJFP | yes Michael Porter Jr.: 20+,no Nikola Joki\u0107: 12+",
+  "KXMVECROSSCATEGORY-S20263J4SCYHWELL7DTH6-6H7XPLUGN | no Collin Gillespie: 4+,yes Naz Reid: 8+",
+  "KXMVECROSSCATEGORY-S2026QIFVE5F2T2ODOESM-K3PVSJMSI | yes Tristan da Silva: 3+,yes Naz Reid: 8+",
+  "KXMVECROSSCATEGORY-S2026DIT3UZIFQ7V2RJ6G-7HUOHWI3R | yes Tie,yes UC Irvine",
+  "KXMVECROSSCATEGORY-S2026R2RFJGY2N7EJ6D2Z-WOXHB3NJS | yes Columbia,yes Montreal",
+  "KXMVECROSSCATEGORY-S2026HRPNMOBGBBSRCLXF-GHSBZIDI4 | no Collin Gillespie: 4+,no Nikola Joki\u0107: 12+"
+ ]
+}

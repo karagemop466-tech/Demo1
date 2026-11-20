@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analysis · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Analysis</h1>
+  <p class="lead">What the snapshot shows, what it cannot show, and how trades will be categorized once a portfolio is connected. Snapshot 2026-11-20 (UTC).</p>
+
+  <h2>Findings from the verified snapshot</h2>
+  <div class="card"><ol class="tight">
+    <li><b>Gas (AAA monthly strikes, Nov 30, 2026).</b> Liquidity is concentrated in the $3.45–$3.65 strikes. Contract volume: $3.55 = 58,065.22; $3.65 = 52,391.73; $3.45 = 24,036.88. The $4.90 and $5.00 strikes show last trades at $0.01 with large displayed ask sizes (16,205.41 and 10,456.22 contracts). <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li><b>Gas vs. the settlement input.</b> AAA's national regular average was $3.6898 on 11/20/26, down from $4.2786 a month earlier. <a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA</a> The "above $3.65" contract's last trade was $0.02, which implies the market expects the Nov 30 average to end at or below $3.65, about 4 cents below today's figure. The trade timestamp has not been checked, so this is unverified as a signal (see Flagged, item F-04).</li>
+    <li><b>Golf (RSM Classic winner, close Dec 6, 2026).</b> Every sampled winner contract traded between $0.001 and $0.003. The lowest-priced asks carry very large displayed sizes (Streb 107,887.69; Brehm 159,757.20). Those sizes are not verified as fillable depth; the orderbook must confirm them. <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li><b>Crypto (BTC range, Nov 20, 2026, 12:00 UTC close).</b> All four sampled strikes have zero volume and zero open interest, with displayed YES ask sizes of 28,346–28,699 contracts at $0.01. No price discovery has happened yet. <a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC&status=open&limit=12" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li><b>Elections (NATO Secretary General, long-dated).</b> Kaja Kallas has 1,962.46 contracts of volume and a $0.13 last trade. Klaus Iohannis has 383.36 contracts and a $0.04 last trade. Both close in 2099, so they are not near-term events. <a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Kalshi API</a></li>
+    <li><b>Culture.</b> No verified open culture market, so there is no finding.</li>
+    <li><b>Data-quality signal.</b> Several demo-environment values are placeholders, and category labels differ between environments. The demo environment should not be used for analysis. See Flagged.</li>
+  </ol></div>
+
+  <h2>Category totals (sampled rows)</h2>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Category</th><th class="num">Verified rows</th><th class="num">Volume (contracts, sampled)</th><th class="num">Open interest (contracts, sampled)</th></tr></thead>
+    <tbody id="cat-totals"><tr><td colspan="4" class="note">Loading…</td></tr></tbody>
+  </table></div><p class="note">Sums of the sampled rows only. See <a href="markets.html">Markets by category</a> for each row's source.</p></div>
+
+  <h2>What the snapshot cannot tell us</h2>
+  <div class="card"><ul class="tight">
+    <li>Whether a trade would fill at the displayed price. That needs the live orderbook at order time.</li>
+    <li>Which strategy works. There are no trades or results yet.</li>
+    <li>Whether a $0.01 or $0.001 price is a real probability or a stale or thin quote. Needs trade history (candlesticks and the trades endpoint, both documented by Kalshi).</li>
+    <li>Fees. Series records show <code>fee_type: quadratic</code>, but Kalshi's fee schedule was not read in this session. Net returns cannot be computed without it.</li>
+    <li>Settlement outcomes. No sampled market has resolved yet, so no yes/no result is recorded.</li>
+  </ul></div>
+
+  <h2>Trade categorization framework (ready for real data)</h2>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Dimension</th><th>Buckets</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td>Market type</td><td>Monthly threshold; outright winner; price range; long-dated outcome</td><td>Each settles differently and has different liquidity.</td></tr>
+      <tr><td>Time to close</td><td>Under 1 day; 1–7 days; over 7 days</td><td>Shows whether returns come from speed or from waiting.</td></tr>
+      <tr><td>Entry price</td><td>Under $0.10; $0.10–$0.90; over $0.90</td><td>Separates longshots from favorites.</td></tr>
+      <tr><td>Liquidity at entry</td><td>Resting contracts on the side bought, from the orderbook</td><td>Tests whether a fill was realistic.</td></tr>
+      <tr><td>Thesis source</td><td>Settlement-source data (e.g. AAA); news; model; none</td><td>Needed to judge whether a strategy had an edge.</td></tr>
+    </tbody></table></div>
+    <p class="note">Strategies will be defined only after at least one full settlement cycle has data. Until then, no strategy is recommended.</p></div>
+</main>
+<footer>Analysis uses only verified snapshot rows. Not investment advice.</footer>
+<script src="assets/common.js"></script>
+<script>
+fetch("data/markets.json").then(function (r) { return r.json(); }).then(function (d) {
+  var t = {};
+  d.markets.forEach(function (m) {
+    if (m.verification !== "verified") { t[m.category] = t[m.category] || { n: 0, v: 0, oi: 0 }; return; }
+    var c = t[m.category] = t[m.category] || { n: 0, v: 0, oi: 0 };
+    c.n++; c.v += Number(m.volume_contracts) || 0; c.oi += Number(m.open_interest_contracts) || 0;
+  });
+  document.getElementById("cat-totals").innerHTML = Object.keys(t).map(function (k) {
+    var c = t[k];
+    var hasRows = c.n > 0;
+    return "<tr><td>" + KD.esc(k) + '</td><td class="num">' + c.n + '</td><td class="num">' +
+      (hasRows ? KD.fmtNum(c.v) : '<span class="blank">blank</span>') + '</td><td class="num">' +
+      (hasRows ? KD.fmtNum(c.oi) : '<span class="blank">blank</span>') + "</td></tr>";
+  }).join("");
+});
+</script>
+</body></html>

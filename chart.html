@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Kalshi demo contract price chart with order-book liquidity."><title>Kalshi Demo · Price Chart &amp; Liquidity</title><link rel="stylesheet" href="styles.css"></head><body data-page="chart"><header class="top"><a class="brand" href="index.html"><span class="mark">K</span> KALSHI <b>DEMO</b></a><nav><a href="index.html">Home</a><a href="markets.html">All markets</a><a href="markets/gas.html">Gas prices</a><a href="markets/elections.html">Elections</a><a href="markets/culture.html">Culture</a><a href="markets/crypto.html">Crypto</a><a href="markets/golf.html">Golf</a><a href="chart.html" style="color:var(--green)">Price chart</a><a href="review.html">Review flags</a></nav><span class="status" id="status-block"><i id="status-dot"></i><span id="connection">Connecting…</span></span></header>
+<main>
+<div class="page-header"><div><p class="eyebrow">07 / PRICE MOVEMENT &amp; LIQUIDITY</p><h1>Contract price chart</h1><p class="sub">Y axis: YES contract price in USD. X axis: timestamp. Choose the candlestick period (1 minute / 1 hour / 1 day) and the lookback window. Official candlesticks require start_ts + end_ts; one-second candles are not a supported period_interval — flagged on Review.</p></div><div style="display:flex;gap:8px;align-items:center"><span class="badge notconn">LIVE API READ-ONLY</span><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer" style="font-size:11px">Candlesticks API ↗</a></div></div>
+
+<div class="split2">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="toolbar chart-controls">
+<label>Market <select id="chart-market"><option value="">Select a market</option></select></label>
+<label>Period <select id="interval"><option value="1m">1 minute</option><option value="60">1 hour</option><option value="1440">1 day</option><span class="flag" style="font-size:9px;margin-left:6px">seconds not supported by API</span></label>
+<label>Window <select id="window"><option value="3600">1 hour</option><option value="21600">6 hours</option><option value="86400">24 hours</option><option value="604800">7 days</option></select></label>
+</div>
+<div class="chartbox"><canvas id="price-canvas"></canvas><div class="chart-empty" id="chart-empty">Choose a market. Price points appear only when returned by the official API.</div><div class="axis-layer"><div class="axis-x" id="axis-x"></div></div></div>
+<p class="footnote" id="chart-note">Candlestick fields per official schema: end_period_ts, yes_bid/yes_ask/price OHLC in dollars, volume_fp, open_interest_fp. Settled markets older than the historical cutoff live on /historical/* endpoints.</p>
+</div>
+<aside class="panel split2">
+<p class="eyebrow">ORDER BOOK — AVAILABLE AT EACH PRICE</p>
+<h3 id="book-title">Select a market</h3>
+<p class="sub">Shows yes_dollars / no_dollars levels: price in USD per contract and how many contracts are available at that price. Displayed depth is not a guarantee of execution.</p>
+<div id="book" class="bookwrap"><div class="empty">No market selected.</div></div>
+<a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Official order-book API ↗</a>
+<a class="source-link" href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Orderbook responses doc ↗</a>
+</aside>
+</div>
+
+<div class="source-panel"><h3>Sources on this page</h3><ul>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks</a> — period_interval valid values: 1 (1 minute), 60 (1 hour), 1440 (1 day). start_ts/end_ts are required Unix timestamps.</li>
+<li><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noreferrer">Historical Data</a> — settled markets/candlesticks older than the cutoff move to GET /historical/* endpoints.</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook</a> — yes_dollars/no_dollars price levels with contract counts; depth param 0-100.</li>
+<li><a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noreferrer">Demo API root</a> (official demo environment doc).</li>
+</ul></div>
+</main>
+<footer><div class="foot">Kalshi Demo Dashboard · demo data only · no orders placed</div><div class="foot">Unverified items: <a href="review.html" class="source-link">Flagged for review</a></div></footer>
+<script src="app.js"></script></body></html>

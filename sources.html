@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sources · Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div id="site-nav"></div>
+<main>
+  <h1>Sources</h1>
+  <p class="lead">Official sources used, and what each supports. "Read" means the page was opened in this session. "Listed, not read" means it appears in Kalshi's official index only. Accessed 2026-11-20 (UTC).</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Source</th><th>Used for</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>S-01</td><td><a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">Kalshi API documentation index (llms.txt)</a></td><td>Page list; confirms other doc pages exist</td><td>Read</td></tr>
+      <tr><td>S-02</td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td><td>Production and demo base URLs; keys are environment-specific</td><td>Read</td></tr>
+      <tr><td>S-03</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td><td>Markets endpoint and market fields (prices, volume, open interest, rules, status, result)</td><td>Read</td></tr>
+      <tr><td>S-04</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td><td>Events endpoint, nested markets, category field</td><td>Read</td></tr>
+      <tr><td>S-05</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td><td>Candlestick path (<code>/series/{series}/markets/{ticker}/candlesticks</code>), period values 1, 60, 1440</td><td>Read</td></tr>
+      <tr><td>S-06</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a></td><td>Orderbook path and <code>depth</code> parameter (0–100)</td><td>Read</td></tr>
+      <tr><td>S-07</td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td><td>Bid-only book; NO bid at p equals YES ask at 1 − p; ascending price order</td><td>Read</td></tr>
+      <tr><td>S-08</td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></td><td>What is needed to unblock portfolio and trading</td><td>Listed, not read</td></tr>
+      <tr><td>S-09</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td><td>How yes/no outcomes are set (Q6)</td><td>Listed, not read</td></tr>
+      <tr><td>S-10</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a></td><td>Polling budget (Q10)</td><td>Listed, not read</td></tr>
+      <tr><td>S-11</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding</a></td><td>Fees (Q8)</td><td>Listed, not read</td></tr>
+      <tr><td>S-12</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a></td><td>Per-second feed option (Q9)</td><td>Listed, not read</td></tr>
+      <tr><td>S-13</td><td><a href="https://gasprices.aaa.com/" target="_blank" rel="noopener">AAA Fuel Prices</a></td><td>Gas settlement input: national regular average $3.6898 on 11/20/26; history rows</td><td>Read</td></tr>
+      <tr><td>S-14</td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&limit=12" target="_blank" rel="noopener">Kalshi production API: KXAAAGASM markets</a></td><td>Gas rows (prices, volume, open interest, rule text)</td><td>Read (API response)</td></tr>
+      <tr><td>S-15</td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&limit=12" target="_blank" rel="noopener">Kalshi production API: KXPGATOUR markets</a></td><td>Golf rows</td><td>Read (API response)</td></tr>
+      <tr><td>S-16</td><td><a href="https://external-api.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC&status=open&limit=12" target="_blank" rel="noopener">Kalshi production API: KXBTC markets</a></td><td>Crypto rows</td><td>Read (API response)</td></tr>
+      <tr><td>S-17</td><td><a href="https://external-api.kalshi.com/trade-api/v2/events?status=open&limit=40&with_nested_markets=true" target="_blank" rel="noopener">Kalshi production API: open events (first page)</a></td><td>Elections rows (KXNEXTNATOSECGEN); event categories</td><td>Read (API response, first chunk)</td></tr>
+      <tr><td>S-18</td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Elections&limit=20" target="_blank" rel="noopener">Kalshi production API: series, Elections</a></td><td>Elections series and placeholder titles</td><td>Read (API response, first chunk)</td></tr>
+      <tr><td>S-19</td><td><a href="https://external-api.kalshi.com/trade-api/v2/series?category=Culture&limit=20" target="_blank" rel="noopener">Kalshi production API: series, Culture</a></td><td>Culture series; settlement-source flags</td><td>Read (API response)</td></tr>
+      <tr><td>S-20</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto" target="_blank" rel="noopener">Kalshi demo API: series, Crypto</a></td><td>Demo data flags (F-08, F-11)</td><td>Read (API response, first chunk)</td></tr>
+      <tr><td>S-21</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=3&with_nested_markets=true" target="_blank" rel="noopener">Kalshi demo API: events sample</a></td><td>Category mismatch (F-09); category filter test</td><td>Read (API response)</td></tr>
+    </tbody></table></div>
+
+  <h2>Secondary sources (not used as data)</h2>
+  <div class="card"><p class="note">Web articles were used only to locate series tickers (KXAAAGASM, KXPGATOUR, and the gas series family). Each ticker was then checked against the Kalshi API above. No values were taken from these articles.</p></div>
+</main>
+<footer>Every row on the Markets page links to one of the API sources above. Not investment advice.</footer>
+<script src="assets/common.js"></script>
+</body></html>

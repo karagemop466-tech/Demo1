@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-11-20",
+  "sample": true,
+  "provenance": "Seed file: market KXAAAGASMIN-26DEC31-3.80 was observed SETTLED ('finalized', result 'yes') in a live probe of the official demo API on 2026-11-20 (settlement_ts 2026-07-06T19:27:27Z, settlement_value_dollars 1.0000). CI extends this file every run by re-checking all tracked events until they resolve YES or NO.",
+  "events": [
+    {
+      "event_ticker": "KXAAAGASMIN-26DEC31",
+      "series_ticker": "KXAAAGASMIN",
+      "title": "How low will US gas prices get this year?",
+      "topic": "gas",
+      "event_status": "open",
+      "api_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASMIN-26DEC31",
+      "markets": [
+        {
+          "ticker": "KXAAAGASMIN-26DEC31-3.80",
+          "title": "Will average **gas prices** be below $3.80 by Dec 31, 2026?",
+          "status": "finalized",
+          "result": "yes",
+          "settled": true,
+          "settlement_ts": "2026-07-06T19:27:27Z",
+          "settlement_value_dollars": "1.0000",
+          "outcome": "YES — AAA reported US national average regular gas below $3.80 within the market window; YES holders received $1.00 per contract (market rules_primary, verified live)"
+        },
+        {
+          "ticker": "KXAAAGASMIN-26DEC31-3.60",
+          "title": "Will average **gas prices** be below $3.60 by Dec 31, 2026?",
+          "status": "active",
+          "result": "",
+          "settled": false,
+          "outcome": ""
+        }
+      ],
+      "checked_at": "2026-11-20"
+    }
+  ],
+  "errors": []
+}
