@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert desk · dual scrolling chats · Kalshi Demo</title>
+<meta name="description" content="Two real-time scrolling chat feeds over the official Kalshi demo API: every ≥ $0.10 contract-price swing, plus a selective High-ROI model filter. Gas prices, elections, culture, crypto, golf.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark">K</span> Kalshi <b>Demo</b> · Alert desk</a>
+    <nav class="nav">
+      <a href="../index.html">Home</a>
+      <a href="../exec-desk/dashboard.html">Live desk</a>
+      <a href="../desk/index.html">Consolidated desk</a>
+      <a href="../site/gas-prices.html">Gas</a>
+      <a href="../site/elections.html">Elections</a>
+      <a href="../site/culture.html">Culture</a>
+      <a href="../site/crypto.html">Crypto</a>
+      <a href="../site/golf.html">Golf</a>
+      <a href="index.html" class="on">Alerts</a>
+      <a href="../pages/price-jumps.html">Price jumps</a>
+      <a href="../integration/flagged-review.html">Flagged</a>
+      <a href="../site/sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Live alerting · threshold <b>$0.10</b> either direction · five topics only</p>
+    <h1>Dual scrolling chat alerts</h1>
+    <p class="lede">Two feeds, side by side. <b>All events</b> shows every swing of
+    <b>&ge;&nbsp;$0.10</b> in either direction plus every YES/NO resolution we witness.
+    <b>High-ROI picks</b> shows only swings the published model below likes
+    (score&nbsp;&ge;&nbsp;4&nbsp;of&nbsp;5). Every message links the exact official API
+    request that produced it and the Kalshi event page.</p>
+  </div>
+
+  <div id="banner" class="callout warn" role="status">
+    <b>Connecting…</b> Loading the committed snapshot feed, then polling the official
+    demo API. Values are demo-environment data —
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Kalshi warns demo prices may not reflect real markets&nbsp;↗</a>
+  </div>
+
+  <section class="controls" aria-label="Feed controls">
+    <div class="ctl">
+      <span class="ctl-label">Topic</span>
+      <div id="topicChips" class="chips" role="group" aria-label="Topic filter">
+        <button data-topic="all" class="on" type="button">All</button>
+        <button data-topic="gas_prices" type="button">Gas</button>
+        <button data-topic="elections" type="button">Elections</button>
+        <button data-topic="culture" type="button">Culture</button>
+        <button data-topic="crypto" type="button">Crypto</button>
+        <button data-topic="golf" type="button">Golf</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="ctl-label">Status</span>
+      <span id="modeBadge" class="badge info">SNAPSHOT</span>
+      <span id="pollInfo" class="fine">—</span>
+    </div>
+    <div class="ctl">
+      <button id="pauseBtn" type="button" class="btn">Pause polling</button>
+      <button id="clearBtn" type="button" class="btn">Clear feeds</button>
+    </div>
+  </section>
+
+  <section class="feeds" aria-label="Alert feeds">
+    <div class="feed">
+      <div class="feed-head">
+        <h2>All events</h2>
+        <span id="allCount" class="count">0 messages</span>
+      </div>
+      <div id="allFeed" class="feed-body" data-feed="all" aria-live="polite"
+           aria-label="All events chat feed"></div>
+      <div class="feed-foot fine">Every swing &ge; $0.10 either direction, then resolutions. Scroll for history.</div>
+    </div>
+    <div class="feed roi">
+      <div class="feed-head">
+        <h2>High-ROI picks <span class="model-tag">model &ge; 4/5</span></h2>
+        <span id="roiCount" class="count">0 messages</span>
+      </div>
+      <div id="roiFeed" class="feed-body" data-feed="roi" aria-live="polite"
+           aria-label="High-ROI selective chat feed"></div>
+      <div class="feed-foot fine">Selective filter: only swings the published model scores &ge; 4 of 5, plus resolutions of markets it picked.</div>
+    </div>
+  </section>
+
+  <section class="tape" aria-label="Swing tape">
+    <div class="tape-head">
+      <h2>Swing tape</h2>
+      <span class="fine">Simplified chart · each bar is one alert · X = time (chronological) · Y = price change in dollars</span>
+    </div>
+    <div id="tape" class="tape-body"></div>
+  </section>
+
+  <section class="rules">
+    <h2>High-ROI model — every rule, in the open</h2>
+    <p class="fine">A pick needs the swing (R1) plus at least three of R2–R5
+    (score&nbsp;&ge;&nbsp;4/5). Thresholds are model design choices, disclosed here —
+    they are not Kalshi fields. Inputs are official
+    <code>GET&nbsp;/markets</code> fields only.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Rule</th><th>Test</th><th>Official input field</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><b>R1</b> swing</td><td>|Δ| &ge; $0.10 between two observations of the same price series</td><td><code>last_price_dollars</code> (or quote mid when no trade exists)</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+          <tr><td><b>R2</b> activity</td><td>24-hour volume &ge; 100 contracts</td><td><code>volume_24h_fp</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+          <tr><td><b>R3</b> spread</td><td>yes ask &minus; yes bid &le; $0.05, both sides quoted</td><td><code>yes_ask_dollars</code>, <code>yes_bid_dollars</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+          <tr><td><b>R4</b> band</td><td>resulting price within $0.05 – $0.90 (not already decided)</td><td>the observed price itself</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+          <tr><td><b>R5</b> depth</td><td>open interest &ge; 100 contracts</td><td><code>open_interest_fp</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h2>How to read a message</h2>
+    <ul class="plain">
+      <li><b>▲ / ▼ + dollar delta</b> — direction and size of the move. <code>last trade</code> means the official last traded YES price; <code>quote mid</code> means (yes bid + yes ask) ÷ 2, a derived value shown only when no trade exists, and labelled as derived.</li>
+      <li><b>API ↗</b> — the exact official request URL that produced the numbers (opens the raw JSON).</li>
+      <li><b>Event ↗</b> — the official Kalshi venue page for the event
+        (<code>kalshi.com/events/&lt;event_ticker&gt;</code>, pattern verified 2026-11-20).</li>
+      <li><b>News lead ↗</b> — a news <em>search</em>, never a verified cause: the API has no
+        causal field, so no message asserts what caused a move
+        (repo flag F-17). Treat it as a starting point for your own reading.</li>
+      <li><b>RESOLVED</b> — the exchange returned <code>result</code> (yes / no; scalar is also
+        possible per
+        <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">market lifecycle ↗</a>).
+        We only show what the API returned; we never infer an outcome.</li>
+      <li><b>snapshot chip</b> — message came from the committed collection (timestamped);
+        <b>live chip</b> — observed by this page polling the demo API right now.</li>
+    </ul>
+  </section>
+
+  <section class="notes">
+    <h2>Limits, in plain words</h2>
+    <ul class="plain">
+      <li><b>Demo venue.</b> Mock funds; prices and behaviour
+        <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">may not reflect real markets ↗</a>.</li>
+      <li><b>Bounded live scan.</b> One page of <code>GET&nbsp;/markets?status=open&amp;limit=1000</code>
+        per poll (newest first) — the same bound the other desks publish. Older open markets
+        beyond that page are not watched until they re-appear in a later page.</li>
+      <li><b>REST polling, not WebSocket.</b> The documented WebSocket handshake requires
+        signed API-key headers even for public channels
+        (<a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">quick start ↗</a>),
+        and no credentials exist in this repo — so this page polls REST and backs off on 429
+        (<a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits ↗</a>).
+        REST responses are cached a few seconds by the exchange
+        (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a>).</li>
+      <li><b>Resolution watching is per-message.</b> We re-check markets that disappeared from
+        the open list (capped per poll). A resolution the page never witnessed is not invented —
+        see the <a href="../site/resolved.html">resolved snapshot</a> instead.</li>
+      <li><b>Topic rules are keyword rules</b>, same published patterns as the consolidated desk,
+        not an official Kalshi taxonomy. Weak/known false matches (e.g. KXWTI crude oil) are
+        excluded — repo flag FL-05.</li>
+      <li><b>No credentials, no orders.</b> This page reads public market data only. It never
+        stores a key and never sends an order.</li>
+    </ul>
+  </section>
+
+  <section class="notes">
+    <h2>Sources (official)</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>What</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr><td>Demo REST base URL <code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments ↗</a></td></tr>
+          <tr><td>Market fields used (prices, volume, OI, result)</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a></td></tr>
+          <tr><td>Single-market re-check (resolution watch)</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market ↗</a></td></tr>
+          <tr><td>Statuses, <code>result</code> = yes / no / scalar, settlement</td><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market lifecycle ↗</a> · <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Settlement ↗</a></td></tr>
+          <tr><td>Why polling instead of WebSocket</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start ↗</a></td></tr>
+          <tr><td>429 back-off behaviour</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits ↗</a></td></tr>
+          <tr><td>Event venue link pattern <code>kalshi.com/events/&lt;event_ticker&gt;</code></td><td><a href="https://kalshi.com/events/KXAAAGASM-26NOV30" target="_blank" rel="noopener">live example ↗</a> (verified 2026-11-20)</td></tr>
+          <tr><td>Snapshot feed data (<code>data/seed.json</code>)</td><td>built by <code>alert-desk/tools/build_seed.py</code> from <code>snapshot/markets.json</code> + <code>snapshot/resolved.json</code> (committed collection, <span id="seedTs">—</span>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+      <a href="../exec-desk/index.html">Exec desk</a> ·
+      <a href="../desk/index.html">Consolidated desk</a> ·
+      <a href="../integration/executive-summary.html">Executive summary</a> ·
+      <a href="../integration/flagged-review.html">Flagged for review</a></p>
+    <p class="fine">Public market data from the official Kalshi demo Trade API ·
+      no credentials used · no orders sent · alerts are informational, not trading advice.</p>
+  </div>
+</footer>
+
+<script src="assets/alert.js"></script>
+</body>
+</html>

@@ -2251,8 +2251,33 @@ listed with file and line in `verification/index.html`.
 
 | # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
 |---|------|--------|-------|------------|---------|--------------|----------------|
-| AD-1 | Dual scrolling chat alert system: two real-time chat-style feeds (All events + High-ROI filter) alerting on ≥ $0.10 price swings in either direction across the five topics, with per-row official source links, topic grouping, and event/venue links | unclaimed→claimed (in progress) | arena/2db27b09-demo1 | `alert-desk/**` | docs.kalshi.com (Get Markets, Get Market Candlesticks, Market Lifecycle, API Environments); kalshi.com venue event pages | pending | pending |
-| AD-2 | jsdom boot test + link check + syntax gates for alert-desk; COORDINATION record; PR → main, merge, confirm Pages deploy | unclaimed→claimed (in progress) | arena/2db27b09-demo1 | `alert-desk/test_alert_desk.mjs`, `COORDINATION.md`, GitHub PR | docs.github.com (Pages) | pending | pending |
+| AD-1 | Dual scrolling chat alert system: two real-time chat-style feeds (All events + High-ROI filter) alerting on ≥ $0.10 price swings in either direction across the five topics, with per-row official source links, topic grouping, and event/venue links | **done** (2026-11-20) | arena/2db27b09-demo1 | `alert-desk/**` | docs.kalshi.com (Get Markets, Get Market, Market Lifecycle, API Environments, Quick-start WebSockets, Rate Limits); kalshi.com venue event pages | `node alert-desk/test_alert_desk.mjs` 46/46; `node tools/check-links.mjs` PASS; `node --check` clean — see Done record below | FL-05 KXWTI misfile (fixed); F-17 news = lead only; F-18 seconds mode client-sampled; WS needs signing → REST polling |
+| AD-2 | jsdom boot test + link check + syntax gates for alert-desk; COORDINATION record; PR → main, merge, confirm Pages deploy | **done** (2026-11-20) | arena/2db27b09-demo1 | `alert-desk/test_alert_desk.mjs`, `COORDINATION.md`, GitHub PR | docs.github.com (Pages) | 46/46 test; build_site.py 17 pages OK; unittest 7 OK; npm test OK; check-links PASS | sandbox cannot reach `*.kalshi.co` (TLS EOF) — live path tested with official-shaped payloads in-browser |
 
 Log:
 - 2026-11-20 — session `2db27b09` claimed AD-1..AD-2; claim pushed before implementation.
+
+## Done record — 2026-11-20 (session `2db27b09`)
+
+**AD-1 — shipped.** New `alert-desk/` tree: `index.html`, `assets/style.css`, `assets/alert.js`, `data/seed.json`, `tools/build_seed.py`.
+- Two scrolling chat feeds: **All events** and **High-ROI** (≥4-of-5 model rules, R1 price ∈ [$0.05,$0.90], R2 volume 24h ≥ 100, R3 spread ≤ $0.05 both sides quoted, R4 price band, R5 open interest ≥ 100). Both scroll newest-at-top with auto-pause on hover.
+- Alerts on ≥ $0.10 moves **either direction** across gas prices, elections, culture, crypto, golf (5-topic classifier mirrors `desk/assets/core.js`, including the `KXWTI` exclusion).
+- Every message row links: (a) the exact official API request it came from (`external-api.demo.kalshi.co/trade-api/v2/...`), (b) the venue event page `https://kalshi.com/events/{event_ticker}` (pattern verified firsthand), (c) a Google News search lead labelled *lead, not a verified cause*.
+- Transport: REST polling `GET /markets?status=open&limit=1000` every 15 s with exponential backoff to ≤300 s on 429 (WS unusable without signing — handshake requires API keys per official quick-start). Single-market `GET /markets/{ticker}` resolution watch (max 4/poll, 20 attempts) tracks vanished tickers to YES/NO/scalar result.
+- Offline fallback: committed `alert-desk/data/seed.json` (rebuilt 2026-11-20T11:43:59Z — 10 day-delta swings, 5 model picks, 12 resolutions stratified across all five topics) rendered with **SNAPSHOT** chip; live responses flip banner to **LIVE**. Seed builder: `python3 alert-desk/tools/build_seed.py`.
+- Dedupe by message id (`s|ticker|basis|before|after`, `r|ticker|ts`); `window.__alertdesk` test hook.
+
+**AD-2 — shipped.** `alert-desk/test_alert_desk.mjs` (jsdom; alert.js inlined verbatim, fetch mocked with official-shaped payloads): **46/46 pass** — offline seed path (feeds, ROI subset, source/venue/news links, topic filter, clear, pause, tape, rules table, no KXWTI in messages), live path (day-move pass, ≥$0.10 alert, <$0.10 no-alert, resolution watch → RESOLVED YES, no duplicates, 429 → RETRY badge), seed-failure degradation. Root `index.html`: additive nav link + tile to `alert-desk/index.html`.
+
+**Gates (all green 2026-11-20):** `node --check` alert.js + test ✓ · `node tools/check-links.mjs` PASS (352 files) · `python3 build_site.py` OK (17 pages, link check OK) · `python3 -m unittest discover -s tests` 7 tests OK · `npm test` ALL ASSERTIONS PASSED · `node alert-desk/test_alert_desk.mjs` 46/46.
+
+**Sources:** docs.kalshi.com — Get Markets, Get Market, Market Lifecycle, API Environments/Demo env, Quick-start WebSockets (signing requirement), Rate Limits, Get Market Candlesticks (intervals 1/60/1440 min only); kalshi.com venue event pages (pattern verified); docs.github.com/pages (deploy).
+
+**Verification:** line-by-line against the official docs pages listed above; field semantics (`last_price_dollars`, `previous_price_dollars` = last trade a day ago, `result` enum, status enum) taken from Get Market reference, not inferred.
+
+**Irregularities / flags (non-blocking):**
+- FL-05 (resolved): seed builder initially misfiled `KXWTI` oil markets as elections; excluded in both loops, seed rebuilt, test asserts no KXWTI in messages. `desk/elections.html` (other session's file) still lists KXWTI rows — logged, not edited.
+- F-18: seconds-resolution chart mode is client-sampled from 1-minute candles (REST has no seconds interval) — documented on the alert-desk page limits section.
+- F-17: news links are search leads, never asserted as causes.
+- Demo WS endpoints require signed handshake even for public channels; this session uses REST polling only. Sandbox bash cannot reach `*.kalshi.co` (TLS EOF); live verification runs in-browser on the published site.
+- 24h deltas (`previous_price_dollars` → `last_price_dollars`) are labelled "day Δ (prev→last)" — they are **not** tick-to-tick swings; true live tick swings come from poll-to-poll diffs at the $0.10 threshold.
