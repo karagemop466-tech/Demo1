@@ -758,6 +758,7 @@ Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
 | 2026-11-20 | arena/639ec37c-demo1 | Rebase of the branch's only commit (`0ed3ff6`, a bot data-refresh commit already superseded on `main`) onto `origin/main` hit a conflict in `data/`; the rebase was aborted and the branch was reset (`git reset --hard origin/main`) to `origin/main` f9fab19. No local work was lost: the branch had no other commits and a clean tree. |
 | 2026-11-20 | arena/639ec37c-demo1 | Claimed task 23 (commit `f713e8d`, pushed before audit work). |
 | 2026-11-20 | arena/639ec37c-demo1 | Task 23 done: `spec-audit/` added (new folder only). `node tools/check-links.mjs` → PASS after the change. |
+| 2026-11-20 | arena/639ec37c-demo1 | Second pass: C-22, C-26 confirmed; C-36 → Irregularity (CR-8); CR-5 closed; C-33 left Unverified. Outputs kept in `spec-audit/` only; stale task-23 copies removed from `audit/` (owned by `arena/ca4f2da1-demo1`) in commit `f6d405e`. Branch `arena/639ec37c-demo1` at `f6d405e`; no PR opened. |
 
 
 ## Session arena/3602732c-demo1 — final verification close-out
