@@ -1,0 +1,11 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&include_volume=true",
+  "fetched_at_utc": "2026-11-20T11:26:30Z",
+  "note": "Sample (first page of ~529 pages in demo). Elections category confirmed present and populated. Series trimmed to fields used by site tables.",
+  "series": [
+    { "ticker": "HOUSEAKAL", "title": "House Alaska at-large", "category": "Elections", "categories": ["Elections"], "tags": ["House"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "64255.00", "settlement_sources": [{ "name": "Library of Congress", "url": "https://www.congress.gov/" }] },
+    { "ticker": "KXPOLANDSEJM", "title": "Poland Sejm election", "category": "Elections", "categories": ["Elections"], "tags": ["International elections"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "72810.00", "settlement_sources": [{ "name": "National Electoral Commission", "url": "https://wybory.gov.pl/" }] },
+    { "ticker": "PRESPARTYAZ", "title": "Arizona presidential winner", "category": "Elections", "categories": ["Elections"], "tags": ["US Elections"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "Library of Congress", "url": "https://www.congress.gov/" }] },
+    { "ticker": "KXLEAVEKARKI", "title": "Sushila Karki leave office", "category": "Elections", "categories": ["Elections"], "tags": ["International"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "ABC", "url": "https://abcnews.go.com/" }] }
+  ]
+}

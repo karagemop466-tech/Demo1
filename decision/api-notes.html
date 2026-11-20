@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Endpoint-by-endpoint verification record for the Kalshi demo Trade API as used by this site.">
+<title>Kalshi Demo · API verification</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> MONITOR</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">—</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner ok"><b>Verification record.</b> “Empirical” = a real GET against the demo host whose raw JSON is preserved in <code>site/data/</code> or cited inline, performed 2026-11-20 11:20–11:29 UTC. “Docs-only” = official OpenAPI/docs page fetched and reviewed; not yet exercised live (requires auth or was unnecessary). OpenAPI <code>security: []</code> and server lists include the demo host for every endpoint shown.</div>
+
+  <section class="section"><div class="table-wrap"><table id="ep-table">
+    <thead><tr><th>Endpoint</th><th>Auth</th><th>Used for</th><th>Verified</th><th>Official docs</th></tr></thead>
+    <tbody id="ep-rows"></tbody></table></div></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">DATA FORMAT RULES (VERIFIED)</p>
+    <h2>How fields are parsed — no guessing</h2>
+  </div></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Rule</th><th>Detail</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Prices: <code>*_dollars</code></td><td>Fixed-point dollar strings, up to 4 decimals (e.g. "0.5600"). Integer-cent fields can't represent sub-cent ticks; the site reads *_dollars only.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noreferrer">Fixed-Point Representation ↗</a></td></tr>
+      <tr><td>Counts: <code>*_fp</code></td><td>Fixed-point contract-count strings, 2 decimals (e.g. "650.51").</td><td class="src"><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noreferrer">Fixed-Point Representation ↗</a></td></tr>
+      <tr><td>Order book: bids only</td><td><code>orderbook_fp.yes_dollars</code> / <code>no_dollars</code>: [price,count] pairs, ascending; best bid = last element; YES bid X ⇔ NO ask $1−X.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Orderbook Responses ↗</a></td></tr>
+      <tr><td>Price grid: <code>price_ranges</code></td><td>Per-market {start,end,step} bands are the source of truth for valid prices; order tickets validate against them.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noreferrer">Fixed-Point Representation ↗</a></td></tr>
+      <tr><td>Signing</td><td>base64( Ed25519(msg) or RSA-PSS-SHA256(salt=32) ) over <code>timestampMs + METHOD + path-without-query</code>; headers KALSHI-ACCESS-KEY/TIMESTAMP/SIGNATURE; ±30 s clock tolerance.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">API Keys ↗</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noreferrer">Quick start ↗</a></td></tr>
+      <tr><td>Candlesticks</td><td>Public; period_interval ∈ {1,60,1440} min; ≤ 5,000 periods/request; timestamps in seconds.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a></td></tr>
+    </tbody></table></div></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">TOPIC CLASSIFICATION RULE</p>
+    <h2>Gas · Elections · Culture · Crypto · Golf</h2>
+  </div></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Topic</th><th>Official filter used</th><th>Verified example (demo, 2026-11-20)</th><th>Query link</th></tr></thead>
+    <tbody>
+      <tr><td>Gas prices</td><td>tags contain <code>Oil and energy</code> AND title matches /gas|diesel|gasoline|fuel/i</td><td class="mono">KXAAAGASW “US gas price up” (vol 94,710,752), KXDIESELMAXY (AAA-settled)</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&include_volume=true" target="_blank" rel="noreferrer">series?category=Economics ↗</a></td></tr>
+      <tr><td>Elections</td><td>category = <code>Elections</code> (exact, case-sensitive)</td><td class="mono">HOUSEAKAL (64,255 cts), KXPOLANDSEJM (72,810 cts)</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&include_volume=true" target="_blank" rel="noreferrer">series?category=Elections ↗</a></td></tr>
+      <tr><td>Culture</td><td>category ∈ {<code>Culture</code>, <code>Entertainment</code>}</td><td class="mono">KXXBANNEDGROK, KXGTA7RELEASEDATE (Entertainment)</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&include_volume=true" target="_blank" rel="noreferrer">series?category=Culture ↗</a></td></tr>
+      <tr><td>Crypto</td><td>category = <code>Crypto</code></td><td class="mono">KXAVAXMINY (40,427 cts), KXAIRDROPPUMPFUN (3,696 cts)</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&include_volume=true" target="_blank" rel="noreferrer">series?category=Crypto ↗</a></td></tr>
+      <tr><td>Golf</td><td>tags contain <code>Golf</code> (case-sensitive — lowercase returned null, flagged F-07)</td><td class="mono">KXPGAR1T20 (207 cts), KXDPWTTOP20 (14 cts) — PGA Tour/ESPN/DP World Tour settlement</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&include_volume=true" target="_blank" rel="noreferrer">series?tags=Golf ↗</a></td></tr>
+    </tbody></table></div>
+  <p class="footnote">Sports category alone spans ~851 pages of series in demo — the site therefore never filters “golf” by category scan; it uses the verified tag filter. Politics category is excluded from elections scope (your call: <a href="../suggestions.html">Q-11</a>).</p></section>
+</main>
+
+<footer><div class="wrap">
+  <span>Kalshi Demo Monitor · verification record</span>
+  <span><a href="../flagged.html">Flagged →</a> · <a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noreferrer">Official docs index ↗</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/api-notes.js"></script>
+</body>
+</html>

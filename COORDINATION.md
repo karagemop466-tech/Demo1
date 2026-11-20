@@ -640,7 +640,42 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 7. UNVERIFIED-07 — no official sub-minute candles; seconds mode is labeled client sampling.
 8. Repo/API irregularities R1–R5 (placeholder README pre-integration; prose vs enum `paused`; deprecated market `title`; legacy order writes 410; sandbox egress) on exec-desk/flagged.html.
 
+## Conflict log (this session)
+- Round 1 (pre-PR): add/add on `README.md`, `COORDINATION.md`, `.gitignore` vs `origin/main` — resolved by keeping `main`'s versions and appending this session's sections; site relocated to `exec-desk/`. No other session's work discarded.
+- Round 2 (PR #25 open, merge attempt rejected with conflicts): `main` advanced via PRs #23 and #24 while #25 was open. `index.html` auto-merged; `COORDINATION.md` conflicted — resolved by keeping **both** sides (this session's section + publish records of sessions s-8344abc8 and arena/4df8be5b). No other session's work discarded.
+
 ## PR & deploy record
 - **PR #25:** https://github.com/karagemop466-tech/Demo1/pull/25 — `arena/3a5f6f1d-demo1` → `main`.
 - CI on the PR head: `site-check` (exec-desk links + JS) **pass**; `Strategy-desk link & syntax check` **pass**; repo-wide `node tools/check-links.mjs` **pass** locally; all `pages.yml` deploy steps verified locally (build_site.py link check OK).
-- Merge: `gh pr merge 25 --merge` executed immediately after this record was pushed (no waiting for review, per brief). Post-merge merge SHA and Pages build status are recorded in the follow-up entry below.
+- Merge: `gh pr merge 25 --merge` executed immediately after this record was pushed (no waiting for review, per brief). Post-merge merge SHA and Pages build status are recorded in the follow-up entry below.## Publish record — session s-8344abc8 (`verified-desk/`)
+
+| Item | Value |
+| --- | --- |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/20 — “verified-desk: 11-page Kalshi demo tracker with tested engine, provenance and tooling” |
+| Merge result | **MERGED** via `gh pr merge 20 --merge` on 2026-11-20, merge commit `b0418724b1a5bf401828bc16554d8b0a7856f4fc`; no approval waited on, per the brief |
+| Conflicts before merge | Two rounds. Round 1 (this board, add/add) resolved by keeping main's accumulated board and appending this section. Round 2 while the PR was open (main advanced by PRs #14 and #19): only `.gitignore` conflicted and was resolved as a union; `index.html`, `README.md` and this file auto-merged. Full rows in the conflict log above |
+| Pre-merge gates | 48 desk tests pass; `verified-desk/tools/check_links.py` clean; canonical `node tools/check-links.mjs` PASS over the whole repo; local `python3 -m http.server` returned 200 for all 11 pages + assets + JSON and 404 for a missing file |
+| CI on the merge commit | “Strategy-desk link & syntax check” run 44731058605 → **success** (this desk included, it scans the repo). “Deploy static site to GitHub Pages” run 44731058725 → **success**; “pages build and deployment” run 44731057577 → **success**. “Kalshi demo data pipeline” run 44731058739 was still queued at record time — it is another session's CI data refresh and does not touch `verified-desk/` |
+| Pages state | API: `status: built`, `build_type: legacy`, source `{branch: main, path: /}`; latest build commit `b041872` at 2026-11-20T11:52:00Z, no error |
+| Live verification | Fetched https://karagemop466-tech.github.io/Demo1/verified-desk/ post-deploy: served with the desk's own content, relative links rewritten under `/Demo1/verified-desk/`, and its `flagged.html#fl-1` / `#fl-3` anchors resolve. The root hub at https://karagemop466-tech.github.io/Demo1/ carries the “Verified desk (session s-8344abc8)” tile section |
+| Not verified | The site has never been opened in a real browser — only jsdom with the committed snapshot — and browser→demo-API CORS is still unconfirmed (`FL-2`). Both are published on the flagged page rather than claimed as done |
+| Follow-ups left for any session | `questions.html#q-1/#q-2` (key + custody) is the only blocker to real portfolio data; `#q-4/#q-5/#q-10/#q-11` are product definitions; unifying the five desks under one navigation is the repo owner's call (`FL-9`, `IR-12`) |
+
+## Publish record — session arena/4df8be5b-demo1
+
+| Item | Result |
+|---|---|
+| Pull request #14 — verified live data + source-linked site | **MERGED** 2026-11-20T11:50:29Z, merge commit `cd6c767` |
+| Pull request #21 — dashboard polish (titles, grouped review flags, wording) | **MERGED**, merge commit `6421770` |
+| Collection runs | Actions runs `44728543994`, `44729957483` — both success; latest snapshot 2026-11-20T11:43:59Z, **494 requests, 0 failures** |
+| Pages deploy after merge | `Deploy static site to GitHub Pages` run `44730859063` — success; later redeploys triggered by other sessions' merges also success |
+| Live verification | `https://karagemop466-tech.github.io/Demo1/site/index.html` + `markets.html` + `flagged.html` fetched after deploy: 1,399 open / 2,469 resolved records rendered from the snapshot, every row linking to its official request URL |
+| Build gate | `python build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS on a fresh clone of `main` after later merges |
+
+### Handoff notes for other sessions
+- **Do not write to `data/`** if you rely on `build_site.py`: `data/` is owned by the 15-minute
+  `fetch-data.yml` cron and has a different schema. The verified dashboard reads **`snapshot/`** only.
+- `site/` is generated — change `build_site.py` (or `site_src/` assets), then rerun the build; the Pages
+  workflow rebuilds it and fails the deploy if any internal link breaks.
+- `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
+- Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.

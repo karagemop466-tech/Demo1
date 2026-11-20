@@ -1,0 +1,10 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&include_volume=true (Culture) — Entertainment category observed in events: https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=60",
+  "fetched_at_utc": "2026-11-20T11:24:30Z",
+  "note": "Culture category exists in demo and returned its full small list (2 series). Culture/entertainment scope also includes the 'Entertainment' category (e.g. KXGTA7RELEASEDATE 'GTA7 release date', observed under Entertainment in the events sample) — the dashboard includes both, per the classification rule on api-notes.html.",
+  "series": [
+    { "ticker": "KXXBANNEDGROK", "title": "Will Grok be banned this year", "category": "Culture", "categories": ["Culture"], "tags": ["AI"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00" },
+    { "ticker": "KXXBANNEDMURRAYHILLGUY1", "title": "Will @MurrayHillGuy1 get banned from X this year?", "category": "Culture", "categories": ["Culture"], "tags": null, "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00" },
+    { "ticker": "KXGTA7RELEASEDATE", "title": "GTA7 release date", "category": "Entertainment", "categories": ["Entertainment"], "tags": null, "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "", "settlement_sources": [{ "name": "Deadline", "url": "https://deadline.com" }, { "name": "Rockstar Games", "url": "https://www.rockstargames.com/" }], "volume_note": "volume not captured for this series (observed via events sample only); blank rather than guessed" }
+  ]
+}

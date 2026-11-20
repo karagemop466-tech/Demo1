@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Kalshi demo portfolio: balance, positions, fills, orders and P&L — authenticated in-browser with your demo API key.">
+<title>Kalshi Demo · Portfolio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> MONITOR</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">—</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner" id="mode-banner"><b>Not connected.</b> Portfolio data requires a demo API key. See below.</div>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">00 / CONNECT DEMO ACCOUNT</p>
+    <h2>One-time connection — demo API key (Ed25519 or RSA)</h2>
+  </div></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Connect</h3>
+      <p class="sub">Your key signs each request <b>inside your browser</b> (WebCrypto). It is sent only to <span class="mono">external-api.demo.kalshi.co</span> — never to this site, GitHub, or anywhere else. Nothing is stored server-side; with “remember” off, the key lives only for this tab session.</p>
+      <div class="toolbar" style="flex-direction:column;align-items:stretch;gap:12px">
+        <label class="lbl">API key ID <input id="key-id" placeholder="e.g. a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off"></label>
+        <label class="lbl">Private key (PEM) <textarea id="key-pem" rows="7" placeholder="Paste the full PEM text here (Ed25519 PKCS#8 or RSA PKCS#1), header lines included" spellcheck="false"></textarea></label>
+        <label style="font-size:13px;color:var(--muted)"><input type="checkbox" id="remember"> Remember on this device (localStorage) — convenient, slightly less safe; leave off on shared machines.</label>
+        <div class="toolbar">
+          <button class="primary" id="connect">Connect & verify</button>
+          <button class="danger" id="disconnect">Disconnect & erase</button>
+          <span id="algo-badge" class="badge info" hidden></span>
+        </div>
+      </div>
+      <div id="connect-result"></div>
+    </div>
+    <div class="card">
+      <h3>How to create a demo API key (official steps)</h3>
+      <ol class="sub" style="padding-left:18px">
+        <li>Create / open your demo account at <a href="https://demo.kalshi.co/" target="_blank" rel="noreferrer">demo.kalshi.co ↗</a> (mock funds; credentials not shared with production — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">official demo docs ↗</a>).</li>
+        <li>Account &amp; security → API Keys → Create Key (<a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">official API-keys guide ↗</a>).</li>
+        <li>Save the <b>private key PEM</b> (shown once) and the <b>key ID</b>; paste both here.</li>
+        <li>This is the only manual step on this site — keys are secrets and cannot be created by an agent (flagged in <a href="../flagged.html">Flagged for review</a>).</li>
+      </ol>
+      <p class="footnote">Signed-request spec verified from official docs: headers <code>KALSHI-ACCESS-KEY/TIMESTAMP/SIGNATURE</code>; signature = base64(Ed25519 or RSA-PSS-SHA256 over <code>timestampMs + METHOD + path-without-query</code>); timestamp tolerance ±30 s. <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noreferrer">Source ↗</a></p>
+    </div>
+  </div></section>
+
+  <section class="section" id="perf"><div class="sec-head"><div>
+    <p class="eyebrow">01 / PERFORMANCE</p>
+    <h2>Portfolio performance</h2>
+    <p class="sub">Computed in your browser from official endpoint responses. “Session curve” samples balance every 60 s while this page is open — it is not a historical record from the exchange.</p>
+  </div>
+    <span class="badge warn" id="perf-badge">NOT CONNECTED</span></div>
+  <div class="statgrid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stat"><span>Cash balance</span><b id="pf-balance">—</b><small>GET /portfolio/balance</small></div>
+    <div class="stat"><span>Portfolio value</span><b id="pf-value">—</b><small>GET /portfolio/balance</small></div>
+    <div class="stat"><span>Realized P&L (sum)</span><b id="pf-pnl">—</b><small>Σ positions.realized_pnl_dollars</small></div>
+    <div class="stat"><span>Fees paid (sum)</span><b id="pf-fees">—</b><small>Σ positions.fees_paid_dollars</small></div>
+  </div>
+  <div class="chartbox" id="session-chart"><div class="empty">Connect, then the session balance curve appears here (60 s samples, this page only).</div></div>
+  <p class="footnote" id="balance-src"></p>
+  </section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">02 / POSITIONS</p>
+    <h2>Positions <span class="src">GET /portfolio/positions (count_filter=position)</span></h2>
+  </div>
+    <div class="toolbar"><button id="load-positions">↻ Load positions</button><button id="raw-positions">Raw JSON</button></div>
+  <div class="table-wrap"><table id="positions-table">
+    <thead><tr><th>Market</th><th>Topic</th><th class="num">Position</th><th class="num">Exposure</th><th class="num">Realized P&L</th><th class="num">Fees paid</th><th class="num">Total traded</th><th>Updated</th><th>Source</th></tr></thead>
+    <tbody id="positions-rows"><tr><td colspan="9" class="empty">Not connected.</td></tr></tbody></table></div>
+  <pre class="code" id="positions-raw" hidden></pre></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">03 / FILLS & TRADE CATEGORIZATION</p>
+    <h2>Recent fills <span class="src">GET /portfolio/fills</span> — each fill tagged by topic and execution type</h2>
+  </div>
+    <div class="toolbar"><button id="load-fills">↻ Load fills</button><span class="pill">direction mapping verified: buy-yes/sell-no → outcome yes</span></div>
+  <div class="table-wrap"><table id="fills-table">
+    <thead><tr><th>Time (UTC)</th><th>Market</th><th>Topic</th><th>Outcome</th><th>Book side</th><th>Direction</th><th class="num">Count</th><th class="num">YES price</th><th>Execution</th><th class="num">Fee cost</th><th>Source</th></tr></thead>
+    <tbody id="fills-rows"><tr><td colspan="11" class="empty">Not connected.</td></tr></tbody></table></div>
+  <p class="footnote">Direction is derived per the official mapping (buy-yes and sell-no → outcome_side “yes”; buy-no and sell-yes → outcome_side “no”). <code>fee_cost</code> is displayed raw — its unit is not stated in the docs section fetched, so it is <a href="../flagged.html">flagged</a> rather than converted. <a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noreferrer">Order direction docs ↗</a></p></section>
+
+  <section class="section"><div class="sec-head"><div>
+    <p class="eyebrow">04 / STRATEGY VIEW</p>
+    <h2>Your fills by topic and strategy</h2>
+  </div></div>
+  <div class="table-wrap"><table id="strategy-table">
+    <thead><tr><th>Topic</th><th>Execution</th><th class="num">Fills</th><th class="num">Σ count</th><th class="num">Σ |notional| (count×price)</th></tr></thead>
+    <tbody id="strategy-rows"><tr><td colspan="5" class="empty">Load fills to see the breakdown.</td></tr></tbody></table></div>
+  <p class="footnote">Aggregation happens in-browser over the fills you just loaded. Strategy taxonomy and deeper analytics live on <a href="../analysis.html">Strategies</a>.</p></section>
+</main>
+
+<footer><div class="wrap">
+  <span>Kalshi Demo Monitor · demo environment (mock funds) · keys never leave your browser except to Kalshi</span>
+  <span><a href="trading.html">Trading →</a> · <a href="api-notes.html">API verification</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/portfolio.js"></script>
+</body>
+</html>

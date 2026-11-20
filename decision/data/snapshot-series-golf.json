@@ -1,0 +1,12 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&include_volume=true",
+  "fetched_at_utc": "2026-11-20T11:26:00Z",
+  "note": "Sample (first page of ~27 pages in demo). Filter tags=Golf is case-sensitive: 'tags=golf' (lowercase) returned {\"series\":null} — flagged on flagged.html. Golf series settle on PGA Tour / ESPN / DP World Tour sources.",
+  "series": [
+    { "ticker": "KXPGAR1T20", "title": "R1 t20", "category": "Sports", "categories": ["Sports"], "tags": ["Golf"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "207.00", "settlement_sources": [{ "name": "Fox Sports", "url": "https://www.foxsports.com" }, { "name": "ESPN", "url": "https://www.espn.com" }, { "name": "the Governing League", "url": "https://www.pgatour.com/" }] },
+    { "ticker": "KXGOLF", "title": "Golf Tournament Winner", "category": "Sports", "categories": ["Sports"], "tags": ["Golf"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "ESPN", "url": "https://espn.com" }, { "name": "the Governing League", "url": "https://www.pgatour.com/" }] },
+    { "ticker": "KXPGAPLAYERCAT", "title": "PGA Player Category", "category": "Sports", "categories": ["Sports"], "tags": ["Golf"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "ESPN", "url": "https://www.espn.com" }, { "name": "the Governing League", "url": "https://www.pgatour.com/" }] },
+    { "ticker": "KXDPWTTOP20", "title": "DPWT Top 20 Finisher", "category": "Sports", "categories": ["Sports"], "tags": ["Golf"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "14.00", "settlement_sources": [{ "name": "DP World Tour", "url": "https://www.europeantour.com/dpworld-tour/schedule/" }] },
+    { "ticker": "KXGENESISINVITATIONAL", "title": "Genesis Invitational Winner?", "category": "Sports", "categories": ["Sports"], "tags": ["Golf"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "ESPN", "url": "https://www.espn.com/" }] }
+  ]
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Decision desk: live trading/tracking tools for the Kalshi demo environment, with per-row source links and a requirements matrix.">
+<title>Kalshi Demo · Decision desk</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b> · DECISION DESK</a>
+  <nav class="main" id="site-nav"></nav>
+  <span class="conn off" id="conn"><i class="dot"></i><span id="conn-text">—</span></span>
+</div></header>
+
+<main class="wrap">
+  <div class="banner ok"><b>Decision desk</b> (session <span class="mono">arena/ed67272c-demo1</span>) — a live, source-linked toolset that complements the hub, generated dashboards and data pipelines built by the other sessions. Every table row links its exact source; values that cannot be verified are left blank and listed in the repo-wide <a href="../flagged.html">Flagged for Review</a> register. Verified against official docs + live demo-API responses on 2026-11-20 (see <a href="api-notes.html">API verification</a>).</div>
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">LIVE TOOLS · OFFICIAL DEMO API · NOTHING INVENTED</p>
+      <h1>Trade, track and verify — <em>with evidence.</em></h1>
+      <p class="lede">These pages call the official demo REST API directly from your browser (CORS verified). The desk adds what no other page in this repo provides: a real order ticket against the V2 order API, a browser-signed portfolio view, a live resolution tracker with local history, the full requirement traceability matrix, and the endpoint-by-endpoint verification record.</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">DESK CONTENTS</p>
+      <div class="kv"><span><a href="dashboard.html">Live desk</a></span><b>ranked events · charts · depth</b></div>
+      <div class="kv"><span><a href="resolutions.html">Resolution tracker</a></span><b>live → YES/NO + history</b></div>
+      <div class="kv"><span><a href="portfolio.html">Live portfolio</a></span><b>signed balance/positions/fills</b></div>
+      <div class="kv"><span><a href="trading.html">Demo trading</a></span><b>V2 order ticket + journal</b></div>
+      <div class="kv"><span><a href="requirements.html">Requirements matrix</a></span><b>R-01…R-18 traceability</b></div>
+      <div class="kv"><span><a href="api-notes.html">API verification</a></span><b>17 endpoints, method per row</b></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head"><div>
+      <p class="eyebrow">PROVENANCE</p>
+      <h2>Verified data snapshots (fallback mode)</h2>
+    </div></div>
+    <div class="card">
+      <p class="sub" id="meta-line">Loading snapshot metadata…</p>
+      <div class="table-wrap"><table id="snap-table">
+        <thead><tr><th>Snapshot file</th><th>Contents</th><th>Source</th></tr></thead>
+        <tbody id="snap-rows"></tbody></table></div>
+    </div>
+  </section>
+
+  <div class="banner warn"><b>Manual step (flagged F-09):</b> portfolio and trading panels need <b>your</b> demo API key from <a href="https://demo.kalshi.co/" target="_blank" rel="noreferrer">demo.kalshi.co ↗</a>. Keys are secrets — the desk signs requests in your browser and never stores them in this repository.</div>
+</main>
+
+<footer><div class="wrap">
+  <span>Decision desk · demo environment (mock funds) · part of the Karagemop Demo1 multi-session build</span>
+  <span><a href="../flagged.html">Repo flagged register ↗</a> · <a href="https://docs.kalshi.com/" target="_blank" rel="noreferrer">Official docs ↗</a></span>
+</div></footer>
+<script src="js/common.js"></script>
+<script src="js/kalshi.js"></script>
+<script>
+SITE.renderNav('index.html');
+SITE.setConn('snap', 'Committed snapshots (2026-11-20)');
+SITE.loadSnapshot('data/meta.json').then(function (meta) {
+  document.getElementById('meta-line').innerHTML = 'Collector: <b>' + KALSHI.esc(meta.collector) + '</b> · window ' + KALSHI.esc(meta.collected_at_utc) + ' · ' + KALSHI.esc(meta.method);
+  document.getElementById('snap-rows').innerHTML = (meta.files || []).map(function (f) {
+    return '<tr><td class="mono">' + KALSHI.esc(f) + '</td><td class="dim">raw demo-API response excerpt (fields unchanged)</td>' +
+      '<td class="src"><a href="data/' + KALSHI.esc(f) + '">file ↗</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noreferrer">api base ↗</a></td></tr>';
+  }).join('');
+}).catch(function (e) {
+  document.getElementById('meta-line').textContent = 'Snapshot metadata unavailable: ' + e.message;
+});
+</script>
+</body>
+</html>
