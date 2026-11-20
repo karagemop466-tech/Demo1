@@ -156,8 +156,12 @@ class Client:
         raise RuntimeError(f"GET {url} failed -> {last_err}")
 
     def paginate(self, path: str, params: dict, key: str, max_pages: int = 60,
-                 max_items: int = 400000):
-        """Cursor pagination with guards for endpoints that ignore `limit`."""
+                 max_items: int = 2000000):
+        """Cursor pagination with guards for endpoints that ignore `limit`.
+
+        Returns (items, pages, exhausted) where `exhausted` is True when the
+        cursor ran out before the page cap, i.e. the full list was retrieved.
+        """
         items: list = []
         cursor = None
         pages = 0
@@ -172,14 +176,14 @@ class Client:
             items.extend(batch)
             new_cursor = data.get("cursor") or ""
             if not batch or not new_cursor or new_cursor in seen:
-                break
+                return items, pages, True
             if len(batch) > 5000:
                 break
             if len(items) >= max_items:
                 break
             seen.add(new_cursor)
             cursor = new_cursor
-        return items, pages
+        return items, pages, False
 
 
 class SeriesIndex:
@@ -246,6 +250,8 @@ def main() -> int:
     ap.add_argument("--base", default=os.environ.get("KALSHI_DEMO_BASE", DEFAULT_BASE))
     ap.add_argument("--out", default="data")
     ap.add_argument("--max-pages", type=int, default=80)
+    ap.add_argument("--open-pages", type=int, default=400,
+                    help="max pages of 1000 open markets to pull")
     ap.add_argument("--settled-pages", type=int, default=30)
     ap.add_argument("--origin", default="https://karagemop466-tech.github.io")
     ap.add_argument("--keep-open", type=int, default=300, help="open markets kept per topic")
@@ -290,8 +296,8 @@ def main() -> int:
     }
 
     # 3. series catalogue ----------------------------------------------------
-    series_raw, series_pages = record("series", lambda: client.paginate(
-        "/series", {"limit": 200}, "series", args.max_pages)) or ([], 0)
+    series_raw, series_pages, series_exhausted = record("series", lambda: client.paginate(
+        "/series", {"limit": 200}, "series", args.max_pages)) or ([], 0, False)
     series_meta: dict[str, dict] = {}
     for s in series_raw:
         tick = str(s.get("ticker", ""))
@@ -314,10 +320,10 @@ def main() -> int:
     index = SeriesIndex(series_meta)
 
     # 4. markets (open + settled) --------------------------------------------
-    open_markets, open_pages = record("markets/open", lambda: client.paginate(
-        "/markets", {"status": "open", "limit": 1000}, "markets", args.max_pages)) or ([], 0)
-    settled_markets, settled_pages = record("markets/settled", lambda: client.paginate(
-        "/markets", {"status": "settled", "limit": 1000}, "markets", args.settled_pages)) or ([], 0)
+    open_markets, open_pages, open_exhausted = record("markets/open", lambda: client.paginate(
+        "/markets", {"status": "open", "limit": 1000}, "markets", args.open_pages)) or ([], 0, False)
+    settled_markets, settled_pages, settled_exhausted = record("markets/settled", lambda: client.paginate(
+        "/markets", {"status": "settled", "limit": 1000}, "markets", args.settled_pages)) or ([], 0, False)
 
     def build_rows(raw_markets, status_label):
         rows = []
@@ -602,6 +608,8 @@ def main() -> int:
         },
         "pagination_pages": {"series": series_pages, "markets_open": open_pages,
                              "markets_settled": settled_pages},
+        "pagination_complete": {"series": series_exhausted, "markets_open": open_exhausted,
+                                 "markets_settled": settled_exhausted},
         "errors": errors,
         "requests": client.requests,
     }, compact=False)
