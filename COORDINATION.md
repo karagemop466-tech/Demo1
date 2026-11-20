@@ -1535,3 +1535,17 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pages state after merge | transient `errored` reading was a superseded build; the build for `1cf87c9` completed **success**, API `status: built` (source `main:/`) |
 | Live verification | https://karagemop466-tech.github.io/Demo1/trader-guide/index.html fetched post-deploy: renders full guide with all tables and source links; landing and exec-desk/dashboard verified live earlier in G-2 |
 | Tasks G-1..G-3 | All done. Sources, verification and irregularities recorded above (Results section) |
+
+# Session arena/5520a397-demo1 — executive-summary refresh
+
+## Claim (current branch only)
+
+- **Session / branch:** `arena/5520a397-demo1` — the platform-fixed current branch; no branch switch or new branch.
+- **Claimed:** 2026-11-20 UTC, after reading this board, checking the current `main` base, and reviewing open pull request #61 and the `trade-desk/` surface.
+- **Handoff / overlap check:** the board's earlier task 22 still says `in progress`, but its record documents completed integration and merged PR #46; this claim is limited to updating the linked executive-summary page to reflect the already-present `trade-desk/` and its audited limits. It does not take ownership of PR #61, the root landing/navigation, data collectors, trade-desk implementation, or any other session's files. PR #61 does not edit the summary file.
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| EX-1 | Refresh the linked executive summary so its requirement/status table points to the current live trade desk, states exact demo API behavior and clearly separates verified capability, computed estimates and blocked account operations | in progress | arena/5520a397-demo1 | `integration/executive-summary.html`; this append-only claim/result in `COORDINATION.md` | Official Kalshi docs: demo environment, API environments, markets, candlesticks, trades, order book, settlement, API keys; full URLs in result below | To be recorded after page/source/link checks | No credentials or order authority in this session; keep account values blank and preserve all security and data-scope caveats |
+
+- **Claim log:** `2026-11-20` — claimed EX-1; no implementation work begins outside the above scope.
