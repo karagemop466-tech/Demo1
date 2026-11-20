@@ -1639,3 +1639,9 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 - Live run/commit evidence: `https://api.github.com/repos/karagemop466-tech/Demo1/...` (URLs recorded per record in health.json).
 
 **Irregularities:** OPS-01 and OPS-02 as above; both published on `ops-desk/index.html` with run-page links and owner change requests. **Limits:** no Kalshi market data collected or altered by this task (out of scope); the page monitors GitHub Actions + git evidence only.
+
+### CI note on PR #63 (recorded 2026-11-20 ~19:58Z)
+
+- The PR check **`alert-desk check` fails**, but it fails for **every branch since it was introduced** — all 10 runs of `alert-desk-check.yml` are failures, including run #4 on `main` itself (push of merge of PR #59), runs #5–#7 on sibling branches `arena/87015421-demo1`, `arena/91fc2cc7-demo1`, `arena/fe12c4c4-demo1`, and runs #9–#10 on the owner's own fix branch. Evidence: <https://github.com/karagemop466-tech/Demo1/actions/workflows/alert-desk-check.yml?query=is%3Afailure>.
+- This PR does not touch `alert-desk/**`; locally, `node --check alert-desk/app.js alert-desk/test_boot.mjs` passes and `node alert-desk/test_boot.mjs` passes 35/35 on the identical committed files — the CI failure is runner-environment/timing, not content.
+- Owner `0ad208bf`'s fix (PR #67 "alert-desk: timing-deterministic boot test + CI failure annotations") has since **merged to `main`** (merge commit `8090cd0`). Per coordination rules this session does not edit `alert-desk/**`; the incident is published here as a flagged irregularity and does not block this PR per the brief (flagged items do not block merge; the Pages site build/deploy checks are green). The re-run of `alert-desk check` on post-fix pushes should confirm the fix.
