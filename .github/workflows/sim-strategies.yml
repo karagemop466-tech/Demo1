@@ -74,6 +74,12 @@ jobs:
           python3 sim-desk/tests/make_fixtures.py
           python3 sim-desk/tests/test_engine.py
 
+      - name: DOM boot test (page renders committed ledger values)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
+        run: |
+          npm ci --no-audit --no-fund
+          node sim-desk/tests/dom_test.mjs
+
       - name: Run strategies against the official demo API (simulated fills only)
         if: ${{ steps.guard.outputs.skip != 'true' }}
         run: python3 sim-desk/engine.py --out sim-desk/data
