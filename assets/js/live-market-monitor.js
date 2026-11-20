@@ -4,7 +4,7 @@
   const DOC_MARKETS = 'https://docs.kalshi.com/api-reference/market/get-markets';
   const DOC_BOOK = 'https://docs.kalshi.com/getting_started/orderbook_responses';
   const topics = {
-    gas: {label: 'Gas prices', re: /\b(gasoline|gas prices?|fuel prices?|crude oil|petrol)\b/i},
+    gas: {label: 'Gas prices', re: /\b(natural gas|henry hub|gasoline|gas prices?|fuel prices?|crude oil|petrol)\b/i},
     elections: {label: 'Elections', re: /\b(election|president|presidential|senate|congress|governor|primary|ballot|vote|political)\b/i},
     culture: {label: 'Culture', re: /\b(culture|entertainment|music|film|movie|tv|television|award|celebrity|box office|artist)\b/i},
     crypto: {label: 'Crypto', re: /\b(crypto|bitcoin|btc|ethereum|ether|solana|dogecoin|token)\b/i},
@@ -19,7 +19,7 @@
   const tracked = new Map();
   const $ = id => document.getElementById(id);
   const topicLabel = (m) => {
-    const text = `${m.title || ''} ${m.ticker || ''} ${m.event_ticker || ''}`;
+    const text = `${m.title || ''} ${m.subtitle || ''} ${m.yes_sub_title || ''} ${m.ticker || ''} ${m.event_ticker || ''}`;
     for (const value of Object.values(topics)) if (value.re.test(text)) return value.label;
     return '';
   };
@@ -73,7 +73,7 @@
     const rows = filteredMarkets();
     if ($('stat-markets')) $('stat-markets').textContent = rows.length.toLocaleString();
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="7" class="empty">${markets.length ? 'No open markets matched these topic keywords.' : 'No qualifying markets were returned by the demo API.'}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="empty">${markets.length ? 'No open markets matched these topic keywords.' : 'No qualifying markets were returned by the demo API.'} <a href="${DOC_MARKETS}" target="_blank" rel="noreferrer">Official source ↗</a></td></tr>`;
       return;
     }
     tbody.innerHTML = rows.map(m => {
@@ -104,7 +104,7 @@
     const body = $('resolved-rows'); if (!body) return;
     const rows = [...tracked.values()];
     if ($('tracked-count')) $('tracked-count').textContent = rows.length.toLocaleString();
-    if (!rows.length) { body.innerHTML='<tr><td colspan="5" class="empty">Select a market above to begin tracking it through resolution.</td></tr>'; return; }
+    if (!rows.length) { body.innerHTML='<tr><td colspan="5" class="empty">Select a market above to begin tracking it through resolution. <a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noreferrer">Official source ↗</a></td></tr>'; return; }
     body.innerHTML = rows.map(m => `<tr><td>${esc(m.title)}<div class="ticker">${esc(m.ticker)}</div></td><td>${esc(m.status || '—')}</td><td>${m.result==='yes'||m.result==='no'?esc(m.result.toUpperCase()):'Not resolved / not returned'}</td><td>${m.checkedAt?new Date(m.checkedAt).toLocaleTimeString(): 'Not checked'}</td><td><a class="table-action" href="${esc(marketSource(m))}" target="_blank" rel="noreferrer">Official API ↗</a></td></tr>`).join('');
   }
   function selectMarket(ticker) {
@@ -113,6 +113,7 @@
     if (!tracked.has(ticker)) tracked.set(ticker, {ticker, title:selected.title || ticker, status:selected.status || '', result:selected.result || '', checkedAt:null});
     if ($('tracked-count')) $('tracked-count').textContent = tracked.size.toLocaleString();
     renderTracked();
+    refreshTracked();
     if ($('chart-title')) $('chart-title').textContent = selected.title || selected.ticker;
     if ($('book-title')) $('book-title').textContent = `${selected.ticker} · ${selected.title || ''}`;
     sample(); loadBook(); drawChart();
@@ -146,7 +147,7 @@
   function renderBook(id, levels) {
     const node = $(id); if (!node) return;
     const best = levels.slice(-6).reverse();
-    node.innerHTML = best.length ? best.map(level => `<tr><td>${money(level[0])}</td><td>${count(level[1])}</td></tr>`).join('') : '<tr><td colspan="2">No bids returned</td></tr>';
+    node.innerHTML = best.length ? best.map(level => `<tr><td>${money(level[0])}</td><td>${count(level[1])}</td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Official ↗</a></td></tr>`).join('') : '<tr><td colspan="3">No bids returned · <a href="https://docs.kalshi.com/getting_started/orderbook_responses">Official source ↗</a></td></tr>';
   }
   function drawChart() {
     const canvas = $('price-chart'); if (!canvas) return;
@@ -175,7 +176,7 @@
   const topicSelect=$('topic');
   if(topicSelect){const queryTopic=new URLSearchParams(location.search).get('topic');if(queryTopic&&topics[queryTopic])topicSelect.value=queryTopic;}
   if($('market-rows')){
-    loadMarkets().catch(err=>{setStatus(err.message);const body=$('market-rows');if(body)body.innerHTML='<tr><td colspan="7" class="empty">Live market data could not be loaded. Confirm browser connectivity/CORS or try again. No values are fabricated.</td></tr>';});
+    loadMarkets().catch(err=>{setStatus(err.message);const body=$('market-rows');if(body)body.innerHTML='<tr><td colspan="7" class="empty">Live market data could not be loaded. Confirm browser connectivity/CORS or try again. No values are fabricated. <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noreferrer">Official source ↗</a></td></tr>';});
     timer=setInterval(()=>loadMarkets().catch(err=>setStatus(err.message)),15000);
   }
   // Public category subpages reuse the same live display without enabling trade actions.
@@ -186,7 +187,7 @@
     const body=$('category-rows');
     get('/markets?'+new URLSearchParams({status:'open',limit:'1000'})).then(data=>{
       const rows=(data.markets||[]).filter(m=>topicLabel(m)===topic.label).sort((a,b)=>(Number(b.volume_24h_fp)||0)-(Number(a.volume_24h_fp)||0));
-      body.innerHTML=rows.length?rows.map(m=>`<tr><td><strong>${esc(m.title||'Untitled')}</strong><div class="ticker">${esc(m.ticker||'')}</div></td><td>${money(m.yes_bid_dollars)}</td><td>${count(m.volume_24h_fp)} contracts</td><td>${esc(m.status||'—')} · ${m.result==='yes'||m.result==='no'?esc(m.result.toUpperCase()):'Not resolved'}</td><td><a class="table-action" href="${esc(marketSource(m))}" target="_blank" rel="noreferrer">Official API ↗</a></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No open markets matched the page’s topic keywords in this API response.</td></tr>';
+      body.innerHTML=rows.length?rows.map(m=>`<tr><td><strong>${esc(m.title||'Untitled')}</strong><div class="ticker">${esc(m.ticker||'')}</div></td><td>${money(m.yes_bid_dollars)}</td><td>${count(m.volume_24h_fp)} contracts</td><td>${esc(m.status||'—')} · ${m.result==='yes'||m.result==='no'?esc(m.result.toUpperCase()):'Not resolved'}</td><td><a class="table-action" href="${esc(marketSource(m))}" target="_blank" rel="noreferrer">Official API ↗</a></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No open markets matched the page’s topic keywords in this API response. <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Official source ↗</a></td></tr>';
     }).catch(()=>{body.innerHTML='<tr><td colspan="5" class="empty">Official demo API unavailable; no sample data shown.</td></tr>';});
   }
 })();

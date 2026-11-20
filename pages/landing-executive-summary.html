@@ -29,16 +29,16 @@
 <main>
   <div class="kicker">Executive summary</div>
   <h1>Kalshi Demo Dashboard — project overview</h1>
-  <p>This site is a static dashboard for the Kalshi demo (paper-money) environment. It collects, organizes, and analyzes event-contract data across five focus topics: <strong>gas prices, elections, culture, crypto, and golf</strong>. It tracks live events until they resolve (resolved Yes or No), tracks demo-account portfolio performance, analyzes trades by type, executes trades through the documented Kalshi API, and maintains a suggestions and questions section so changes are reviewed before implementation.</p>
+  <p>This site is an evidence-first dashboard for the Kalshi demo environment, focused on <strong>gas prices, elections, culture, crypto, and golf</strong>. It includes a public REST snapshot monitor and session-only market tracking. Private portfolio analytics and order execution are documented as requirements but are not connected; suggestions and decision questions are reviewable before implementation.</p>
 
   <section>
     <h2>Data source — Kalshi Trade API v2 (official)</h2>
     <table>
       <thead><tr><th>Interface</th><th>Demo — recommended</th><th>Demo — also supported</th><th>Source</th></tr></thead>
       <tbody>
-        <tr><td>REST Trade API</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><code>https://demo-api.kalshi.co/trade-api/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com — demo environment</a></td></tr>
-        <tr><td>WebSocket API</td><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td><code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/demo_env">docs.kalshi.com — demo environment</a></td></tr>
-        <tr><td>Official documentation</td><td colspan="3"><a href="https://docs.kalshi.com">https://docs.kalshi.com</a> (demo guide, quick start, changelog)</td></tr>
+        <tr><td>REST Trade API</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><code>https://demo-api.kalshi.co/trade-api/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/api_environments">Official API environments ↗</a></td></tr>
+        <tr><td>WebSocket API</td><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td><code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td><td><a href="https://docs.kalshi.com/getting_started/api_environments">Official API environments ↗</a></td></tr>
+        <tr><td>Official documentation</td><td colspan="2"><a href="https://docs.kalshi.com">Kalshi API documentation ↗</a></td><td><a href="https://docs.kalshi.com/">Official docs home ↗</a></td></tr>
       </tbody>
     </table>
     <p class="center">Endpoints verified against the official Kalshi API documentation: <a href="../docs/sources.md">docs/sources.md</a> with full endpoint table and source links.</p>
@@ -56,15 +56,16 @@
   <section>
     <h2>Site sections</h2>
     <table>
-      <thead><tr><th>Section</th><th>Page</th><th>Contents</th></tr></thead>
+      <thead><tr><th>Section</th><th>Page</th><th>Contents</th><th>Official source</th></tr></thead>
       <tbody>
-        <tr><td>Live dashboard</td><td><a href="../pages/dashboard.html">pages/dashboard.html</a></td><td>Interactive price graph (time X-axis, contract price Y-axis, selectable seconds/minutes/hours window) and liquidity table (contracts available at each price).</td></tr>
-        <tr><td>Focus categories</td><td>pages/{gas,elections,culture,crypto,golf}.html</td><td>Event tables for gas prices, elections, culture, crypto, golf — every row carries a source link to the official API docs; unconfirmed values are blank and flagged unverified.</td></tr>
-        <tr><td>Portfolio performance</td><td><a href="../pages/portfolio.html">pages/portfolio.html</a></td><td>Demo-account balance, positions, orders, fills, settlements via the authenticated /portfolio endpoints.</td></tr>
-        <tr><td>Trade execution</td><td><a href="../pages/trades.html">pages/trades.html</a></td><td>Order form mapped to POST /portfolio/events/orders; requires the user's own demo API key (no credentials stored in this repo).</td></tr>
-        <tr><td>Suggestions</td><td><a href="../pages/suggestions.html">pages/suggestions.html</a></td><td>Improvement suggestions to review and choose a path from before implementing.</td></tr>
-        <tr><td>Questions &amp; answers</td><td><a href="../pages/questions.html">pages/questions.html</a></td><td>Questions that must be answered before decisions, with missing-information discovery suggestions.</td></tr>
-        <tr><td>Flagged for review</td><td><a href="../pages/flagged-review.html">pages/flagged-review.html</a></td><td>All unverified items and irregularities with source links.</td></tr>
+        <tr><td>Live dashboard</td><td><a href="../pages/dashboard.html">pages/dashboard.html</a></td><td>Interactive graph-control demonstration; simulated sample is explicitly labeled, not live market data.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Public market-data guide ↗</a></td></tr>
+        <tr><td>Public REST monitor</td><td><a href="../pages/live-market-monitor.html">pages/live-market-monitor.html</a></td><td>Public market snapshots, sampled session chart, selected-market bid depth and status/result checks.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets reference ↗</a></td></tr>
+        <tr><td>Focus categories</td><td><a href="../pages/gas.html">Gas</a> · <a href="../pages/elections.html">Elections</a> · <a href="../pages/culture.html">Culture</a> · <a href="../pages/crypto.html">Crypto</a> · <a href="../pages/golf.html">Golf</a></td><td>Topic-specific event tables; unconfirmed values remain blank and flagged.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Kalshi market-data guide ↗</a></td></tr>
+        <tr><td>Portfolio performance</td><td><a href="../pages/portfolio.html">pages/portfolio.html</a></td><td>Private balance, positions, orders, fills and settlements; not connected.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated requests guide ↗</a></td></tr>
+        <tr><td>Trade execution</td><td><a href="../pages/trades.html">pages/trades.html</a></td><td>Documentary order workflow; no orders submitted, no credentials stored.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Create order guide ↗</a></td></tr>
+        <tr><td>Suggestions</td><td><a href="../pages/suggestions.html">pages/suggestions.html</a></td><td>Proposed improvements requiring review before implementation.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">API key security ↗</a></td></tr>
+        <tr><td>Questions &amp; answers</td><td><a href="../pages/questions.html">pages/questions.html</a></td><td>Decision questions with known facts, missing information and next steps.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets reference ↗</a></td></tr>
+        <tr><td>Flagged for review</td><td><a href="../pages/flagged-review.html">pages/flagged-review.html</a></td><td>Unverified items, source links and known limitations.</td><td><a href="https://docs.kalshi.com/">Official Kalshi API docs ↗</a></td></tr>
       </tbody>
     </table>
   </section>
@@ -72,7 +73,7 @@
   <section>
     <h2>Verification status (this build)</h2>
     <div class="callout warn">
-      <strong>Environmental limitation:</strong> the build sandbox cannot reach kalshi.co (outbound internet is limited to github.com, npm, and PyPI hosts). Live market values, event resolutions (Yes/No), portfolio balances, fills, and trade results were <em>not</em> fetched from the official Kalshi API and could not be empirically verified. Per the project verification standard, every such value is left <strong>blank</strong> and flagged <strong>unverified</strong> with a source link to the official documentation; nothing is inferred or filled in.
+      <strong>Verification boundary:</strong> official Kalshi documentation and one live demo open-markets response were reviewed during this session, but no response is embedded as a static snapshot. Runtime values depend on browser/network access. Account balances, fills, and trade outcomes were not fetched; the static category pages leave unsupported values blank. The live REST monitor reports request errors without substituting sample values.
     </div>
     <div class="callout bad">
       <strong>Credentials:</strong> no Kalshi API credentials exist in this repository and none were created or stored. Trade execution and live portfolio reads require you to supply your own demo API key. See <a href="../pages/trades.html">pages/trades.html</a> and <a href="../pages/portfolio.html">pages/portfolio.html</a>.

@@ -37,10 +37,10 @@
     </tr></thead>
     <tbody>
       <tr class="flagged">
-        <td>1</td><td>Which live events have the highest dollar amount right now, per focus topic (gas, elections, culture, crypto, golf)?</td><td>GET /events + GET /markets volume and last price from the Kalshi demo API</td><td>No answer — API not reachable from build environment; no data fetched</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a></td><td>Connect to https://external-api.demo.kalshi.co/trade-api/v2 with a demo account and record top events per topic with source links</td>
+        <td>1</td><td>Which live events have the highest dollar amount right now, per focus topic (gas, elections, culture, crypto, golf)?</td><td>GET /events + GET /markets volume and last price from the Kalshi demo API</td><td>No verified dollar ranking — the public REST monitor samples contract fields, but the request does not define a dollar metric</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a></td><td>Connect to https://external-api.demo.kalshi.co/trade-api/v2 with a demo account and record top events per topic with source links</td>
       </tr>
       <tr class="flagged">
-        <td>2</td><td>How did each tracked event resolve — Yes or No?</td><td>Event resolution + settlement_sources[*].url for each event</td><td>No answer — no events were tracked to resolution</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (settlement_sources on events)</a></td><td>Poll /events/{event_ticker} until status = settled, record resolution and settlement source URL</td>
+        <td>2</td><td>How did each tracked event resolve — Yes or No?</td><td>Event resolution + settlement_sources[*].url for each event</td><td>A selected market can be polled during one browser session; there is no durable, exhaustive resolution history</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (settlement_sources on events)</a></td><td>Poll /events/{event_ticker} until status = settled, record resolution and settlement source URL</td>
       </tr>
       <tr class="flagged">
         <td>3</td><td>What is the demo-account portfolio performance (balance, positions, P&L)?</td><td>GET /portfolio/balance, /portfolio/positions, /portfolio/fills, /portfolio/settlements</td><td>No answer — authenticated endpoints; no credentials in repo</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (auth)</a></td><td>Supply your own demo API key; query the /portfolio endpoints</td>
@@ -49,7 +49,7 @@
         <td>4</td><td>Which trade types perform best (bid vs ask, limit, time-in-force)?</td><td>Trade history categorized by type with P&L per type</td><td>No answer — no trades were executed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Kalshi quick start (order placement)</a></td><td>Execute demo trades, then analyze fills by type</td>
       </tr>
       <tr class="flagged">
-        <td>5</td><td>How many contracts are available at each price (live liquidity)?</td><td>GET /markets/{ticker}/orderbook or WebSocket orderbook_delta</td><td>No answer — no order book fetched</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (liquidity deprecated; read order book)</a></td><td>Connect WebSocket orderbook_delta for the tracked tickers</td>
+        <td>5</td><td>How many contracts are available at each price (live liquidity)?</td><td>GET /markets/{ticker}/orderbook or WebSocket orderbook_delta</td><td>The public REST monitor fetches the selected market’s point-in-time orderbook when available; not all markets are loaded</td><td><a href="https://docs.kalshi.com/changelog">Kalshi changelog (liquidity deprecated; read order book)</a></td><td>Connect WebSocket orderbook_delta for the tracked tickers</td>
       </tr>
       <tr class="flagged">
         <td>6</td><td>Are demo API credentials shared with production?</td><td>Environment credentials policy</td><td>No — demo keys work only against demo endpoints; production keys do not work in demo</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo docs</a></td><td>Read the official demo-environment documentation</td>

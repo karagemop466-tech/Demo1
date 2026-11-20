@@ -33,30 +33,16 @@
 
   <table>
     <thead><tr>
-      <th>#</th><th>Suggestion</th><th>Area</th><th>Expected decision-making benefit</th><th>Suggested path</th><th>Status</th><th>Decision</th>
+      <th>#</th><th>Suggestion</th><th>Area</th><th>Expected decision-making benefit</th><th>Suggested path</th><th>Status</th><th>Official source</th><th>Decision</th>
     </tr></thead>
     <tbody>
-      <tr>
-        <td>1</td><td>Connect the live Kalshi demo WebSocket (ticker + orderbook_delta channels) so the price graph and liquidity table stream real data</td><td>Data</td><td>Live price movements drive timely trade decisions instead of stale tables</td><td>Review credentials handling, then enable in dashboard</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>2</td><td>Add a client-only demo API key entry field (never stored, never logged) to enable portfolio reads and trade execution</td><td>Trading</td><td>Enables real demo trades and portfolio P&L tracking</td><td>Security review first — client-side key handling must not expose keys</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>3</td><td>Categorize every trade by type (bid/ask, limit, time-in-force) and show P&L per trade type</td><td>Analysis</td><td>Compare which trade types perform best; build strategies per type</td><td>Implement after #2 is connected</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>4</td><td>Track each focus-category event to resolution and record Yes/No with settlement_source URL</td><td>Events</td><td>Verify how events resolved before trusting signals derived from them</td><td>Add a "resolved" column + resolution source link on category pages</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>5</td><td>Export trade history and positions to CSV</td><td>Portfolio</td><td>Offline review and audit of trading decisions</td><td>Low effort, implement after #2</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>6</td><td>Add price-alert thresholds per market (notify when a contract crosses a price)</td><td>UX</td><td>Faster reactions to price moves without watching the graph constantly</td><td>Prototype after #1</td><td>Proposed</td><td>—</td>
-      </tr>
-      <tr>
-        <td>7</td><td>Add a backtest view using historical candlesticks (GET /markets/{ticker}/candlesticks)</td><td>Analysis</td><td>Test strategies on historical price action before risking demo funds</td><td>Defer until live data works</td><td>Proposed</td><td>—</td>
-      </tr>
+      <tr><td>1</td><td>Consider authenticated demo WebSocket ticker/orderbook_delta feeds as a latency enhancement to the public REST monitor</td><td>Data</td><td>Lower-latency updates could complement the current 15-second public REST sampling interval</td><td>Review authentication scopes, server-side security and reconnection behavior before any change</td><td>Proposed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">Kalshi WebSocket docs ↗</a></td><td><select aria-label="Decision for suggestion 1" data-decision="1"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>2</td><td>Add a private backend for demo-only portfolio reads and explicitly approved order submission; never handle signing keys in the browser</td><td>Trading</td><td>Enables authenticated account analysis and controlled demo trading</td><td>Security design first — least privilege, secret custody, audit logs, explicit approval</td><td>Proposed</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">API key security ↗</a></td><td><select aria-label="Decision for suggestion 2" data-decision="2"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>3</td><td>Categorize trades by documented type and report performance from reconciled fills</td><td>Analysis</td><td>Compare outcomes using source-backed trade records and agreed definitions</td><td>Implement only after authenticated account data and classification rules are approved</td><td>Proposed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated data guide ↗</a></td><td><select aria-label="Decision for suggestion 3" data-decision="3"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>4</td><td>Track each focus-category market through resolution and retain its returned YES/NO result and official source</td><td>Events</td><td>Make resolution history auditable before drawing conclusions from past events</td><td>Define retention and lifecycle rules; distinguish closed status from final result</td><td>Proposed</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market">Get Market result fields ↗</a></td><td><select aria-label="Decision for suggestion 4" data-decision="4"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>5</td><td>Export reconciled trade history and positions for offline audit</td><td>Portfolio</td><td>Support repeatable review of actual fills and outcomes</td><td>Agree data access, retention and privacy controls before export</td><td>Proposed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated account data ↗</a></td><td><select aria-label="Decision for suggestion 5" data-decision="5"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>6</td><td>Add configurable price alerts for selected markets</td><td>UX</td><td>Reduce the need to watch a chart continuously; alerts are not trade signals</td><td>Specify alert data field, cadence, delivery and stale-data behavior</td><td>Proposed</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Public market data ↗</a></td><td><select aria-label="Decision for suggestion 6" data-decision="6"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
+      <tr><td>7</td><td>Add a backtest view using documented historical candlesticks (GET /series/{series_ticker}/markets/{ticker}/candlesticks)</td><td>Analysis</td><td>Test strategies on historical price action with explicit limitations</td><td>Verify series ticker, supported interval, cutoffs, and fees before using results</td><td>Proposed</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks ↗</a></td><td><select aria-label="Decision for suggestion 7" data-decision="7"><option>Not reviewed</option><option>Consider</option><option>Defer</option><option>Approve for planning</option><option>Reject</option></select></td></tr>
     </tbody>
   </table>
 
@@ -67,8 +53,23 @@
     <li>If approved, implement on a branch, verify against official Kalshi docs, then merge.</li>
     <li>Rejected items stay visible with the reason noted.</li>
   </ol>
+  <p class="smallprint">Review choices are stored in this browser only (local storage); they are not sent to the site or published and are not implementation approval.</p>
   <p class="center source-list">Reference: <a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo environment</a> · <a href="../pages/flagged-review.html">Flagged for review</a> page lists all unverified data items that affect these suggestions.</p>
 </main>
 <footer class="footer">Kalshi Demo Dashboard · Suggestions</footer>
+<script>
+(() => {
+  const key = 'kalshi-demo-suggestion-decisions-v1';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+  document.querySelectorAll('select[data-decision]').forEach(select => {
+    const id = select.dataset.decision;
+    if (saved[id]) select.value = saved[id];
+    select.addEventListener('change', () => {
+      try { saved[id] = select.value; localStorage.setItem(key, JSON.stringify(saved)); } catch (_) {}
+    });
+  });
+})();
+</script>
 </body>
 </html>

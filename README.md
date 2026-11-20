@@ -5,12 +5,12 @@ A static, evidence-first GitHub Pages dashboard for Kalshi public demo markets. 
 ## Executive summary
 
 - **Demo data:** reads public market snapshots from Kalshi’s recommended demo Trade API root, `https://external-api.demo.kalshi.co/trade-api/v2`.
-- **Ranking:** sorts matches by the documented `volume_24h_fp` quantity where available. The value is a contract count, **not a dollar-notional ranking**; “highest dollar amount” remains flagged because an authoritative definition/calculation has not been established.
+- **Ranking:** the root summary sorts by API-reported total contract volume; the live REST monitor sorts by documented `volume_24h_fp` where available. Both values are contract counts, **not dollar-notional rankings**; “highest dollar amount” remains flagged because an authoritative definition/calculation has not been established.
 - **Liquidity:** the selected market’s REST orderbook is shown as YES/NO bid levels with contract counts. It is a point-in-time bid snapshot, not total dollar liquidity or guaranteed execution.
 - **Price history:** selected market YES bid samples are plotted on a timestamp axis at a 15-second browser sampling interval. History is in-memory and only collected while the page is open; no historical API series is claimed.
 - **Resolution:** selected markets are polled via the official individual-market endpoint. Status is shown as returned; YES/NO is displayed only for an exact returned result. Tracking ends when the browser session ends.
 - **Portfolio/trading:** balance, fills, positions, P&L, strategy analytics and order execution are not enabled. No credentials are accepted or stored, and no orders are submitted. A private backend, demo-only authorization, and explicit risk controls are prerequisites.
-- **Coverage:** keyword-based topic classification over title/ticker strings is not an official Kalshi taxonomy. Overview discovery is bounded to five pages (up to 5,000 returned markets); each category page uses the first page (up to 1,000 markets). Coverage is not exhaustive.
+- **Coverage:** keyword-based topic classification over title/subtitle/ticker strings is not an official Kalshi taxonomy. The root market summary uses one page (up to 1,000 records); the live REST monitor is bounded to five cursor pages (up to 5,000 returned markets) and stops early when pagination ends. Separate category tables are reference/review pages with unverified values left blank, not exhaustive live feeds.
 - **Fail-safe behavior:** unavailable source values remain blank, API errors are shown, and the dashboard does not substitute mock market values.
 
 ## Pages

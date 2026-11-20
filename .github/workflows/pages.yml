@@ -38,7 +38,7 @@ jobs:
                   for key, value in attrs:
                       if key in ('href','src') and value:
                           self.refs.append(value)
-          pages = list(Path('.').glob('*.html'))
+          pages = list(Path('.').glob('**/*.html'))
           assert pages, 'No HTML pages found'
           for page in pages:
               parser=Check(); parser.feed(page.read_text())
