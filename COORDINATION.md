@@ -1317,3 +1317,20 @@ All live values in the site are drawn from the committed snapshot collected from
 - **Overlap check:** board reviewed. Every brief item (executive summary, category tables, dashboards, jump alerts, sim/strategy engines, Flagged for Review, final integration + PR/merge/Pages) is already claimed or done by earlier sessions. This session does not build a new dashboard.
 - **Task R-1 | in progress | ff380b7c | scope: `COORDINATION.md` (this section only)** — re-fetch the live GitHub Pages landing and the Flagged for Review page; re-read the official Kalshi demo endpoint pages the brief names (`docs.kalshi.com/getting_started/api_environments`, `…/demo_env`); compare each against the board's claims; log results here.
 - **Limits:** the sandbox shell cannot reach `*.kalshi.co` (egress allowlist is github/npm/pypi only). Live Kalshi market values are therefore not re-collected here; the only Kalshi evidence is the official docs pages, read via the page-fetch tool. No values are filled in from memory.
+
+### Record — session arena/ff380b7c-demo1 (R-1 done)
+
+| # | Task | Status | Outcome |
+|---|------|--------|---------|
+| R-1 | Live-site + official-endpoint re-verification | done | See checks below. No site files edited; no values changed. |
+
+**Checks performed (2026-11-20 UTC):**
+1. Official REST and WebSocket demo URLs re-read from https://docs.kalshi.com/getting_started/api_environments and https://docs.kalshi.com/getting_started/demo_env. Both match the brief exactly: REST `https://external-api.demo.kalshi.co/trade-api/v2` (also `https://demo-api.kalshi.co/trade-api/v2`); WebSocket `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`). The demo page states mock funds and that demo prices "may not be reflective of those in real markets."
+2. Live landing https://karagemop466-tech.github.io/Demo1/ fetched: renders, topic counts 1,399 open / 2,117 resolved / 352 awaiting, snapshot 2026-11-20 11:43:59 UTC, 494 requests / 0 failed. Counts match the board's Task 20/21 records.
+3. Live Flagged for Review https://karagemop466-tech.github.io/Demo1/integration/flagged-review.html fetched: renders SEC-01, AUTH-01, KEY-01, PAPER-01, FILL-01, JUMP-01, SCOPE-01, RANK-01, SIM-01, LEGACY-01, TEST-01 with source links.
+
+**Irregularities from this check (no new file change; all already logged):**
+- Official environments page lists dedicated hosts `wss://user-ws.demo.kalshi.co/trade-api/ws/v2` (fill and user_orders) and `wss://margin-user-ws.demo.kalshi.co/trade-api/ws/v2/margin`, plus external-feeds hosts. It also says the `warp-ws` hosts are deprecated. Repo has no reference to `user-ws` or `external-feeds`; 3 files still mention `warp-ws` only in the audit text. Already logged by session ca4f2da1 as **A-03** on `audit/index.html`. Request for the owner of any future account/fill code: use `user-ws` for fill and order updates before building on the old host.
+- The official demo page links `https://demo.kalshi.co/` as the demo web app. Repo pages do not need to change for this.
+
+**Limits:** no live Kalshi market values were re-collected (the sandbox cannot reach `*.kalshi.co`); the API-URL facts above come from the official docs pages only.
