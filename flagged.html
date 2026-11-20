@@ -126,13 +126,10 @@
         <td><span class="tag t-unv">Open by nature</span></td>
         <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/docs/api-verification.md" target="_blank" rel="noopener">docs/api-verification.md</a></td></tr>
 
-      <tr><td>E-08</td><td>Two pages now implement the same $0.10 requirement</td>
-        <td>Sessions <code>d973ced5</code> and <code>65df996f</code> both built the brief’s two-chat alert feed, in parallel and unaware of each other
-        (the branches collided on <code>alerts.html</code>). Nothing was discarded: the snapshot-driven page is published verbatim as
-        <a href="alerts-snapshot.html">alerts-snapshot.html</a> with a banner pointing at the live page, and the live page is
-        <a href="alerts.html">alerts.html</a>. If one should win, say which and the other can be retired.</td>
-        <td><span class="tag t-info">Both kept; needs your decision</span></td>
-        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></td></tr>
+      <tr><td>E-08</td><td>Three pages now implement the same $0.10 requirement</td>
+        <td>Sessions <code>d973ced5</code>, <code>65df996f</code> (this one) and one more built the brief’s two-chat alert feed in parallel, unaware of each other; two of them collided on the filename <code>alerts.html</code>. Nothing was discarded. As merged, the live page is <a href="alerts.html">alerts.html</a> (browser polls REST every 15 s; swing measured on the best available official price), <a href="alerts-snapshot.html">alerts-snapshot.html</a> is the preserved snapshot variant (candle close-to-close), and <a href="alerts/index.html">alerts/index.html</a> renders its own generated <code>alerts/data/feed.json</code> with a published QLM score. Same threshold, three different baselines for “a move”, which is exactly why one should win: a $0.10 flag on one page is not guaranteed to appear on another at the same minute. Pick a survivor and the others can be archived with a banner.</td>
+        <td><span class="tag t-info">All kept; needs your decision</span> <a href="suggestions.html#s16">S16</a></td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a> · <a href="https://github.com/karagemop466-tech/Demo1/tree/main/alerts" target="_blank" rel="noopener">alerts/README.md</a></td></tr>
       <tr><td>E-09</td><td>“Which markets are in a topic” has two answers in this repo</td>
         <td>The site pages (<code>site/gas-prices.html</code> …) count <b>116 open gas markets</b> because their collector,
         <code>tools/collect_kalshi.py</code>, classifies by the series’ <i>published Kalshi categories</i>. The data pipeline behind the live desk and the

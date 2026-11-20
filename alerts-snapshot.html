@@ -44,7 +44,8 @@
     <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
     <nav class="nav">
       <a href="index.html">Home</a>
-      <a href="alerts.html" class="active">Price swing alerts</a>
+      <a href="alerts.html">Alert tapes (live)</a>
+      <a href="alerts-snapshot.html" class="active">Snapshot alert feed</a>
       <a href="exec-desk/dashboard.html">Live desk</a>
       <a href="site/gas-prices.html">Gas prices</a>
       <a href="site/elections.html">Elections</a>
@@ -62,7 +63,8 @@
     requirement now lives at <a href="alerts.html"><b>Live alert tapes</b></a>: it polls the official demo API in the browser
     (<code class="key">GET /markets</code> + <code class="key">GET /markets/orderbooks</code> + <code class="key">GET /markets/trades</code> every 15&nbsp;s)
     instead of reading only the committed candlestick capture, and its high-ROI filter is a documented five-gate screen
-    (<a href="docs/alerts-model.html">model spec</a>, <a href="tests/alerts.test.mjs">test suite</a>). Both feeds use the same
+    (<a href="docs/alerts-model.html">model spec</a>, <a href="tests/alerts.test.mjs">test suite</a>). A third implementation of the same brief, built by
+    another session over its own generated feed, is published at <a href="alerts/index.html">alerts/index.html</a>. All three use the same
     $0.10 rule; nothing on either page is inferred, and neither places an order. Board record: COORDINATION.md, sessions
     <code class="key">d973ced5</code> (I-1…I-4) and <code class="key">65df996f</code> (N-1…N-4).
   </div>
