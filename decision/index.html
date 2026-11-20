@@ -59,7 +59,7 @@
 <script>
 SITE.renderNav('index.html');
 SITE.setConn('snap', 'Committed snapshots (2026-11-20)');
-SITE.loadSnapshot('data/meta.json').then(function (meta) {
+SITE.loadSnapshot('meta.json').then(function (meta) {
   document.getElementById('meta-line').innerHTML = 'Collector: <b>' + KALSHI.esc(meta.collector) + '</b> · window ' + KALSHI.esc(meta.collected_at_utc) + ' · ' + KALSHI.esc(meta.method);
   document.getElementById('snap-rows').innerHTML = (meta.files || []).map(function (f) {
     return '<tr><td class="mono">' + KALSHI.esc(f) + '</td><td class="dim">raw demo-API response excerpt (fields unchanged)</td>' +
