@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-20T11:27:32Z",
+ "generated_utc": "2026-11-20T11:33:23Z",
  "base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "series": [
   {
@@ -3594,9 +3594,75 @@
        "yes_ask_close": 0.02,
        "volume": 11.31,
        "open_interest": 31025.84
+      },
+      {
+       "t": 1795174080,
+       "price_close": 0.08,
+       "price_open": 0.08,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.02,
+       "volume": 10.39,
+       "open_interest": 31032.28
+      },
+      {
+       "t": 1795174140,
+       "price_close": 0.08,
+       "price_open": 0.02,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.02,
+       "volume": 4.59,
+       "open_interest": 31035.41
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.02,
+       "price_open": 0.02,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.02,
+       "volume": 4.28,
+       "open_interest": 31037.42
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.08,
+       "price_open": 0.02,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.02,
+       "volume": 2.26,
+       "open_interest": 31039.22
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.08,
+       "price_open": 0.02,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.02,
+       "volume": 2.92,
+       "open_interest": 31041.26
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.08,
+       "price_open": 0.08,
+       "price_high": 0.08,
+       "price_low": 0.02,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.08,
+       "volume": 4.14,
+       "open_interest": 31044.18
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1795152475&end_ts=1795174075&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1795152827&end_ts=1795174427&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -4285,7 +4351,7 @@
        "open_interest": 19268.58
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1794569275&end_ts=1795174075&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1794569627&end_ts=1795174427&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -4336,7 +4402,7 @@
        "open_interest": 17549.26
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1787398076&end_ts=1795174076&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6400/candlesticks?start_ts=1787398427&end_ts=1795174427&period_interval=1440",
      "error": null
     }
    }
@@ -7911,9 +7977,75 @@
        "yes_ask_close": 0.89,
        "volume": 3.28,
        "open_interest": 10790.24
+      },
+      {
+       "t": 1795174080,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 7.48,
+       "open_interest": 10797.72
+      },
+      {
+       "t": 1795174140,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 4.52,
+       "open_interest": 10802.24
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 1.79,
+       "open_interest": 10804.03
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 4.44,
+       "open_interest": 10808.47
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 3.3,
+       "open_interest": 10811.77
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.89,
+       "price_open": 0.89,
+       "price_high": 0.89,
+       "price_low": 0.89,
+       "yes_bid_close": 0.86,
+       "yes_ask_close": 0.89,
+       "volume": 4.6,
+       "open_interest": 10816.37
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1795152476&end_ts=1795174076&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1795152828&end_ts=1795174428&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -8701,7 +8833,7 @@
        "open_interest": 10629.43
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794569276&end_ts=1795174076&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1794569628&end_ts=1795174428&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -8752,7 +8884,7 @@
        "open_interest": 8955.53
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787398076&end_ts=1795174076&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/KXAAAGASW-26NOV23-3.6200/candlesticks?start_ts=1787398428&end_ts=1795174428&period_interval=1440",
      "error": null
     }
    }
@@ -8764,72 +8896,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152540,
-       "price_close": 0.003,
-       "price_open": 0.004,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.004,
-       "volume": 8.9,
-       "open_interest": 47101939.59
-      },
-      {
-       "t": 1795152600,
-       "price_close": 0.003,
-       "price_open": 0.004,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 11.86,
-       "open_interest": 47101939.59
-      },
-      {
-       "t": 1795152660,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.003,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 5.13,
-       "open_interest": 47101939.59
-      },
-      {
-       "t": 1795152720,
-       "price_close": 0.004,
-       "price_open": 0.004,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.004,
-       "volume": 6.57,
-       "open_interest": 47101939.59
-      },
-      {
-       "t": 1795152780,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 4.15,
-       "open_interest": 47101939.59
-      },
-      {
-       "t": 1795152840,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 3.07,
-       "open_interest": 47101939.59
-      },
       {
        "t": 1795152900,
        "price_close": 0.004,
@@ -12723,9 +12789,75 @@
        "yes_ask_close": 0.004,
        "volume": 7.41,
        "open_interest": 47102256.69
+      },
+      {
+       "t": 1795174140,
+       "price_close": 0.004,
+       "price_open": 0.004,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 4.39,
+       "open_interest": 47102257.8
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.004,
+       "volume": 8.25,
+       "open_interest": 47102258.37
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 6.37,
+       "open_interest": 47102258.37
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.003,
+       "price_open": 0.004,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.004,
+       "volume": 1.06,
+       "open_interest": 47102258.37
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 3.21,
+       "open_interest": 47102258.37
+      },
+      {
+       "t": 1795174440,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 6.53,
+       "open_interest": 47102258.37
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1795152507&end_ts=1795174107&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1795152859&end_ts=1795174459&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -14426,7 +14558,7 @@
        "open_interest": 47102231.62
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1794569307&end_ts=1795174107&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1794569660&end_ts=1795174460&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -15214,7 +15346,7 @@
        "open_interest": 47101920.18
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1787398107&end_ts=1795174107&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMD/markets/KXPRESNOMD-28-AYAN/candlesticks?start_ts=1787398460&end_ts=1795174460&period_interval=1440",
      "error": null
     }
    }
@@ -15226,72 +15358,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152540,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.004,
-       "volume": 6.24,
-       "open_interest": 507264.16
-      },
-      {
-       "t": 1795152600,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 7.88,
-       "open_interest": 507270.87
-      },
-      {
-       "t": 1795152660,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 6.68,
-       "open_interest": 507277.16
-      },
-      {
-       "t": 1795152720,
-       "price_close": 0.004,
-       "price_open": 0.003,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.004,
-       "volume": 4.1,
-       "open_interest": 507281.26
-      },
-      {
-       "t": 1795152780,
-       "price_close": 0.003,
-       "price_open": 0.003,
-       "price_high": 0.003,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 11.29,
-       "open_interest": 507292.55
-      },
-      {
-       "t": 1795152840,
-       "price_close": 0.004,
-       "price_open": 0.004,
-       "price_high": 0.004,
-       "price_low": 0.003,
-       "yes_bid_close": 0.002,
-       "yes_ask_close": 0.003,
-       "volume": 2.46,
-       "open_interest": 507294.91
-      },
       {
        "t": 1795152900,
        "price_close": 0.004,
@@ -19185,9 +19251,75 @@
        "yes_ask_close": 0.004,
        "volume": 4.93,
        "open_interest": 562765.87
+      },
+      {
+       "t": 1795174140,
+       "price_close": 0.003,
+       "price_open": 0.003,
+       "price_high": 0.003,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 2.96,
+       "open_interest": 562767.56
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.004,
+       "price_open": 0.004,
+       "price_high": 0.004,
+       "price_low": 0.004,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.004,
+       "volume": 0.6,
+       "open_interest": 562768.16
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 3.86,
+       "open_interest": 562772.02
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.004,
+       "volume": 3.86,
+       "open_interest": 562775.88
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.003,
+       "price_open": 0.003,
+       "price_high": 0.003,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.003,
+       "volume": 3.18,
+       "open_interest": 562777.73
+      },
+      {
+       "t": 1795174440,
+       "price_close": 0.004,
+       "price_open": 0.003,
+       "price_high": 0.004,
+       "price_low": 0.003,
+       "yes_bid_close": 0.002,
+       "yes_ask_close": 0.004,
+       "volume": 15.49,
+       "open_interest": 562793.22
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1795152508&end_ts=1795174108&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1795152860&end_ts=1795174460&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -21009,7 +21141,7 @@
        "open_interest": 508829.93
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1794569308&end_ts=1795174108&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1794569661&end_ts=1795174461&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -21170,7 +21302,7 @@
        "open_interest": 507132.93
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1787398108&end_ts=1795174108&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPRESNOMR/markets/KXPRESNOMR-28-LHOG/candlesticks?start_ts=1787398461&end_ts=1795174461&period_interval=1440",
      "error": null
     }
    }
@@ -21182,50 +21314,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152600,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.04,
-       "yes_ask_close": 0.05,
-       "volume": 0.0,
-       "open_interest": 6823.07
-      },
-      {
-       "t": 1795152660,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.04,
-       "yes_ask_close": 0.05,
-       "volume": 0.0,
-       "open_interest": 6823.07
-      },
-      {
-       "t": 1795152780,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.04,
-       "yes_ask_close": 0.05,
-       "volume": 0.0,
-       "open_interest": 6823.07
-      },
-      {
-       "t": 1795152840,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.04,
-       "yes_ask_close": 0.05,
-       "volume": 0.0,
-       "open_interest": 6823.07
-      },
       {
        "t": 1795152960,
        "price_close": null,
@@ -24635,9 +24723,75 @@
        "yes_ask_close": 0.17,
        "volume": 3.38,
        "open_interest": 24822.67
+      },
+      {
+       "t": 1795174140,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 5.16,
+       "open_interest": 24822.67
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 3.55,
+       "open_interest": 24822.67
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 7.39,
+       "open_interest": 24822.67
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 1.97,
+       "open_interest": 24822.67
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 11.16,
+       "open_interest": 24822.67
+      },
+      {
+       "t": 1795174440,
+       "price_close": 0.17,
+       "price_open": 0.17,
+       "price_high": 0.17,
+       "price_low": 0.17,
+       "yes_bid_close": 0.14,
+       "yes_ask_close": 0.17,
+       "volume": 5.06,
+       "open_interest": 24822.67
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1795152532&end_ts=1795174132&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1795152887&end_ts=1795174487&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -25260,7 +25414,7 @@
        "open_interest": 7930.79
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794569333&end_ts=1795174133&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1794569687&end_ts=1795174487&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -25333,7 +25487,7 @@
        "open_interest": 6823.07
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1787398133&end_ts=1795174133&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXRT/markets/KXRT-FUR-85/candlesticks?start_ts=1787398487&end_ts=1795174487&period_interval=1440",
      "error": null
     }
    }
@@ -25345,72 +25499,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152540,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.04,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
-      {
-       "t": 1795152600,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.02,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
-      {
-       "t": 1795152660,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.02,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
-      {
-       "t": 1795152720,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.04,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
-      {
-       "t": 1795152780,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.02,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
-      {
-       "t": 1795152840,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.01,
-       "yes_ask_close": 0.02,
-       "volume": 0.0,
-       "open_interest": 52273.19
-      },
       {
        "t": 1795152900,
        "price_close": null,
@@ -28811,7 +28899,7 @@
        "open_interest": 52273.19
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1795152533&end_ts=1795174133&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1795152887&end_ts=1795174487&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -30149,7 +30237,7 @@
        "open_interest": 52273.19
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1794569333&end_ts=1795174133&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1794569688&end_ts=1795174488&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -30244,7 +30332,7 @@
        "open_interest": 52273.19
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1787398134&end_ts=1795174134&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXOSCARPIC/markets/KXOSCARPIC-27-INV/candlesticks?start_ts=1787398488&end_ts=1795174488&period_interval=1440",
      "error": null
     }
    }
@@ -30256,72 +30344,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152600,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
-      {
-       "t": 1795152660,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 1.0,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
-      {
-       "t": 1795152720,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 1.0,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
-      {
-       "t": 1795152780,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 1.0,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
-      {
-       "t": 1795152840,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
-      {
-       "t": 1795152900,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 11458808.47
-      },
       {
        "t": 1795152960,
        "price_close": null,
@@ -34006,9 +34028,75 @@
        "yes_ask_close": 0.01,
        "volume": 0.0,
        "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174200,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 1.0,
+       "volume": 0.0,
+       "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174260,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174320,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 1.0,
+       "volume": 0.0,
+       "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174380,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174440,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 1.0,
+       "volume": 0.0,
+       "open_interest": 11453252.92
+      },
+      {
+       "t": 1795174500,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 11453252.92
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1795152558&end_ts=1795174158&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1795152913&end_ts=1795174513&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -35577,7 +35665,7 @@
        "open_interest": 11458808.47
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1794569358&end_ts=1795174158&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1794569713&end_ts=1795174513&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -36574,7 +36662,7 @@
        "open_interest": 11458808.47
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1787398159&end_ts=1795174159&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-T149999.99/candlesticks?start_ts=1787398513&end_ts=1795174513&period_interval=1440",
      "error": null
     }
    }
@@ -36586,72 +36674,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152600,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
-      {
-       "t": 1795152660,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 1.0,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
-      {
-       "t": 1795152720,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
-      {
-       "t": 1795152780,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
-      {
-       "t": 1795152840,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 1.0,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
-      {
-       "t": 1795152900,
-       "price_close": null,
-       "price_open": null,
-       "price_high": null,
-       "price_low": null,
-       "yes_bid_close": 0.0,
-       "yes_ask_close": 0.01,
-       "volume": 0.0,
-       "open_interest": 39622137.23
-      },
       {
        "t": 1795152960,
        "price_close": null,
@@ -40402,9 +40424,75 @@
        "yes_ask_close": 0.01,
        "volume": 0.0,
        "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174200,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 1.0,
+       "volume": 0.0,
+       "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174260,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174320,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174380,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174440,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 39622137.23
+      },
+      {
+       "t": 1795174500,
+       "price_close": null,
+       "price_open": null,
+       "price_high": null,
+       "price_low": null,
+       "yes_bid_close": 0.0,
+       "yes_ask_close": 0.01,
+       "volume": 0.0,
+       "open_interest": 39622137.23
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1795152559&end_ts=1795174159&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1795152914&end_ts=1795174514&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -42028,7 +42116,7 @@
        "open_interest": 39622137.23
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1794569359&end_ts=1795174159&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1794569714&end_ts=1795174514&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -43025,7 +43113,7 @@
        "open_interest": 39622137.23
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1787398159&end_ts=1795174159&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY/markets/KXBTCY-27JAN0100-B127500/candlesticks?start_ts=1787398514&end_ts=1795174514&period_interval=1440",
      "error": null
     }
    }
@@ -43037,72 +43125,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152600,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 7.01,
-       "open_interest": 1147139.73
-      },
-      {
-       "t": 1795152660,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 2.19,
-       "open_interest": 1147141.92
-      },
-      {
-       "t": 1795152720,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 4.8,
-       "open_interest": 1147146.72
-      },
-      {
-       "t": 1795152780,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 10.84,
-       "open_interest": 1147157.56
-      },
-      {
-       "t": 1795152840,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 1.3,
-       "open_interest": 1147158.86
-      },
-      {
-       "t": 1795152900,
-       "price_close": 0.005,
-       "price_open": 0.005,
-       "price_high": 0.005,
-       "price_low": 0.005,
-       "yes_bid_close": 0.004,
-       "yes_ask_close": 0.005,
-       "volume": 0.54,
-       "open_interest": 1147159.4
-      },
       {
        "t": 1795152960,
        "price_close": 0.005,
@@ -46974,9 +46996,75 @@
        "yes_ask_close": 0.005,
        "volume": 2.2,
        "open_interest": 1149114.93
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 7.88,
+       "open_interest": 1149122.81
+      },
+      {
+       "t": 1795174260,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 0.31,
+       "open_interest": 1149123.12
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 3.32,
+       "open_interest": 1149126.44
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 9.9,
+       "open_interest": 1149136.34
+      },
+      {
+       "t": 1795174440,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 6.45,
+       "open_interest": 1149142.79
+      },
+      {
+       "t": 1795174500,
+       "price_close": 0.005,
+       "price_open": 0.005,
+       "price_high": 0.005,
+       "price_low": 0.005,
+       "yes_bid_close": 0.004,
+       "yes_ask_close": 0.005,
+       "volume": 3.33,
+       "open_interest": 1149146.12
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1795152595&end_ts=1795174195&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1795152951&end_ts=1795174551&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -47786,7 +47874,7 @@
        "open_interest": 1148959.46
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1794569395&end_ts=1795174195&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1794569751&end_ts=1795174551&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -47826,7 +47914,7 @@
        "open_interest": 1146925.69
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1787398195&end_ts=1795174195&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-TMOO/candlesticks?start_ts=1787398551&end_ts=1795174551&period_interval=1440",
      "error": null
     }
    }
@@ -47838,72 +47926,6 @@
     "1m/6h": {
      "period_interval_minutes": 1,
      "points": [
-      {
-       "t": 1795152600,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 3.0,
-       "open_interest": 681894.62
-      },
-      {
-       "t": 1795152660,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 9.34,
-       "open_interest": 681894.62
-      },
-      {
-       "t": 1795152720,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 2.89,
-       "open_interest": 681894.62
-      },
-      {
-       "t": 1795152780,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 6.95,
-       "open_interest": 681894.62
-      },
-      {
-       "t": 1795152840,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 7.85,
-       "open_interest": 681894.62
-      },
-      {
-       "t": 1795152900,
-       "price_close": 0.028,
-       "price_open": 0.028,
-       "price_high": 0.028,
-       "price_low": 0.028,
-       "yes_bid_close": 0.026,
-       "yes_ask_close": 0.028,
-       "volume": 4.38,
-       "open_interest": 681894.62
-      },
       {
        "t": 1795152960,
        "price_close": 0.028,
@@ -51786,9 +51808,64 @@
        "yes_ask_close": 0.025,
        "volume": 8.55,
        "open_interest": 681894.62
+      },
+      {
+       "t": 1795174200,
+       "price_close": 0.025,
+       "price_open": 0.025,
+       "price_high": 0.025,
+       "price_low": 0.025,
+       "yes_bid_close": 0.022,
+       "yes_ask_close": 0.025,
+       "volume": 4.56,
+       "open_interest": 681894.62
+      },
+      {
+       "t": 1795174320,
+       "price_close": 0.025,
+       "price_open": 0.025,
+       "price_high": 0.025,
+       "price_low": 0.025,
+       "yes_bid_close": 0.022,
+       "yes_ask_close": 0.025,
+       "volume": 7.53,
+       "open_interest": 681894.62
+      },
+      {
+       "t": 1795174380,
+       "price_close": 0.025,
+       "price_open": 0.025,
+       "price_high": 0.025,
+       "price_low": 0.025,
+       "yes_bid_close": 0.022,
+       "yes_ask_close": 0.025,
+       "volume": 6.92,
+       "open_interest": 681894.62
+      },
+      {
+       "t": 1795174440,
+       "price_close": 0.025,
+       "price_open": 0.025,
+       "price_high": 0.025,
+       "price_low": 0.025,
+       "yes_bid_close": 0.022,
+       "yes_ask_close": 0.025,
+       "volume": 5.45,
+       "open_interest": 681894.62
+      },
+      {
+       "t": 1795174500,
+       "price_close": 0.025,
+       "price_open": 0.025,
+       "price_high": 0.025,
+       "price_low": 0.025,
+       "yes_bid_close": 0.022,
+       "yes_ask_close": 0.025,
+       "volume": 2.6,
+       "open_interest": 681894.62
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1795152596&end_ts=1795174196&period_interval=1",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1795152952&end_ts=1795174552&period_interval=1",
      "error": null
     },
     "1h/7d": {
@@ -52444,7 +52521,7 @@
        "open_interest": 681894.62
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1794569396&end_ts=1795174196&period_interval=60",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1794569752&end_ts=1795174552&period_interval=60",
      "error": null
     },
     "1d/90d": {
@@ -52484,7 +52561,7 @@
        "open_interest": 681894.62
       }
      ],
-     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1787398196&end_ts=1795174196&period_interval=1440",
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR/markets/KXPGATOUR-THRC26-SSTR/candlesticks?start_ts=1787398552&end_ts=1795174552&period_interval=1440",
      "error": null
     }
    }
