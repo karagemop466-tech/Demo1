@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Line-by-line verification · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='explore.html'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a><a href='verification.html' class='on'>Verification</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Automated re-check of every rendered value against the official snapshot</p>
+    <h1>Line-by-line verification</h1>
+  </div>
+  
+<div class="callout ok">
+  <b>Automated line-by-line verification — PASS.</b>
+  Every rendered value was re-derived from the official snapshot and compared cell by cell;
+  every market-data row was required to carry a link to an official Kalshi endpoint.
+  Snapshot collected 2026-11-20T11:43:59Z from <code>https://external-api.demo.kalshi.co/trade-api/v2</code>.
+</div>
+<h2>Snapshot provenance</h2>
+<div class='tablewrap'><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>REST base</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td></tr><tr><td>Open markets in snapshot</td><td>1399</td></tr><tr><td>Resolved markets in snapshot</td><td>2469</td></tr><tr><td>API requests</td><td>494</td></tr><tr><td>Failed requests</td><td>0</td></tr><tr><td>Series discovered</td><td>16643</td></tr></tbody></table></div>
+<h2>Rows verified</h2>
+<div class='tablewrap'><table><thead><tr><th>Page / check</th><th>Rows / figures checked</th></tr></thead><tbody><tr><td>markets.html (values + source links)</td><td>250</td></tr><tr><td>resolved.html (YES/NO + source links)</td><td>250</td></tr><tr><td>topic pages (gas/elections/culture/crypto/golf)</td><td>600</td></tr><tr><td>liquidity.html (depth + source links)</td><td>48</td></tr><tr><td>index.html (snapshot-health figures)</td><td>8</td></tr></tbody></table></div>
+<h2>Hard failures (0)</h2>
+<ul class="tight"><li class='ok'>none</li></ul>
+<h2>Warnings / items flagged for review (2)</h2>
+<ul class="tight"><li>liquidity.html: 36 full-ladder rows carry a section-level order-book source link rather than a per-row link</li><li>external OFFICIAL settlement sources referenced (from the markets&#x27; settlement_sources): gasprices.aaa.com, www.cfbenchmarks.com, www.espn.com, www.foxsports.com, www.netflix.com, www.oscars.org, www.pgatour.com, www.rottentomatoes.com, www.theice.com</li></ul>
+<p class="fine">Method: <code>tools/verify_site.py</code> re-reads <code>snapshot/*.json</code> (the recorded
+official demo-API responses) and compares each rendered cell against the value the builder computed from that
+snapshot. A mismatch, a missing official source link on a market-data row, a non-official source host, or
+committed secret material fails the check. Values that the API did not return are rendered as “—” and are
+never inferred.</p>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
+    <p>Data snapshot: <b>2026-11-20T11:43:59Z</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
