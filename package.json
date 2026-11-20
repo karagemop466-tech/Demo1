@@ -1,0 +1,12 @@
+{
+  "name": "kalshi-demo-desk",
+  "private": true,
+  "description": "Dev tooling for the exec-desk DOM tests. The published site itself is plain HTML/JS/CSS with no build step.",
+  "scripts": {
+    "test": "node exec-desk/scripts/dom_test.mjs",
+    "check:links": "python3 exec-desk/scripts/check_links.py && node tools/check-links.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^31.0.1"
+  }
+}

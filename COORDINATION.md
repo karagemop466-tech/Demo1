@@ -629,6 +629,7 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - Every API claim read page-by-page from docs.kalshi.com and cross-checked against the embedded OpenAPI spec; per-line table in exec-desk/docs/VERIFICATION.md (30+ rows).
 - `node --check` on all 11 exec-desk JS files; `python3 exec-desk/scripts/check_links.py` (117 internal links, 0 broken); repo-wide `node tools/check-links.mjs` run before merge (secrets + link audit).
 - Table rows on data pages link the live official API URL + the official schema page; values that cannot be confirmed render blank with an UNVERIFIED flag (never inferred).
+- Deterministic DOM test added at `exec-desk/scripts/dom_test.mjs` (jsdom + fetch mocked to official-schema payloads): **all 10 assertions pass** — ranked rows render, banner LIVE·direct, best bid $0.45, implied best ask = 1 − highest NO bid = $0.46, spread $0.01, ±5¢ depth 260 contracts, auto-selection. Run with `npm i && npm test`.
 
 ## Irregularities flagged (published on exec-desk/flagged.html)
 1. UNVERIFIED-01 — CORS undocumented in official docs; github.io origin evidenced working via `data/cors.json`; runtime detection retained.
