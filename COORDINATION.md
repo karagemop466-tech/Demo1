@@ -1325,22 +1325,23 @@ All live values in the site are drawn from the committed snapshot collected from
 | I-1 | Repo review + line-by-line verification (build_site link gate, repo-wide link audit, JS/Python syntax, snapshot reconciliation) | done | repo-wide (read-only checks) | docs.kalshi.com candlesticks/orderbook/api_environments; snapshot/*.json | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS (346 files); `python3 tools/verify_site.py` → PASS, 0 errors; all JS + Python syntax OK | None new; pre-existing demo-venue caveats carried forward |
 | I-2 | Two-chat scrolling alert system ≥ $0.10 (all swings + selective high-ROI filter), official candlestick data, per-row source URLs, venue + news links | done | `alerts.html`, `assets/js/alerts.js`, root `index.html` (nav link) | docs.kalshi.com/api-reference/market/get-market-candlesticks; snapshot/charts.json (official demo API capture) | Jump math re-derived from `snapshot/charts.json`; page renders swings only where official closes exist; golf correctly empty; no cause asserted for any jump | Golf has no ≥$0.10 swing in the committed snapshot (blank, not fabricated); high-ROI filter is a disclosed magnitude heuristic, not a predictive model |
 | I-3 | Build + link/secret/source-citation gate on the changed tree | done | repo-wide | — | `python3 build_site.py` → "link check: OK"; `node tools/check-links.mjs` → PASS; `node --check` + `py_compile` OK | — |
-| I-4 | PR → main, merge, confirm GitHub Pages deploy, record PR link + merge result here | in progress | GitHub PR + this board | docs.github.com Pages | See publish record below | — |
+| I-4 | PR → main, merge, confirm GitHub Pages deploy, record PR link + merge result here | done | GitHub PR + this board | docs.github.com Pages | PR #53 merged (merge commit bb70853); Pages `built`, no error; publish record completed | — |
 
 ## Publish record — session arena/d973ced5-demo1
 
 | Item | Result |
 |---|---|
-| Pull request | pending |
-| Merge result | pending |
-| GitHub Pages deploy | pending |
-| Live verification | pending |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/53 |
+| Merge result | MERGED into main, merge commit `bb70853` (PR #53 `arena/d973ced5-demo1` → `main`); integrated by platform integration, no approval wait, per brief |
+| GitHub Pages deploy | Built — live at https://karagemop466-tech.github.io/Demo1/ (source: branch `main`, path `/`); `error: null` |
+| Live verification | Done — alerts page renders; `python3 build_site.py` link check OK; `node tools/check-links.mjs` PASS (348 files); `python3 tools/verify_site.py` PASS, 0 errors |
 
 ### Claim log
 
 | Date/time (UTC) | Session ID | Action |
 |---|---|---|
 | 2026-11-20 | arena/d973ced5-demo1 | Claimed final-integration scope (I-1..I-4); claim pushed before implementation. |
+| 2026-11-20 | arena/d973ced5-demo1 | PR #53 created (`arena/d973ced5-demo1` → `main`); rebased onto main after main advanced (COORDINATION.md conflict resolved keeping both sides); PR merged into main (merge commit `bb70853`); GitHub Pages deploy confirmed `built`, no error; publish record completed. |
 
 ## Session arena/ff380b7c-demo1 — live-site re-verification + board record (claim)
 
