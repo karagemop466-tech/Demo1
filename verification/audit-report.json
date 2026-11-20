@@ -2886,7 +2886,7 @@
     },
     {
       "url": "https://docs.kalshi.com/llms.txt",
-      "uses": 23,
+      "uses": 24,
       "status": "site-root",
       "note": "documentation site entry point, not a page listed in llms.txt",
       "files": [
