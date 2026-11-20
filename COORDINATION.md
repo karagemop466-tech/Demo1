@@ -1536,6 +1536,7 @@ All live values in the site are drawn from the committed snapshot collected from
 | Live verification | https://karagemop466-tech.github.io/Demo1/trader-guide/index.html fetched post-deploy: renders full guide with all tables and source links; landing and exec-desk/dashboard verified live earlier in G-2 |
 | Tasks G-1..G-3 | All done. Sources, verification and irregularities recorded above (Results section) |
 
+<<<<<<< HEAD
 ## Session arena/d372e97e-demo1 — close-out verification of the brief (claim + record)
 
 - **Session ID:** `d372e97e` — branch `arena/d372e97e-demo1` (platform-fixed name; recorded as deviation like prior sessions).
@@ -1762,3 +1763,32 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 - 2026-11-20 ~19:55 UTC — session `fab3e340` claimed PD-1..PD-4; claim pushed before implementation.
 - 2026-11-20 ~20:05 UTC — PD-1 partial evidence (fetched before the shared GitHub token hit its rate limit): Pages builds API shows `errored` "Page build failed." for `6aa1ed55`(19:42:14Z), `8db5749f`(19:41:49Z), `696c9454`(19:40:38Z), `971d8191`(19:40:10Z), `70690b17`(19:36:32Z); built `1cf87c90`(19:37:57Z), `b4a7fc4d`(19:33:07Z). Site object: `source {branch: main, path: /}`. Live-site check via page fetch: landing renders the 11:43:59Z snapshot; `trade-desk/index.html` (PR #60) and `alert-desk/index.html` (PR #59) fail to fetch = not deployed. Implementation prepared and verified locally: full pages.yml gate suite green on this tree (monitor JS OK; required files OK; live-desk JS OK; `build_site.py` 17 pages + "link check: OK"; site JS OK; desk dom_test 105/105; `tools/check-links.mjs` PASS 391 files; `verify_site.py` 0 errors; dashboard tests 46/46 + 9/9; unittest 7/7; npm test PASS). Implementation commit (this one): `pages.yml` gains schedule trigger + node_modules cleanup + single-publisher header; new root `DEPLOYMENT.md`; stray `scripts/__pycache__/fetch_demo_data.cpython-311.pyc` untracked (already gitignored).
 - 2026-11-20 ~20:15-20:30 UTC — PD-1 evidence completed; PD-2 revised within the permission boundary. Verbatim findings: Pages site object `{build_type: "legacy", source {branch: main, path: /}, status: errored}`; Actions runs list shows BOTH publishers triggering per push and ending `completed/cancelled` in pairs from 19:47 UTC (`b1b7ff1`, `8090cd0`, `21e3f86`, `23c2e99`, `4c50cb0`, `163acac`, `7153013`), and in 19:36-19:44 the built-in runs were cancelled (Pages builds API recorded those commits as `errored` "Page build failed.") while run `44803947194` for `1cf87c9` succeeded — the live site froze at that 19:37:57Z build (trade-desk/ and alert-desk/ absent). Root cause: `pages.yml`'s deploy job shared the `pages` concurrency group (cancel-in-progress) with the built-in publisher. PD-2 execution: PR #70 (single-publisher docs + schedule + cleanup + pyc untrack) MERGED 20:13:15Z, merge commit `7153013`. The settings switch `PUT /pages build_type=workflow` was then attempted and **denied**: `{"message":"Resource not accessible by integration","status":403}` (endpoint needs admin-level "manage GitHub Pages settings"). Revised single-publisher fix pushed in this commit: `pages.yml` becomes **validation-only** (all checks kept, pull_request trigger added, deploy job + artifact upload removed, concurrency group renamed `pages-validation`), leaving the built-in builder as the sole publisher — bot data refreshes deploy immediately again. DEPLOYMENT.md rewritten to record the implemented policy, the verbatim 403, and the cancel-pair evidence table.
+=======
+---
+
+# Session arena/dbe9aa36-demo1 — status check, overlap audit, Pages health (no claim taken)
+
+- **Session ID:** `dbe9aa36` — branch `arena/dbe9aa36-demo1` (platform-fixed; not renamed). Base `main` at `6aa1ed5` (PR #60 merge).
+- **Claimed at:** no scope claimed. Overlap audit found no unclaimed brief item left to take.
+- **Overlap audit (2026-11-20 UTC):** read the board and `gh pr list --state open`. Open PRs and their board state:
+  - PR #61 `arena/65df996f-demo1` — N-1..N-4 **in progress** (owner active). Not merged by this session.
+  - PR #62 `arena/fe12c4c4-demo1` — F-1/F-2 done; **F-3 final integration in progress** (owner active). Not merged by this session.
+  - PR #63 `arena/54a39029-demo1` — O-1 **done** (ops-desk). Checks pending at time of audit. Not merged by this session.
+- **Integration rule respected:** shared outputs (`index.html`, `assets/common.js`, `COORDINATION.md` sections of other sessions) are not edited here. Merging sibling PRs that are still in progress would overlap with their owners' work; that decision stays with the owners of PRs #61 and #62.
+- **Pages health:** `gh api repos/karagemop466-tech/Demo1/pages` → `status: errored`, `build_type: legacy`, source `main:/`. Recent builds for `6aa1ed5`, `8db5749`, `696c945` are `errored` (error message null). Build for `97262eb` was `building` at 19:44:05Z; polling then hit the GitHub API rate limit (HTTP 403, request ID D380:3D6527:E8430:16CE68). Final Pages status is **not yet confirmed**; to be re-checked once the rate limit clears. Cause of the errored builds not determined from the sandbox.
+- **Egress limits:** sandbox cannot reach `*.kalshi.co`, `*.github.io`, or the Actions log host; no live site verification from shell.
+
+### Requests logged (not applied)
+1. Owners of PR #61 (`65df996f`) and PR #62 (`fe12c4c4`): when your PR is merged, record the merge result here; PR #63 (`54a39029`) is green-pending and ready for a merge decision once its checks pass.
+2. Anyone running Pages-triggering pushes: several legacy Pages builds reported `errored` in quick succession (possibly overlapping pushes). Recommend the final integration session re-check `pages/builds/latest` after its merge and redeploy if needed.
+>>>>>>> bc8aeb9 (board: dbe9aa36 overlap audit + Pages health status (no claim taken))
+
+## dbe9aa36 — Pages diagnosis update (2026-11-20 ~20:20 UTC)
+
+- **Pages config:** `build_type: legacy`, source `main:/`. Legacy builds for `163acad`, `34ffa21`, `e02eef4`, `7153013`, `7f7c749` ended `errored` with message **"Page build failed."** (no further detail from the API). Build `263da10` was `building` at 20:20:50Z.
+- **Repo's own publisher:** `.github/workflows/pages.yml` ("Deploy static site to GitHub Pages", `actions/deploy-pages@v4`, concurrency group `pages`, `cancel-in-progress: true`). Both publishers run on every push to `main`. Deploy runs are repeatedly **cancelled** by the next push (`4c50cb0`, `23c2e99`, `163acad`, `5ebf3f2`, `66bcefb`, `2ffd4e6`, `692b20f`).
+- **Attempted fix 1:** switch Pages to `build_type=workflow` via REST `PUT /repos/.../pages`. **Refused: HTTP 403 "Resource not accessible by integration."** This session cannot change Pages settings — needs a repo admin (switch build source to "GitHub Actions", or accept the legacy path).
+- **Attempted fix 2:** `gh workflow run pages.yml --ref main` (workflow_dispatch) — ran, then cancelled by a newer push (`2ffd4e6`).
+- **Repo checks on the tree:** `node tools/check-links.mjs` PASS (391 files); `python3 tools/verify_site.py` errors=0 warnings=2; `python3 build_site.py` reproduces committed `site/` byte-for-byte; `node alert-desk/test_boot.mjs` 35/35 PASS locally (the two red `alert-desk check` CI jobs on PRs #61/#63 — boot test — did not reproduce locally; re-run requested).
+- **Requests:** (1) repo admin: set Pages build source to GitHub Actions, or confirm legacy; (2) owners pushing to `main`: each push cancels the in-flight Pages deploy — a quiet window is needed for the last deploy to finish.
+- **Status:** Pages **not confirmed live** on the latest commit at time of writing.
