@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalshi demo data hub · Demo1</title><link rel="stylesheet" href="assets/site.css"></head>
+<body data-depth="1">
+<header class="site"><a class="brand" href="index.html">KALSHI <b>DEMO</b> · DATA HUB</a><nav></nav></header>
+<div class="wrap">
+  <h1>Kalshi demo — executive data hub</h1>
+  <p class="lede">Collects, organizes and analyzes live market data from the official Kalshi <b>demo</b> Trade API for five
+  topics only: <b>gas prices, elections, culture, crypto, golf</b>. Data is fetched on a schedule by CI from
+  <a href="https://external-api.demo.kalshi.co/trade-api/v2/events" target="_blank" rel="noreferrer">external-api.demo.kalshi.co/trade-api/v2</a>
+  and published as static JSON; every table row links to the official API response or documentation behind it.
+  Unverified values are left blank and flagged — nothing is inferred.</p>
+  <div id="snap-banner" class="banner">Loading snapshot status…</div>
+
+  <div class="grid cards4" id="top-cards"></div>
+
+  <h2>Highest-USD live events (all topics)</h2>
+  <div class="table-wrap"><table id="top-events">
+    <thead><tr><th>#</th><th>Topic</th><th>Event</th><th class="num">Est. USD vol 24h</th><th class="num">Notional at stake</th><th class="num">Contracts</th><th>Source</th></tr></thead>
+    <tbody><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+  </table></div>
+  <p class="footnote"><b>Est. USD volume</b> = contracts × last traded price (flagged methodology — not an official Kalshi metric);
+  <b>notional at stake</b> = open interest × $1.00 (each binary contract pays $1 at settlement —
+  <a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noreferrer">official doc ↗</a>).</p>
+
+  <h2>Executive summary — key findings</h2>
+  <div class="grid cards3">
+    <div class="card"><span class="k">Environment</span><div class="v">DEMO</div><span class="s">Recommended REST <code>external-api.demo.kalshi.co/trade-api/v2</code>; WebSocket <code>external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> — verified against <a href="https://docs.kalshi.com/getting_started/api_environments.md" target="_blank" rel="noreferrer">official environments page ↗</a>.</span></div>
+    <div class="card"><span class="k">Public market data</span><div class="v">No auth</div><span class="s">Events, markets, order books, candlesticks, trades are public (<a href="https://docs.kalshi.com/getting_started/quick_start_market_data.md" target="_blank" rel="noreferrer">official quick start ↗</a>); portfolio/trading require signed API keys.</span></div>
+    <div class="card"><span class="k">Demo vs real</span><div class="v">Thin books</div><span class="s">Demo markets use mock funds; most show near-zero volume (verified live 2026-11-20). Rankings still work — but treat demo dollar figures as test data only.</span></div>
+    <div class="card"><span class="k">Resolution</span><div class="v">YES / NO</div><span class="s">Settled markets expose <code>result</code> + <code>settlement_ts</code> + <code>settlement_value_dollars</code> (verified live: e.g. KXAAAGASMIN-26DEC31-3.80 → yes, $1.00).</span></div>
+    <div class="card"><span class="k">Price history</span><div class="v">Candles</div><span class="s">Official candlesticks endpoint, 1 min / 1 hour / 1 day intervals (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noreferrer">docs ↗</a>) — wired into the <a href="pages/live.html">live dashboard</a>.</span></div>
+    <div class="card"><span class="k">Trading</span><div class="v">V2 orders</div><span class="s"><code>POST /portfolio/events/orders</code> with <code>bid|ask</code>, fixed-point strings; legacy write endpoints are removed (410 Gone) — <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noreferrer">docs ↗</a>. Credential-gated scaffold in <code>scripts/demo_trader.py</code>.</span></div>
+  </div>
+
+  <h2>Where to go next</h2>
+  <div class="grid cards3">
+    <div class="card"><span class="k">Dashboard</span><div class="v"><a href="pages/live.html">Live dashboard</a></div><span class="s">Top-USD events per topic, price chart (seconds → 7-day windows), order-book depth, contracts at each price.</span></div>
+    <div class="card"><span class="k">Settlements</span><div class="v"><a href="pages/resolutions.html">Resolutions</a></div><span class="s">Every tracked event until it resolves, with YES/NO outcome and payout.</span></div>
+    <div class="card"><span class="k">Account</span><div class="v"><a href="pages/portfolio.html">Portfolio &amp; trades</a></div><span class="s">Balance, positions, fills, categorized trade analysis + strategy framework (credential-gated).</span></div>
+    <div class="card"><span class="k">Decisions</span><div class="v"><a href="pages/suggestions.html">Suggestions &amp; questions</a></div><span class="s">Improvement proposals for review + the questions/information/answers list needed before decisions.</span></div>
+    <div class="card"><span class="k">Audit</span><div class="v"><a href="pages/flagged.html">Flagged for review</a></div><span class="s">Unverified items and irregularities with source links — reviewed after go-live.</span></div>
+    <div class="card"><span class="k">Evidence</span><div class="v"><a href="pages/verification.html">Verification log</a></div><span class="s">Endpoint-by-endpoint verification against docs.kalshi.com with dates and live-probe URLs.</span></div>
+  </div>
+
+  <h2>Other site entry points (from earlier sessions)</h2>
+  <p class="small">
+    <a href="../index.html">Root monitor (v1 single-page dashboard)</a> ·
+    <a href="../pages/landing-executive-summary.html">Executive summary page (v1)</a> ·
+    <a href="../pages/gas.html">Category tables (v1)</a> ·
+    <a href="pages/sources.html">Full source list</a> ·
+    <a href="pages/repo-review.html">Repo review</a>
+  </p>
+</div>
+<footer class="site"></footer>
+<script src="assets/site.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const snap = await snapshotBanner("snap-banner");
+  if (!snap) return;
+  const rows = [];
+  for (const [topic, data] of Object.entries(snap.topics || {}))
+    for (const ev of (data.top_events || [])) rows.push({ topic, ...ev });
+  rows.sort((a, b) => ((b.est_usd_volume_24h || 0) - (a.est_usd_volume_24h || 0)) || ((b.est_usd_volume || 0) - (a.est_usd_volume || 0)));
+  document.querySelector("#top-events tbody").innerHTML = rows.length ? rows.map((ev, i) => `
+    <tr>
+      <td>${i + 1}</td><td><span class="pill open">${K.esc(ev.topic)}</span></td>
+      <td><b>${K.esc(ev.title)}</b><br><span class="small">${K.esc(ev.series_ticker)}</span></td>
+      <td class="num">${K.usd(ev.est_usd_volume_24h)}</td>
+      <td class="num">${K.usd(ev.notional_at_stake_usd)}</td>
+      <td class="num">${K.blank(ev.total_volume_fp)}</td>
+      <td><a href="${K.esc(ev.api_url)}" target="_blank" rel="noreferrer">API ↗</a></td>
+    </tr>`).join("") : `<tr><td colspan="7" class="empty">No events matched yet.</td></tr>`;
+  const books = Object.keys(snap.orderbooks || {}).length;
+  document.getElementById("top-cards").innerHTML = `
+    <div class="card"><span class="k">Open events scanned</span><div class="v">${snap.sample ? "seed" : K.blank(snap.events_scanned)}</div><span class="s">per pipeline run (limit-capped)</span></div>
+    <div class="card"><span class="k">Topics matched</span><div class="v">${Object.keys(snap.topics || {}).length}/5</div><span class="s">gas · elections · culture · crypto · golf</span></div>
+    <div class="card"><span class="k">Order books captured</span><div class="v">${books}</div><span class="s">top markets per run</span></div>
+    <div class="card"><span class="k">Run errors</span><div class="v">${(snap.errors || []).length}</div><span class="s">${snap.sample ? "seed snapshot (manual probes)" : "0 = clean run"}</span></div>`;
+});
+</script>
+</body>
+</html>

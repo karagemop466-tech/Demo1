@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-11-20",
+  "sample": true,
+  "note": "Seed tracking list. CI appends the top events per topic every run and re-checks them until they settle.",
+  "events": [
+    {"event_ticker": "KXAAAGASMIN-26DEC31", "series_ticker": "KXAAAGASMIN", "title": "How low will US gas prices get this year?", "topic": "gas", "first_tracked": "2026-11-20"},
+    {"event_ticker": "KXBTCMINMON-BTC-26NOV30", "series_ticker": "KXBTCMINMON", "title": "BTC min one touch monthly", "topic": "crypto", "first_tracked": "2026-11-20"},
+    {"event_ticker": "KXPGAPLAYOFF-THRC26", "series_ticker": "KXPGAPLAYOFF", "title": "The RSM Classic: Playoff", "topic": "golf", "first_tracked": "2026-11-20"},
+    {"event_ticker": "KXOSCARSUPACTO-27", "series_ticker": "KXOSCARSUPACTO", "title": "Oscar for Best Supporting Actor", "topic": "culture", "first_tracked": "2026-11-20"},
+    {"event_ticker": "KXNEXTNATOSECGEN-99", "series_ticker": "KXNEXTNATOSECGEN", "title": "Who will be the next Secretary General of NATO?", "topic": "elections", "first_tracked": "2026-11-20"}
+  ]
+}

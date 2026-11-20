@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio &amp; trades · Kalshi demo data hub</title><link rel="stylesheet" href="../assets/site.css"></head>
+<body data-depth="2">
+<header class="site"><a class="brand" href="../index.html">KALSHI <b>DEMO</b> · DATA HUB</a><nav></nav></header>
+<div class="wrap">
+  <h1>Portfolio performance &amp; trade execution (demo account)</h1>
+  <p class="lede">Reads <code>docs/data/portfolio.json</code> produced by <code>scripts/demo_trader.py</code>, which signs
+  requests with a Kalshi <b>demo</b> API key per the
+  <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noreferrer">official authentication guide ↗</a>.
+  No credentials exist in this repository; without them every account value below is blank by design.</p>
+  <div id="status-banner" class="banner">Loading portfolio state…</div>
+
+  <div class="cards4 grid" id="balance-cards"></div>
+
+  <h2>Positions</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Market</th><th>Position</th><th class="num">Avg cost</th><th class="num">Market price</th><th class="num">Mark-to-market</th><th>Source</th></tr></thead>
+    <tbody id="pos-rows"><tr><td colspan="6" class="empty">Not connected — requires demo credentials.</td></tr></tbody>
+  </table></div>
+
+  <h2>Fills / trade history</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Time</th><th>Market</th><th>Side</th><th class="num">Count</th><th class="num">Price</th><th class="num">Fees</th><th>Source</th></tr></thead>
+    <tbody id="fill-rows"><tr><td colspan="7" class="empty">Not connected — requires demo credentials.</td></tr></tbody>
+  </table></div>
+
+  <h2>Trade analysis — categorized</h2>
+  <p class="lede">When fills exist, they are grouped by topic (gas/elections/culture/crypto/golf) and by strategy tag
+  from <code>scripts/strategies.json</code>, so results can be compared per strategy: fill count, notional, YES/NO mix,
+  win rate after settlement, and slippage (fill price vs. quote at order time).</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Group</th><th class="num">Fills</th><th class="num">Notional (USD)</th><th class="num">YES / NO</th><th class="num">Win rate</th><th>Notes</th></tr></thead>
+    <tbody id="analysis-rows"><tr><td colspan="6" class="empty">Not connected — analysis populates once fills exist.</td></tr></tbody>
+  </table></div>
+
+  <h2>How to enable (no manual data entry anywhere else)</h2>
+  <div class="banner">
+    <ol>
+      <li>Create a demo account at <a href="https://demo.kalshi.co/" target="_blank" rel="noreferrer">demo.kalshi.co ↗</a>, then under <b>Account &amp; security → API Keys</b> create a key (per the <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noreferrer">official quick start ↗</a>).</li>
+      <li>Add repository secrets <code>KALSHI_DEMO_API_KEY_ID</code> and <code>KALSHI_DEMO_PRIVATE_KEY</code> (PEM). The private key never enters the site or this chat.</li>
+      <li>Run <code>python3 scripts/demo_trader.py status</code> (portfolio read) — or dispatch a CI workflow that runs it; <code>docs/data/portfolio.json</code> refreshes and this page lights up.</li>
+      <li>Trading additionally requires <code>KALSHI_ALLOW_TRADING=1</code>; orders go to <code>POST /portfolio/events/orders</code> (official <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noreferrer">Create Order V2 ↗</a>; legacy write endpoints return 410 Gone).</li>
+    </ol>
+  </div>
+</div>
+<footer class="site"></footer>
+<script src="../assets/site.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  await snapshotBanner("snap-banner");
+  const banner = document.getElementById("status-banner");
+  let P = null;
+  try { P = await K.json("data/portfolio.json"); } catch (e) {
+    banner.className = "banner bad"; banner.innerHTML = `<b>portfolio.json unavailable:</b> ${K.esc(e.message)} — all account values blank.`; return;
+  }
+  if (!P.configured) {
+    banner.className = "banner warn";
+    banner.innerHTML = `<b>Demo credentials not configured.</b> Balance, positions, fills and orders are blank (never invented).
+      Enable path below; endpoints used: <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noreferrer">balance ↗</a>,
+      <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noreferrer">positions ↗</a>,
+      <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noreferrer">fills ↗</a>.
+      <span class="pill warn">UNVERIFIED</span>`;
+    return;
+  }
+  banner.className = "banner";
+  banner.innerHTML = `Demo account connected · generated ${K.esc(P.generated_at || "")} ${P.errors && P.errors.length ? '<span class="pill warn">' + P.errors.length + ' errors</span>' : '<span class="pill yes">ok</span>'}`;
+  const b = P.balance || {};
+  document.getElementById("balance-cards").innerHTML = `
+    <div class="card"><span class="k">Cash balance</span><div class="v">${K.blank(b.balance_dollars ? "$" + b.balance_dollars : "")}</div><span class="s">${b.balance_cents != null ? (b.balance_cents / 100).toFixed(2) + " USD (cents field)" : ""}</span></div>
+    <div class="card"><span class="k">Portfolio value</span><div class="v">${b.portfolio_value_cents != null ? "$" + (b.portfolio_value_cents / 100).toFixed(2) : ""}</div><span class="s">includes positions</span></div>
+    <div class="card"><span class="k">Open positions</span><div class="v">${(P.positions || []).length}</div><span class="s">unsettled markets</span></div>
+    <div class="card"><span class="k">Fills</span><div class="v">${(P.fills || []).length}</div><span class="s">in current API window</span></div>`;
+  const fillRow = f => `<tr>
+      <td>${K.esc(f.created_time || f.ts || "")}</td>
+      <td>${K.esc(f.market_ticker || f.ticker || "")}</td>
+      <td>${K.esc(f.outcome_side || f.side || f.action || "")}</td>
+      <td class="num">${K.blank(f.count || f.count_fp)}</td>
+      <td class="num">${K.blank(f.price_dollars || f.price)}</td>
+      <td class="num">${K.blank(f.fee_dollars || f.fee)}</td>
+      <td><a href="${K.esc(P.fills_api_url || "https://docs.kalshi.com/api-reference/portfolio/get-fills.md")}" target="_blank" rel="noreferrer">API ↗</a></td></tr>`;
+  document.getElementById("fill-rows").innerHTML = (P.fills || []).length ? (P.fills || []).map(fillRow).join("") : `<tr><td colspan="7" class="empty">No fills returned yet.</td></tr>`;
+  const posRow = p => `<tr>
+      <td>${K.esc(p.market_ticker || p.ticker || "")}</td>
+      <td>${K.blank(p.position)}</td>
+      <td class="num">${K.blank(p.average_price_dollars || p.avg_price)}</td>
+      <td class="num">${K.blank(p.market_price_dollars || "")}</td>
+      <td class="num">${K.blank(p.realized_pnl_dollars || p.realized_pnl || "")}</td>
+      <td><a href="${K.esc(P.positions_api_url || "https://docs.kalshi.com/api-reference/portfolio/get-positions.md")}" target="_blank" rel="noreferrer">API ↗</a></td></tr>`;
+  document.getElementById("pos-rows").innerHTML = (P.positions || []).length ? (P.positions || []).map(posRow).join("") : `<tr><td colspan="6" class="empty">No positions returned.</td></tr>`;
+  const A = P.analysis || { by_topic: {} };
+  const aRows = Object.entries(A.by_topic || {}).map(([topic, s]) => `
+    <tr><td><span class="pill open">${K.esc(topic)}</span></td><td class="num">${K.blank(s.fills)}</td>
+    <td class="num">${K.usd(s.notional_usd)}</td><td class="num">${K.blank(s.yes_fills)} / ${K.blank(s.no_fills)}</td>
+    <td class="num">${K.blank(A.win_rate == null ? "" : A.win_rate)}</td><td class="small">win rate available after settlements</td></tr>`);
+  document.getElementById("analysis-rows").innerHTML = aRows.length ? aRows.join("") : `<tr><td colspan="6" class="empty">No fills to analyze yet.</td></tr>`;
+});
+</script>
+</body>
+</html>

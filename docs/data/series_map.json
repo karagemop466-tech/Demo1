@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-11-20",
+  "sample": true,
+  "provenance": {
+    "note": "Hand-built initial seed from live probes of the official Kalshi DEMO API via platform page-fetch on 2026-11-20. Every value below was copied from an actual API response; nothing is inferred. The scheduled CI pipeline (scripts/fetch_kalshi_data.py) replaces this with a full snapshot every 15 minutes.",
+    "probe_urls": [
+      "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXAAAGASMIN&status=open&with_nested_markets=true",
+      "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXBTCMINMON&status=open&with_nested_markets=true",
+      "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGAPLAYOFF&status=open&with_nested_markets=true",
+      "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXOSCARSUPACTO&status=open&with_nested_markets=true",
+      "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=3",
+      "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf",
+      "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Oscars",
+      "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto",
+      "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"
+    ]
+  },
+  "method": "GET /series?category=<Kalshi category> (exact, case-sensitive; matches the series 'categories' list) + GET /series?tags=<Tag>. gas/golf additionally filtered by title/tag keywords.",
+  "taxonomy_source": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories (live-verified 2026-11-20)",
+  "series_map": {
+    "gas": ["KXAAAGASMIN", "KXAAAGASMAX", "KXAAAGASW"],
+    "elections": ["KXNEXTNATOSECGEN", "KXNEWPOPE"],
+    "culture": ["KXOSCARSUPACTO", "KXOSCARSONG", "KXOSCARCOSTUME", "KXOSCARNOMMAKEUP", "KXOSCARNOMINTERFILM", "OSCARNOMSUPACTO", "OSCARSUPACTO", "KXOSCARCASTING", "KXOSCARDS"],
+    "crypto": ["KXBTCMINMON", "KXSOLMINMON", "KXETHMINMON", "KXXLMMAXY", "KXXRPMAXY", "KXSOLD26", "KXSOL26500", "KXZECY", "KXBTCMAX90", "KXFDVESPRESSO", "KXFDVZAMA"],
+    "golf": ["KXPGACUT", "KXPGAPLAYOFF", "KXTHEOPEN", "KXDPWORLDTOURR2LEAD"]
+  },
+  "categories_by_topic": {
+    "elections": {"category": "Elections", "verified": "category exists; events returned live (e.g., KXNEXTNATOSECGEN-99)"},
+    "crypto": {"category": "Crypto", "verified": "GET /series?category=Crypto returned 35-chunk series list live on 2026-11-20"},
+    "culture": {"category": "Entertainment", "verified": "Oscars series carry categories [\"Entertainment\"]; GET /series?tags=Oscars live 2026-11-20"},
+    "gas": {"category": "Economics", "verified": "gas series live in Economics (tag 'Oil and energy'); KXAAAGASMIN/KXAAAGASW confirmed via live event fetch + official kalshi.com market page"},
+    "golf": {"category": "Sports", "verified": "GET /series?tags=Golf returned golf series live on 2026-11-20"}
+  }
+}
