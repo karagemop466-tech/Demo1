@@ -186,22 +186,26 @@ def post_fixed(d):
 # Explore
 # ---------------------------------------------------------------------------
 def series_matches(series, rule):
-    """Explicit, auditable matching rule. Returns (matched, why)."""
+    """Explicit, auditable matching rule.
+
+    Returns (matched, why, field) where field records WHICH part of the series
+    record matched ("title", "ticker" or "tags"), so a tag-only or ticker-only
+    match can be surfaced for review instead of being silently accepted.
+    """
     title = (series.get("title") or "")
     ticker = (series.get("ticker") or "")
     tags = " ".join(str(t) for t in (series.get("tags") or []))
-    hay = f"{title} | {ticker} | {tags}"
-    low = hay.lower()
     for pattern, why in rule["patterns"]:
-        if re.search(pattern, low, re.I):
-            return True, f'{why} (pattern "{pattern}")'
+        for field, hay in (("title", title), ("ticker", ticker), ("tags", tags)):
+            if hay and re.search(pattern, hay, re.I):
+                return True, f'{why} — matched {field} (pattern "{pattern}")', field
     for cat in rule["categories"]:
         cats = [str(c).lower() for c in (series.get("categories") or [])]
         if series.get("category"):
             cats.append(str(series["category"]).lower())
         if cat.lower() in cats:
-            return True, f'discovery category "{cat}"'
-    return False, ""
+            return True, f'discovery category "{cat}"', "category"
+    return False, "", ""
 
 
 def fetch_series():
@@ -437,8 +441,11 @@ def shape_market(m, series_ticker, topic, market_url, event_cache, match_reason=
     return {
         "topic": topic,
         "topic_match_reason": match_reason,
-        "topic_matched_by_ticker_only": bool(match_reason and "ticker" in match_reason
-                                             and "title" not in match_reason),
+        "topic_match_field": (match_reason.split("matched ")[1].split(" ")[0]
+                              if "matched " in (match_reason or "") else None),
+        "topic_matched_weakly": bool(match_reason and
+                                     ("matched tags" in match_reason or
+                                      "matched ticker" in match_reason)),
         "series_ticker": series_ticker,
         "event_ticker": m.get("event_ticker"),
         "event_title": (event or {}).get("title") if isinstance(event, dict) else None,
@@ -517,15 +524,17 @@ def collect():
     for topic_key, rule in TOPIC_RULES.items():
         matched = []
         for s in series:
-            ok, why = series_matches(s, rule)
+            ok, why, field = series_matches(s, rule)
             if ok:
                 matched.append({
                     "ticker": s.get("ticker"),
                     "title": s.get("title"),
                     "category": s.get("category"),
                     "categories": s.get("categories") or [],
+                    "tags": (s.get("tags") or [])[:6],
                     "volume_contracts": fnum(s.get("volume_fp")),
                     "match_reason": why,
+                    "match_field": field,
                 })
         matched.sort(key=lambda x: -(x["volume_contracts"] or 0))
         selected = matched[:MAX_SERIES_PER_TOPIC]
@@ -622,8 +631,10 @@ def collect():
             "label": rule["label"],
             "patterns": [{"pattern": p, "why": w} for p, w in rule["patterns"]],
             "top_series": [{"ticker": x["ticker"], "title": x["title"],
+                            "tags": x.get("tags"),
                             "volume_contracts": x["volume_contracts"],
-                            "match_reason": x["match_reason"]} for x in selected],
+                            "match_reason": x["match_reason"],
+                            "match_field": x.get("match_field")} for x in selected],
             "series_matched": len(matched),
             "series_selected": [s["ticker"] for s in selected],
             "series": matched,

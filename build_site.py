@@ -140,6 +140,9 @@ def page(name, title, body, subtitle="", active=None):
 </main>
 <footer class="foot">
   <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
     <p>Data snapshot: <b>{esc(gen or 'not collected yet')}</b> · Source: official Kalshi demo Trade API
     (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
     Documentation: <a href="{DOCS}">docs.kalshi.com</a></p>
@@ -348,7 +351,7 @@ def build_topic(key, meta, markets, resolved):
             (f"${dn['value']:,.2f}" if dn.get("value") is not None else dash(None)),
             dash(when(m.get("close_time"))),
             pill(m.get("status") or "unknown", "ok" if m.get("status") == "active" else "warn")
-            + (" " + pill("ticker-only", "warn") if m.get("topic_matched_by_ticker_only") else ""),
+            + (" " + pill(f"{m['topic_match_field']}-only", "warn") if m.get("topic_matched_weakly") and m.get("topic_match_field") else ""),
             src(m.get("sources", {}).get("market"), "market"),
         ])
     res_all = sorted([r for r in resolved if r["topic"] == key],
@@ -366,12 +369,18 @@ def build_topic(key, meta, markets, resolved):
             " ".join(src(s.get("url"), s.get("name") or "source") for s in settle_src) or dash(None),
             src(m.get("sources", {}).get("market"), "market"),
         ])
+    def quality(s):
+        f = s.get("match_field")
+        if f == "title":
+            return pill("title match", "ok")
+        if f in ("tags", "ticker"):
+            return pill(f"{f}-only match", "warn")
+        return pill(f or "match", "warn")
+
     series_rows = [[f"<code>{esc(s['ticker'])}</code>", esc(s.get("title")),
+                    esc(", ".join(s.get("tags") or []) or "—"),
                     esc(s.get("match_reason")),
-                    dash(s.get("volume_contracts")),
-                    pill("ticker-only match", "warn") if ("ticker" in (s.get("match_reason") or "")
-                                                          and "title" not in (s.get("match_reason") or ""))
-                    else pill("title match", "ok")]
+                    dash(s.get("volume_contracts")), quality(s)]
                    for s in (topic_meta.get("top_series") or [])]
     errs = topic_meta.get("errors") or []
     err_html = ""
@@ -407,7 +416,8 @@ every record is searchable in the <a href="explore.html">data browser</a>.</p>
 <h2>Series matched by the topic rule</h2>
 <p class="fine">From <a href="{DOCS}/api-reference/market/get-series-list">Get Series List</a> and
 <a href="{DOCS}/api-reference/events/get-events">Get Events</a> metadata; <code>match_reason</code> records exactly why each series was included.</p>
-{table(["Series ticker", "Title", "Match reason", "Series volume (contracts)", "Match quality"], series_rows)}
+{table(["Series ticker", "Series title", "Tags (from API)", "Match reason",
+        "Series volume (contracts)", "Match quality"], series_rows, "wide")}
 {err_html}
 """
     page(TOPIC_PAGES[key], f"{label} — Kalshi demo markets", body,
@@ -871,7 +881,7 @@ def build_flagged(meta, markets):
          f"{DOCS}/api-reference/market/get-markets", "Displayed, not silently dropped"),
     ]
     rows = [[esc(a), esc(b), esc(c), src(d, "official"), esc(e)] for a, b, c, d, e in items]
-    ticker_only = [m for m in markets if m.get("topic_matched_by_ticker_only")]
+    ticker_only = [m for m in markets if m.get("topic_matched_weakly")]
     to_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
                 esc(m.get("topic_match_reason")), esc((m.get("title") or "")[:70])]
                for m in ticker_only[:40]]
@@ -888,10 +898,11 @@ def build_flagged(meta, markets):
 </div>
 {table(["Irregularity", "What the site shows", "Why it happens", "Official source", "Status"], rows, "wide")}
 
-<h2>Topic matches made on ticker prefix only (needs a human eye)</h2>
-<p class="fine">These were assigned to a topic because their series ticker matched the rule, while the title did not.
-They are almost certainly correct Kalshi series for the topic — but the classification rests on a naming
-convention rather than the market title, so they are listed for review. Showing {len(to_rows)} of {len(ticker_only)}.</p>
+<h2>Topic matches that rest on a ticker or tag, not the series title (needs a human eye)</h2>
+<p class="fine">These records belong to a series whose <i>series</i> title did not match the topic rule — the match came
+from the series ticker or its tags. They are usually correct (e.g. a series titled “US gas price up” whose tags say
+“gas prices”), but the classification rests on metadata rather than the title, so they are listed for review.
+Showing {len(to_rows)} of {len(ticker_only)} open-market records.</p>
 {table(["Market", "Ticker", "Why it matched", "Title (truncated)"], to_rows, "wide")}
 
 <h2>Open markets whose YES bid is not a live level</h2>

@@ -1,71 +1,59 @@
-name: Build and deploy Kalshi research site
+name: Build and deploy site to GitHub Pages
 
+# GitHub Pages for this repository is configured in "legacy" mode: it serves the
+# repository root of `main` over a static file server, so no custom Pages
+# workflow can be selected from the repository settings by this session.
+# This workflow therefore rebuilds the site from the committed verified snapshot
+# and, if the generated output differs, commits it to main. Pages then publishes
+# it automatically. The build fails (and nothing is committed) if the site does
+# not build cleanly or has a broken internal link.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: pages-content
   cancel-in-progress: true
 
 jobs:
-  build:
+  rebuild:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Validate JavaScript syntax
+      - name: Validate JavaScript
         run: |
           node --check assets/chart.js
-          node --check assets/detail.js
-          node --check app.js || true
-      - name: Validate collector syntax
-        run: python -m py_compile tools/collect_kalshi.py build_site.py
-      - name: Build site from collected data (fails on any broken internal link)
+          node --check assets/explore.js
+          node --check app.js
+      - name: Validate Python
+        run: python -m py_compile build_site.py tools/collect_kalshi.py tools/account_worker.py
+      - name: Build site (fails on broken internal link or missing asset)
         run: python build_site.py
-      - name: Assert every table row carries a source link
+      - name: Verify no placeholder values leaked into rendered pages
         run: |
-          python - <<'PY'
-          import pathlib, re, sys
-          rows = 0; missing = []
-          for p in pathlib.Path('site').glob('*.html'):
-              for tr in re.findall(r'<tr>(.*?)</tr>', p.read_text(), re.S):
-                  tds = re.findall(r'<td[^>]*>(.*?)</td>', tr, re.S)
-                  if len(tds) < 3:
-                      continue
-                  rows += 1
-                  if not any(a.startswith('http') for a in re.findall(r"href='([^']+)'", tr)):
-                      missing.append(p.name + ': ' + re.sub(r'<[^>]+>', ' ', tr)[:90].strip())
-          print(f'data rows checked: {rows}')
-          if missing:
-              print('rows without an official source link:')
-              for m in missing[:20]:
-                  print('  -', m)
-              sys.exit(0)  # reported, not fatal: some tables are methodology, not data
-          print('all data rows carry a source link')
-          PY
-      - name: Site size report
+          set -e
+          if grep -rIn --include='*.html' -E 'undefined|NaN|>None<|\{[' site/ | head -20; then
+            echo "found suspicious rendered tokens"; exit 1
+          fi
+          echo "no undefined/NaN/None tokens in rendered pages"
+      - name: Commit rebuilt site if it changed
         run: |
-          du -sh site
-          ls site | head -30
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          git config user.name "site-builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add site/
+          if git diff --cached --quiet; then
+            echo "site output unchanged"
+          else
+            git commit -m "site: rebuild from verified snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push origin HEAD:main
+            echo "committed rebuilt site to main"
+          fi

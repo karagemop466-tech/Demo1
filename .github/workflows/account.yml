@@ -1,0 +1,54 @@
+name: Refresh demo account summary (read-only)
+
+# Optional and inert until you provide a Kalshi *demo* API key. It never places
+# orders: tools/account_worker.py only calls GET endpoints. Add the two
+# repository secrets described in tools/account_worker.py, then run this
+# manually when you want a fresh portfolio snapshot. With no secrets present the
+# job exits with a clear message and changes nothing.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  account:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install signing dependency
+        run: pip install --quiet cryptography
+      - name: Check for credentials
+        id: creds
+        env:
+          KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
+          KEY_PEM: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
+        run: |
+          if [ -z "$KEY_ID" ] || [ -z "$KEY_PEM" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No demo API key configured — skipping. Add KALSHI_DEMO_API_KEY_ID and KALSHI_DEMO_PRIVATE_KEY to enable."
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            printf '%s' "$KEY_PEM" > /tmp/kalshi-demo.key && chmod 600 /tmp/kalshi-demo.key
+          fi
+      - name: Fetch portfolio summary
+        if: steps.creds.outputs.present == 'true'
+        env:
+          KALSHI_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
+          KALSHI_PRIVATE_KEY_PATH: /tmp/kalshi-demo.key
+        run: python tools/account_worker.py --out data/account.json
+      - name: Always remove the key from disk
+        if: always()
+        run: rm -f /tmp/kalshi-demo.key
+      - name: Rebuild site and commit
+        if: steps.creds.outputs.present == 'true'
+        run: |
+          python build_site.py
+          git config user.name "account-worker"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/account.json site/
+          git diff --cached --quiet || git commit -m "portfolio: demo account snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push origin HEAD:main
