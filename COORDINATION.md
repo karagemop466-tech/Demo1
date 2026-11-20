@@ -357,3 +357,31 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 | 2026-11-20 ~11:30 | Claimed tasks 13–17 |
 | 2026-11-20 ~11:33–11:56 | Rebase conflicts on COORDINATION.md resolved repeatedly (PRs #8–#13 merged concurrently); each time origin/main's board kept verbatim and this session's section re-appended — no other session's content discarded |
 | 2026-11-20 ~11:56 | Tasks 13–16 done; task 17 (PR + merge + Pages verify) in progress |
+
+---
+
+# Tasks — session arena-288e8741-demo1 (branch `arena/288e8741-demo1`)
+
+Claimed 2026-11-20 ~11:30 UTC. File scope exclusive to this session; COORDINATION.md shared by convention.
+
+| # | Task | Status | File scope (exclusive) | Notes |
+|---|------|--------|------------------------|-------|
+| 13 | Live demo-API data collection + verified snapshots | done | `data/demo-snapshot.json`, `data/demo-resolution-log.json`, `docs/demo-data-verification.md` | 29 documented fetches against the official demo API; every record carries its source URL; automated source-link audit PASS |
+| 14 | Demo live tracker page (watchlist, chart seconds/minutes/hours, order book, resolution tracking) | done | `pages/demo-live.html`, `assets/js/demo-live.js` | LIVE mode (browser→demo API; CORS for Pages origin verified in data/cors.json) with verified-snapshot fallback; `node --check` PASS; links audit PASS |
+| 15 | Paper-trading & strategy engine | done | `pages/paper-trading.html`, `assets/js/paper-trading.js` | Clearly labeled SIMULATION; strategy-categorized trade log + performance analytics; fees not modeled (flagged) |
+| 16 | Executive summary: additive live-data findings section | done | `executive-summary.html` (additive only) | Existing content untouched |
+| 17 | Integration: PR to main, merge, Pages verification, board record | in progress | PR via GitHub | Merge result + Pages deploy recorded in follow-up commit (PR #6/#10 convention) |
+
+Sources: docs.kalshi.com (quick_start_market_data, get-market-candlesticks, get-trades, get-series-list, get-events, api_environments, quick_start_authenticated_requests, quick_start_create_order, get-balance, fee_rounding, rate_limits, llms.txt) + live responses from https://external-api.demo.kalshi.co/trade-api/v2 (fetch log: docs/demo-data-verification.md).
+
+Irregularities: demo "settled" indexes contain synthetic future-dated events (2027–2035, junk metadata such as cadence "hohhggd"); injected open interest on zero-trade markets (KXTIME-26-ALIU OI 33,419.76 / volume 0.00); KXDPWTTOP20-GEC26 occurrence_datetime (2026-11-08) disagrees with actual settlement timestamps (2026-10-25); no official dollar-volume field exists in the market object (computed estimates labeled est./computed); demo rankings dominated by synthetic 2028 election markets (KXPRESNOMD-28-JCRO volume 2,656,378.77). Full list: docs/demo-data-verification.md §Irregularities.
+
+Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/paper-trading.html` from the shared navigation; (b) review `data/demo-snapshot.json` for the pipeline data layer; (c) surface flagged items on the Flagged for Review page.
+
+## Claim log (session arena-288e8741-demo1)
+
+| Date/time (UTC) | Action |
+|---|---|
+| 2026-11-20 ~11:30 | Claimed tasks 13–17 |
+| 2026-11-20 ~11:33–11:56 | Rebase conflicts on COORDINATION.md resolved repeatedly (PRs #8–#13 merged concurrently); each time origin/main's board kept verbatim and this session's section re-appended — no other session's content discarded |
+| 2026-11-20 ~11:56 | Tasks 13–16 done; task 17 (PR + merge + Pages verify) in progress |

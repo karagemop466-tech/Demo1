@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paper trading (SIM) · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .banner.ok{border-left-color:var(--ok);background:#f0faf4}
+  .banner.warn{border-left-color:var(--warn);background:#fff8ee}
+  .banner.bad{border-left-color:var(--bad);background:#fdf2f2}
+  .btn{font:inherit;font-size:13px;padding:6px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  #run-log{font-size:13px;color:var(--muted);margin-top:8px;word-break:break-word}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:800px){.twocol{grid-template-columns:1fr}}
+  .strat{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:#fff;margin-bottom:10px}
+  .strat b{display:block;margin-bottom:3px}
+  .strat .scope{color:#174e8c;font-size:12px;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top"><span class="brand">Kalshi Demo Dashboard</span>
+  <a href="../index.html">Home</a><a href="../executive-summary.html">Executive summary</a><a href="../markets.html">Markets</a>
+  <a href="../chart.html">Chart</a><a href="demo-live.html">Demo live tracker</a><a href="paper-trading.html">Paper trading (SIM)</a>
+  <a href="../analysis.html">Analysis</a><a href="../questions.html">Questions</a><a href="../suggestions.html">Suggestions</a>
+  <a href="../flagged.html">Flagged</a><a href="../sources.html">Sources</a><a href="../portfolio.html">Portfolio</a>
+</header>
+<main>
+  <h1>Paper trading &amp; strategy analytics <span class="tag t-blk">SIMULATION</span></h1>
+  <p class="lead">Executes <b>simulated</b> trades on the five tracked categories (gas, elections, culture, crypto, golf), categorizes them by strategy and market type, and reports performance. Every simulated fill requires a displayed bid/ask with size from official demo-API data (or the verified snapshot when the API is unreachable). No real orders are sent — see “How real trading would work” below.</p>
+
+  <div class="banner warn" id="sim-banner">Idle — nothing loaded yet.</div>
+
+  <div class="card">
+    <h2>Strategy catalog (each trade is tagged for later analysis)</h2>
+    <div class="strat"><b>1 · Deep-favorite hold</b><span class="scope">scope: crypto, gas</span>
+      <p class="note">BUY YES when 0.92 ≤ best bid and best ask ≤ 0.98 with displayed ask size. Hold to settlement. Tests whether near-certain contracts are worth holding against event surprise and exit liquidity.</p></div>
+    <div class="strat"><b>2 · Longshot lottery</b><span class="scope">scope: elections, culture</span>
+      <p class="note">BUY YES when best ask ≤ $0.02 with displayed size. Most longshots resolve NO — the point is to measure the real hit rate instead of assuming one.</p></div>
+    <div class="strat"><b>3 · Tight-spread round trip</b><span class="scope">scope: golf</span>
+      <p class="note">Instant simulated buy-at-ask / sell-at-bid when the spread ≤ $0.002 and both sides show size. Demonstrates that displayed depth is not guaranteed execution.</p></div>
+    <div class="strat"><b>4 · Momentum chase (1-min candles)</b><span class="scope">scope: crypto — LIVE mode only</span>
+      <p class="note">If the last 5 <i>traded</i> 1-minute candle closes are strictly increasing, BUY YES at ask. Skipped in snapshot mode (no history there) — nothing is reconstructed.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <button class="btn primary" id="run">▶ Run engine (evaluate + trade)</button>
+      <button class="btn" id="settle">↻ Refresh positions / settle</button>
+      <button class="btn" id="export">⬇ Export trades JSON</button>
+      <button class="btn" id="reset">Clear sim data</button>
+    </div>
+    <div class="filters" id="cat-sel">
+      <span class="note">Run scope:</span>
+      <label><input type="checkbox" value="gas" checked> gas</label>
+      <label><input type="checkbox" value="elections" checked> elections</label>
+      <label><input type="checkbox" value="culture" checked> culture</label>
+      <label><input type="checkbox" value="crypto" checked> crypto</label>
+      <label><input type="checkbox" value="golf" checked> golf</label>
+    </div>
+    <div id="run-log"></div>
+  </div>
+
+  <div class="card">
+    <h2>Simulated trade log (categorized)</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Time (UTC)</th><th>Strategy</th><th>Category</th><th>Market</th><th>Side</th><th>Entry</th><th>Qty</th><th>Notional</th><th>Mark/exit</th><th>P&amp;L</th><th>Status</th><th>Source</th></tr></thead>
+      <tbody id="sim-rows"><tr><td colspan="12">No simulated trades yet.</td></tr></tbody>
+    </table></div>
+    <p class="note">Trades persist in your browser’s localStorage only (key <code>kd-sim-trades-v1</code>). Marks use the official best bid; settlement uses the official <code>result</code> field (yes → $1.00, no → $0.00 per contract). Fees are NOT modeled (Kalshi charges trading fees — see <a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noreferrer">official fee docs</a>); that limitation is flagged for review.</p>
+  </div>
+
+  <div class="twocol">
+    <div class="card"><h3>Performance by strategy</h3>
+      <div class="table-wrap"><table><thead><tr><th>Strategy</th><th>Trades</th><th>Open</th><th>Realized P&amp;L</th></tr></thead><tbody id="an-strat"><tr><td>—</td></tr></tbody></table></div></div>
+    <div class="card"><h3>Performance by category</h3>
+      <div class="table-wrap"><table><thead><tr><th>Category</th><th>Trades</th><th>Open</th><th>Realized P&amp;L</th></tr></thead><tbody id="an-cat"><tr><td>—</td></tr></tbody></table></div></div>
+  </div>
+
+  <div class="card"><h3>Portfolio totals</h3>
+    <div class="table-wrap"><table><tbody id="an-totals"><tr><td>—</td></tr></tbody></table></div></div>
+
+  <div class="card">
+    <h2>How REAL demo-account trading would work (not implemented here — credential-gated)</h2>
+    <ul class="tight">
+      <li>Authentication uses signed API keys (Ed25519/RSA, <code>KALSHI-ACCESS-*</code> headers): <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noreferrer">Quick Start: Authenticated Requests</a> · <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">API Keys</a>.</li>
+      <li>Order placement: <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noreferrer">Quick Start: Create your first order</a>. Account reads: <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noreferrer">Get Balance</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noreferrer">Get Positions</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">Get Fills</a>.</li>
+      <li>A static GitHub Pages site cannot hold a private signing key safely; real trading needs a separately secured server-side signing service plus explicit risk limits (flagged on the review page). No credentials exist in this repository and none were added.</li>
+      <li>Rate limits apply to authenticated endpoints — see <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noreferrer">Rate Limits and Tiers</a>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>What this page can and cannot tell you</h2>
+    <ul class="tight">
+      <li><b>Can:</b> whether a rule would have triggered on displayed prices; simulated P&amp;L from official marks and official resolutions; hit rates per strategy/category on DEMO data.</li>
+      <li><b>Cannot:</b> guarantee fills (displayed liquidity ≠ execution); model fees or slippage beyond the spread rule; generalize demo results to production (demo volumes are synthetic — see <a href="../flagged.html">Flagged for Review</a>).</li>
+    </ul>
+  </div>
+</main>
+<footer>SIMULATION ONLY — no orders are transmitted. Data: official Kalshi demo API (public endpoints) or the verified snapshot; see docs/demo-data-verification.md. Not investment advice.</footer>
+<script src="../assets/js/paper-trading.js"></script>
+</body></html>
