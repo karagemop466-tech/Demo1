@@ -40,15 +40,27 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch || github.ref_name }}
+          fetch-depth: 2
 
       - name: Skip data-only commits (loop protection)
         if: ${{ github.event_name == 'push' }}
         id: guard
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -v '^sim-desk/data/' || true)
+          set -e
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "first push of this branch — running"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git fetch --no-tags --depth=1 origin "$BEFORE" 2>/dev/null || true
+          CHANGED=$(git diff --name-only "$BEFORE" HEAD 2>/dev/null | grep -v '^sim-desk/data/' || true)
           if [ -z "$CHANGED" ]; then
             echo "only sim-desk/data changed — nothing to do"
             echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code changes: $CHANGED"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/setup-python@v5
