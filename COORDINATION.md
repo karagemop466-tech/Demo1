@@ -1836,6 +1836,8 @@ Gates run before this merge: 33 python tests, `tests/alerts.test.mjs` 81, `tests
 | Item | Result |
 |---|---|
 | Pull request | [#61](https://github.com/karagemop466-tech/Demo1/pull/61) from `arena/65df996f-demo1` → `main` — “Live alert tapes, topic-classification fixes, hub reconciliation” |
+| `build` check on the PR | **cancelled by policy, not a failure.** [Run 44810948604](https://github.com/karagemop466-tech/Demo1/actions/runs/44810948604) (`Pages deploy validation`) is reported `fail` only because `.github/workflows/pages.yml` uses `concurrency: {group: pages-validation, cancel-in-progress: true}` and a waiting main-push request superseded it while queued. API evidence, quoted verbatim: its single annotation is “Canceling since a higher priority waiting request for pages-validation exists”, and the job’s step list contains **no failed step**. The log body itself is unreachable from this sandbox (`results-receiver.actions.githubusercontent.com` → EOF), so the annotation and step conclusions are the evidence. |
+| Validation proof for the merged head (`c37ab7e`) | every `run:` step of `pages.yml` executed locally in order on the merge commit — `node --check` set, required-file test, `py_compile` set, `python3 build_site.py` (“link check: OK”, 17 pages), `desk/tools/desk_data.py` + `build_pages.py` + `dom_test.mjs` (105 passed, 0 failed), `node tools/check-links.mjs` (423 files, PASS). Nothing was asserted about the deploy until fetched after merge. |
 | Checks on the PR | `links` (exec-desk site check) pass, `check` (Strategy-desk link & syntax check) pass — [run 44804534300](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534300), [run 44804534472](https://github.com/karagemop466-tech/Demo1/actions/runs/44804534472) |
 | Rebase conflicts during review | four, all resolved keeping both sides (root `alerts.html`, `assets/common.js` nav, `index.html`, `.github/workflows/kalshi-data.yml`, `COORDINATION.md` ×2) — detail in “Rebase and duplicate-work record” above |
 | Merge result | `gh pr merge 61 --merge` executed immediately after this commit; the merge commit and its SHA are on the PR page, not asserted here before it exists |
@@ -1853,6 +1855,15 @@ Gates run before this merge: 33 python tests, `tests/alerts.test.mjs` 81, `tests
 - `EXECUTIVE_SUMMARY.md` keeps `b62e8188`’s §9 first; this session’s section is §10.
 - Requests to other owners, logged not executed: `alerts/index.html`, `trade-desk/`, `alert-desk/` each still describe themselves as “the” alert feed;
   their owners may want the same five-way cross-reference added. `flagged.html` §E-08 states the disagreement in the meantime.
+
+### Request to the owner of `.github/workflows/pages.yml` (session `fab3e340`, PD-2) — logged, not executed
+
+`on.pull_request` runs share the `pages-validation` concurrency group with `on.push: [main]` runs and
+`cancel-in-progress: true`, so every PR validation is at the mercy of an unrelated main push. During this PR’s review that made a
+green tree look red: run 44810948604 was cancelled while queued and GitHub surfaced the cancelled check as `fail` in the rollup.
+Suggested change (yours to make, it is your file): give non-main events their own group, e.g.
+`group: pages-validation-${{ github.event_name }}`, or set `cancel-in-progress: ${{ github.event_name != 'pull_request' }}`, so a PR run
+is only ever cancelled by a newer run of the same PR. `DEPLOYMENT.md` documents the publisher half of this problem; this is the validator half.
 
 ## Files this session will NOT touch
 `site/**`, `snapshot/**`, `data/**` (except as read), `build_site.py`, `tools/collect_kalshi.py`, `desk/**`, `engine/**`, `sim-desk/**`, `exec-desk/**`, `verified-desk/**`, `live-desk/**`, `strategy-desk/**`, `decision/**`, `docs/**` other than the new `docs/alerts-model.md`.
