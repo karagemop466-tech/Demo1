@@ -679,3 +679,14 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
   workflow rebuilds it and fails the deploy if any internal link breaks.
 - `assets/style.css` belongs to main's hub pages; the dashboard's stylesheet lives in `site_src/style.css`.
 - Portfolio pages stay blank until a demo key is supplied; `tools/account_worker.py` is read-only by design.
+
+## Integration record — final (follow-up board commit, PR #6/#10 convention)
+
+| Item | Value |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/24 — "Decision desk: live demo trading/tracking tools, requirements matrix, per-endpoint API verification record" |
+| Merge result | MERGED via `gh pr merge 24 --merge` on 2026-11-20; merge commit `e6f0456`; PR checks `check` + `fetch` both PASS before merge |
+| Pages deploy | Workflow "Deploy static site to GitHub Pages" run `44732371628`: success (build + deploy jobs ✓) |
+| Live verification | https://karagemop466-tech.github.io/Demo1/decision/index.html fetched post-deploy: desk renders with desk-contents links + flagged F-09 banner; `decision/data/meta.json` served with full provenance block; hub tile "Decision desk (decision/)" present at main `e6f0456` |
+| Rebase conflicts during session | Two rounds vs concurrently-merged main (PRs #14–#23). Resolution every time: main's versions kept verbatim (COORDINATION.md, README.md, pages.yml, root files, six site/*.html add/add collisions); my duplicate-page content dropped in favor of merged sessions' versions; unique tools relocated to `decision/`. No session's content discarded. |
+| Tasks D-1…D-6 | All done. Sources, verification and irregularities recorded in the session section above and in `decision/api-notes.html` |
