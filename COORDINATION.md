@@ -388,3 +388,40 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 | 2026-11-20 ~11:30 | Claimed tasks 13–17 |
 | 2026-11-20 ~11:33–11:56 | Rebase conflicts on COORDINATION.md resolved repeatedly (PRs #8–#13 merged concurrently); each time origin/main's board kept verbatim and this session's section re-appended — no other session's content discarded |
 | 2026-11-20 ~11:56 | Tasks 13–16 done; task 17 (PR + merge + Pages verify) in progress |
+
+---
+
+# Session arena-6aa291e9-demo1 — verification registers, CI candle/resolution persistence, Python trading scaffold
+
+## Session claim
+
+- **Session ID:** `arena-6aa291e9-demo1` — branch `arena/6aa291e9-demo1` (platform-fixed; `session-<id>/<task>` convention replaced by file-scope ownership, documented deviation).
+- **Claimed at:** 2026-11-20 (UTC) when the board was empty; board merged 6× as eight parallel sessions merged to main (PRs #1–#17) — no other session's rows or files were ever discarded or edited.
+- **File scope (path-distinct from all merged work):** `scripts/fetch_kalshi_data.py`, `scripts/demo_trader.py`, `scripts/strategies.json`, `tests/test_fetch_kalshi_data.py`, `.github/workflows/kalshi-data.yml`, `docs/` (`index.html`, `pages/*`, `assets/*`, `data/*`), `EXECUTIVE_SUMMARY.md`, `SOURCES.md`, `REVIEW.md`. No collision with `pages/*.html`, `strategy-desk/`, or `pages/demo-live.html`/`pages/paper-trading.html`.
+
+## Task board
+
+| # | Task | Status | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|
+| 1 | Coordination board merge (×6) | done | — | Conflicts on COORDINATION.md resolved by keeping every session's section verbatim + appending mine | Six rebase conflicts, all non-destructive |
+| 2 | Deep API verification (18 official doc pages fetched + live demo probes; registers in SOURCES.md + docs/pages/verification.html) | done | SOURCES.md A1–A20, B1–B11 | Environments, auth signing, events/series/orderbook/candlesticks/trades schemas, fixed-point, rate limits, WS handshake auth, order V2 (legacy → 410 Gone), settlement — every row source-linked | WS handshake requires auth (F5); event.category deprecated (F6) |
+| 3 | Repo review (line-by-line, all sessions' files) | done | REVIEW.md + docs/pages/repo-review.html | Owned files not edited; findings logged (incl. tracked `scripts/__pycache__/*.pyc` from another session — recommend owner removal) | Root app.js limit=1000 vs documented 200 (F9); kalshi.com link format (F10) |
+| 4 | CI pipeline: taxonomy-driven topic mapping, USD ranking methodology, orderbooks, **1m/60m candlesticks persisted server-side**, **resolution tracking until YES/NO settle** | done | docs.kalshi.com endpoints | Writes docs/data/*.json with provenance; schedule 15 min; PR-triggered validation + artifact; 7/7 offline unit tests on recorded live payloads | Complements `data/` full-exchange pipeline |
+| 5 | Demo trading scaffold (Python, signed; order V2; strategies disabled) | done | create-order-v2, cancel-order-v2, get-balance, auth quick start | Refuses without creds + KALSHI_ALLOW_TRADING=1 | Blocked on demo credentials (F4) |
+| 6 | docs/ data hub: live dashboard (chart windows seconds→7d, depth, liquidity), resolutions (YES/NO), portfolio, suggestions+questions, flagged, verification, review, sources | done | per-row official links | node --check pass; JSON validity pass; internal link audit pass | Seed snapshot sample:true until first CI run (F7) |
+| 7 | Executive summary + SOURCES.md + REVIEW.md | done | see files | — | — |
+| 8 | Final integration (nav/README tiles + PR #16 + merge + Pages confirm) | in progress | — | PR #16: https://github.com/karagemop466-tech/Demo1/pull/16 | — |
+
+## Cross-file requests (not applied to owned files)
+
+| From | File | Request |
+|---|---|---|
+| this session | root `data/*.json` pipeline (`fetch-data.yml`) | **Repo-bloat risk:** `data/markets.json` (~1 MB) + `data/series.json` (~0.5 MB) committed on every refresh — ~150 MB/day churn at 15-min cadence. Recommend ≥60-min cadence, artifact storage, or pruning. Owner decision — not edited. |
+| this session | root `index.html` | Data-hub tiles — APPLIED as integration edit (additive section only) |
+| this session | root `README.md` | Data-hub/pipeline section — APPLIED as integration edit (additive) |
+
+## Notes
+
+- **CORS resolved:** `data/cors.json` (CI header test, 2026-11-20T11:22:36Z) shows the official demo API reflecting `access-control-allow-origin: https://karagemop466-tech.github.io` — browser fetches from this site work. My F1 flag closed with that evidence; third-party 403 reports superseded.
+- Unique contributions vs merged main: server-persisted candlestick history, resolution/outcome history in JSON, verified taxonomy driving topic mapping, USD ranking methodology (volume×price + OI×$1), CI-runnable Python demo trader (browser clients cannot hold keys), deep verification/review/source registers.
+- Live probes this session: demo books thin (BTC ladder most active: OI 3,439.27 on KXBTCMINMON-BTC-26NOV30-6750000); gas KXAAAGASMIN-26DEC31-3.80 settled YES $1.00 (resolution mechanics verified end-to-end).
