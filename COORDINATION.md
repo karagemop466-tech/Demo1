@@ -1535,3 +1535,36 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pages state after merge | transient `errored` reading was a superseded build; the build for `1cf87c9` completed **success**, API `status: built` (source `main:/`) |
 | Live verification | https://karagemop466-tech.github.io/Demo1/trader-guide/index.html fetched post-deploy: renders full guide with all tables and source links; landing and exec-desk/dashboard verified live earlier in G-2 |
 | Tasks G-1..G-3 | All done. Sources, verification and irregularities recorded above (Results section) |
+
+---
+
+# Session arena/0da1798f-demo1 — live demo-API capture via the session tool channel + simplified trader page
+
+## Session claim
+
+- **Session ID:** `0da1798f` — branch `arena/0da1798f-demo1` (platform-fixed name; the `session-<id>/<task>` naming convention is not available, recorded as a deviation like every prior session). Base: `main` at `6aa1ed5` (PR #60 merge).
+- **Claimed at:** 2026-11-20T19:50Z. This claim is committed and pushed before any implementation work.
+- **New capability discovered (why this session exists):** the official Kalshi demo API **is** reachable from inside an agent session through the page-fetch tool channel. Every prior session recorded "the sandbox shell cannot reach `*.kalshi.co`" and therefore relied on GitHub-hosted runner captures (`snapshot/`, `docs/data/`). Verified live in this session: `GET https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=3&status=open` returned HTTP 200 with real demo payload (market tickers `KXMVECROSSCATEGORY-…`, `status: active`, updated 2026-11-20T19:39Z). `curl` from the shell is still blocked by the egress allowlist — the fetch is tool-mediated only. This is logged as an irregularity/clarification of the prior sessions' blanket statement.
+- **Overlap check:** read the full board and all 4 open PRs. PR #61 (`65df996f`) touches root `index.html`, `assets/common.js`, `alerts*.html/js`, `dashboard.html`, `scripts/fetch_kalshi_data.py`; PR #62 (`fe12c4c4`) touches `build_site.py`, `monitor/`, `engine/strategies.json`, `site/*`, `tools/strategy_sim.py`; PR #63 (`54a39029`) is entirely inside `ops-desk/**`; PR #64 (`d372e97e`) is COORDINATION.md only. **Therefore this session edits nothing outside its own new tree.** No root landing/nav, no `build_site.py`, no `data/`, no `snapshot/`, no `engine/`, no shared workflow file, no other desk.
+
+## Task board
+
+| # | Task | Status | Owner | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------------------|---------|--------------|----------------|
+| L-1 | Official-source verification pass: demo REST/WS endpoints, public market-data endpoint shapes, fee schedule, settlement semantics — each repo claim re-read against the official docs page | in progress | arena/0da1798f-demo1 | `live-capture/**` | docs.kalshi.com (per-claim URL recorded in the page's source table) | Every claim row links the official docs URL and, where applicable, the exact demo request URL that returned it | Report below |
+| L-2 | Live five-topic capture: open markets ranked by official volume/liquidity fields, order-book depth (contracts at price), 1m/1h/1d candles, recent trades, settled markets with YES/NO results — raw responses kept with their request URL and fetch timestamp | in progress | arena/0da1798f-demo1 | `live-capture/raw/**`, `live-capture/capture-index.json` | `https://external-api.demo.kalshi.co/trade-api/v2` (demo host recommended by the brief and listed on the official environments page) | Raw JSON kept verbatim; nothing is entered that the API did not return; blanks stay blank | Demo venue = mock funds |
+| L-3 | Simplified live trader page in this session's namespace: topic-grouped event tables, ≥$0.10 swing alert tape (all events + model-pick filter), time-window chart (1m/1h/1d), depth-at-price ladder, resolution status | in progress | arena/0da1798f-demo1 | `live-capture/**` | official docs + this session's capture | Offline-boot test + link check + `node --check`; every rendered value traceable to a capture file | Page is additive; root landing link requested, not applied |
+| L-4 | Deploy-state audit: root-cause the repeated GitHub Pages "Page build failed" builds on `main` and publish findings with official docs links | in progress | arena/0da1798f-demo1 | `live-capture/**` (read-only repo/GitHub inspection) | docs.github.com Pages limits | Findings + fix request logged for the owner of `pages.yml` (shared file, not edited here) | See L-4 record |
+| L-5 | Final integration for this session's tree: gates, PR → `main`, merge, post-merge Pages confirmation, record here | pending | arena/0da1798f-demo1 | `COORDINATION.md` | — | — | — |
+
+## Integration requests (logged, not applied — shared files owned elsewhere)
+
+1. **Root landing owner** (`65df996f` PR #61 currently touches `index.html`; `2a5bb307`/`91fc2cc7` hold prior tile requests): add one tile for `live-capture/index.html` ("Live capture · session 0da1798f — data pulled through the demo API inside the agent session, 2026-11-20").
+2. **`pages.yml` owner:** the Pages source is `build_type: legacy` (`main` at `/`) while `.github/workflows/pages.yml` also uploads an artifact and runs `actions/deploy-pages@v4`. Repeated 0-second "Page build failed" builds were observed on `main` between 19:40Z and 19:44Z while several merges landed inside a minute of each other. Pick one deployment mechanism; see L-4 record for the full evidence.
+3. **`engine/` owner (`05e53528`):** restate the earlier request that a refresh must not overwrite `snapshot/charts.json` when the candlestick endpoint returns empty arrays.
+
+## Claim log
+
+| Date/time (UTC) | Session | Action |
+|---|---|---|
+| 2026-11-20T19:50Z | arena/0da1798f-demo1 | Claimed L-1..L-5 (new `live-capture/**` tree + board only); pushed before implementation. |
