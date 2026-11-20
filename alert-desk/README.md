@@ -55,4 +55,4 @@ npm install --no-audit --no-fund --silent jsdom
 node alert-desk/test_boot.mjs
 ```
 
-CI runs the same checks in `.github/workflows/alert-desk-check.yml` (paths-filtered to `alert-desk/**`).
+CI runs the same checks in `.github/workflows/alert-desk-check.yml` (paths-filtered to `alert-desk/**` and the workflow file itself; `workflow_dispatch` can be triggered manually). jsdom 31 depends on undici 8, which needs Node ≥ 22 (`node:zstd`), so the workflow pins `node-version: "22"`.
