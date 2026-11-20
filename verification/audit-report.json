@@ -1,0 +1,2378 @@
+{
+  "generated_utc": "2026-11-20T11:43:59Z",
+  "audit_base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "canonical": {
+    "generated_utc": "2026-11-20T11:43:59Z",
+    "base": "https://external-api.demo.kalshi.co/trade-api/v2",
+    "totals": {
+      "open": 1399,
+      "records": 2469,
+      "yes": 222,
+      "no": 1895,
+      "awaiting": 352,
+      "topics": 5,
+      "resolved_yesno": 2117
+    },
+    "per_topic": {
+      "gas_prices": {
+        "label": "gas prices",
+        "open": 116,
+        "records": 367,
+        "yes": 107,
+        "no": 243,
+        "awaiting": 17,
+        "resolved_yesno": 350
+      },
+      "elections": {
+        "label": "elections",
+        "open": 255,
+        "records": 132,
+        "yes": 29,
+        "no": 102,
+        "awaiting": 1,
+        "resolved_yesno": 131
+      },
+      "culture": {
+        "label": "culture",
+        "open": 191,
+        "records": 428,
+        "yes": 57,
+        "no": 311,
+        "awaiting": 60,
+        "resolved_yesno": 368
+      },
+      "crypto": {
+        "label": "crypto",
+        "open": 474,
+        "records": 900,
+        "yes": 9,
+        "no": 659,
+        "awaiting": 232,
+        "resolved_yesno": 668
+      },
+      "golf": {
+        "label": "golf",
+        "open": 363,
+        "records": 642,
+        "yes": 20,
+        "no": 580,
+        "awaiting": 42,
+        "resolved_yesno": 600
+      }
+    },
+    "requests": 494,
+    "failed": 0,
+    "snapshot_files": {
+      "markets": "snapshot/markets.json",
+      "resolved": "snapshot/resolved.json",
+      "charts": "snapshot/charts.json",
+      "metadata": "snapshot/metadata.json",
+      "collect_log": "snapshot/collect-log.txt"
+    }
+  },
+  "counts": {
+    "files_scanned": 360,
+    "findings": 5,
+    "errors": 0,
+    "warnings": 3,
+    "mismatches": 0,
+    "explained": 2,
+    "doc_links_used": 111,
+    "doc_links_in_index": 0,
+    "doc_links_not_in_index": 0,
+    "doc_links_unverified": 111,
+    "tables_checked": 24,
+    "cross_desk_quantities": 64,
+    "cross_desk_differences": 3
+  },
+  "findings": [
+    {
+      "check": "C3",
+      "file": "desk/resolutions.html",
+      "line": 43,
+      "topic": "elections",
+      "field": "topic summary row",
+      "claimed": [
+        56,
+        5,
+        51,
+        1
+      ],
+      "canonical": [
+        1,
+        29,
+        102,
+        131,
+        132,
+        255,
+        387
+      ],
+      "status": "EXPLAINED",
+      "detail": "The page matches its own data source, desk/data/resolutions-log.json (tracked 57, resolved 56, awaiting 1). The snapshot holds 132 records for this topic; the difference of 75 is the series-prefix exclusion declared in desk/tools/track_resolutions.py (see C8). The row itself does not state the exclusion, so a reader comparing desks sees two different numbers."
+    },
+    {
+      "check": "C5",
+      "file": "docs/pages/suggestions.html",
+      "field": "market rows without official source link",
+      "claimed": 1,
+      "canonical": 1,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "verified-desk/flagged.html",
+      "field": "market rows without official source link",
+      "claimed": 1,
+      "canonical": 2,
+      "status": "WARNING"
+    },
+    {
+      "check": "C5",
+      "file": "verified-desk/provenance.html",
+      "field": "market rows without official source link",
+      "claimed": 4,
+      "canonical": 4,
+      "status": "WARNING"
+    },
+    {
+      "check": "C8",
+      "file": "snapshot/resolved.json",
+      "topic": "elections",
+      "field": "records excluded from the desk tracker by series prefix",
+      "claimed": 75,
+      "canonical": 132,
+      "status": "EXPLAINED",
+      "detail": "75 resolved and 60 open records use series KXWTI, which the desk tracker excludes (desk/tools/track_resolutions.py). Snapshot records for this topic: 132; desk-tracked: 57."
+    }
+  ],
+  "row_source_coverage": {
+    "desk/crypto.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/culture.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/elections.html": {
+      "market_rows": 81,
+      "rows_with_official_source": 81,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/gas-prices.html": {
+      "market_rows": 97,
+      "rows_with_official_source": 97,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/golf.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/live.html": {
+      "market_rows": 30,
+      "rows_with_official_source": 30,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/markets.html": {
+      "market_rows": 40,
+      "rows_with_official_source": 40,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/resolutions.html": {
+      "market_rows": 180,
+      "rows_with_official_source": 180,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "desk/strategy.html": {
+      "market_rows": 16,
+      "rows_with_official_source": 16,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/pages/flagged.html": {
+      "market_rows": 1,
+      "rows_with_official_source": 1,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/pages/suggestions.html": {
+      "market_rows": 1,
+      "rows_with_official_source": 0,
+      "rows_without_official_source": 1,
+      "coverage_pct": 0.0,
+      "unsourced_examples": [
+        {
+          "line": 42,
+          "first_cell": "Q7"
+        }
+      ]
+    },
+    "docs/pages/verification.html": {
+      "market_rows": 5,
+      "rows_with_official_source": 5,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "docs/verification-3c2c8403.html": {
+      "market_rows": 3,
+      "rows_with_official_source": 3,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "flagged.html": {
+      "market_rows": 2,
+      "rows_with_official_source": 2,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/crypto.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/culture.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/elections.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/flagged.html": {
+      "market_rows": 40,
+      "rows_with_official_source": 40,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/gas-prices.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/golf.html": {
+      "market_rows": 120,
+      "rows_with_official_source": 120,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/markets.html": {
+      "market_rows": 250,
+      "rows_with_official_source": 250,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "site/resolved.html": {
+      "market_rows": 250,
+      "rows_with_official_source": 250,
+      "rows_without_official_source": 0,
+      "coverage_pct": 100.0,
+      "unsourced_examples": []
+    },
+    "verified-desk/flagged.html": {
+      "market_rows": 2,
+      "rows_with_official_source": 1,
+      "rows_without_official_source": 1,
+      "coverage_pct": 50.0,
+      "unsourced_examples": [
+        {
+          "line": 127,
+          "first_cell": "volume_fp , volume_24h_fp"
+        }
+      ]
+    },
+    "verified-desk/provenance.html": {
+      "market_rows": 4,
+      "rows_with_official_source": 0,
+      "rows_without_official_source": 4,
+      "coverage_pct": 0.0,
+      "unsourced_examples": [
+        {
+          "line": 66,
+          "first_cell": "21"
+        },
+        {
+          "line": 67,
+          "first_cell": "22"
+        },
+        {
+          "line": 68,
+          "first_cell": "23"
+        }
+      ]
+    }
+  },
+  "doc_links": [
+    {
+      "url": "https://docs.kalshi.com",
+      "uses": 41,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "build_site.py",
+        "docs/sources.md",
+        "pages/flagged-review.html",
+        "pages/landing-executive-summary.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/",
+      "uses": 15,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "archive/monitor.html",
+        "audit/build_audit.py",
+        "decision/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "engine/app.js",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/account/get-account-api-limits",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-event",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/kalshi.js",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-events",
+      "uses": 49,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "audit/index.html",
+        "data/demo-snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-events.md",
+      "uses": 17,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "REVIEW.md",
+        "SOURCES.md",
+        "assets/js/kalshi-core.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/events/get-events`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "tools/engine_refresh.py",
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status.md",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/verification.html",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/live-data/get-event-live-data",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-exchange-status",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "strategy-desk/suggestions.html",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market",
+      "uses": 14,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "live-desk/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+      "uses": 96,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "assets/js/price-jumps.js",
+        "audit/flagged.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks(period",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "tools/collect_kalshi.py",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md",
+      "uses": 13,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks`",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-order-book",
+      "uses": 13,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "archive/monitor.html",
+        "engine/strategies.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+      "uses": 50,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "chart.html",
+        "data/demo-snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook.md",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "docs/pages/verification.html",
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/assets/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-market.md",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/assets/app.js",
+        "verified-desk/suggestions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-markets",
+      "uses": 132,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "audit/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-markets.md",
+      "uses": 15,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-markets`",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks",
+      "uses": 15,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "live-desk/app.js",
+        "live-desk/pages/categories/crypto.html",
+        "live-desk/pages/categories/culture.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series-list",
+      "uses": 33,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/index.html",
+        "data/demo-snapshot.json",
+        "decision/js/api-notes.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series-list.md",
+      "uses": 14,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-series-list`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-trades",
+      "uses": 39,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "data/demo-snapshot.json",
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-trades.md",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "docs/api-verification.md",
+        "pages/live.html",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/market/get-trades`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/order-groups/create-order-group",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/amend-order-v2",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/verification.html",
+        "scripts/demo_trader.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
+      "uses": 44,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "audit/index.html",
+        "decision/js/api-notes.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
+      "uses": 11,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/index.html",
+        "docs/pages/portfolio.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/create-order-v2`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-order-queue-position",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/orders/get-orders",
+      "uses": 15,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "decision/js/trading.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
+      "uses": 43,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-balance.md",
+      "uses": 9,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/portfolio.html",
+        "docs/pages/sources.html",
+        "docs/pages/verification.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
+      "uses": 36,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills.md",
+      "uses": 11,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "docs/api-verification.md",
+        "docs/pages/portfolio.html",
+        "docs/pages/verification.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-positions",
+      "uses": 35,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "archive/monitor.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-positions.md",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "docs/pages/portfolio.html",
+        "docs/pages/verification.html",
+        "pages/strategy.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/portfolio/get-settlements",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/kalshi.js",
+        "exec-desk/docs/SOURCES.md",
+        "exec-desk/js/config.js",
+        "exec-desk/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-filters-for-sports",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/api-reference.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories.md",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "docs/api-verification.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/api-reference/series/get-series",
+      "uses": 29,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "strategy-desk/data/series-map.json",
+        "strategy-desk/sources.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/changelog",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "docs/sources.md",
+        "pages/dashboard.html",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_environments",
+      "uses": 95,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "audit/index.html",
+        "data/demo-snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_environments.md",
+      "uses": 20,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "EXECUTIVE_SUMMARY.md",
+        "SOURCES.md",
+        "assets/js/kalshi-core.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_environments`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_keys",
+      "uses": 46,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "decision/api-notes.html",
+        "decision/js/kalshi.js",
+        "decision/js/portfolio.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_keys.md",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "pages/flagged-review.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/api_keys`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/demo_env",
+      "uses": 129,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "audit/index.html",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/demo_env.md",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "EXECUTIVE_SUMMARY.md",
+        "SOURCES.md",
+        "docs/assets/site.js",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/demo_env`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/exchange_sharding",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/portfolio.html",
+        "verified-desk/provenance.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fee_rounding",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "flagged.html",
+        "pages/paper-trading.html",
+        "questions.html",
+        "sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fixed_point_migration",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/api-notes.html",
+        "decision/js/kalshi.js",
+        "docs/verification-log.md",
+        "scripts/fetch_kalshi_data.py"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/fixed_point_migration.md",
+      "uses": 9,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/data/snapshot.json",
+        "docs/pages/flagged.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/historical_data",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "app.js",
+        "chart.html",
+        "review.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/historical_data.md",
+      "uses": 6,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
+      "uses": 63,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "audit/index.html",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_settlement",
+      "uses": 45,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "audit/index.html",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_settlement.md",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/index.html",
+        "docs/pages/live.html",
+        "docs/pages/resolutions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/market_settlement`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_direction",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/kalshi.js",
+        "decision/js/requirements.js",
+        "decision/portfolio.html",
+        "decision/trading.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_direction.md",
+      "uses": 5,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/assets/app.js",
+        "verified-desk/strategies.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/order_errors",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/flagged.html",
+        "decision/js/trading.js",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
+      "uses": 63,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/index.html",
+        "chart.html",
+        "decision/api-notes.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses.md",
+      "uses": 17,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/data/snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "engine/app.js",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses\\\\\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses\\\\\\\\\\\\\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",
+      "uses": 1,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/orderbook_responses`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/pagination",
+      "uses": 6,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/api-reference.html",
+        "verified-desk/assets/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/pagination.md",
+      "uses": 6,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/pages/sources.html",
+        "docs/pages/suggestions.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "strategy-desk/executive-summary.html",
+        "strategy-desk/index.html",
+        "strategy-desk/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
+      "uses": 35,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "audit/index.html",
+        "decision/api-notes.html",
+        "decision/js/kalshi.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md",
+      "uses": 15,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/data/portfolio.json",
+        "docs/pages/flagged.html",
+        "docs/pages/portfolio.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_create_order",
+      "uses": 37,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "audit/index.html",
+        "docs/sources.md"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_create_order.md",
+      "uses": 9,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "docs/api-verification.md",
+        "pages/strategy.html",
+        "tools/kalshi-signer.mjs",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
+      "uses": 35,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "README.md",
+        "app.js",
+        "data/demo-snapshot.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_market_data.md",
+      "uses": 8,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/index.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
+      "uses": 28,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "app.js",
+        "decision/js/requirements.js",
+        "desk/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets.md",
+      "uses": 13,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "assets/js/kalshi-core.js",
+        "docs/api-verification.md",
+        "docs/pages/flagged.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "engine/app.js",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets\\\\\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets\\\\\\\\\\\\\\\\",
+      "uses": 3,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",
+      "uses": 1,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/quick_start_websockets`",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/rate_limits",
+      "uses": 28,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "decision/js/api-notes.js",
+        "decision/js/kalshi.js",
+        "engine/README.md",
+        "engine/app.js"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/getting_started/rate_limits.md",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "SOURCES.md",
+        "docs/api-verification.md",
+        "docs/pages/flagged.html",
+        "docs/pages/sources.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/llms-full.txt",
+      "uses": 7,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "docs/sources.md",
+        "pages/landing-executive-summary.html",
+        "verification/audit-report.json"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/llms.txt",
+      "uses": 32,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        ".github/workflows/desk.yml",
+        ".github/workflows/live-data.yml",
+        "COORDINATION.md",
+        "EXECUTIVE_SUMMARY.md"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/orderbook-updates",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "engine/app.js",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/websocket-connection",
+      "uses": 12,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "COORDINATION.md",
+        "monitor/app.js",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/websockets/websocket-connection.md",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "verification/audit-report.json",
+        "verification/index.html",
+        "verified-desk/suggestions.html"
+      ]
+    },
+    {
+      "url": "https://docs.kalshi.com/welcome",
+      "uses": 4,
+      "status": "unverified",
+      "note": "official doc index not available in this sandbox",
+      "files": [
+        "exec-desk/sources.html",
+        "verification/audit-report.json",
+        "verification/index.html"
+      ]
+    }
+  ],
+  "cross_desk": [
+    {
+      "quantity": "awaiting",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 232,
+        "desk/resolutions.html": 232,
+        "verification/index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 60,
+        "desk/resolutions.html": 60,
+        "verification/index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 1,
+        "desk/resolutions.html": 1,
+        "verification/index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 17,
+        "desk/resolutions.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "awaiting",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 42,
+        "desk/resolutions.html": 42,
+        "verification/index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "crypto",
+      "values": {
+        "index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "culture",
+      "values": {
+        "index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "elections",
+      "values": {
+        "index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting result",
+      "topic": "golf",
+      "values": {
+        "index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "crypto",
+      "values": {
+        "docs/verification-3c2c8403.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "culture",
+      "values": {
+        "docs/verification-3c2c8403.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "elections",
+      "values": {
+        "docs/verification-3c2c8403.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "gas_prices",
+      "values": {
+        "docs/verification-3c2c8403.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, no result",
+      "topic": "golf",
+      "values": {
+        "docs/verification-3c2c8403.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 659,
+        "desk/resolutions.html": 659,
+        "verification/index.html": 659
+      },
+      "distinct_values": [
+        659
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 311,
+        "desk/resolutions.html": 311,
+        "verification/index.html": 311
+      },
+      "distinct_values": [
+        311
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 102,
+        "desk/resolutions.html": 51,
+        "verification/index.html": 102
+      },
+      "distinct_values": [
+        51,
+        102
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "no",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 243,
+        "desk/resolutions.html": 243
+      },
+      "distinct_values": [
+        243
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "no",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 580,
+        "desk/resolutions.html": 580,
+        "verification/index.html": 580
+      },
+      "distinct_values": [
+        580
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 474,
+        "docs/verification-3c2c8403.html": 474,
+        "verification/index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 191,
+        "docs/verification-3c2c8403.html": 191,
+        "verification/index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 255,
+        "docs/verification-3c2c8403.html": 255,
+        "verification/index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 116,
+        "docs/verification-3c2c8403.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 363,
+        "docs/verification-3c2c8403.html": 363,
+        "verification/index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "crypto",
+      "values": {
+        "index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "culture",
+      "values": {
+        "index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "elections",
+      "values": {
+        "index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "golf",
+      "values": {
+        "index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets collected",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "crypto",
+      "values": {
+        "verification/index.html": 900
+      },
+      "distinct_values": [
+        900
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "culture",
+      "values": {
+        "verification/index.html": 428
+      },
+      "distinct_values": [
+        428
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "elections",
+      "values": {
+        "verification/index.html": 132
+      },
+      "distinct_values": [
+        132
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "records",
+      "topic": "golf",
+      "values": {
+        "verification/index.html": 642
+      },
+      "distinct_values": [
+        642
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 668,
+        "desk/resolutions.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 368,
+        "desk/resolutions.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 131,
+        "desk/resolutions.html": 56
+      },
+      "distinct_values": [
+        56,
+        131
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 350,
+        "desk/resolutions.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 600,
+        "desk/resolutions.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "crypto",
+      "values": {
+        "index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "culture",
+      "values": {
+        "index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "elections",
+      "values": {
+        "index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes / no result)",
+      "topic": "golf",
+      "values": {
+        "index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "crypto",
+      "values": {
+        "docs/verification-3c2c8403.html": 668,
+        "verification/index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "culture",
+      "values": {
+        "docs/verification-3c2c8403.html": 368,
+        "verification/index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "elections",
+      "values": {
+        "docs/verification-3c2c8403.html": 131,
+        "verification/index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "gas_prices",
+      "values": {
+        "docs/verification-3c2c8403.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved (yes/no)",
+      "topic": "golf",
+      "values": {
+        "docs/verification-3c2c8403.html": 600,
+        "verification/index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved markets found",
+      "topic": "crypto",
+      "values": {
+        "site/index.html": 900
+      },
+      "distinct_values": [
+        900
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved markets found",
+      "topic": "culture",
+      "values": {
+        "site/index.html": 428
+      },
+      "distinct_values": [
+        428
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved markets found",
+      "topic": "elections",
+      "values": {
+        "site/index.html": 132
+      },
+      "distinct_values": [
+        132
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved markets found",
+      "topic": "gas_prices",
+      "values": {
+        "site/index.html": 367
+      },
+      "distinct_values": [
+        367
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved markets found",
+      "topic": "golf",
+      "values": {
+        "site/index.html": 642
+      },
+      "distinct_values": [
+        642
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "crypto",
+      "values": {
+        "desk/markets.html": 9,
+        "desk/resolutions.html": 9,
+        "verification/index.html": 9
+      },
+      "distinct_values": [
+        9
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "culture",
+      "values": {
+        "desk/markets.html": 57,
+        "desk/resolutions.html": 57,
+        "verification/index.html": 57
+      },
+      "distinct_values": [
+        57
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "elections",
+      "values": {
+        "desk/markets.html": 29,
+        "desk/resolutions.html": 5,
+        "verification/index.html": 29
+      },
+      "distinct_values": [
+        5,
+        29
+      ],
+      "status": "differ"
+    },
+    {
+      "quantity": "yes",
+      "topic": "gas_prices",
+      "values": {
+        "desk/markets.html": 107,
+        "desk/resolutions.html": 107
+      },
+      "distinct_values": [
+        107
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "yes",
+      "topic": "golf",
+      "values": {
+        "desk/markets.html": 20,
+        "desk/resolutions.html": 20,
+        "verification/index.html": 20
+      },
+      "distinct_values": [
+        20
+      ],
+      "status": "agree"
+    }
+  ]
+}
