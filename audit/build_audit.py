@@ -68,9 +68,9 @@ SECTIONS = [
                  res="ok"),
             dict(id="B-02", claim="Legacy /portfolio/orders write endpoints are removed and return HTTP 410 Gone",
                  repo="EXECUTIVE_SUMMARY.md line 27; SOURCES.md line 21; exec-desk/flagged.html line 34; verified-desk/index.html line 76; docs/pages/sources.html line 69; COORDINATION.md line 533",
-                 src=DOC + "getting_started/quick_start_create_order",
-                 says="The official create-order-v2 description, as shown in a search-index excerpt of docs.kalshi.com, reads: \"The legacy /portfolio/orders endpoint will be deprecated no earlier than May 6, 2026 — clients should migrate to this path.\" That is not the same as \"removed\" or \"410 Gone\". The full page could not be read here. The quick-start and Order Errors pages read (first chunks only) do not state a 410 for the legacy path. GitHub pull requests by third parties report observing 410 responses; they are not official sources.",
-                 res="unv"),
+                 src=DOC + "api-reference/orders/create-order-v2",
+                 says="<strong>Re-verified 2026-11-20 (session arena/b62e8188-demo1) — claim CONFIRMED.</strong> The full official page description (docs.kalshi.com/api-reference/orders/create-order-v2.md, fetched 2026-11-20) reads: \"The legacy <code>/portfolio/orders</code> write endpoints (create, cancel, amend, decrease and their batch forms) have been removed and now return <code>410 Gone</code> with code <code>deprecated_v1_order_endpoint</code>; use this path instead.\" The earlier partial search-index excerpt (\"deprecated no earlier than May 6, 2026\") was stale; the repo wording matches the current official text.",
+                 res="ok"),
             dict(id="B-03", claim="GET /events: limit 1 to 200 (default 200); status filter unopened, open, closed, settled; with_nested_markets option",
                  repo="docs/api-verification.md row 4; exec-desk/js/markets.js line 50",
                  src=DOC + "api-reference/events/get-events",
@@ -89,8 +89,8 @@ SECTIONS = [
             dict(id="B-06", claim="Candlesticks: at most 5,000 periods per request",
                  repo="docs/api-verification.md row 10",
                  src=DOC + "api-reference/market/get-market-candlesticks",
-                 says="Not found in the first two chunks (of 11) that were read. Not confirmed.",
-                 res="unv"),
+                 says="<strong>Re-verified 2026-11-20 (session arena/b62e8188-demo1) — claim CONFIRMED.</strong> The official page description reads: \"One request can span at most 5,000 periods. If the minutes between <code>start_ts</code> and <code>end_ts</code> divided by <code>period_interval</code> exceed 5,000, the request is rejected with 400 <code>bad_request</code> and the <code>details</code> field gives the requested and maximum counts.\" The original audit read only the first two chunks and missed the description block.",
+                 res="ok"),
             dict(id="B-07", claim="Order book returns bids only; YES and NO arrays ascending with best bid last; NO bid at p equals YES ask at 1 − p; empty book returns 200 with empty arrays; depth limits levels",
                  repo="docs/api-verification.md row 9",
                  src=DOC + "getting_started/orderbook_responses",
@@ -183,14 +183,14 @@ SECTIONS = [
 ]
 
 FLAGS = [
-    dict(id="F-01", sev="High", title="strategy-desk live mode mislabels open events as closed (C-01 to C-03)",
-         detail="Raw REST statuses are compared with values the API does not return. Fix: map active to open and finalized to settled in the live path, as the snapshot path already does. This is a change request to the strategy-desk owner; no file was edited in this audit.",
-         src=DOC + "getting_started/market_lifecycle", repo=REPO + "strategy-desk/assets/app.js#L286-L292"),
-    dict(id="F-02", sev="High", title="\"Legacy writes return 410 Gone\" is not confirmed by the official text (B-02)",
-         detail="The official create-order-v2 description says the legacy endpoint \"will be deprecated no earlier than May 6, 2026\". Several repo files state it has been removed with HTTP 410 Gone as fact. Reword to the official wording, or verify the 410 against a live response before keeping the claim.",
+    dict(id="F-01", sev="Resolved 2026-11-20", title="strategy-desk live mode mislabels open events as closed (C-01 to C-03) — FIXED",
+         detail="Raw REST statuses are compared with values the API does not return. Fix applied 2026-11-20 by session arena/b62e8188-demo1: strategy-desk/assets/app.js now normalizes raw statuses via normStatus() (active/initialized/inactive to open, determined/disputed/amended/finalized to settled, closed and unknown to closed) in both the live and snapshot paths. Original change request recorded in COORDINATION.md (CR-1).",
+         src=DOC + "getting_started/market_lifecycle", repo=REPO + "strategy-desk/assets/app.js"),
+    dict(id="F-02", sev="Withdrawn 2026-11-20", title="\u201cLegacy writes return 410 Gone\u201d is not confirmed by the official text (B-02) — WITHDRAWN, repo claim is correct",
+         detail="Withdrawn by session arena/b62e8188-demo1 after re-reading the full official create-order-v2 page: the description now states the legacy /portfolio/orders write endpoints \u201chave been removed and now return 410 Gone with code deprecated_v1_order_endpoint\u201d. The earlier audit relied on a stale partial search-index excerpt. See corrected row B-02.",
          src=DOC + "api-reference/orders/create-order-v2", repo=REPO + "EXECUTIVE_SUMMARY.md#L27"),
-    dict(id="F-03", sev="Medium", title="\"At most 5,000 periods per request\" is not confirmed (B-06)",
-         detail="Confirm on the full candlestick reference page before relying on it for chunking.",
+    dict(id="F-03", sev="Withdrawn 2026-11-20", title="\u201cAt most 5,000 periods per request\u201d is not confirmed (B-06) — WITHDRAWN, repo claim is correct",
+         detail="Withdrawn by session arena/b62e8188-demo1: the official candlesticks page description states \u201cOne request can span at most 5,000 periods\u2026 rejected with 400 bad_request\u201d. The original audit read only the first two page chunks. See corrected row B-06.",
          src=DOC + "api-reference/market/get-market-candlesticks", repo=REPO + "docs/api-verification.md"),
     dict(id="F-04", sev="Medium", title="Fee formula not verified (B-13)",
          detail="Field names are confirmed. Any edge or fee-adjusted figure needs the fee schedule read and cited line by line.",
@@ -297,7 +297,7 @@ def build():
 <header>
   <nav><a href="../index.html">← Hub</a><a href="#sec-A">Environments</a><a href="#sec-B">Endpoints</a><a href="#sec-C">Repo code</a><a href="#sec-D">Doc gaps</a><a href="#flagged">Flagged for Review</a></nav>
   <h1>Official-source audit of Kalshi API claims in this repo</h1>
-  <p>Checked 2026-11-20 by session <code>ca4f2da1</code> (branch <code>arena/ca4f2da1-demo1</code>). Every row links to the official page it was checked against.</p>
+  <p>Checked 2026-11-20 by session <code>ca4f2da1</code> (branch <code>arena/ca4f2da1-demo1</code>). Every row links to the official page it was checked against. <strong>Corrections 2026-11-20 (session <code>arena/b62e8188-demo1</code>):</strong> rows B-02 and B-06 were re-verified against the full official pages and moved to Confirmed (the original audit had read partial chunks); flags F-02 and F-03 are withdrawn accordingly, and F-01 is marked fixed (CR-1 applied in <code>strategy-desk/assets/app.js</code>).</p>
 </header>
 <main>
   <div class="cards">{cards}</div>

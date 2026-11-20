@@ -4,6 +4,8 @@
   "snapshot_counts": {
     "open_markets": 1399,
     "resolved_markets": 2469,
+    "settled_with_result": 2117,
+    "awaiting_result": 352,
     "requests": 494,
     "failed": 0,
     "series": 16643
@@ -17,7 +19,7 @@
     "topic_crypto_rows_checked": 120,
     "topic_golf_rows_checked": 120,
     "liquidity_rows_checked": 48,
-    "index_figures_checked": 8
+    "index_figures_checked": 10
   },
   "errors": [],
   "warnings": [

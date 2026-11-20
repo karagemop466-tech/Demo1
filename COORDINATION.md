@@ -1563,6 +1563,67 @@ All live values in the site are drawn from the committed snapshot collected from
 
 | Item | Result |
 |---|---|
+| Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
+| Merge result | pending |
+| Pages state after merge | pending |
+
+# Session arena/b62e8188-demo1 — repo review, verification fixes, dual alert-chat, final integration
+
+## Session claim
+
+- **Session ID:** `arena/b62e8188-demo1` (session `b62e8188`)
+- **Branch:** `arena/b62e8188-demo1` (platform-fixed name, branched from `main` @ `fb81fc0`; the `session-<id>/<task>` branch convention is recorded as a documented deviation, branch not renamed).
+- **Claimed at:** 2026-11-20 (UTC), before any implementation commit. Working tree clean at claim time.
+- **Role:** line-by-line repo review + official-source re-verification of the open claims on the board; fix the open requests (V-3/F6, CR-1, CR-4); **correct audit F-02/F-03, which today's official docs contradict** (see verification below); close the brief's dual scrolling-chat alert requirement (unimplemented on this branch's base `fb81fc0`; see the overlap log below for how concurrent sessions landed three implementations mid-session and how this session re-scoped to tests + bug fixes instead of a fourth page) — then final integration: full gate suite, PR → `main`, merge, Pages confirmation.
+
+## File scope (this session)
+
+- `COORDINATION.md` (append-only — shared by convention)
+- `build_site.py` + regenerated `site/**` (V-3 label fix: split "Resolved" into settled-with-result vs closed-awaiting-result)
+- `strategy-desk/assets/app.js`, `strategy-desk/assets/markets.js` (CR-1 REST status mapping fix)
+- `audit/index.html`, `audit/flagged.html`, `audit/build_audit.py` (F-02/F-03 correction rows — additive; audit owner `ca4f2da1` inactive)
+- `index.html` (CR-4: additive tile linking `audit/`; additive accurate tile for the shipped `alerts.html`)
+- `flagged.html` (additive correction rows)
+- **New files only:** `tests/alerts.test.mjs`, `docs/verification-b62e8188.html`
+- `assets/js/alerts.js` (merged session `arena/d973ced5-demo1`'s file — two bug fixes only, logged below; page content unchanged)
+- `EXECUTIVE_SUMMARY.md` (additive: session section + the now-verified 410 wording note)
+
+Deliberately NOT touched: `snapshot/**`, `data/**`, `tools/collect_kalshi.py`, other desks' implementations (`exec-desk/`, `desk/`, `sim-desk/`, `engine/`, `decision/`, `verified-desk/`, `live-desk/`, `monitor/`, `pages/`, `docs/pages/**`), workflows.
+
+## Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| B-1 | Line-by-line repo review + gap analysis vs the brief | done | b62e8188 | whole tree (read-only) | docs.kalshi.com; live snapshot re-derivation | `git ls-files` inventory; snapshot re-derived 2,469 = 2,117 with result (222 yes / 1,895 no) + 352 closed awaiting; 1,399 open all `active` | Seven dashboard variants coexist (carried forward) |
+| B-2 | V-3/F6 fix: `build_site.py` "Resolved 2469" label → split settled-with-result vs awaiting | done | b62e8188 | `build_site.py`, `site/**` | https://docs.kalshi.com/getting_started/market_lifecycle (`result` set at determination; `finalized` = settled) | Counts re-derived from `snapshot/resolved.json` at build time; `tools/verify_site.py` PASS with the split (index figures 8→10) | — |
+| B-3 | CR-1 fix: strategy-desk live status mapping (`active`→open, `finalized`→settled, etc.) | done | b62e8188 | `strategy-desk/assets/app.js`, `strategy-desk/assets/markets.js` | https://docs.kalshi.com/getting_started/market_lifecycle (fetched 2026-11-20: raw REST statuses `initialized/active/inactive/closed/determined/disputed/amended/finalized`) | `normStatus()` 12/12 mapping assertions; node --check PASS; event-status preference semantics preserved exactly | markets.js L23/L74 consume the normalized event statuses — no edit needed after app.js fix (documented here per CR-1's wording) |
+| B-4 | Correct audit F-02/F-03 — today's official docs **confirm** the "410 Gone" wording and the "≤5,000 periods" limit the audit flagged as unverified | done | b62e8188 | `audit/index.html`, `audit/flagged.html`, `audit/build_audit.py` | https://docs.kalshi.com/api-reference/orders/create-order-v2.md ("legacy `/portfolio/orders` write endpoints … have been removed and now return `410 Gone` with code `deprecated_v1_order_endpoint`"); https://docs.kalshi.com/api-reference/market/get-market-candlesticks ("One request can span at most 5,000 periods…") — both fetched 2026-11-20 | Quoted verbatim on the audit pages; regenerated via `python3 audit/build_audit.py` (21 confirmed · 3 mismatch · 2 unverified · 1 new) | Docs evolved since audit ca4f2da1 read them (its F-02 cited a stale search-index excerpt) |
+| B-5 | CR-4 fix: root hub tile for `audit/` | done | b62e8188 | `index.html` (additive) | — | `node tools/check-links.mjs` PASS | — |
+| B-6 | Dual scrolling-chat alert system (brief: simplified scrolling chat; chat A = all events, chat B = model high-ROI filter; swings ≥ $0.10 either direction; real time) | done (re-scoped — see overlap log) | b62e8188 | NEW `tests/alerts.test.mjs`; bug fixes in `assets/js/alerts.js` (merged owner d973ced5, logged); additive `index.html` tile | docs.kalshi.com candlesticks schema (end_period_ts + price.close_dollars, fetched 2026-11-20); `snapshot/charts.json` shapes | `node tests/alerts.test.mjs` **23/23** pinning the shipped `alerts.html` behaviour + accepting both bug fixes; own duplicate page dropped to avoid a 4th alert implementation (see overlap log) | No official "cause" field — jump-cause links labeled unverified (carried forward F-17) |
+| B-7 | Verification report page with source links for every check | done | b62e8188 | NEW `docs/verification-b62e8188.html`; additive `EXECUTIVE_SUMMARY.md` §9 | docs.kalshi.com (all pages cited in the report) | `node tools/check-links.mjs` PASS | — |
+| B-8 | Full gate suite (build, verify_site, link audits, syntax, tests) | done | b62e8188 | whole tree (read-only) | — | build_site 17 pages link-check OK · verify_site PASS 0 errors (250+250+600+48+10 rows) · check-links PASS · alerts 29/29 · dashboard 46/46 · jumps 9/9 · npm test PASS · unittest 7/7 · desk build/dom 105/105/runtime 40/40/fees 21/21 · node --check + py_compile clean | — |
+| B-9 | PR → main, merge, confirm Pages deploy, record | in progress | b62e8188 | `COORDINATION.md` | docs.github.com Pages | — | — |
+
+## Verification already performed at claim time (this session)
+
+1. **Market lifecycle** (https://docs.kalshi.com/getting_started/market_lifecycle, fetched 2026-11-20): REST statuses are `initialized, active, inactive, closed, determined, disputed, amended, finalized`; filter values map `open`→`active`, `settled`→`finalized`. Snapshot re-check: 1,399 open markets carry raw status `active`; resolved records carry `finalized`/`closed`/`determined`/`disputed`. → CR-1 confirmed real; audit C-01..C-03 correct.
+2. **Create Order (V2)** (https://docs.kalshi.com/api-reference/orders/create-order-v2.md, fetched 2026-11-20): "The legacy `/portfolio/orders` write endpoints (create, cancel, amend, decrease and their batch forms) have been removed and now return `410 Gone` with code `deprecated_v1_order_endpoint`". → repo "410 Gone" wording is **correct**; audit F-02 is **outdated** (docs now state removal explicitly) and must be corrected.
+3. **Candlesticks** (https://docs.kalshi.com/api-reference/market/get-market-candlesticks, fetched 2026-11-20): "One request can span at most 5,000 periods. If the minutes between `start_ts` and `end_ts` divided by `period_interval` exceed 5,000, the request is rejected with 400 `bad_request`…". → repo "≤ 5,000 periods per request" is **correct**; audit F-03 is **wrong** and must be corrected. (Same page confirms F-05: settled-before-cutoff candles only via `GET /historical/markets/{ticker}/candlesticks`.)
+4. **Snapshot counts** re-derived from `snapshot/resolved.json` + `snapshot/markets.json`: 2,469 closed records = 2,117 with `result` (222 yes / 1,895 no) + 352 awaiting result; 1,399 open (`active`). → V-3 confirmed: generated `site/` label overstates "Resolved".
+
+## Claim log
+
+| Date/time (UTC) | Session ID | Task | Action |
+|---|---|---|---|
+| 2026-11-20 | arena/b62e8188-demo1 | B-1..B-9 | Claimed before implementation; board committed and pushed first, per protocol |
+
+## Overlap & conflict log (session arena/b62e8188-demo1)
+
+| Date (UTC) | What happened | Resolution |
+|---|---|---|
+| 2026-11-20 | This session's claim (pushed at `80f9815`, base `fb81fc0`) and session `arena/d973ced5-demo1`'s claim both covered the brief's dual scrolling-chat alert requirement, with **identical filenames** (`alerts.html`, `assets/js/alerts.js`). Concurrently `arena/2a5bb307-demo1` shipped `alerts/` + `alert-desk/`, `arena/87015421-demo1` shipped `trade-desk/`, and `arena/65df996f-demo1`'s PR #61 shipped live alert tapes. True concurrent claim: neither session could see the other's claim at claim time. | Per protocol ("never discard another session's work", "keep scopes non-overlapping"): main's merged `alerts.html` + `assets/js/alerts.js` (d973ced5) were kept as-is in content; this session **dropped its own duplicate page** rather than add a 4th alert implementation (fragmentation is a standing flagged irregularity). The `index.html` add/add conflict kept **both** tiles (main's `alert-desk/` tile + an accurate tile for `alerts.html`). |
+| 2026-11-20 | While writing the regression suite for the shipped `alerts.html`, **two real bugs** were found in the merged implementation (both invisible to its own verification): (1) `loadData()` read `charts.series`/`charts.generated_utc` one level off the `loadSnapshot()` return shape, so **every visit rendered zero swings** and a "—" capture date; (2) `normalizeCandle()` only read the snapshot point shape, so **every official candlesticks payload** (`end_period_ts` + `price.close_dollars`, schema verified on docs.kalshi.com 2026-11-20) parsed to null and the live overlay silently fell back to snapshot. | Fixed in `assets/js/alerts.js` under final-integration authority (owner d973ced5's publish record is complete; edits limited to the two bugs, page content unchanged) and acceptance-tested (`tests/alerts.test.mjs` sections 1, 4). Evidence: `docs/verification-b62e8188.html`. |
+| 2026-11-20 | Rebase of this branch onto advancing `main` (PRs #61–#67 + other sessions' board records) conflicted twice in `COORDINATION.md` and once in `index.html`. | Every round kept **both** sides: main's accumulated board verbatim + this session's sections re-appended; `index.html` kept main's tiles and added only additive tiles. No session's content discarded. |
 | Pull request | https://github.com/karagemop466-tech/Demo1/pull/64 — "Board: session d372e97e close-out verification record" |
 | Pre-merge checks | PASS — `check` (run 44804941467) and `links` (run 44804941595) both `pass` |
 | Merge result | **MERGED** 2026-11-20T19:47:37Z via `gh pr merge 64 --merge`; merge commit `b1b7ff12254559c1d7dbab0cc9b861c91872f4ea` (no approval wait, per brief) |

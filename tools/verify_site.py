@@ -315,12 +315,17 @@ def check_liquidity_page(html_text, market_by_ticker, errors, warnings, stats):
     stats["liquidity_rows_checked"] = checked
 
 
-def check_index_figures(html_text, meta, errors, warnings, stats):
+def check_index_figures(html_text, meta, errors, warnings, stats, resolved=None):
     """The overview page's snapshot-health figures must equal metadata.json."""
     exch = meta.get("exchange_status") or {}
+    resolved = resolved or []
+    n_with = len([r for r in resolved if (r.get("result") or "").lower() in ("yes", "no")])
+    n_wait = len(resolved) - n_with
     figures = {
         "Open markets collected": meta.get("counts", {}).get("open_markets"),
-        "Resolved markets collected": meta.get("counts", {}).get("resolved_markets"),
+        "Closed records collected (settled + awaiting)": meta.get("counts", {}).get("resolved_markets"),
+        "Settled with YES/NO result": n_with,
+        "Closed — awaiting result": n_wait,
         "Price-history series": meta.get("counts", {}).get("chart_series"),
         "Series discovered": meta.get("series_count"),
         "API requests this snapshot": (meta.get("request_stats") or {}).get("requests"),
@@ -389,7 +394,7 @@ def run_verification(root=ROOT):
     if pages.get("liquidity.html"):
         check_liquidity_page(pages["liquidity.html"], market_by_ticker, errors, warnings, stats)
     if pages.get("index.html"):
-        check_index_figures(pages["index.html"], meta, errors, warnings, stats)
+        check_index_figures(pages["index.html"], meta, errors, warnings, stats, resolved)
 
     # source-host audit across every source link on the site
     bad_hosts = {}
@@ -428,6 +433,10 @@ def run_verification(root=ROOT):
         "snapshot_counts": {
             "open_markets": len(markets),
             "resolved_markets": len(resolved),
+            "settled_with_result": len([r for r in resolved
+                                        if (r.get("result") or "").lower() in ("yes", "no")]),
+            "awaiting_result": len([r for r in resolved
+                                    if (r.get("result") or "").lower() not in ("yes", "no")]),
             "requests": req,
             "failed": fail,
             "series": meta.get("series_count"),
@@ -460,7 +469,9 @@ def render_report_html(report):
 {render_table(["Item", "Value"], [
     ["REST base", f"<code>{esc(report['snapshot_base'])}</code>"],
     ["Open markets in snapshot", str(sc['open_markets'])],
-    ["Resolved markets in snapshot", str(sc['resolved_markets'])],
+    ["Closed records in snapshot (settled + awaiting)", str(sc['resolved_markets'])],
+    ["Settled with YES/NO result", str(sc.get('settled_with_result', 0))],
+    ["Closed — awaiting result", str(sc.get('awaiting_result', 0))],
     ["API requests", str(sc['requests'])],
     ["Failed requests", str(sc['failed'])],
     ["Series discovered", str(sc['series'])],
@@ -500,7 +511,9 @@ def main():
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"verification status: {report['status']}")
     print(f"  snapshot: {report['snapshot_counts']['open_markets']} open / "
-          f"{report['snapshot_counts']['resolved_markets']} resolved / "
+          f"{report['snapshot_counts']['resolved_markets']} closed records "
+          f"({report['snapshot_counts'].get('settled_with_result', 0)} with result, "
+          f"{report['snapshot_counts'].get('awaiting_result', 0)} awaiting) / "
           f"{report['snapshot_counts']['requests']} requests / "
           f"{report['snapshot_counts']['failed']} failed")
     s = report["stats"]

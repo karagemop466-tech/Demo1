@@ -24,6 +24,22 @@ const ago = (iso) => { if (!iso) return ''; const s = (Date.now() - new Date(iso
 const resultBadge = (r) => { const v = String(r || '').toLowerCase(); if (v === 'yes') return '<span class="badge yes">YES</span>'; if (v === 'no') return '<span class="badge no">NO</span>'; if (v === 'scalar') return '<span class="badge info">SCALAR</span>'; return '<span class="blank" title="not settled">—</span>'; };
 const statusBadge = (s) => { const v = String(s || '').toLowerCase(); const cls = { open: 'live', closed: 'closed', settled: 'settled' }[v] || 'info'; return `<span class="badge ${cls}">${esc(v || 'unknown').toUpperCase()}</span>`; };
 
+/* Normalize a market status to this app's three buckets: 'open' | 'closed' | 'settled'.
+   Official REST statuses (docs.kalshi.com/getting_started/market_lifecycle, fetched 2026-11-20):
+   initialized, active, inactive, closed, determined, disputed, amended, finalized.
+   Mapping (fix for flagged F-01 / CR-1 — earlier code compared raw 'active'/'finalized'
+   against 'open'/'settled', labelling every live event "closed"):
+     pre-close  → open    (initialized, active, inactive)
+     result known / paid → settled (determined, disputed, amended, finalized; legacy 'settled')
+     post-close awaiting result → closed ('closed'; unknown values fold here, never into 'settled')
+   Legacy normalized values ('open'/'closed'/'settled') pass through unchanged. */
+function normStatus(s) {
+  const v = String(s || '').toLowerCase();
+  if (v === 'active' || v === 'inactive' || v === 'initialized' || v === 'open') return 'open';
+  if (v === 'finalized' || v === 'settled' || v === 'determined' || v === 'disputed' || v === 'amended') return 'settled';
+  return 'closed';
+}
+
 let toastTimer = null;
 function toast(msg, ms = 3500) {
   let el = $('#toast'); if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; document.body.appendChild(el); }
@@ -283,13 +299,16 @@ const Store = (() => {
       done++; if (onProgress) onProgress(done, seriesList.length);
     }
     events = [...byEvent.values()].map((ev) => {
-      const openCount = ev.markets.filter((m) => String(m.status).toLowerCase() === 'open').length;
-      const anySettled = ev.markets.some((m) => ['settled', 'closed'].includes(String(m.status).toLowerCase()));
+      // F-01/CR-1 fix: normalize raw REST statuses (active/finalized/…) before comparing.
+      const normed = ev.markets.map((m) => normStatus(m.status));
+      const openCount = normed.filter((s) => s === 'open').length;
+      const anySettled = normed.some((s) => s === 'settled');
+      const anyClosedQ = normed.some((s) => s === 'closed');
       const result = ev.markets.map((m) => m.result || m.market_result).find((r) => r);
       const closeTimes = ev.markets.map((m) => m.close_time).filter(Boolean).sort();
       return {
         ...ev,
-        status: anySettled ? (result ? 'settled' : 'closed') : openCount ? 'open' : 'closed',
+        status: (result || anySettled) ? 'settled' : (anyClosedQ || !openCount) ? 'closed' : 'open',
         result: result || '',
         volume: ev.markets.reduce((a, m) => a + (Number(m.volume) || 0), 0),
         volume24h: ev.markets.reduce((a, m) => a + (Number(m.volume_24h) || 0), 0),
@@ -362,8 +381,9 @@ const Snapshot = (() => {
       ev.markets.push({
         ticker: m.ticker,
         title: m.title || '',
-        status: String(m.status || '').toLowerCase() === 'active' ? 'open' : String(m.status || '').toLowerCase(),
-        result: m.result || '',           // snapshot results were empty at capture time → stays blank (flagged, never guessed)
+        // F-01/CR-1 fix: full raw-REST status normalization (was: only 'active' → 'open').
+        status: normStatus(m.status),
+        result: m.result || '',           // official result field when the snapshot captured it; blank stays blank (flagged, never guessed)
         volume: parseFP(m.volume_fp) || 0,
         volume_24h: parseFP(m.volume_24h_fp) || 0,
         open_interest: parseFP(m.open_interest_fp) || 0,
@@ -377,6 +397,7 @@ const Snapshot = (() => {
     return [...byEvent.values()].map((ev) => {
       const statuses = ev.markets.map((x) => x.status);
       const anyClosed = statuses.some((s) => s === 'closed' || s === 'settled');
+      const anySettled = statuses.some((s) => s === 'settled');
       const openCount = statuses.filter((s) => s === 'open').length;
       const result = ev.markets.map((x) => x.result).find((r) => r);
       // dollar volume: official traded_notional_usd when present; otherwise the
@@ -384,7 +405,7 @@ const Snapshot = (() => {
       const notionalKnown = ev.markets.every((x) => x.traded_notional != null);
       return {
         ...ev,
-        status: result ? 'settled' : anyClosed ? 'closed' : openCount ? 'open' : 'closed',
+        status: (result || anySettled) ? 'settled' : anyClosed ? 'closed' : openCount ? 'open' : 'closed',
         result: result || '',
         volume: ev.markets.reduce((a, x) => a + x.volume, 0),
         volume24h: ev.markets.reduce((a, x) => a + x.volume_24h, 0),
