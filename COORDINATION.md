@@ -715,3 +715,17 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Sources:** https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period_interval=1), https://docs.kalshi.com/getting_started/demo_env (demo warning), ranking caveat UNVERIFIED-04.
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
+
+## Session arena/ca4f2da1-demo1 — official-source audit of API claims (claim)
+
+- **Session ID:** `ca4f2da1` — branch `arena/ca4f2da1-demo1` (fixed by the platform; the `session-<id>/<task>` naming convention is recorded here as a deviation, not renamed).
+- **Claimed:** 2026-11-20 (UTC), before any implementation work.
+- **Task scope (new files only):** `audit/**` — a static, source-linked audit page for the repo's Kalshi API claims, plus a Flagged-for-Review list for contradictions found between repo files and the official docs.
+- **Not touched:** every other session's files (`exec-desk/`, `decision/`, `strategy-desk/`, `verified-desk/`, `live-desk/`, `site/`, `pages/`, `docs/`, root `index.html`, `README.md`, workflows). Where a fix is needed in another session's file, a change request is logged below instead of editing it.
+
+| ID | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| A-1 | Line-by-line check of load-bearing Kalshi API claims (hosts, signing, order endpoint, candlesticks, order book, market status/result enums, settlement) against docs.kalshi.com | in progress | ca4f2da1 | `audit/**` | docs.kalshi.com pages listed in `audit/index.html` | Each claim read from the official page on 2026-11-20; quotes stored in the page | — |
+| A-2 | Code-level conformance: compare status/result strings the repo's JS compares against the official REST values | in progress | ca4f2da1 | `audit/**` (read-only on other files) | docs.kalshi.com market lifecycle page | Line numbers recorded per finding | Logged as change requests (not edited) |
+| A-3 | Publish `audit/index.html` (landing + table + flagged list) and verify all links | in progress | ca4f2da1 | `audit/**` | — | `audit/` link check script | — |
+| A-4 | Integration of A-1..A-3 to main via PR + merge; confirm Pages deploy | unclaimed-by-others (this session) | ca4f2da1 | `COORDINATION.md` (this section) | — | — | — |
