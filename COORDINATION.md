@@ -1566,3 +1566,52 @@ All live values in the site are drawn from the committed snapshot collected from
 | Pull request | PR from `arena/d372e97e-demo1` → `main` (link recorded below after creation) |
 | Merge result | pending |
 | Pages state after merge | pending |
+
+# Session arena/b62e8188-demo1 — repo review, verification fixes, dual alert-chat, final integration
+
+## Session claim
+
+- **Session ID:** `arena/b62e8188-demo1` (session `b62e8188`)
+- **Branch:** `arena/b62e8188-demo1` (platform-fixed name, branched from `main` @ `fb81fc0`; the `session-<id>/<task>` branch convention is recorded as a documented deviation, branch not renamed).
+- **Claimed at:** 2026-11-20 (UTC), before any implementation commit. Working tree clean at claim time.
+- **Role:** line-by-line repo review + official-source re-verification of the open claims on the board; fix the open requests (V-3/F6, CR-1, CR-4); **correct audit F-02/F-03, which today's official docs contradict** (see verification below); implement the one brief requirement still unimplemented anywhere in the tree — the **dual scrolling-chat live alert system** ("two scrolling chats, one with all events and the other a selective filter based on events our model likes as high ROI", swings ≥ $0.10 either direction) — then final integration: full gate suite, PR → `main`, merge, Pages confirmation.
+
+## File scope (this session)
+
+- `COORDINATION.md` (append-only — shared by convention)
+- `build_site.py` + regenerated `site/**` (V-3 label fix: split "Resolved" into settled-with-result vs closed-awaiting-result)
+- `strategy-desk/assets/app.js`, `strategy-desk/assets/markets.js` (CR-1 REST status mapping fix)
+- `audit/index.html`, `audit/flagged.html`, `audit/build_audit.py` (F-02/F-03 correction rows — additive; audit owner `ca4f2da1` inactive)
+- `index.html` (CR-4: additive tile linking `audit/`)
+- `flagged.html` (additive correction rows)
+- **New files only:** `alerts.html`, `assets/js/alerts.js`, `tests/alerts.test.mjs`, `docs/verification-b62e8188.html`
+- `EXECUTIVE_SUMMARY.md` (additive: alerts feature section + the now-verified 410 wording note)
+
+Deliberately NOT touched: `snapshot/**`, `data/**`, `tools/collect_kalshi.py`, other desks' implementations (`exec-desk/`, `desk/`, `sim-desk/`, `engine/`, `decision/`, `verified-desk/`, `live-desk/`, `monitor/`, `pages/`, `docs/pages/**`), workflows.
+
+## Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| B-1 | Line-by-line repo review + gap analysis vs the brief | in progress | b62e8188 | whole tree (read-only) | docs.kalshi.com; live snapshot re-derivation | `git ls-files` inventory; snapshot re-derived 2,469 = 2,117 with result (222 yes / 1,895 no) + 352 closed awaiting; 1,399 open all `active` | Seven dashboard variants coexist (carried forward) |
+| B-2 | V-3/F6 fix: `build_site.py` "Resolved 2469" label → split settled-with-result vs awaiting | in progress | b62e8188 | `build_site.py`, `site/**` | https://docs.kalshi.com/getting_started/market_lifecycle (`result` set at determination; `finalized` = settled) | Counts re-derived from `snapshot/resolved.json` at build time | — |
+| B-3 | CR-1 fix: strategy-desk live status mapping (`active`→open, `finalized`→settled, etc.) | in progress | b62e8188 | `strategy-desk/assets/app.js`, `strategy-desk/assets/markets.js` | https://docs.kalshi.com/getting_started/market_lifecycle (fetched 2026-11-20: raw REST statuses `initialized/active/inactive/closed/determined/disputed/amended/finalized`) | Confirmed against official lifecycle table + snapshot status values | — |
+| B-4 | Correct audit F-02/F-03 — today's official docs **confirm** the "410 Gone" wording and the "≤5,000 periods" limit the audit flagged as unverified | in progress | b62e8188 | `audit/index.html`, `audit/flagged.html`, `audit/build_audit.py` | https://docs.kalshi.com/api-reference/orders/create-order-v2.md ("legacy `/portfolio/orders` write endpoints … have been removed and now return `410 Gone` with code `deprecated_v1_order_endpoint`"); https://docs.kalshi.com/api-reference/market/get-market-candlesticks ("One request can span at most 5,000 periods…") — both fetched 2026-11-20 | Quoted verbatim on the audit pages | Docs evolved since audit ca4f2da1 read them (audit F-02 cited "deprecation no earlier than May 6, 2026") |
+| B-5 | CR-4 fix: root hub tile for `audit/` | in progress | b62e8188 | `index.html` (additive) | — | link check | — |
+| B-6 | Dual scrolling-chat alert system (brief: simplified scrolling chat; chat A = all events, chat B = model high-ROI filter; swings ≥ $0.10 either direction; real time) | in progress | b62e8188 | NEW `alerts.html`, `assets/js/alerts.js`, `tests/alerts.test.mjs` | docs.kalshi.com candlesticks/trades/orderbook (period_interval 1/60/1440; bids-only book); browser→demo API CORS (data/cors.json) | Headless jsdom test; LIVE mode fetches the official demo API, snapshot fallback labeled | No official "cause" field — jump-cause links labeled unverified (carried forward F-17) |
+| B-7 | Verification report page with source links for every check | in progress | b62e8188 | NEW `docs/verification-b62e8188.html` | docs.kalshi.com (all pages cited in the report) | — | — |
+| B-8 | Full gate suite (build, verify_site, link audits, syntax, tests) | pending | b62e8188 | whole tree (read-only) | — | — | — |
+| B-9 | PR → main, merge, confirm Pages deploy, record | pending | b62e8188 | `COORDINATION.md` | docs.github.com Pages | — | — |
+
+## Verification already performed at claim time (this session)
+
+1. **Market lifecycle** (https://docs.kalshi.com/getting_started/market_lifecycle, fetched 2026-11-20): REST statuses are `initialized, active, inactive, closed, determined, disputed, amended, finalized`; filter values map `open`→`active`, `settled`→`finalized`. Snapshot re-check: 1,399 open markets carry raw status `active`; resolved records carry `finalized`/`closed`/`determined`/`disputed`. → CR-1 confirmed real; audit C-01..C-03 correct.
+2. **Create Order (V2)** (https://docs.kalshi.com/api-reference/orders/create-order-v2.md, fetched 2026-11-20): "The legacy `/portfolio/orders` write endpoints (create, cancel, amend, decrease and their batch forms) have been removed and now return `410 Gone` with code `deprecated_v1_order_endpoint`". → repo "410 Gone" wording is **correct**; audit F-02 is **outdated** (docs now state removal explicitly) and must be corrected.
+3. **Candlesticks** (https://docs.kalshi.com/api-reference/market/get-market-candlesticks, fetched 2026-11-20): "One request can span at most 5,000 periods. If the minutes between `start_ts` and `end_ts` divided by `period_interval` exceed 5,000, the request is rejected with 400 `bad_request`…". → repo "≤ 5,000 periods per request" is **correct**; audit F-03 is **wrong** and must be corrected. (Same page confirms F-05: settled-before-cutoff candles only via `GET /historical/markets/{ticker}/candlesticks`.)
+4. **Snapshot counts** re-derived from `snapshot/resolved.json` + `snapshot/markets.json`: 2,469 closed records = 2,117 with `result` (222 yes / 1,895 no) + 352 awaiting result; 1,399 open (`active`). → V-3 confirmed: generated `site/` label overstates "Resolved".
+
+## Claim log
+
+| Date/time (UTC) | Session ID | Task | Action |
+|---|---|---|---|
+| 2026-11-20 | arena/b62e8188-demo1 | B-1..B-9 | Claimed before implementation; board committed and pushed first, per protocol |
