@@ -66,6 +66,17 @@ ok("a down move of -13c fires and keeps its sign", byTicker.DOWN && near(byTicke
 ok("a +9c move does not fire", !byTicker.SMALL);
 ok("exactly $0.10 fires (the brief says >= $0.10)", !!byTicker.EDGE && near(byTicker.EDGE.move, 0.10));
 ok("a single print cannot be a jump", E.scanTrades([tape[0]], { now }).length === 0);
+/* exact fixed-point boundary, which IEEE 754 dollars get wrong: 0.60 - 0.50 is
+ * 0.09999999999999998, so a float comparison would drop a real $0.10 move. */
+const pair = (a, b) => [
+  { ticker: "B", yes_price_dollars: a, count_fp: "1", created_time: iso(100) },
+  { ticker: "B", yes_price_dollars: b, count_fp: "1", created_time: iso(10) }
+];
+ok("exactly 10.00 cents up fires (0.5000 -> 0.6000)", E.scanTrades(pair("0.5000", "0.6000"), { now }).length === 1);
+ok("9.99 cents up does not fire (0.5000 -> 0.5999)", E.scanTrades(pair("0.5000", "0.5999"), { now }).length === 0);
+ok("9.90 cents up does not fire (0.5000 -> 0.5990)", E.scanTrades(pair("0.5000", "0.5990"), { now }).length === 0);
+ok("exactly 10.00 cents down fires (0.6000 -> 0.5000)", E.scanTrades(pair("0.6000", "0.5000"), { now }).length === 1);
+ok("10.01 cents down fires (0.5000 -> 0.3999)", E.scanTrades(pair("0.5000", "0.3999"), { now }).length === 1);
 ok("trades older than the window are ignored",
   E.scanTrades([{ ticker: "OLD", yes_price_dollars: "0.10", count_fp: "1", created_time: iso(3600) },
                 { ticker: "OLD", yes_price_dollars: "0.50", count_fp: "1", created_time: iso(30) }],

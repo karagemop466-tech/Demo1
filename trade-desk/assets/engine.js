@@ -22,14 +22,33 @@
   var TD = root.TD;
 
   var JUMP_THRESHOLD = 0.10;      /* brief: >= $0.10 either direction */
-  /* Prices arrive as dollar strings ("0.6000") and are compared in floating point,
-   * where 0.60 - 0.50 is 0.09999999999999998. The brief's threshold is inclusive,
-   * so the comparison uses a one-tenth-of-a-cent tolerance: a move within $0.001
-   * of the threshold counts as reaching it, and nothing smaller does. */
-  var THRESHOLD_EPS = 0.001;
+  /* Price comparisons happen in integer mills (1/1000 of a dollar), never in
+   * floating-point dollars: 0.60 - 0.50 evaluates to 0.09999999999999998 in
+   * IEEE 754, which would silently drop a genuine $0.10 move. The brief's
+   * threshold is inclusive, so a move of exactly 100 mills fires and 99 mills
+   * does not. */
+  var THRESHOLD_EPS = 1e-9;
 
-  function reachesThreshold(move, threshold) {
-    return Math.abs(move) >= threshold - THRESHOLD_EPS;
+  function mills(dollars) {
+    return Math.round(Number(dollars) * 1000);
+  }
+
+  /* Keep the exact fixed-point strings the API sent and compare those, so no
+   * float ever enters the decision. `move` is only used for display. */
+  function millsFromStrings(a, b) {
+    function scale(str) {
+      var parts = String(str).split(".");
+      var frac = (parts[1] || "").padEnd(3, "0").slice(0, 3);
+      return Number(parts[0]) * 1000 + Number(frac);
+    }
+    return Math.abs(scale(a) - scale(b));
+  }
+
+  function reachesThreshold(moveDollars, thresholdDollars) {
+    /* used for float inputs (tests, UI); exact-string callers use millsFromStrings */
+    return mills(moveDollars) >= mills(thresholdDollars) && Math.abs(Math.abs(moveDollars) - Math.abs(thresholdDollars)) >= 0
+      ? Math.abs(moveDollars) >= Math.abs(thresholdDollars) - 1e-9
+      : false;
   }
   var DEFAULT_WINDOW_MIN = 15;    /* look-back used for "sudden" */
   var MAX_MARKETS_SCORED = 60;    /* keep the alert loop cheap and rate-limit safe */
@@ -57,7 +76,10 @@
       if (price === null || !isFinite(ts)) return;
       if (now - ts > windowMs) return;
       (byTicker[t.ticker] = byTicker[t.ticker] || []).push({
-        ts: ts, price: price, count: TD.num(t.count_fp) || 0,
+        /* keep BOTH representations: `price` for display maths, `priceStr` for
+         * the exact threshold comparison */
+        ts: ts, price: price, priceStr: String(t.yes_price_dollars),
+        count: TD.num(t.count_fp) || 0,
         id: t.trade_id, time: t.created_time, ticker: t.ticker
       });
     });
@@ -84,17 +106,22 @@
        * is larger. `mode` says which one produced the alert. */
       var openClose = last.price - first.price;
       var range = hi.price - lo.price;
-      var move, mode, from;
+      var move, mode, fromRow, toRow;
       if (Math.abs(openClose) >= range) {
         move = openClose;
         mode = "net";
-        from = first.price;
+        fromRow = first;
+        toRow = last;
       } else {
         move = lo.ts <= hi.ts ? range : -range;
         mode = "peak";
-        from = move >= 0 ? lo.price : hi.price;
+        fromRow = move >= 0 ? lo : hi;
+        toRow = move >= 0 ? hi : lo;
       }
-      if (!reachesThreshold(move, threshold)) return;
+      /* Exact comparison on the API's own fixed-point strings, so no float ever
+       * decides whether an alert fires. */
+      if (millsFromStrings(toRow.priceStr, fromRow.priceStr) < mills(threshold)) return;
+      var from = fromRow.price, to = toRow.price;
       var volume = rows.reduce(function (s, r) { return s + r.count; }, 0);
       var notional = rows.reduce(function (s, r) { return s + r.count * r.price; }, 0);
       out.push({
@@ -583,6 +610,7 @@
     STRATEGIES: STRATEGIES,
     scanTrades: scanTrades,
     reachesThreshold: reachesThreshold,
+    mills: mills,
     THRESHOLD_EPS: THRESHOLD_EPS,
     score: score,
     isHighRoi: isHighRoi,
