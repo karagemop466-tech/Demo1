@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f8">
+  <meta name="description" content="A Kalshi demo-market dashboard for live gas, election, culture, crypto and golf markets, with transparent source links and limitations.">
+  <title>Kalshi Demo Desk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="index.html" aria-label="Kalshi Demo Desk home"><span class="brand-mark">K</span><span>Kalshi <b>Demo Desk</b></span></a>
+    <div class="sidebar-label">Workspace</div>
+    <nav class="side-nav" aria-label="Main navigation">
+      <a class="nav-item active" href="index.html"><span class="nav-icon">◫</span> Market dashboard</a>
+      <a class="nav-item" href="pages/summary.html"><span class="nav-icon">▤</span> Executive summary</a>
+      <a class="nav-item" href="pages/topics.html"><span class="nav-icon">▦</span> Topic pages</a>
+      <a class="nav-item" href="pages/requirements.html"><span class="nav-icon">☷</span> Requirements &amp; decisions</a>
+      <a class="nav-item" href="pages/flagged.html"><span class="nav-icon">⚑</span> Flagged for review <span class="nav-count">7</span></a>
+      <a class="nav-item" href="pages/methodology.html"><span class="nav-icon">⌘</span> Method &amp; sources</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="demo-pill"><span></span> DEMO ENVIRONMENT</div><p>Market data is read-only here. No credentials or keys are requested or stored.</p><a href="https://demo.kalshi.co/" target="_blank" rel="noreferrer">Open Kalshi demo ↗</a></div>
+  </aside>
+  <main class="main-shell">
+    <header class="topbar"><div><div class="eyebrow">PREDICTION MARKETS / MONITOR</div><h1>Market dashboard</h1></div><div class="topbar-right"><span class="connection-chip" id="connection-status"><i></i> Waiting for data</span><button class="button button-light" id="refresh-button" type="button">↻ <span>Refresh</span></button></div></header>
+    <section class="notice notice-info" id="data-notice" role="status"><span class="notice-icon">i</span><div><b>Live data is not yet connected.</b> This dashboard fetches public market data from Kalshi’s demo API. The API may restrict browser requests (CORS); if blocked, use the linked API directly or configure a same-origin read-only proxy. <a href="pages/flagged.html">See limitations &amp; review items ↗</a></div></section>
+    <section class="toolbar" aria-label="Market filters">
+      <div class="topic-tabs" role="group" aria-label="Filter by topic">
+        <button class="topic-tab selected" data-topic="all" type="button">All topics</button><button class="topic-tab" data-topic="gas" type="button">Gas prices</button><button class="topic-tab" data-topic="elections" type="button">Elections</button><button class="topic-tab" data-topic="culture" type="button">Culture</button><button class="topic-tab" data-topic="crypto" type="button">Crypto</button><button class="topic-tab" data-topic="golf" type="button">Golf</button>
+      </div>
+      <label class="select-wrap">Rank by <select id="rank-select"><option value="depth">Live bid depth ($)</option><option value="volume">24h volume (contracts)</option><option value="oi">Open interest (contracts)</option></select></label>
+    </section>
+    <div class="rank-explainer" id="rank-explainer">Bid depth is the sum of price × contracts across both sides of the returned order books. It is visible bid liquidity, not total event value or a guarantee of execution.</div>
+    <section class="metric-grid" aria-label="Market summary metrics">
+      <article class="metric-card"><div class="metric-title">OPEN MARKETS <span class="metric-help" title="Open markets returned by the filtered API result">?</span></div><div class="metric-value" id="metric-open">—</div><div class="metric-foot">Within selected topics <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">API fields ↗</a></div></article>
+      <article class="metric-card"><div class="metric-title">TOPIC EVENTS</div><div class="metric-value" id="metric-events">—</div><div class="metric-foot">Grouped by Kalshi event ticker <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noreferrer">Event API ↗</a></div></article>
+      <article class="metric-card"><div class="metric-title">BEST LIVE BID DEPTH</div><div class="metric-value" id="metric-depth">—</div><div class="metric-foot" id="metric-depth-label">No verified live order book yet</div></article>
+      <article class="metric-card"><div class="metric-title">WATCHLIST</div><div class="metric-value" id="metric-watch">0</div><div class="metric-foot">Saved in this browser only <button class="text-button" id="show-watchlist" type="button">View tracked ↗</button></div></article>
+    </section>
+    <section class="panel market-panel" id="markets">
+      <div class="panel-heading"><div><div class="panel-kicker">LIVE / DEMO</div><h2>Highest-liquidity events</h2><p>Ranked by observed order-book bid depth; only categories selected above are included.</p></div><div class="panel-tools"><span class="updated-label" id="updated-label">Updated —</span><label class="select-wrap compact">Refresh <select id="refresh-rate"><option value="0">Manual</option><option value="30000">30 sec</option><option value="60000" selected>1 min</option><option value="300000">5 min</option></select></label></div></div>
+      <div class="table-scroll"><table><thead><tr><th>EVENT / MARKET</th><th>TOPIC</th><th>YES BID</th><th>YES ASK</th><th>24H VOLUME</th><th>OPEN INTEREST</th><th>LIVE BID DEPTH</th><th>STATUS</th><th></th></tr></thead><tbody id="market-rows"><tr><td colspan="9" class="empty-state">Fetching official demo API data…</td></tr></tbody></table></div>
+      <div class="table-footer"><span id="table-footnote">Values remain blank until returned by Kalshi. “—” means not reported.</span><button class="text-button" id="load-more" type="button" hidden>Load more markets ↓</button></div>
+    </section>
+    <section class="panel tracked-panel" id="tracked-panel" hidden><div class="panel-heading small-heading"><div><div class="panel-kicker">WATCHLIST / BROWSER LOCAL</div><h2>Tracked markets &amp; reported outcomes</h2><p>Saved tickers are refreshed while this dashboard is open. This is not a server-side archive.</p></div><button class="text-button" id="hide-watchlist" type="button">Hide ↑</button></div><div class="table-scroll"><table class="tracked-table"><thead><tr><th>MARKET</th><th>TOPIC</th><th>STATUS</th><th>REPORTED RESULT</th><th>UPDATED</th><th>SOURCE</th><th></th></tr></thead><tbody id="tracked-rows"><tr><td colspan="7" class="empty-state">No tracked markets yet.</td></tr></tbody></table></div></section>
+    <div class="lower-grid">
+      <section class="panel chart-panel"><div class="panel-heading small-heading"><div><div class="panel-kicker">PRICE HISTORY</div><h2>Contract price</h2><p id="chart-subtitle">Select an event to plot observed YES midpoint.</p></div><label class="select-wrap compact">Window <select id="chart-window"><option value="30">30 seconds</option><option value="60">1 minute</option><option value="300" selected>5 minutes</option><option value="900">15 minutes</option><option value="3600">1 hour</option><option value="21600">6 hours</option><option value="86400">24 hours</option></select></label></div><div class="chart-key"><span><i></i> YES midpoint · USD</span><span id="chart-observations">0 observations</span></div><div class="chart-area"><canvas id="price-chart" aria-label="Observed contract price over time" role="img"></canvas><div class="chart-empty" id="chart-empty">Select a market to begin collecting live price observations.<br><small>History starts when this page begins observing; this is not backfilled exchange history.</small></div></div><div class="chart-axis"><span>Time (local)</span><span>Contract price ($)</span></div></section>
+      <section class="panel orderbook-panel"><div class="panel-heading small-heading"><div><div class="panel-kicker">MARKET DEPTH</div><h2>Selected order book</h2><p id="orderbook-title">Choose a market from the table.</p></div><a class="text-button" id="orderbook-source" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">API source ↗</a></div><div class="depth-legend"><span>PRICE</span><span>CONTRACTS</span><span>NOTIONAL</span></div><div class="depth-columns"><div><h3>YES BIDS</h3><div id="yes-levels" class="depth-list"><div class="depth-empty">No market selected</div></div></div><div><h3>NO BIDS</h3><div id="no-levels" class="depth-list"><div class="depth-empty">No market selected</div></div></div></div><p class="microcopy">Kalshi’s public order book returns YES and NO bids. Top 10 reported levels per side are shown; quantity is supplied by Kalshi and no order count is inferred. <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">How to read the book ↗</a></p></section>
+    </div>
+    <section class="panel portfolio-panel"><div class="panel-heading small-heading"><div><div class="panel-kicker">ACCOUNT / DEMO</div><h2>Portfolio &amp; trade performance</h2><p>Private account data requires signed requests. No account is connected in this static site.</p></div><span class="status-tag status-neutral">NOT CONNECTED</span></div><div class="portfolio-grid"><div class="portfolio-empty"><span class="lock-icon">⌑</span><div><b>Secure account connection is not configured</b><p>Balance, positions, fills, realized P&amp;L and trade strategy analysis are unavailable. A private key must never be placed in this public site or browser storage.</p></div></div><div class="portfolio-actions"><a class="button button-light" href="pages/requirements.html#portfolio">Connection requirements ↗</a><a class="text-button" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">Kalshi API key guidance ↗</a></div></div></section>
+    <footer class="page-footer"><span>Kalshi Demo Desk · Independent monitoring interface · Not investment advice</span><span><a href="pages/methodology.html">Sources &amp; methodology</a> · <a href="pages/flagged.html">Review limitations</a></span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
