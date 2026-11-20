@@ -15,7 +15,9 @@
   }
   function price(v) {
     if (v === null || v === undefined || isNaN(v)) return "";
-    return "$" + Number(v).toFixed(2);
+    var n = Number(v);
+    // demo books quote sub-penny prices (e.g. $0.0030); show 4 decimals below a dime
+    return "$" + (n !== 0 && Math.abs(n) < 0.10 ? n.toFixed(4) : n.toFixed(2));
   }
   function pct(v) {
     if (v === null || v === undefined || isNaN(v)) return "";
