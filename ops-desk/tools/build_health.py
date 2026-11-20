@@ -260,16 +260,50 @@ def main():
         data_paths.append(entry)
         time.sleep(0.4)
 
+    # Pages deploy health (site-publishing pipeline): recent runs of pages.yml
+    pages_runs_url = f"{API}/actions/workflows/pages.yml/runs?per_page=30"
+    try:
+        pages_resp, pages_url_used = get_json(pages_runs_url)
+        pruns = pages_resp.get("workflow_runs", [])
+        cancelled_count = sum(1 for r in pruns if r["conclusion"] == "cancelled")
+        queued_count = sum(1 for r in pruns if r["status"] in ("queued", "in_progress", "pending", "waiting"))
+        last_success = next((r for r in pruns if r["conclusion"] == "success"), None)
+        pages_deploys = {
+            "sample_count": len(pruns),
+            "cancelled_in_sample": cancelled_count,
+            "queued_or_in_progress_in_sample": queued_count,
+            "last_success": ({"id": last_success["id"], "created_at": last_success["created_at"],
+                              "html_url": last_success["html_url"],
+                              "head_sha": last_success["head_sha"]} if last_success else None),
+            "recent": [{"id": r["id"], "event": r["event"], "status": r["status"],
+                        "conclusion": r.get("conclusion"), "created_at": r["created_at"],
+                        "head_sha": r["head_sha"], "html_url": r["html_url"]} for r in pruns[:12]],
+            "api_url": pages_url_used,
+        }
+    except RuntimeError as e:
+        pages_deploys = {"error": str(e), "api_url": pages_runs_url}
+
     # OPS-01 evidence: sim-strategies.yml history vs its board claim
     hist = git_file_history_cron_count(".github/workflows/sim-strategies.yml")
     shipped = local_files.get(".github/workflows/sim-strategies.yml", {"triggers": [], "crons": []})
+    board_matches = board_crosscheck()
+    claims_schedule = bool(board_matches["matches"])
+    ships_schedule = len(shipped.get("crons", [])) > 0
+    if claims_schedule and not ships_schedule:
+        verdict = ("MISMATCH — board record says the workflow runs on push + 30-min schedule; "
+                   "the shipped file declares no schedule trigger. Cron lines across "
+                   f"{hist['commits_examined']} historical commit(s): {hist['cron_lines_total']}.")
+    elif claims_schedule and ships_schedule:
+        verdict = (f"RESOLVED — the shipped file now declares schedule {shipped['crons']}; "
+                   f"cron lines across {hist['commits_examined']} historical commit(s): {hist['cron_lines_total']}. "
+                   "Re-check the runs sample to confirm schedule-event runs are actually firing.")
+    else:
+        verdict = "consistent — no board schedule claim and no shipped schedule."
     ops01 = {
-        "board_claim": board_crosscheck(),
+        "board_claim": board_matches,
         "shipped_triggers": shipped,
         "git_history": hist,
-        "verdict": ("MISMATCH — board record says the workflow runs on push + 30-min schedule; "
-                    "the shipped file declares no schedule trigger and its full git history "
-                    f"contains {hist['cron_lines_total']} cron lines across {hist['commits_examined']} commits."),
+        "verdict": verdict,
     }
 
     health = {
@@ -284,9 +318,12 @@ def main():
         "workflow_files_declared_triggers": local_files,
         "repo_sample": repo_sample,
         "data_paths": data_paths,
+        "pages_deploys": pages_deploys,
         "irregularities": {
             "OPS-01": {
-                "title": "sim-strategies.yml shipped without the schedule its board record claims; sim-desk ledger idle",
+                "title": ("sim-strategies.yml shipped without the schedule its board record claims; sim-desk ledger idle "
+                          "(original finding 2026-11-20 19:35Z; RESOLVED on main by commit 0273db7 'fix: restore simulated "
+                          "strategy schedule', cron 5,35 * * * *)"),
                 "evidence": ops01,
             },
             "OPS-02": {
@@ -298,6 +335,12 @@ def main():
                              "GitHub Actions workflow runs ... If the load is sufficiently high enough, some queued jobs "
                              "may be dropped.' This repo issued ~150 push-event runs in the sample window."),
                 },
+            },
+            "OPS-03": {
+                "title": ("Pages deploy starvation under merge storms: pages.yml uses concurrency group 'pages' with "
+                          "cancel-in-progress: true, so every merge cancels the previous deploy and the published site "
+                          "can stay frozen while merges continue"),
+                "evidence": {"pages_deploys": pages_deploys},
             },
         },
     }

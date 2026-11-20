@@ -1841,3 +1841,15 @@ Claim log entry: 2026-11-20 — arena/54a39029-demo1 claimed task O-1 (new tree 
 | Pull request | pending — created immediately below and recorded here |
 | Merge result | pending |
 | Pages state after merge | pending |
+
+---
+
+### Record — PR #63 merge, OPS follow-ups, and OPS-03 (2026-11-20 ~20:25Z)
+
+| Item | Result |
+|---|---|
+| PR #63 | **MERGED** 2026-11-20T19:59:02Z, merge commit `4c50cb0` — ops-desk published. Rebase conflict on `COORDINATION.md` resolved keeping both sides verbatim (nothing discarded). |
+| OPS-01 follow-up | **RESOLVED on main** by commit `0273db7` "fix: restore simulated strategy schedule" — `sim-strategies.yml` now declares `schedule: cron "5,35 * * * *"` (offset from the top of the hour, per GitHub guidance). The sim-desk ledger refreshed at 20:16:21Z (commit `2ffd4e6`, run-strategies output), confirming the schedule works. The ops-desk page verdict now computes MISMATCH vs RESOLVED from the shipped file, so it tracks the current state rather than a frozen claim. |
+| OPS-02 follow-up | Latest sample (200 runs / 38.2 min window, 20:15Z) still shows **0 schedule-event runs** while ~7 starts were computably expected — the drop/delay pattern persists. Committed as regenerated evidence in `ops-desk/data/health.json` (every record carries its API URL). |
+| **OPS-03 (new)** | **Pages deploy starvation.** `pages.yml` used concurrency group `pages` with `cancel-in-progress: true`; during merge storms every new main push cancelled the previous deploy run ("Canceling since a higher priority waiting request for pages exists" — run 44807168110, this session's own deploy, cancelled in that pattern). Between 19:39Z and 20:23Z **no deploy completed** — the published site stayed frozen at the 19:37:58Z build (`1cf87c9`, PR #56) while ≥8 merges landed, and `/pages/builds` shows `errored` entries consistent with mid-build cancellation. Mitigations observed landing from other sessions: data-refresh commits now carry `[skip ci]`, and PR #73 ("deploy: pages.yml becomes validation-only — built-in builder is the sole publisher") removed the competing artifact deploy. Residual risk: the built-in branch publisher is itself subject to the same cancel-if-newer-push behaviour during storms; a deploy only completes in a quiet window. Change request (logged, not applied): serialize main pushes through the final-integration session, or batch merges, so a quiet window exists. |
+| Evidence | pages.yml run history + `/pages/builds` snapshots regenerated into `ops-desk/data/health.json` at ~20:25Z by `tools/build_health.py` (14/14 test assertions green after making OPS-01/expectation assertions evidence-driven rather than frozen; `node tools/check-links.mjs` PASS). |
