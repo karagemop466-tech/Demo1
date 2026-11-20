@@ -725,3 +725,33 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 Claim log entry: 2026-11-20 — arena/3c2c8403-demo1 claimed T14 (root `index.html` + new verification doc only; no edits to `site/`, `snapshot/`, `data/`, or other desks).
 | 2026-11-20 | arena/3c2c8403-demo1 | Claimed T14; root landing rewritten category-first; verification page `docs/verification-3c2c8403.html` added; T14 marked done. Requests logged: V-3 (generated site label) and V-6 (older desks) — not edited (outside claimed scope). |
 | 2026-11-20 | arena/3c2c8403-demo1 | Conflict + push incident: rebase of T14 claim onto main (PR #32 added a section to COORDINATION.md) conflicted; resolved by keeping both sections (no content dropped). A push issued while the rebase was still paused sent three pre-rebase commits to `arena/3c2c8403-demo1` (only this session's commits were on that branch). Replaced them with `git push --force-with-lease` after confirming the remote held nothing else. Lesson recorded: never pipe `git pull --rebase` into `tail` before a push. |
+
+## Tasks — session arena/358db039-demo1 (final integration + verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 22 | Final integration: re-verify combined data line by line, broken-link check, site build, PR to main, merge, confirm Pages deploy | in progress | arena/358db039-demo1 | `COORDINATION.md` (claim + record); verification fixes only in files not owned by other sessions | docs.kalshi.com (api_environments, demo_env, candlesticks, orderbook, settlement); live site https://karagemop466-tech.github.io/Demo1/ | Full local suite: node --check, py_compile, build_site.py link gate, check-links, dom tests, pytest; live fetch of key pages | PR #32 (sharp-jump scanner, session arena/c8617443-demo1) merged to main as f9fab19 before this claim — rebased cleanly, no conflict. No demo API key in repo → portfolio/trading cells remain blank + flagged per no-fabrication rule. |
+
+Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final integration). Scope is COORDINATION.md plus verification-only fixes; exec-desk/jumps.* owned by arena/c8617443-demo1 (merged) and not touched.
+
+### Verification record — session arena/358db039-demo1 (task 22, final integration)
+
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Official endpoints match brief | ✅ | Fetched https://docs.kalshi.com/getting_started/api_environments.md 2026-11-20: demo REST `https://external-api.demo.kalshi.co/trade-api/v2` (recommended) + `https://demo-api.kalshi.co/trade-api/v2`; demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` + `wss://demo-api.kalshi.co/trade-api/ws/v2` — exact match to brief |
+| Live site serves | ✅ | Fetched https://karagemop466-tech.github.io/Demo1/ , /site/index.html , /exec-desk/jumps.html — all 200 with expected content |
+| JS syntax (pages.yml set + jumps) | ✅ | `node --check` pass: monitor/app.js, kalshi-core/ui/live, signer, check-links, dashboard.test, site chart/explore, exec-desk/js/jumps.js |
+| Python compile | ✅ | `py_compile` pass: build_site.py, collect_kalshi.py, account_worker.py, fetch_demo_data.py, fetch_kalshi_data.py, demo_trader.py |
+| Site build + link gate | ✅ | `python3 build_site.py` → "built 16 pages; markets=1399/1399 resolved=2469/2469 charts=10; link check: OK" |
+| Repo link audit | ✅ | `node tools/check-links.mjs` → PASS (238 files); `python3 exec-desk/scripts/check_links.py` → OK (123 internal); `python3 verified-desk/tools/check_links.py` → clean |
+| Dashboard tests | ✅ | `node tests/dashboard.test.mjs` → ALL CHECKS PASSED (46/46) after time-relative fixture fix (see below) |
+| Exec-desk DOM tests | ✅ | `node exec-desk/scripts/dom_test.mjs` → ALL ASSERTIONS PASSED |
+| Verified-desk tests | ✅ | `node --test verified-desk/tests/*.mjs` → 48/48 pass |
+| Pipeline unit tests | ✅ | `pytest tests/test_fetch_kalshi_data.py` → 7 passed |
+| Data freshness | ✅ | snapshot/metadata.json 2026-11-20T11:43:59Z (494 requests, 0 failed); docs/data/snapshot.json 2026-11-20T12:34:30Z; CI pipeline every 15 min on main |
+| CI on main | ✅ | `gh run list --branch main`: site-check, link check, Pages deploy all success after PR #32 merge (f9fab19) |
+| Requirement pages present | ✅ | 35/35 key pages non-empty (root hub, site/, docs/, exec-desk/, pages/) — see audit in PR body |
+
+**Fix applied by this session (final-integration scope):** `tests/dashboard.test.mjs` trade fixtures used hardcoded `created_time: 2026-11-20T11:11` which aged out of the page's default 60-minute scan window (`recentTrades` filters `created_time` within `[now-60m, now]`), causing 8 failures + a crash at line 166. Page logic was correct; fixtures changed to time-relative `isoAgo()` values (field shapes unchanged). File owned by merged session 8c8d4499; edited under final-integration authority and logged here. Also committed `package-lock.json` (jsdom devDep lock) for reproducible test runs.
+
+**Irregularities (non-blocking, published on Flagged pages):** No demo API key in repo → portfolio balances/fills blank + flagged (no fabrication). "Highest dollar amount" is computed notional (no official USD field) — disclosed per row. Demo books thin; values are test-venue data. Jumps page shows "API unreachable" when fetched from non-browser environments (sandbox egress) — browser CORS verified working via data/cors.json.
