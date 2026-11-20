@@ -81,6 +81,15 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add docs/data
           git commit -m "data: refresh Kalshi demo snapshot [skip ci]" --no-verify
+          # Hardened twice in the same window: session 65df996f added a bounded push retry here,
+          # and another session reworked the same step on main. The published version is kept — it
+          # rebuilds the data commit on the remote tip, which the plain rebase could not do — and the
+          # rationale is recorded for the next reader: this step used to push exactly once, while four
+          # committing workflows share main (kalshi-data, desk, engine-refresh, account), so a
+          # non-fast-forward push reddened a run whose data was fine (run 44746307623, 2026-11-20).
+          # On a content conflict inside docs/data the freshly generated snapshot wins: every file there
+          # is regenerated whole by scripts/fetch_kalshi_data.py, so the last published data is never
+          # preferred over a newer complete read of the API.
           DATA_COMMIT="$(git rev-parse HEAD)"
           echo "data commit: $DATA_COMMIT"
           for attempt in 1 2 3; do
