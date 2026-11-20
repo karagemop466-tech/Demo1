@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#047857"><meta name="description" content="Kalshi demo account status and browser-local paper order simulator.">
+  <title>Portfolio &amp; paper trading · Kalshi Demo</title><link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="demo-board.html" aria-label="Kalshi demo dashboard home"><span class="brand-mark" aria-hidden="true">K</span><span class="brand-copy"><strong>Kalshi demo</strong><small>Market signal board</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="demo-board.html">Dashboard</a><a href="gas-prices.html">Gas prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="demo-portfolio.html" aria-current="page">Portfolio</a><a href="demo-analysis.html">Trade analysis</a><a href="requirements.html">Executive summary</a><a href="demo-suggestions.html">Suggestions</a><a href="review.html">Flagged for review</a><a href="demo-sources.html">Sources</a></nav>
+  </header>
+  <main class="page-wrap" data-paper-view="portfolio">
+    <section class="page-intro"><span class="eyebrow">Account data · unavailable · local simulation available</span><h1>Portfolio and paper orders.</h1><p class="lede">Kalshi account balance and live order submission require signed credentials that are not available here. You can instead run a clearly labeled paper account in this browser, simulated against the public Kalshi demo order book. It never sends orders to Kalshi.</p></section>
+
+    <div class="banner banner-warning" role="note"><div><strong>Paper trading only — no Kalshi orders are submitted.</strong><p>Paper fills sweep the returned visible demo bids/asks up to your limit price and depth. Records are stored only in this browser's local storage. No Kalshi fees, queue position, slippage beyond shown depth, or actual fill guarantee is modeled. <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Private API signing guide</a> · <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order API</a>.</p></div></div>
+
+    <section class="section" aria-labelledby="real-account-heading">
+      <div class="section-heading"><div><h2 id="real-account-heading">Real Kalshi demo account</h2><p>Not connected; no actual account figures or order history are available.</p></div><span class="status-pill status-pending">Not connected</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Current value</th><th>Why blank / requirement</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr><td>Demo account access</td><td>Not configured</td><td>No demo API key or secure signing service was supplied. Demo and production credentials are separate.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a> · <a class="source-link" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td></tr>
+          <tr><td>Cash balance / portfolio value</td><td>— <span class="status-tag">unavailable</span></td><td>Requires an authenticated account response; no account value is inferred from the paper ledger.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr>
+          <tr><td>Positions / actual fills</td><td>— <span class="status-tag">unavailable</span></td><td>No signed positions or fills have been fetched; paper records below are separate.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a> · <a class="source-link" href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td></tr>
+          <tr><td>Actual order submission</td><td>Disabled</td><td>This static site has no private key, signing service, order policy, or permission to submit a live demo order.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a> · <a class="source-link" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Signing</a></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="paper-trading-panel" class="section" aria-labelledby="paper-account-heading">
+      <div class="section-heading"><div><h2 id="paper-account-heading">Browser-local paper account</h2><p>Choose the virtual starting balance; it is a simulation setting, not a reported Kalshi balance.</p></div><span id="paper-ledger-state" class="status-pill status-pending">Not configured</span></div>
+      <div class="metric-grid" aria-label="Paper portfolio summary">
+        <article class="metric-card"><span class="metric-label">Virtual starting balance</span><strong id="paper-initial-cash" class="metric-value">—</strong><span class="metric-note">User-configured; browser-local</span></article>
+        <article class="metric-card"><span class="metric-label">Paper cash</span><strong id="paper-cash" class="metric-value">—</strong><span class="metric-note">Gross of unmodeled fees</span></article>
+        <article class="metric-card"><span class="metric-label">Realized paper P&amp;L</span><strong id="paper-realized" class="metric-value">—</strong><span class="metric-note">Only simulated exits; before fees</span></article>
+        <article class="metric-card"><span class="metric-label">Open paper positions</span><strong id="paper-position-count" class="metric-value">—</strong><span class="metric-note">Unsettled; market value not assumed</span></article>
+      </div>
+      <div class="split-layout">
+        <form id="paper-bankroll-form" class="card card-pad">
+          <h3>Set or reset paper bankroll</h3>
+          <div class="field-grid">
+            <label class="form-field" for="paper-bankroll">Starting virtual cash (USD)
+              <input id="paper-bankroll" name="bankroll" type="number" min="0.01" max="1000000" step="0.01" inputmode="decimal" required placeholder="Enter a paper amount">
+            </label>
+            <button type="submit">Start / reset paper account</button>
+          </div>
+          <p id="paper-account-message" class="table-note" aria-live="polite">No paper balance is configured. No amount is assumed.</p>
+        </form>
+        <aside class="callout warning"><strong>Local data boundary</strong><p>Paper trades are stored in this browser's local storage and do not sync to Kalshi or another device. Clearing browser storage removes them. Each order uses a fresh public demo order-book snapshot and links to its source.</p></aside>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="paper-order-heading">
+      <div class="section-heading"><div><h2 id="paper-order-heading">Simulate a limit order</h2><p>Only visible book depth at or better than your limit is simulated. Unfilled quantity remains unfilled; short selling is disabled.</p></div><a href="demo-analysis.html">See paper strategy analysis →</a></div>
+      <form id="paper-order-form" class="card card-pad order-form">
+        <div class="field-grid">
+          <label class="form-field" for="paper-ticker">Market ticker
+            <input id="paper-ticker" name="ticker" type="text" required maxlength="128" autocomplete="off" placeholder="Copy a ticker from a topic table">
+          </label>
+          <label class="form-field" for="paper-category">Topic tag
+            <select id="paper-category" name="category" required><option value="gas-prices">Gas prices</option><option value="elections">Elections</option><option value="culture">Culture</option><option value="crypto">Crypto</option><option value="golf">Golf</option></select>
+          </label>
+          <label class="form-field" for="paper-outcome">Contract
+            <select id="paper-outcome" name="outcome"><option value="yes">YES</option><option value="no">NO</option></select>
+          </label>
+          <label class="form-field" for="paper-action">Action
+            <select id="paper-action" name="action"><option value="buy">Buy</option><option value="sell">Sell</option></select>
+          </label>
+          <label class="form-field" for="paper-quantity">Contracts
+            <input id="paper-quantity" name="contracts" type="number" min="0.01" step="0.01" required value="1">
+          </label>
+          <label class="form-field" for="paper-limit">Limit price (USD)
+            <input id="paper-limit" name="limitPrice" type="number" min="0.0001" max="0.9999" step="0.0001" required placeholder="e.g. 0.50">
+          </label>
+          <label class="form-field" for="paper-strategy">Strategy tag (optional)
+            <input id="paper-strategy" name="strategy" type="text" maxlength="80" placeholder="Use your own neutral label">
+          </label>
+          <div class="form-field form-action"><button id="paper-fetch-book" type="button">Refresh demo order book</button><button id="paper-submit-order" type="submit">Simulate limit order</button></div>
+        </div>
+        <p id="paper-order-message" class="table-note" role="status" aria-live="polite">Start a paper bankroll first. This control never sends an API order.</p>
+      </form>
+      <div class="section-heading" style="margin-top:1rem"><div><h3>Visible book levels</h3><p>Bid levels come from Kalshi's returned orderbook. Opposing bids are converted to asks using 1 − bid.</p></div><span id="paper-book-timestamp" class="status-pill status-pending">No snapshot</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Displayed side</th><th>Price</th><th>Contracts available</th><th>Source</th></tr></thead><tbody id="paper-book-body"><tr><td colspan="4" class="empty-state">Refresh a ticker's live demo order book. <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Official orderbook documentation</a></td></tr></tbody></table></div>
+    </section>
+
+    <section class="section" aria-labelledby="paper-positions-heading">
+      <div class="section-heading"><div><h2 id="paper-positions-heading">Open paper positions</h2><p>Cost basis and quantity are local simulated values. Liquidation estimates are shown only when a current bid book covers the full quantity.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Topic / ticker</th><th>Contract</th><th>Contracts</th><th>Average entry</th><th>Cost basis</th><th>Indicative value / P&amp;L</th><th>Market source</th></tr></thead><tbody id="paper-positions-body"><tr><td colspan="7" class="empty-state">No paper positions. Sources: <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Kalshi positions reference</a> (real accounts only).</td></tr></tbody></table></div>
+      <p class="table-note">Indicative liquidation figures, when available, use current visible bid depth. They are not guaranteed fills, omit fees, and do not represent actual account values.</p>
+    </section>
+
+    <section class="section" aria-labelledby="paper-orders-heading">
+      <div class="section-heading"><div><h2 id="paper-orders-heading">Paper order log</h2><p>Every order row links to the official demo order-book endpoint used for its simulated decision.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Time</th><th>Topic / ticker</th><th>Action</th><th>Limit</th><th>Requested</th><th>Filled</th><th>Average fill</th><th>Status</th><th>Source</th></tr></thead><tbody id="paper-orders-body"><tr><td colspan="9" class="empty-state">No paper orders yet. The API book format is documented at <a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener">Get Multiple Market Orderbooks</a>.</td></tr></tbody></table></div>
+    </section>
+
+    <section class="section split-layout">
+      <article class="card card-pad"><span class="kicker">Actual account access</span><h2>What remains unavailable</h2><ul class="content-prose"><li>An authenticated demo balance, actual portfolio value, positions, and fills.</li><li>A server-side signer configured with demo-only credentials; this static site must never store a private signing key.</li><li>Written order authorization, a risk limit, and a verified fee/accounting policy before any actual API order is enabled.</li></ul></article>
+      <aside class="callout warning"><strong>Not a trading recommendation</strong><p>Paper results are hypothetical, local to this browser, and based on a point-in-time visible book. The dashboard does not claim the simulation predicts execution or performance. See <a href="review.html">Flagged for Review</a> and <a href="demo-suggestions.html">Suggestions</a>.</p></aside>
+    </section>
+  </main>
+  <footer class="site-footer page-wrap"><div class="footer-row"><span>No private key is requested, stored, or used; paper simulation is not an actual Kalshi order.</span><span><a href="requirements.html">Executive summary</a> · <a href="review.html">Flagged items</a></span></div></footer>
+  <script type="module" src="assets/paper-trader.js"></script>
+</body>
+</html>

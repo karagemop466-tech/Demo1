@@ -6,15 +6,30 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Kalshi demo dashboard home"><span class="brand-mark" aria-hidden="true">K</span><span class="brand-copy"><strong>Kalshi demo</strong><small>Market signal board</small></span></a>
-    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Dashboard</a><a href="gas-prices.html">Gas prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio</a><a href="analysis.html" aria-current="page">Trade analysis</a><a href="requirements.html">Executive summary</a><a href="suggestions.html">Suggestions</a><a href="review.html">Flagged for review</a><a href="sources.html">Sources</a></nav>
+    <a class="brand" href="demo-board.html" aria-label="Kalshi demo dashboard home"><span class="brand-mark" aria-hidden="true">K</span><span class="brand-copy"><strong>Kalshi demo</strong><small>Market signal board</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="demo-board.html">Dashboard</a><a href="gas-prices.html">Gas prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="demo-portfolio.html">Portfolio</a><a href="demo-analysis.html" aria-current="page">Trade analysis</a><a href="requirements.html">Executive summary</a><a href="demo-suggestions.html">Suggestions</a><a href="review.html">Flagged for review</a><a href="demo-sources.html">Sources</a></nav>
   </header>
-  <main class="page-wrap">
+  <main class="page-wrap" data-paper-view="analysis">
     <section class="page-intro"><span class="eyebrow">Trade analysis · no account data loaded</span><h1>Separate observed trade facts from strategy ideas.</h1><p class="lede">This page defines what can be measured from Kalshi's documented fills, positions, market results, and balances. It intentionally shows no performance statistics because there is no authenticated demo-account history available.</p></section>
-    <div class="callout warning"><strong>Current result: no trade-performance conclusion is supportable.</strong><p>There are no account fills, opening balance, fees, position history, or observed settlements in this checkout. The calculations below describe an analysis plan, not results or a recommendation.</p></div>
+    <div class="callout warning"><strong>Current result: no actual-account performance conclusion is supportable.</strong><p>There are no Kalshi account fills, opening balance, fees, position history, or observed account settlements in this checkout. Browser-local paper results, when present, are a separate hypothetical ledger—not actual trades, a recommendation, or evidence of a profitable strategy.</p></div>
+
+    <section class="section" aria-labelledby="paper-analysis-heading">
+      <div class="section-heading"><div><h2 id="paper-analysis-heading">Browser-local paper activity</h2><p>These aggregates use only the paper orders simulated in this browser. They are gross of fees and do not estimate a win rate or forecast future returns.</p></div><a href="demo-portfolio.html">Open paper order ticket →</a></div>
+      <div class="metric-grid">
+        <article class="metric-card"><span class="metric-label">Filled paper orders</span><strong id="paper-analysis-order-count" class="metric-value">0</strong><span class="metric-note">Unfilled attempts excluded</span></article>
+        <article class="metric-card"><span class="metric-label">Gross paper notional</span><strong id="paper-analysis-notional" class="metric-value">$0.00</strong><span class="metric-note">Simulated fill value; before fees</span></article>
+        <article class="metric-card"><span class="metric-label">Realized paper P&amp;L</span><strong id="paper-analysis-realized" class="metric-value">—</strong><span class="metric-note">Only local sell simulations; not actual account P&amp;L</span></article>
+        <article class="metric-card"><span class="metric-label">Verified strategy win rate</span><strong class="metric-value">—</strong><span class="metric-note">Not calculated; settlement lifecycle and strategy definition are missing</span></article>
+      </div>
+      <h3>By user-selected topic</h3>
+      <div class="table-wrap"><table><thead><tr><th>Topic tag</th><th>Filled orders</th><th>Contracts</th><th>Gross simulated notional</th><th>Realized paper P&amp;L</th><th>Official order-book sources</th></tr></thead><tbody id="paper-analysis-categories"><tr><td colspan="6" class="empty-state">No simulated fills yet. <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Official orderbook documentation</a>.</td></tr></tbody></table></div>
+      <h3 style="margin-top:1rem">By user-entered strategy tag</h3>
+      <div class="table-wrap"><table><thead><tr><th>Strategy tag</th><th>Filled orders</th><th>Contracts</th><th>Gross simulated notional</th><th>Realized paper P&amp;L</th><th>Official order-book sources</th></tr></thead><tbody id="paper-analysis-strategies"><tr><td colspan="6" class="empty-state">No simulated fills yet. This table does not infer or recommend a strategy; see the <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">official orderbook reference</a>.</td></tr></tbody></table></div>
+      <p class="table-note">Topic and strategy tags are user-selected labels, not Kalshi classifications. Gross notional is simulated fills only; fees, final settlement, and performance against an actual account are not included.</p>
+    </section>
 
     <section class="section">
-      <div class="section-heading"><div><h2>Analysis plan and data requirements</h2><p>All values remain blank until the corresponding authenticated data is present and checked.</p></div><a href="portfolio.html">Portfolio status →</a></div>
+      <div class="section-heading"><div><h2>Analysis plan and data requirements</h2><p>All values remain blank until the corresponding authenticated data is present and checked.</p></div><a href="demo-portfolio.html">Portfolio status →</a></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Analysis</th><th>Data required</th><th>How it would be grouped / reported</th><th>Current status</th><th>Official source</th></tr></thead>
         <tbody>
@@ -31,9 +46,10 @@
 
     <section class="section split-layout">
       <article class="card card-pad"><span class="kicker">Trade categorization</span><h2>Proposed tags</h2><ul class="content-prose"><li><strong>Topic:</strong> site-side category / keyword match (gas prices, elections, culture, crypto, golf).</li><li><strong>Direction:</strong> the API's reported YES/NO side and buy/sell action.</li><li><strong>Execution:</strong> the API's reported taker flag, book side, contract count, price, and fee fields.</li><li><strong>Lifecycle:</strong> open, closed, and the market's explicit YES/NO result. A market-level result is not silently generalized to an entire multi-market event.</li></ul><p class="table-note">These tags are analysis dimensions only. They do not assert that a trade followed a proven or profitable strategy.</p></article>
-      <article class="card card-pad"><span class="kicker">Strategy ideas · for review only</span><h2>Do not enable execution yet</h2><ul class="content-prose"><li>Start with a read-only category and side-by-side fill audit.</li><li>Test any entry rule against time-stamped snapshots and settled outcomes, with fees included.</li><li>Do not size from a book alone; risk budget, max loss, exposure cap, and order controls are not defined.</li><li>Require explicit demo-only scope and a secure signed-request service before any order endpoint is enabled.</li></ul><a href="suggestions.html">Review and record a decision →</a></article>
+      <article class="card card-pad"><span class="kicker">Strategy ideas · for review only</span><h2>Do not enable execution yet</h2><ul class="content-prose"><li>Start with a read-only category and side-by-side fill audit.</li><li>Test any entry rule against time-stamped snapshots and settled outcomes, with fees included.</li><li>Do not size from a book alone; risk budget, max loss, exposure cap, and order controls are not defined.</li><li>Require explicit demo-only scope and a secure signed-request service before any order endpoint is enabled.</li></ul><a href="demo-suggestions.html">Review and record a decision →</a></article>
     </section>
   </main>
-  <footer class="site-footer page-wrap"><div class="footer-row"><span>No performance values are fabricated or inferred.</span><span><a href="portfolio.html">Portfolio status</a> · <a href="review.html">Flagged items</a></span></div></footer>
+  <footer class="site-footer page-wrap"><div class="footer-row"><span>No actual-account performance values are fabricated or inferred.</span><span><a href="demo-portfolio.html">Portfolio status</a> · <a href="review.html">Flagged items</a></span></div></footer>
+  <script type="module" src="assets/paper-trader.js"></script>
 </body>
 </html>
