@@ -1331,8 +1331,8 @@ All live values in the site are drawn from the committed snapshot collected from
 
 | Item | Result |
 |---|---|
-| Pull request | **pending** — to be created from `arena/9bfdf3bc-demo1` → `main` |
-| Merge result | **pending** — `gh pr merge <N> --merge` (no approval wait, per brief) |
-| Pages state after merge | **pending** — `gh api /repos/karagemop466-tech/Demo1/pages` |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/52 — `arena/9bfdf3bc-demo1` → `main` (created) |
+| Merge result | pending — `gh pr merge 52 --merge` to be run as the final step (no approval wait, per brief) |
+| Pages state after merge | pending — `gh api /repos/karagemop466-tech/Demo1/pages` (confirm after merge) |
 
 ---
