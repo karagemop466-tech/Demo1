@@ -27,6 +27,14 @@ jobs:
           python3 build_site.py
       - name: Validate verified-dashboard JavaScript
         run: node --check site/assets/chart.js && node --check site/assets/explore.js
+      - name: Kalshi desk — build and link check
+        run: |
+          python3 desk/tools/desk_data.py
+          python3 desk/tools/build_pages.py
+          node --check desk/assets/core.js
+          node --check desk/assets/live.js
+          node desk/tools/dom_test.mjs
+
       - name: Site link, secrets and source-citation audit
         run: node tools/check-links.mjs
       - uses: actions/upload-pages-artifact@v3
