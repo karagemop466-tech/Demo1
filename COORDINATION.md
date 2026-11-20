@@ -716,6 +716,16 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
 
+## Tasks — session arena/3c2c8403-demo1 (category-first landing + root verification)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| T14 | Replace the nine-desk root hub with a clean category-first landing page (gas, elections, culture, crypto, golf → `site/`), keep every other desk reachable under an "Earlier desks" section, and re-verify every root-page claim against official sources | done | arena/3c2c8403-demo1 | `index.html` (root only), `docs/verification-3c2c8403.html` (new), COORDINATION.md | docs.kalshi.com/getting_started/api_environments, /demo_env, /market_lifecycle, /api-reference/market/get-markets; live demo API: `/exchange/status`, `/markets/KXRT-FUR-85` (all fetched 2026-11-20) | Every landing-page claim listed with its source in `docs/verification-3c2c8403.html`. Counts re-derived from `snapshot/` (1,399 open; 2,117 resolved with yes/no; 352 closed awaiting result). Link check PASS; all 62 relative links resolve | V-1 previous landing said culture had no open market (contradicted: KXRT-FUR-85 active; 191 in snapshot) — corrected. V-2 old 15-row table used production host — landing now demo-only. V-3 "resolved" overstated (352 closed-without-result) — corrected on landing; **generated `site/*.html` still say "Resolved 2469" → open request to integration owner (`build_site.py`)**. V-4 snapshot vs live drift (time-stamped, not an error). V-5 "24h notional" is a computed proxy, not an API field. V-6 older desks still show production/stale values (not edited; other sessions). V-7 request: fix label in `build_site.py`. V-8 demo prices may not reflect real markets. V-9 portfolio/trading unverified (no demo key). |
+
+Claim log entry: 2026-11-20 — arena/3c2c8403-demo1 claimed T14 (root `index.html` + new verification doc only; no edits to `site/`, `snapshot/`, `data/`, or other desks).
+| 2026-11-20 | arena/3c2c8403-demo1 | Claimed T14; root landing rewritten category-first; verification page `docs/verification-3c2c8403.html` added; T14 marked done. Requests logged: V-3 (generated site label) and V-6 (older desks) — not edited (outside claimed scope). |
+| 2026-11-20 | arena/3c2c8403-demo1 | Conflict + push incident: rebase of T14 claim onto main (PR #32 added a section to COORDINATION.md) conflicted; resolved by keeping both sections (no content dropped). A push issued while the rebase was still paused sent three pre-rebase commits to `arena/3c2c8403-demo1` (only this session's commits were on that branch). Replaced them with `git push --force-with-lease` after confirming the remote held nothing else. Lesson recorded: never pipe `git pull --rebase` into `tail` before a push. |
+
 ## Tasks — session arena/358db039-demo1 (final integration + verification)
 
 | # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
