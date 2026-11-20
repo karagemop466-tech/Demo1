@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo live tracker · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px}
+  .chips .chip{font:inherit;font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
+  .chips .chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  #gran .segbtn,#win .segbtn{border:0;border-radius:0;padding:7px 14px;background:#fff;cursor:pointer;font:inherit;font-size:13px}
+  #gran .segbtn.active,#win .segbtn.active{background:#12202f;color:#fff}
+  .banner.live{border-left-color:var(--ok);background:#f0faf4}
+  .banner.warn{border-left-color:var(--warn);background:#fff8ee}
+  .btn{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}
+  .btn:hover{background:#eef4f9}
+  .tag.res{background:#e3f5ea;color:var(--ok);font-weight:600}
+  .tag.open{background:#e6eef9;color:#174e8c}
+  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}
+</style>
+</head>
+<body>
+<header class="top"><span class="brand">Kalshi Demo Dashboard</span>
+  <a href="../index.html">Home</a><a href="../executive-summary.html">Executive summary</a><a href="../markets.html">Markets</a>
+  <a href="../chart.html">Chart</a><a href="demo-live.html">Demo live tracker</a><a href="paper-trading.html">Paper trading (SIM)</a>
+  <a href="../analysis.html">Analysis</a><a href="../questions.html">Questions</a><a href="../suggestions.html">Suggestions</a>
+  <a href="../flagged.html">Flagged</a><a href="../sources.html">Sources</a><a href="../portfolio.html">Portfolio</a>
+</header>
+<main>
+  <h1>Demo live tracker — gas · elections · culture · crypto · golf</h1>
+  <p class="lead">Tracks the curated DEMO watchlist (every event verified to exist on the demo API on 2026-11-20) with live prices, dollar-volume estimates, order-book liquidity and resolution tracking until each event finalizes (yes/no). In LIVE mode your browser reads the official Kalshi demo API directly; if that fails, the page falls back to the verified point-in-time snapshot and says so. Nothing is ever invented.</p>
+
+  <div class="banner warn" id="mode-banner">Connecting to the official demo API…</div>
+
+  <div class="kpirow">
+    <div class="card kpi"><div class="n" id="kpi-mode">…</div><div class="l">Data mode (live / snapshot)</div></div>
+    <div class="card kpi"><div class="n" id="kpi-events">—</div><div class="l">Tracked events (5 categories)</div></div>
+    <div class="card kpi"><div class="n" id="kpi-markets">—</div><div class="l">Markets loaded</div></div>
+    <div class="card kpi"><div class="n" id="kpi-dollars">—</div><div class="l">Σ estimated $ volume (computed)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <button class="btn" id="refresh">↻ Refresh now</button>
+      <label><input type="checkbox" id="auto-refresh"> auto-refresh every 60 s</label>
+      <span class="note">Ranking metric: computed dollar-volume estimate = Σ(volume<sub>fp</sub> × last_price) per event. The API has no official dollar-volume field (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets schema</a>) — exact traded dollars come from the trades feed and are computed client-side for single markets on request. Demo volumes are dominated by synthetic 2028 election markets; treat rankings as exercise data (see <a href="../flagged.html">Flagged for review</a>).</span>
+    </div>
+    <div class="chips" id="cat-filter">
+      <button class="chip active" data-cat="all">All categories</button>
+      <button class="chip" data-cat="gas">Gas prices</button>
+      <button class="chip" data-cat="elections">Elections</button>
+      <button class="chip" data-cat="culture">Culture</button>
+      <button class="chip" data-cat="crypto">Crypto</button>
+      <button class="chip" data-cat="golf">Golf</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Event (watchlist)</th><th>Category</th><th>Closes</th><th>Contracts traded</th><th>$ volume (est., computed)</th><th>Open interest</th><th>Resolution status</th><th>Source</th><th></th></tr></thead>
+      <tbody id="watch-rows"><tr><td colspan="9">Loading…</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2>Market explorer — prices, sizes, liquidity</h2>
+    <div class="filters">
+      <label>Event <select id="explore-event"><option value="">Choose a tracked event…</option></select></label>
+      <span class="note" id="explorer-coverage"></span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Market</th><th>Last</th><th>YES bid / ask</th><th>Bid size / ask size</th><th>Volume (contracts)</th><th>24 h volume</th><th>Open interest</th><th>Status / result</th><th>Actions</th><th>Source</th></tr></thead>
+      <tbody id="explorer-rows"><tr><td colspan="10">Select an event above.</td></tr></tbody>
+    </table></div>
+    <p class="note">Prices are dollars per $1-payout YES contract. Status/result come verbatim from the API; “finalized · yes/no” is the official resolution.</p>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1.6fr 1fr">
+    <div class="card">
+      <h2 id="chart-title">Price movement <span class="note" id="chart-market"></span></h2>
+      <div class="filters">
+        <span class="seg" id="gran">
+          <button class="segbtn" data-g="seconds">Seconds</button>
+          <button class="segbtn active" data-g="minutes">Minutes</button>
+          <button class="segbtn" data-g="hours">Hours</button>
+        </span>
+        <span class="seg" id="win">
+          <button class="segbtn" data-w="300">5 m</button>
+          <button class="segbtn" data-w="900">15 m</button>
+          <button class="segbtn active" data-w="21600">6 h</button>
+          <button class="segbtn" data-w="86400">24 h</button>
+          <button class="segbtn" data-w="604800">7 d</button>
+        </span>
+        <button class="btn" onclick="window.dispatchEvent(new Event('kd-reload-chart'))">↻ reload chart</button>
+      </div>
+      <svg id="chart" class="chart" role="img" aria-label="YES contract price over time; X axis time, Y axis price in dollars"></svg>
+      <p class="note" id="chart-note">Seconds view = polled official market snapshots every 3 s (Kalshi candlesticks minimum is 1 minute). Minutes = 1-minute candlesticks; hours = 1-hour candlesticks. When a candle has no trades, the closing best bid is plotted and labeled as such.</p>
+    </div>
+    <div class="card">
+      <h2>Liquidity — contracts available at each price</h2>
+      <div id="book-box"><p class="note">Pick “Book” on any market row. The official order-book endpoint returns resting YES and NO bids; YES asks are derived as 1 − NO bid (per <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">official orderbook docs</a>). $ depth = Σ(price × contracts), computed.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Resolution tracker — until each event resolves yes / no</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Category</th><th>Event / market</th><th>State (from API result field)</th><th>Source</th></tr></thead>
+      <tbody id="res-rows"><tr><td colspan="4">Loading…</td></tr></tbody>
+    </table></div>
+    <p class="note">“RESOLVED YES/NO” rows use the API’s official <code>result</code> + <code>settlement_ts</code> + <code>settlement_value_dollars</code> fields. Verified historical resolutions from <a href="../data/demo-resolution-log.json">data/demo-resolution-log.json</a> are merged in. Known demo irregularities (synthetic future-dated “settled” events, metadata mismatches) are listed on the <a href="../flagged.html">Flagged for Review</a> page.</p>
+  </div>
+
+  <div class="card">
+    <h2>Where each number comes from</h2>
+    <ul class="tight">
+      <li><b>Live mode:</b> <code>GET {base}/markets?event_ticker=…&amp;limit=1000</code>, <code>GET {base}/markets/{ticker}</code>, <code>GET {base}/markets/{ticker}/orderbook</code>, <code>GET {base}/series/{series}/markets/{ticker}/candlesticks</code> — all documented at <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noreferrer">Quick Start: Market Data</a>; demo base URL listed at <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noreferrer">API Environments</a>.</li>
+      <li><b>CORS:</b> published-site origin verified allowed by the demo API (repo file <a href="../data/cors.json">data/cors.json</a>, checked 2026-11-20 from a GitHub Actions runner with an Origin header).</li>
+      <li><b>Snapshot fallback:</b> <a href="../data/demo-snapshot.json">data/demo-snapshot.json</a> — verbatim API responses captured 2026-11-20 with per-record source URLs; verification log at <a href="../docs/demo-data-verification.md">docs/demo-data-verification.md</a>.</li>
+      <li><b>Simulated trading &amp; strategy analytics:</b> <a href="paper-trading.html">Paper trading (SIM)</a> — clearly labeled simulation; no real orders are possible without authenticated demo-account credentials.</li>
+    </ul>
+  </div>
+</main>
+<footer>Not investment advice. LIVE values come straight from the official demo API in your browser; otherwise the page shows only the verified snapshot. Empty cells mean “not returned”, never zero.</footer>
+<script src="../assets/js/demo-live.js"></script>
+<script>document.addEventListener('kd-reload-chart',function(){var b=document.getElementById('refresh');if(b)b.click();});</script>
+</body></html>
