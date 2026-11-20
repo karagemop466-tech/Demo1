@@ -19,16 +19,16 @@ Session ID convention: `arena-a443fb8f-demo1` (this session's branch `arena/a443
 | # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
 |---|------|--------|------------|------------|---------|--------------|----------------|
 | 1 | Coordination board setup (this file) | done | arena-a443fb8f-demo1 | COORDINATION.md | — | Self-verified | None |
-| 2 | Official Kalshi API source research & verification | in progress | arena-a443fb8f-demo1 | docs/sources.md | https://external-api.demo.kalshi.co/trade-api/v2 ; https://demo-api.kalshi.co/trade-api/v2 ; https://docs.kalshi.io | Pending | User-provided endpoints not yet independently confirmed |
-| 3 | Landing page + executive summary | unclaimed | arena-a443fb8f-demo1 | index.html | docs/sources.md | Pending | — |
-| 4 | Category subpages: gas prices, elections, culture, crypto, golf (event tables w/ source links) | unclaimed | arena-a443fb8f-demo1 | pages/{gas,elections,culture,crypto,golf}.html | docs/sources.md | Pending | Live market data not reachable from sandbox; values left blank + unverified |
-| 5 | Live interactive dashboard: price graph (time X, contract price Y, seconds/minutes/hours zoom), liquidity & contract-availability table | unclaimed | arena-a443fb8f-demo1 | pages/dashboard.html + assets/ | docs/sources.md | Pending | — |
-| 6 | Portfolio performance tracking (Kalshi demo account) | unclaimed | arena-a443fb8f-demo1 | pages/portfolio.html | docs/sources.md | Pending | Requires API credentials; no credentials stored or hardcoded |
-| 7 | Trade execution interface | unclaimed | arena-a443fb8f-demo1 | pages/trades.html | docs/sources.md | Pending | Requires API credentials; execution not possible from this session |
-| 8 | Suggestions section (review before implementing) | unclaimed | arena-a443fb8f-demo1 | pages/suggestions.html | — | n/a | — |
-| 9 | Questions / information / answers for decision-making | unclaimed | arena-a443fb8f-demo1 | pages/questions.html | docs/sources.md | Pending | — |
-| 10 | Flagged for Review page (unverified items + irregularities) | unclaimed | arena-a443fb8f-demo1 | pages/flagged-review.html | — | n/a | — |
-| 11 | GitHub Pages: enable, build check, broken-link check, publish | unclaimed | arena-a443fb8f-demo1 | .github/workflows/pages.yml (or Pages settings) | docs.github.com | Pending | — |
+| 2 | Official Kalshi API source research & verification | done | arena-a443fb8f-demo1 | docs/sources.md | https://docs.kalshi.com/getting_started/demo_env ; https://docs.kalshi.com/getting_started/quick_start_create_order ; https://docs.kalshi.com/changelog ; https://docs.kalshi.com/llms-full.txt | Verified against docs.kalshi.com (official): demo REST/WebSocket base URLs match user-provided endpoints; public market data needs no key; portfolio/trading/WebSocket need signed Ed25519/RSA key | Irregularity: build sandbox cannot reach kalshi.co, so live responses were not empirically fetched |
+| 3 | Landing page + executive summary | done | arena-a443fb8f-demo1 | index.html | docs/sources.md | Verified: links point to docs.kalshi.com | — |
+| 4 | Category subpages: gas prices, elections, culture, crypto, golf (event tables w/ source links) | done | arena-a443fb8f-demo1 | pages/{gas,elections,culture,crypto,golf}.html | docs/sources.md | Every row has an official API source link; all values blank + unverified | Live market data not reachable from sandbox |
+| 5 | Live interactive dashboard: price graph (time X, contract price Y, seconds/minutes/hours zoom), liquidity & contract-availability table | done | arena-a443fb8f-demo1 | pages/dashboard.html + assets/ | docs/sources.md | Graph controls wired; live feed requires credentials | Simulated data only ever labeled explicitly as simulated |
+| 6 | Portfolio performance tracking (Kalshi demo account) | done | arena-a443fb8f-demo1 | pages/portfolio.html | docs/sources.md | Endpoints documented with official links | Requires API credentials; no credentials stored |
+| 7 | Trade execution interface | done | arena-a443fb8f-demo1 | pages/trades.html | docs/sources.md | POST /portfolio/events/orders documented with official link | Requires API credentials; execution not possible from this session |
+| 8 | Suggestions section (review before implementing) | done | arena-a443fb8f-demo1 | pages/suggestions.html | — | n/a | — |
+| 9 | Questions / information / answers for decision-making | done | arena-a443fb8f-demo1 | pages/questions.html | docs/sources.md | Pending live data | — |
+| 10 | Flagged for Review page (unverified items + irregularities) | done | arena-a443fb8f-demo1 | pages/flagged-review.html | — | n/a | — |
+| 11 | GitHub Pages: enable, build check, broken-link check, publish | in progress | arena-a443fb8f-demo1 | Pages settings via gh API | docs.github.com | Pending | — |
 | 12 | Final integration: re-verify combined data line by line, PR to main, merge, record PR link & merge result | unclaimed | arena-a443fb8f-demo1 | all | — | Pending | — |
 
 ## Claim log
