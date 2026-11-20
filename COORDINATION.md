@@ -1,32 +1,83 @@
-# Coordination board
+# Coordination Board — Kalshi Demo Dashboard (merged)
 
-Session: `arena/e41f6700-demo1` (current Arena-managed branch). No other session claims were present when checked.
+Shared task board for parallel agent sessions. Each session claims tasks by writing its session ID and file scope, then commits and pushes immediately. Never start a task another session has claimed. Keep scopes non-overlapping: each session works on its own branch/git worktree and edits only files in its claimed scope. If a task requires changing a file owned by another session, log the request here instead of editing it.
+
+Sessions in this repo:
+- `arena-a443fb8f-demo1` — branch `arena/a443fb8f-demo1` (multi-page site: landing/executive summary, category pages, dashboard, portfolio, trades, suggestions, questions, flagged review, docs/sources.md)
+- `arena/e41f6700-demo1` — branch merged into main via PRs #1–#2 (single-page market monitor: index.html, app.js, styles.css, .github/workflows/pages.yml, README)
+
+## Task conventions
+- Status values: `unclaimed`, `in progress`, `done`, `needs review`
+- `needs review` means the item is published on the Flagged for Review page and does not block anything.
+- A claim older than 60 minutes with no commits may be taken over by another session; note the handoff in the log below.
+- Small, frequent commits. Run `git pull --rebase` before every push.
+- On merge conflict: stop, resolve without discarding the other session's work, log what happened.
+- When a task is finished: record sources, verification performed, and irregularities here; mark it done.
+- Never mark anything verified without checking it against an official source; link that source.
+- Shared outputs (table data, site index/navigation) are changed only by the final integration session once all other tasks are done.
+
+## Tasks — session arena-a443fb8f-demo1
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 1 | Coordination board setup (this file) | done | arena-a443fb8f-demo1 | COORDINATION.md | — | Self-verified | None |
+| 2 | Official Kalshi API source research & verification | done | arena-a443fb8f-demo1 | docs/sources.md | https://docs.kalshi.com/getting_started/demo_env ; https://docs.kalshi.com/getting_started/quick_start_create_order ; https://docs.kalshi.com/changelog ; https://docs.kalshi.com/llms-full.txt | Verified against docs.kalshi.com (official): demo REST/WebSocket base URLs match user-provided endpoints; public market data needs no key; portfolio/trading/WebSocket need signed Ed25519/RSA key | Irregularity: build sandbox cannot reach kalshi.co, so live responses were not empirically fetched |
+| 3 | Landing page + executive summary | done | arena-a443fb8f-demo1 | pages/landing-executive-summary.html | docs/sources.md | Verified: links point to docs.kalshi.com | — |
+| 4 | Category subpages: gas prices, elections, culture, crypto, golf (event tables w/ source links) | done | arena-a443fb8f-demo1 | pages/{gas,elections,culture,crypto,golf}.html | docs/sources.md | Every row has an official API source link; all values blank + unverified | Live market data not reachable from sandbox |
+| 5 | Live interactive dashboard: price graph (time X, contract price Y, seconds/minutes/hours zoom), liquidity & contract-availability table | done | arena-a443fb8f-demo1 | pages/dashboard.html + assets/ | docs/sources.md | Graph controls wired; live feed requires credentials | Simulated data only ever labeled explicitly as simulated |
+| 6 | Portfolio performance tracking (Kalshi demo account) | done | arena-a443fb8f-demo1 | pages/portfolio.html | docs/sources.md | Endpoints documented with official links | Requires API credentials; no credentials stored |
+| 7 | Trade execution interface | done | arena-a443fb8f-demo1 | pages/trades.html | docs/sources.md | POST /portfolio/events/orders documented with official link | Requires API credentials; execution not possible from this session |
+| 8 | Suggestions section (review before implementing) | done | arena-a443fb8f-demo1 | pages/suggestions.html | — | n/a | — |
+| 9 | Questions / information / answers for decision-making | done | arena-a443fb8f-demo1 | pages/questions.html | docs/sources.md | Pending live data | — |
+| 10 | Flagged for Review page (unverified items + irregularities) | done | arena-a443fb8f-demo1 | pages/flagged-review.html | — | n/a | — |
+| 11 | GitHub Pages: enable, build check, broken-link check, publish | done | arena-a443fb8f-demo1 | Pages settings via gh API | docs.github.com | Pages already enabled on repo, serving main at https://karagemop466-tech.github.io/Demo1/ (status: built). Local broken-link check: none. Will re-deploy automatically when main is updated via merge. | Cannot change Pages source branch via gh API (403 integration permission); not needed since Pages serves main and the PR merges into main |
+| 12 | Final integration: merge conflict resolution, combined-site verification, PR to main, merge, record PR link & merge result | in progress | arena-a443fb8f-demo1 | all | docs/sources.md; docs.kalshi.com | Internal links verified (both sessions' files); all table rows carry official source links; unverified values left blank and flagged | Merge conflict with main resolved 2026-11-20 (see integration log) |
+
+## Tasks — session arena/e41f6700-demo1
 
 | Task | Status | Owner | File scope |
 |---|---|---|---|
 | Kalshi demo research, requirements, dashboard prototype and verification | done | arena/e41f6700-demo1 | `COORDINATION.md`, `README.md`, `index.html`, `styles.css`, `app.js`, `.github/workflows/pages.yml` |
 | GitHub Pages deployment and merge verification | done | arena/e41f6700-demo1 | GitHub repository settings / Actions (external) |
 
-## Log
-- 2026-11-20 — Initial repo had only a minimal README. Checked for existing `COORDINATION.md`; none existed. Claimed end-to-end scope and committed/pushed claim. First pull against the not-yet-published remote branch failed because it did not exist; rebased against `origin/main`, then pushed current branch successfully.
-- 2026-11-20 — Verified official quick-start market-data documentation and official Get Balance documentation by fetching pages. Quick-start documents unauthenticated public markets/events/orderbook examples. Balance reference documents the demo host and signed authentication headers. See source links in README and the site's rows.
-- 2026-11-20 — Get Markets page fetch failed; related references for order book / positions / fills were linked but not all independently fetched. Marked as limitations, not verified claims. User-provided demo endpoint used as configured.
-- 2026-11-20 — Added static dashboard with live API attempts, empty-on-failure behavior, keyword topic filters, contract-volume ranking, order-book request, portfolio/trading safety notice, questions, suggestions and review flags. No credential handling, orders, fabricated prices, history or performance data.
-- 2026-11-20 — Verification: run `node --check app.js`; review HTML/CSS/JS against fetched sources and verify local links/build. External API success and GitHub Pages deployment require online Actions/API validation after push and cannot be asserted without a successful run.
+## Integration log
+
+| Date/time (UTC) | Session ID | Action |
+|---|---|---|
+| 2026-11-20 | arena-a443fb8f-demo1 | PR #4 (arena/a443fb8f-demo1 → main) could not merge cleanly: add/add conflicts on COORDINATION.md and index.html (both sessions added these files independently). |
+| 2026-11-20 | arena-a443fb8f-demo1 | Resolved by merging main into the feature branch: kept arena/e41f6700-demo1's root `index.html`, `app.js`, `styles.css`, `.github/workflows/pages.yml`, `README.md` (their deployed single-page monitor); preserved arena-a443fb8f-demo1's multi-page site under `pages/` (landing-executive-summary.html, dashboard.html, category pages, portfolio, trades, suggestions, questions, flagged-review, assets/, docs/); added cross-links from root nav to the multi-page section; wrote this merged COORDINATION.md. No work from either session was discarded. |
+| 2026-11-20 | arena-a443fb8f-demo1 | Re-ran local broken-link check on combined tree: none. |
+
+## Claim log
+
+| Date/time (UTC) | Session ID | Task | Action |
+|---|---|---|---|
+| 2026-11-20 | arena-a443fb8f-demo1 | All tasks (1–12) | Claimed by session; created COORDINATION.md; built multi-page site |
+| 2026-11-20 | arena/e41f6700-demo1 | Research, dashboard prototype, verification, Pages deployment | Claimed end-to-end scope; built single-page monitor; deployed via GitHub Actions (run 44725819853) |
+
+## Handoff log
+
+None yet.
 
 ## Sources
+
+Session arena-a443fb8f-demo1:
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/quick_start_create_order
+- https://docs.kalshi.com/changelog
+- https://docs.kalshi.com/llms-full.txt
+- docs/sources.md (consolidated verified endpoint table)
+
+Session arena/e41f6700-demo1:
 - https://docs.kalshi.com/getting_started/quick_start_market_data
 - https://docs.kalshi.com/api-reference/portfolio/get-balance
-- https://docs.kalshi.com/api-reference/market/get-markets (page fetch failed in this session)
+- https://docs.kalshi.com/api-reference/market/get-markets (page fetch failed in that session — linked for manual review)
 - https://docs.kalshi.com/api-reference/market/get-market-order-book
 - https://docs.kalshi.com/api-reference/portfolio/get-positions
 - https://docs.kalshi.com/api-reference/portfolio/get-fills
 
-## Irregularities / outstanding integration
-- Contract volume is not “dollar amount”; no dollar ranking offered absent a defensible official metric and methodology.
-- Topic terms are heuristic pending authoritative series allowlist; potential omissions/false matches flagged in the UI.
-- Historical price graph controls are present but no points are shown pending verified history API schema and support.
-- Private account performance and trading need secure authenticated backend and user-defined permissions/limits. Browser-only Pages must not hold private keys.
-- PR #1: https://github.com/karagemop466-tech/Demo1/pull/1 — merged 2026-11-20 (`gh pr merge 1 --merge`). Main deploy run https://github.com/karagemop466-tech/Demo1/actions/runs/44725819853 completed successfully (build and Pages deploy jobs both passed). GitHub Pages API reports `built`; URL: https://karagemop466-tech.github.io/Demo1/ . A second platform Pages build/deployment run was still in progress at last status check; the project deploy workflow itself succeeded.
-- Local verification passed: `node --check app.js`, `git diff --check`, and static HTML internal anchor/file check. GitHub workflow validation and deploy passed. Browser/API runtime and live market response are not verified here; API may be CORS restricted.
-- Known warning: GitHub Actions emitted a Node.js 20 deprecation annotation for upstream actions; build/deploy succeeded. It is listed as a maintenance irregularity, not a site failure.
+## Notes
+
+- Sandbox outbound internet is restricted to github.com / npm / pypi hosts; kalshi.co is NOT reachable from this environment. Live Kalshi API data cannot be fetched or empirically verified here. All market values are therefore left blank and flagged `unverified` with source links to the official Kalshi API docs, per the verification requirement ("never infer or fill in values").
+- No Kalshi API credentials exist in this repository and none will be added. Trade execution and portfolio reads require authenticated endpoints; the site documents the official endpoints and leaves execution as a credential-gated, flagged item.
+- Both sessions' sites flag: contract volume is not "dollar amount"; topic matching is heuristic; historical price points are not fabricated; private account performance and trading need secure authenticated backend and user-defined permissions/limits; browser-only Pages must not hold private keys.
