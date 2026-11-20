@@ -417,10 +417,10 @@ def build_position(config, market, topic, matched_by, strategy, side, entry_pric
     }
 
 
-def settle_position(pos, market_row, run_id, api_url):
+def settle_position(pos, market_row, run_id, api_url, settled_statuses=("settled", "finalized")):
     result = (market_row.get("result") or "").lower()
     status = (market_row.get("status") or "").lower()
-    if status != "settled" or result not in ("yes", "no"):
+    if status not in settled_statuses or result not in ("yes", "no"):
         return None
     contracts = pos["contracts"]
     win = (pos["side"] == result)
@@ -531,10 +531,13 @@ def run(config, ledger, api, run_id):
     rules = compile_topic_rules(config)
     errors = []
 
-    # --- 1. universe: open markets, paginated (official: limit<=1000, cursor)
-    markets = []
+    # --- 1. universe: (a) paginated open-markets scan (sort order not guaranteed
+    # by the API) plus (b) targeted series queries with the documented
+    # series_ticker filter, because the demo exchange is sparse and the general
+    # scan alone can miss the sparse-but-liquid tracked series entirely.
+    by_ticker = {}
     cursor = ""
-    for _ in range(config["universe"]["list_pages"]):
+    for _ in range(config["universe"]["scan_pages"]):
         params = {"status": config["universe"]["markets_status"],
                   "limit": config["universe"]["page_limit"]}
         if cursor:
@@ -542,21 +545,45 @@ def run(config, ledger, api, run_id):
         body = api.get("/markets", params)
         if not body or not body.get("markets"):
             break
-        markets.extend(body["markets"])
+        for m in body["markets"]:
+            t = m.get("ticker")
+            if t and t not in by_ticker:
+                by_ticker[t] = m
         cursor = body.get("cursor") or ""
         if not cursor:
             break
+    for topic_key, series_list in config["topics"]["known_series"].items():
+        for series in series_list:
+            body = api.get("/markets", {"series_ticker": series,
+                                        "status": config["universe"]["markets_status"],
+                                        "limit": config["universe"]["page_limit"]})
+            if not body or not body.get("markets"):
+                continue
+            for m in body["markets"]:
+                t = m.get("ticker")
+                if not t:
+                    continue
+                m.setdefault("series_ticker", series)
+                m.setdefault("topic_hint", topic_key)
+                if t not in by_ticker:
+                    by_ticker[t] = m
+    markets = list(by_ticker.values())
 
     # --- 2+3. classify + rank by computed 24h notional (disclosed estimate)
     now = time.time()
     candidates = []
     for m in markets:
         topic, matched_by = classify(m, rules)
+        if not topic and m.get("topic_hint"):
+            # targeted series rows keep their configured topic when keyword rules
+            # miss (short demo titles); the hint is disclosed in matched_by.
+            topic = m["topic_hint"]
+            matched_by = "known_series:" + str(m.get("series_ticker"))
         if not topic:
             continue
-        vol24 = market_volume_24h(m)
+        vol24 = market_volume_24h(m) or 0.0
         last = market_last_price(m)
-        if vol24 is None or last is None:
+        if last is None:
             continue
         if vol24 < config["universe"]["min_volume_24h_contracts"]:
             continue
@@ -656,7 +683,8 @@ def run(config, ledger, api, run_id):
             pos["mark_basis"] = "official last_price_dollars (held side)"
             pos["mark_source_url"] = mark_url
             status = (row.get("status") or "").lower()
-            settled = settle_position(pos, row, run_id, mark_url)
+            settled = settle_position(pos, row, run_id, mark_url,
+                                      settled_statuses=config.get("settlement_statuses", ("settled", "finalized")))
             if settled:
                 ledger["cash"] = round(ledger["cash"] + settled["payout"], 2)
                 settled_now.append(settled)

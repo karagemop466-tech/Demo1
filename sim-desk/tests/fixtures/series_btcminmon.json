@@ -1,0 +1,16 @@
+{
+ "markets": [
+  {
+   "ticker": "KXBTCMINMON-BTC-26NOV20-6750000",
+   "series_ticker": "KXBTCMINMON",
+   "event_ticker": "KXBTCMINMON-26NOV20",
+   "title": "Will Bitcoin be above $67,500 at 8am EST on November 20?",
+   "volume_24h": "12000.00",
+   "volume": "12000.00",
+   "last_price_dollars": "0.5500",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  }
+ ],
+ "cursor": ""
+}

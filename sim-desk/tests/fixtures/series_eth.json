@@ -1,0 +1,16 @@
+{
+ "markets": [
+  {
+   "ticker": "KXETHMINMON-ETH-26NOV20-2800000",
+   "series_ticker": "KXETHMINMON",
+   "event_ticker": "KXETHMINMON-26NOV20",
+   "title": "Will Ethereum be above $2,800 at 8am EST on November 20?",
+   "volume_24h": "20000.00",
+   "volume": "20000.00",
+   "last_price_dollars": "0.9000",
+   "close_time": "2028-11-07T15:00:00Z",
+   "status": "open"
+  }
+ ],
+ "cursor": ""
+}

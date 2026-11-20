@@ -273,7 +273,7 @@ class TestIntegrationReplay(unittest.TestCase):
             self.assertIn("insufficient", reasons)
             self.assertIn("no candlestick history", reasons)
             self.assertTrue(all(r["url"].startswith(CONFIG["base_url"]) for r in runlog["requests"]))
-            self.assertEqual(runlog["summary"]["api_calls"], 12)
+            self.assertEqual(runlog["summary"]["api_calls"], 31)
 
             # every entry carries its official request URL
             for p in ledger["positions_open"]:

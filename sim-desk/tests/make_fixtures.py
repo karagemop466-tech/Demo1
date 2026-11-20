@@ -67,6 +67,11 @@ def ob(yes, no):
 
 PAYLOADS = {
     "markets_open.json": MARKETS_OPEN,
+    "series_empty.json": {"markets": [], "cursor": ""},
+    "series_btcminmon.json": {"markets": [MARKETS_OPEN["markets"][1]], "cursor": ""},
+    "series_gas.json": {"markets": [MARKETS_OPEN["markets"][2]], "cursor": ""},
+    "series_nato.json": {"markets": [MARKETS_OPEN["markets"][3]], "cursor": ""},
+    "series_eth.json": {"markets": [MARKETS_OPEN["markets"][0]], "cursor": ""},
     "ob_btc.json": ob([("0.10", 5), ("0.30", 8), ("0.44", 6)], [("0.12", 4), ("0.51", 9)]),
     "ob_gas.json": ob([("0.20", 7), ("0.30", 5)], [("0.40", 10), ("0.55", 8)]),
     "ob_max.json": ob([("0.50", 3), ("0.83", 40)], []),
@@ -91,6 +96,12 @@ PAYLOADS = {
     ]},
 }
 
+KNOWN_SERIES = ["KXAAAGASW", "KXAAAGASMIN", "KXAAAGASMAX", "KXAAAGASM",
+                "KXPRESNOMD", "KXPRESNOMR", "KXPRESPERSON", "KXNEXTNATOSECGEN",
+                "KXTIME", "KXOSCARSUPACTO", "KXOSCARSONG", "KXEMMYCACTO",
+                "KXBTCD", "KXBTCMINMON", "KXETHMINMON", "KXSOLMINMON",
+                "KXPGATOUR", "KXPGA", "KXRYDERCUP"]
+
 MANIFEST1 = {
     "/markets?status=open&limit=1000": "markets_open.json",
     "/markets/KXBTCMINMON-BTC-26NOV20-6750000/orderbook?": "ob_btc.json",
@@ -105,6 +116,19 @@ MANIFEST1 = {
     "/series/KXETHMINMON/markets/KXETHMINMON-ETH-26NOV20-2800000/candlesticks?": "candles_eth.json",
     "/markets?tickers=": "markets_tickers_run1.json",
 }
+# targeted series queries (documented series_ticker filter)
+for s in KNOWN_SERIES:
+    key = f"/markets?series_ticker={s}&status=open&limit=1000"
+    if s == "KXBTCMINMON":
+        MANIFEST1[key] = "series_btcminmon.json"
+    elif s == "KXAAAGASM":
+        MANIFEST1[key] = "series_gas.json"
+    elif s == "KXNEXTNATOSECGEN":
+        MANIFEST1[key] = "series_nato.json"
+    elif s == "KXETHMINMON":
+        MANIFEST1[key] = "series_eth.json"
+    else:
+        MANIFEST1[key] = "series_empty.json"
 MANIFEST2 = dict(MANIFEST1)
 MANIFEST2["/markets?tickers="] = "markets_tickers_run2.json"
 

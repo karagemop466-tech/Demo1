@@ -6,17 +6,27 @@
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "universe": {
     "markets_status": "open",
-    "list_pages": 3,
+    "scan_pages": 10,
     "page_limit": 1000,
-    "min_volume_24h_contracts": 100,
+    "min_volume_24h_contracts": 5,
     "min_hours_until_close": 2,
     "candidates_max": 20,
     "max_per_topic_candidates": 6,
-    "notional_basis": "computed 24h traded notional = volume_24h x last_price_dollars (both official market fields). 'Highest dollar amount' is not an official Kalshi field; this is a disclosed estimate, not an official metric."
+    "notional_basis": "computed 24h traded notional = volume_24h_fp x last_price_dollars (both official market fields). 'Highest dollar amount' is not an official Kalshi field; this is a disclosed estimate, not an official metric.",
+    "coverage": "General scan paginates GET /markets?status=open (sort order is not guaranteed by the API, so it may miss sparse series). The documented series_ticker filter then targets the demo series observed to carry the tracked topics' open lineups (config topics.known_series; membership comes from this repo's verified demo snapshots, and each query is logged with its URL). A series with no open markets simply returns an empty page.",
+    "volume_floor_note": "The demo exchange is extremely thin: most markets trade 0 contracts in 24h (flagged irregularity across sessions). The floor is 5 contracts, far below any production-equivalent threshold."
   },
   "topics": {
     "order": ["gas", "elections", "culture", "crypto", "golf"],
     "note": "First matching rule wins; classification is by series/event ticker and title keywords. Official series category strings for the demo exchange are not published; keyword matching is disclosed per row via matched_by.",
+    "known_series": {
+      "gas": ["KXAAAGASW", "KXAAAGASMIN", "KXAAAGASMAX", "KXAAAGASM"],
+      "elections": ["KXPRESNOMD", "KXPRESNOMR", "KXPRESPERSON", "KXNEXTNATOSECGEN"],
+      "culture": ["KXTIME", "KXOSCARSUPACTO", "KXOSCARSONG", "KXEMMYCACTO"],
+      "crypto": ["KXBTCD", "KXBTCMINMON", "KXETHMINMON", "KXSOLMINMON"],
+      "golf": ["KXPGATOUR", "KXPGA", "KXRYDERCUP"]
+    },
+    "known_series_note": "Demo series observed in this repo's verified snapshots (data/demo-snapshot.json categories; strategy-desk series map). Series with no open markets return an empty page and are logged.",
     "rules": {
       "gas": {"ticker": "KXAAAGAS|KXGAS", "title": "gas price"},
       "elections": {"ticker": "KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE", "title": "election|president|senate|governor|prime minister|nominee|parliament|chancellor"},
@@ -68,7 +78,8 @@
     "source": "https://kalshi.com/docs/kalshi-fee-schedule.pdf"
   },
   "mark_rule": "Open positions are marked to market with the official last_price_dollars field (held-side value = last YES price for YES, 1 - last YES price for NO). Marks are last-trade based and can lag the book (official responses-cached caveat).",
-  "settlement_rule": "When a market with an open simulated position reports status=settled and result in {yes,no}: payout = $1.00 per contract if the held side matches result, else $0.00 (official market-settlement rule). Settlement fee = $0 for simple yes/no determinations (official fee schedule).",
+  "settlement_rule": "When a market with an open simulated position reports a settled status (status in {settled, finalized} — the demo exchange has returned both spellings, a flagged demo-vs-docs enum irregularity) and result in {yes,no}: payout = $1.00 per contract if the held side matches result, else $0.00 (official market-settlement rule). Settlement fee = $0 for simple yes/no determinations (official fee schedule).",
+  "settlement_statuses": ["settled", "finalized"],
   "api_politeness": {
     "sleep_seconds_between_calls": 0.15,
     "retry_on_429": 1,
