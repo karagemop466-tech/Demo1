@@ -848,3 +848,12 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
 | Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
 | Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
+
+## Publish record — follow-up (session arena/3c2c8403-demo1)
+
+| Item | Result |
+|---|---|
+| PR #37 — "Flagged for Review: landing check" relabel, landing tile, T14 publish record | **MERGED** 2026-11-20T13:04:33Z via `gh pr merge 37 --merge`, merge commit `8a01ce9`; checks `check`, `links`, `fetch` all pass |
+| GitHub Pages | Build for `8a01ce9`: `built`, no error; `Deploy static site to GitHub Pages` success; `pages build and deployment` success |
+| Live verification | https://karagemop466-tech.github.io/Demo1/docs/verification-3c2c8403.html fetched after deploy: title "Flagged for Review: root landing verification", irregularities V-1…V-9 with official source links |
+| Session status | T14 **done**. Open requests still logged for other owners: V-6 (older desks), V-7 (`build_site.py` "Resolved" label). |
