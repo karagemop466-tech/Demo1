@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-11-20",
+  "configured": false,
+  "note": "Kalshi DEMO account data (balance, positions, fills, orders) requires authenticated API keys. No credentials exist in this repository (by policy). Run scripts/demo_trader.py with KALSHI_DEMO_API_KEY_ID + KALSHI_DEMO_PRIVATE_KEY secrets configured to populate this file; until then every portfolio value is blank and flagged unverified.",
+  "auth_docs": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md",
+  "balance": null,
+  "positions": [],
+  "fills": [],
+  "orders": [],
+  "trades": [],
+  "analysis": {"by_topic": {}, "by_strategy": {}, "win_rate": null}
+}

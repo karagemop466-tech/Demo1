@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suggestions — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="../">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="dashboard.html">Live dashboard</a>
+      <a href="gas.html">Gas prices</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a class="active" href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions &amp; answers</a>
+      <a href="flagged-review.html">Flagged for review</a>
+    </nav>
+    <span class="status-pill">Suggestions — review before implementing</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Suggestions for site &amp; decision-making improvements</div>
+  <h1>Suggestions — review and choose the best path before implementing</h1>
+  <p>Every change to the dashboard should be reviewed here first. Choose the best path (approve / defer / reject) before implementing anything. Statuses: <em>Proposed</em> = awaiting review · <em>Under review</em> = being evaluated · <em>Approved</em> = cleared to implement · <em>Rejected</em> = will not implement · <em>Implemented</em> = live on the site.</p>
+
+  <table>
+    <thead><tr>
+      <th>#</th><th>Suggestion</th><th>Area</th><th>Expected decision-making benefit</th><th>Suggested path</th><th>Status</th><th>Decision</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td>1</td><td>Connect the live Kalshi demo WebSocket (ticker + orderbook_delta channels) so the price graph and liquidity table stream real data</td><td>Data</td><td>Live price movements drive timely trade decisions instead of stale tables</td><td>Review credentials handling, then enable in dashboard</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>2</td><td>Add a client-only demo API key entry field (never stored, never logged) to enable portfolio reads and trade execution</td><td>Trading</td><td>Enables real demo trades and portfolio P&L tracking</td><td>Security review first — client-side key handling must not expose keys</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>3</td><td>Categorize every trade by type (bid/ask, limit, time-in-force) and show P&L per trade type</td><td>Analysis</td><td>Compare which trade types perform best; build strategies per type</td><td>Implement after #2 is connected</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>4</td><td>Track each focus-category event to resolution and record Yes/No with settlement_source URL</td><td>Events</td><td>Verify how events resolved before trusting signals derived from them</td><td>Add a "resolved" column + resolution source link on category pages</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>5</td><td>Export trade history and positions to CSV</td><td>Portfolio</td><td>Offline review and audit of trading decisions</td><td>Low effort, implement after #2</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>6</td><td>Add price-alert thresholds per market (notify when a contract crosses a price)</td><td>UX</td><td>Faster reactions to price moves without watching the graph constantly</td><td>Prototype after #1</td><td>Proposed</td><td>—</td>
+      </tr>
+      <tr>
+        <td>7</td><td>Add a backtest view using historical candlesticks (GET /markets/{ticker}/candlesticks)</td><td>Analysis</td><td>Test strategies on historical price action before risking demo funds</td><td>Defer until live data works</td><td>Proposed</td><td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Review process</h2>
+  <ol>
+    <li>Read the suggestion and its expected decision-making benefit.</li>
+    <li>Choose a path: approve, defer, or reject — record it in the Decision column.</li>
+    <li>If approved, implement on a branch, verify against official Kalshi docs, then merge.</li>
+    <li>Rejected items stay visible with the reason noted.</li>
+  </ol>
+  <p class="center source-list">Reference: <a href="https://docs.kalshi.com/getting_started/demo_env">Kalshi demo environment</a> · <a href="../pages/flagged-review.html">Flagged for review</a> page lists all unverified data items that affect these suggestions.</p>
+</main>
+<footer class="footer">Kalshi Demo Dashboard · Suggestions</footer>
+</body>
+</html>

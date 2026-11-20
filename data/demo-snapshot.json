@@ -1,0 +1,248 @@
+{
+  "snapshot_id": "demo-snapshot-2026-11-20",
+  "title": "Kalshi DEMO environment - verified point-in-time snapshot",
+  "environment": "demo",
+  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "collected_at_utc": "2026-11-20T11:20:00Z to 11:33:00Z window (individual trade records carry their exact API timestamps)",
+  "collected_by": "session arena-288e8741-demo1 via authenticated platform page fetcher (direct HTTPS GET, no Origin header, no credentials required - these are public market-data endpoints)",
+  "verification_rule": "Every value below was copied verbatim from an official Kalshi demo Trade API JSON response. No value is estimated or invented. Fields the API did not return in the captured chunk are omitted (blank), not zero-filled. Computed fields are explicitly labeled 'computed' with their formula.",
+  "coverage_note": "Large events return many markets (paginated). Only the markets captured in the first response chunk(s) are listed; the source URL returns the full list. This partial coverage is disclosed per event.",
+  "categories": {
+    "gas": {
+      "series": [
+        {
+          "ticker": "KXAAAGASM",
+          "title": "US gas price",
+          "frequency": "monthly",
+          "category": "Economics",
+          "categories": ["Economics"],
+          "tags": ["Oil & Gas", "Oil and energy"],
+          "settlement_sources": [{"name": "AAA", "url": "https://gasprices.aaa.com/"}],
+          "product_metadata": {"scope": "Gasoline"},
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASM"
+        }
+      ],
+      "open_events": [
+        {
+          "event_ticker": "KXAAAGASM-26NOV30",
+          "title": "Gas prices in the US in Nov 2026?",
+          "sub_title": "On Nov 30, 2026",
+          "category": "Economics",
+          "strike_date": "2026-11-30T15:00:00Z",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXAAAGASM&limit=100"
+        },
+        {
+          "event_ticker": "KXAAAGASW-26NOV23",
+          "series_ticker": "KXAAAGASW",
+          "title": "Weekly AAA gas price event (trading observed on 2026-11-20)",
+          "close_time_of_first_market": "2026-11-23T04:59:00Z",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXAAAGASW-26NOV23&limit=1000",
+          "coverage": "partial - first chunk of 4 returned by endpoint",
+          "markets": [
+            {"ticker": "KXAAAGASW-26NOV23-3.5800", "title": "Will average **gas prices** be above $3.5800?", "status": "active", "last_price_dollars": "0.9900", "open_interest_fp": "650.51", "volume_fp": "650.51", "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000", "close_time": "2026-11-23T04:59:00Z", "rules_primary": "If average regular gas prices for United States are strictly greater than $3.5800 on Nov 23, 2026 according to AAA, then the market resolves to Yes."},
+            {"ticker": "KXAAAGASW-26NOV23-3.8600", "title": "Will average **gas prices** be above $3.8600?", "status": "active", "last_price_dollars": "0.0200", "open_interest_fp": "3398.05", "volume_fp": "3398.05", "yes_bid_dollars": "0.0000", "yes_ask_dollars": "1.0000", "close_time": "2026-11-23T04:59:00Z", "rules_primary": "If average regular gas prices for United States are strictly greater than $3.8600 on Nov 23, 2026 according to AAA, then the market resolves to Yes."},
+            {"ticker": "KXAAAGASW-26NOV23-3.7600", "title": "Will average **gas prices** be above $3.7600?", "status": "active", "last_price_dollars": "0.0000", "open_interest_fp": "0.00", "volume_fp": "0.00", "close_time": "2026-11-23T04:59:00Z"},
+            {"ticker": "KXAAAGASW-26NOV23-3.9000", "title": "Will average **gas prices** be above $3.9000?", "status": "active", "last_price_dollars": "0.0000", "open_interest_fp": "0.00", "volume_fp": "0.00", "close_time": "2026-11-23T04:59:00Z"},
+            {"ticker": "KXAAAGASW-26NOV23-3.5400", "title": "Will average **gas prices** be above $3.5400?", "status": "active", "last_price_dollars": "0.0000", "open_interest_fp": "0.00", "volume_fp": "0.00", "close_time": "2026-11-23T04:59:00Z"},
+            {"ticker": "KXAAAGASW-26NOV23-3.5600", "title": "Will average **gas prices** be above $3.5600?", "status": "active", "last_price_dollars": "0.0000", "open_interest_fp": "0.00", "volume_fp": "0.00", "close_time": "2026-11-23T04:59:00Z"}
+          ],
+          "observed_trades_2026-11-20": [
+            {"ticker": "KXAAAGASW-26NOV23-3.6400", "yes_price_dollars": "0.0200", "count_fp": "1.50", "created_time": "2026-11-20T11:27:25.764648Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"}
+          ],
+          "dollar_volume_estimate_computed": "sum(volume_fp * last_price_dollars) over captured markets = 650.51*0.99 + 3398.05*0.02 = 643.99 + 67.96 = $711.96 (partial coverage; estimate, not an official field)"
+        }
+      ],
+      "resolved_examples": [
+        {
+          "event_ticker": "KXAAAGASM-26OCT31",
+          "market_ticker": "KXAAAGASM-26OCT31-4.18",
+          "title": "Will average **gas prices** be above $4.18?",
+          "status": "finalized",
+          "result": "yes",
+          "settlement_ts": "2026-10-31T14:10:30.416365Z",
+          "settlement_value_dollars": "1.0000",
+          "last_price_dollars": "0.8300",
+          "volume_fp": "784.60",
+          "open_interest_fp": "743.85",
+          "rules_primary": "If average regular gas prices for United States are strictly greater than $4.18 on Oct 31, 2026 according to AAA, then the market resolves to Yes.",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&limit=1"
+        }
+      ]
+    },
+    "crypto": {
+      "series_seen": ["KXBTC (hourly BTC price range)", "KXBTCD (daily/hourly BTC price)", "KXETH", "KXDOGE", "KXSUIATH", "KXBTC2025100", "KXBTCMAXW", "KXSOLFLIPETH", "KXETHMAXY", "KXBTCVSSOL", "KXDJTBTC"],
+      "series_list_source": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=50",
+      "open_events": [
+        {
+          "event_ticker": "KXBTCD-26NOV2017",
+          "title": "Bitcoin price on Nov 20, 2026? (5 PM EST settlement)",
+          "category": "Crypto",
+          "expected_expiration_time": "2026-11-20T22:05:00Z",
+          "close_time": "2026-11-20T22:00:00Z",
+          "settlement_source": "CF Benchmarks (BRTI)",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXBTCD-26NOV2017&limit=1000",
+          "coverage": "partial - first chunk of 12 returned by endpoint (event has ~240 strike markets)",
+          "markets": [
+            {"ticker": "KXBTCD-26NOV2017-T57499.99", "subtitle": "$57,500 or above", "status": "active", "last_price_dollars": "0.9900", "volume_fp": "23963.06", "volume_24h_fp": "833.47", "open_interest_fp": "22024.83", "yes_bid_dollars": "0.9600", "yes_bid_size_fp": "3471.61", "yes_ask_dollars": "1.0000"},
+            {"ticker": "KXBTCD-26NOV2017-T72999.99", "subtitle": "$73,000 or above", "status": "active", "last_price_dollars": "0.0300", "open_interest_fp": "42073.10"},
+            {"ticker": "KXBTCD-26NOV2017-T76999.99", "subtitle": "$77,000 or above", "status": "active", "last_price_dollars": "0.0200", "volume_fp": "8444.67", "open_interest_fp": "8444.67"},
+            {"ticker": "KXBTCD-26NOV2017-T76499.99", "subtitle": "$76,500 or above", "status": "active", "last_price_dollars": "0.0400", "volume_fp": "8686.16", "open_interest_fp": "8686.16"},
+            {"ticker": "KXBTCD-26NOV2017-T75999.99", "subtitle": "$76,000 or above", "status": "active", "last_price_dollars": "0.0300", "volume_fp": "2474.61", "open_interest_fp": "2474.61"}
+          ],
+          "dollar_volume_estimate_computed": "over captured markets only: 23963.06*0.99 + 8444.67*0.02 + 8686.16*0.04 + 2474.61*0.03 = 23723.43+168.89+347.45+74.24 = $24,314.01 (partial coverage; estimate, not an official field)"
+        }
+      ],
+      "observed_trades_2026-11-20": [
+        {"ticker": "KXBTCD-26NOV2017-T58999.99", "yes_price_dollars": "0.9300", "count_fp": "0.74", "created_time": "2026-11-20T11:26:21.523141Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T60999.99", "yes_price_dollars": "0.7100", "count_fp": "1.01", "created_time": "2026-11-20T11:27:26.76547Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T62999.99", "yes_price_dollars": "0.2800", "count_fp": "1.07", "created_time": "2026-11-20T11:27:26.53053Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T63999.99", "yes_price_dollars": "0.1400", "count_fp": "0.20", "created_time": "2026-11-20T11:27:26.154857Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T65499.99", "yes_price_dollars": "0.0400", "count_fp": "0.55", "created_time": "2026-11-20T11:27:26.362099Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T65999.99", "yes_price_dollars": "0.0200", "count_fp": "1.26", "created_time": "2026-11-20T11:27:26.159971Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T66499.99", "yes_price_dollars": "0.0400", "count_fp": "1.60", "created_time": "2026-11-20T11:27:25.740745Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXBTCD-26NOV2017-T68999.99", "yes_price_dollars": "0.0400", "count_fp": "1.71", "created_time": "2026-11-20T11:26:20.865443Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"}
+      ],
+      "orderbook_sample": {
+        "market_ticker": "KXBTCD-26NOV2017-T57499.99",
+        "yes_bids_dollars": [["0.9400", "4485.00"], ["0.9500", "4411.43"], ["0.9600", "3471.61"]],
+        "no_bids_dollars": [],
+        "note": "orderbook returns resting bids only; a YES ask of $1-minus-NO-bid cannot be derived here because the NO bid side is empty",
+        "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2017-T57499.99/orderbook"
+      },
+      "candlesticks_sample": {
+        "market_ticker": "KXBTCD-26NOV2017-T57499.99",
+        "period_interval_minutes": 1,
+        "window_utc": "start 1795166700 (2026-11-20T09:25:00Z) to end 1795173900 (2026-11-20T11:25:00Z)",
+        "observed_pattern": "every returned 1-minute candle in the captured chunk shows yes_bid close 0.9600, yes_ask close 1.0000, volume_fp 0.00, open_interest_fp 22024.83; the price OHLC object carries only previous_dollars 0.9900 (no trades in window)",
+        "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCD/markets/KXBTCD-26NOV2017-T57499.99/candlesticks?start_ts=1795166700&end_ts=1795173900&period_interval=1"
+      },
+      "resolution_note": "GET /events?series_ticker=KXBTCD&status=settled&limit=10 returned only synthetic future-dated events (strike dates 2027-2035) with junk cadence metadata (e.g. 'hohhggd'). No genuine 2026 settled crypto event was found via this query. Flagged in the resolution log."
+    },
+    "elections": {
+      "open_events": [
+        {
+          "event_ticker": "KXPRESNOMD-28",
+          "title": "Democratic presidential nominee 2028 (winner takes nomination)",
+          "category": "Elections",
+          "close_time": "2028-11-07T15:00:00Z",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXPRESNOMD-28&limit=1000",
+          "coverage": "partial - first chunk of 13 returned by endpoint (~260 candidate markets)",
+          "markets": [
+            {"ticker": "KXPRESNOMD-28-JCRO", "subtitle": "Jasmine Crockett", "status": "active", "last_price_dollars": "0.0030", "volume_fp": "2656378.77", "open_interest_fp": "1924557.49", "yes_bid_dollars": "0.0010", "yes_bid_size_fp": "24.66"},
+            {"ticker": "KXPRESNOMD-28-ASPA", "subtitle": "Abigail Spanberger", "status": "active", "last_price_dollars": "0.0030", "volume_fp": "1381.12", "open_interest_fp": "1381.12"},
+            {"ticker": "KXPRESNOMD-28-SABR", "subtitle": "Stacey Abrams", "status": "active", "last_price_dollars": "0.0000", "volume_fp": "0.00", "open_interest_fp": "0.00"},
+            {"ticker": "KXPRESNOMD-28-PFLA", "subtitle": "Peggy Flanagan", "status": "active", "last_price_dollars": "0.0000", "volume_fp": "0.00", "open_interest_fp": "0.00"},
+            {"ticker": "KXPRESNOMD-28-SCOL", "subtitle": "Scott Colom", "status": "active", "last_price_dollars": "0.0030", "open_interest_fp": "860312.95"}
+          ],
+          "dollar_volume_estimate_computed": "over captured markets: 2656378.77*0.003 + 1381.12*0.003 = $7,972.87 (partial coverage; estimate, not an official field)"
+        }
+      ],
+      "other_election_series_seen": ["KXPRESNOMR-28 (Republican nominee, actively trading)", "KXPRESPERSON-28 (person elected president 2028, actively trading)", "KXAGRACE (state AG races 2028)", "KXSTATEDEEPKH", "KXMAYORBOS (series exists, 0 events)", "KXNEXTPRESSECPERM"],
+      "observed_trades_2026-11-20": [
+        {"ticker": "KXPRESNOMD-28-RC", "yes_price_dollars": "0.0030", "count_fp": "1.41", "created_time": "2026-11-20T11:27:25.932766Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXPRESNOMD-28-ESLO", "yes_price_dollars": "0.0090", "count_fp": "1.66", "created_time": "2026-11-20T11:27:25.92816Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXPRESNOMR-28-ITRU", "yes_price_dollars": "0.0100", "count_fp": "1.94", "created_time": "2026-11-20T11:27:26.768805Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXPRESPERSON-28-JVAN", "yes_price_dollars": "0.1400", "count_fp": "1.65", "created_time": "2026-11-20T11:26:20.951652Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"}
+      ],
+      "resolution_note": "No settled 2026-cycle election events were located on the demo environment (KXAGRACE status=settled returned zero events). The demo election book is dominated by synthetic 2028 nominee markets with very large volume/open-interest values. Flagged in the resolution log."
+    },
+    "culture": {
+      "series_list_category_source": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=200 (returned exactly 2 series: KXXBANNEDGROK, KXXBANNEDMURRAYHILLGUY1)",
+      "open_events": [
+        {
+          "event_ticker": "KXTIME-26",
+          "title": "Time Person of the Year 2026",
+          "category": "Culture (event-level category returned as Culture; individual Grammy events use 'Entertainment')",
+          "close_time": "2027-01-01T04:59:00Z",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXTIME-26&limit=1000",
+          "coverage": "partial - first chunk of 20 returned by endpoint (~400 candidate markets)",
+          "markets": [
+            {"ticker": "KXTIME-26-AND", "subtitle": "Andy Burnham", "status": "active", "last_price_dollars": "0.0000", "volume_fp": "0.00", "open_interest_fp": "0.00"},
+            {"ticker": "KXTIME-26-TS", "subtitle": "Taylor Swift", "status": "active", "last_price_dollars": "0.0500", "volume_fp": "293.88", "open_interest_fp": "292.73"},
+            {"ticker": "KXTIME-26-ALIU", "subtitle": "Alysa Liu", "status": "active", "last_price_dollars": "0.0200", "open_interest_fp": "33419.76"}
+          ]
+        },
+        {
+          "event_ticker": "KXGRAMMY-ROTY69",
+          "title": "Grammy Winner: Record Of The Year (2027 ceremony)",
+          "category": "Entertainment",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXGRAMMY&limit=50"
+        },
+        {
+          "event_ticker": "KXGRAMMY-SOTY69",
+          "title": "Grammy Winner: Song Of The Year (2027 ceremony)",
+          "category": "Entertainment",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXGRAMMY&limit=50"
+        }
+      ],
+      "observed_trades_2026-11-20": [
+        {"ticker": "KXTIME-26-ABD", "yes_price_dollars": "0.1900", "count_fp": "0.62", "created_time": "2026-11-20T11:26:20.864904Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXTIME-26-BEN", "yes_price_dollars": "0.0600", "count_fp": "1.61", "created_time": "2026-11-20T11:27:25.831012Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXTIME-26-VIC", "yes_price_dollars": "0.0400", "count_fp": "1.57", "created_time": "2026-11-20T11:27:25.765384Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+        {"ticker": "KXTOPSONG-26NOV28-BOS", "yes_price_dollars": "0.0200", "count_fp": "1.31", "created_time": "2026-11-20T11:26:21.643835Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"}
+      ],
+      "resolution_note": "No settled culture events captured; KXTIME-26 and KXGRAMMY events are open with 2027 close dates."
+    },
+    "golf": {
+      "series_seen_via_tags_filter": ["KXPGATOUR (PGA Tour tournament winner markets)", "KXDPWTTOP20 (DP World Tour top-20 finishers)", "KXNEXTWIN (series exists, zero events on demo)", "KXPGARETURN", "KXPRESCUPMATCH (Presidents Cup)", "KXGOLFMAJORS (Golf Majors Won)"],
+      "series_list_source": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Sports&tags=Golf",
+      "open_events": [
+        {
+          "event_ticker": "KXPGATOUR-THRC26",
+          "title": "The RSM Classic - tournament winner (live tournament week Nov 19-22, 2026)",
+          "category": "Sports",
+          "expected_expiration_time": "2026-11-22T00:00:00Z",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXPGATOUR-THRC26&limit=1000",
+          "coverage": "partial - first chunk of 38 returned by endpoint (~760 golfer markets)",
+          "markets": [
+            {"ticker": "KXPGATOUR-THRC26-MATK", "subtitle": "Matt Atkins", "status": "active", "last_price_dollars": "0.0030", "volume_fp": "3567.85", "volume_24h_fp": "3550.67", "open_interest_fp": "3567.85", "yes_bid_dollars": "0.0020", "yes_bid_size_fp": "83333.33", "yes_ask_dollars": "0.0030", "yes_ask_size_fp": "55481.40"},
+            {"ticker": "KXPGATOUR-THRC26-CVIL", "subtitle": "Camilo Villegas", "status": "active", "last_price_dollars": "0.0000", "volume_fp": "0.00", "yes_bid_dollars": "0.0100", "yes_bid_size_fp": "8.00"},
+            {"ticker": "KXPGATOUR-THRC26-NHAR", "subtitle": "Nick Hardy", "status": "active", "volume_fp": "0.00"},
+            {"ticker": "KXPGATOUR-THRC26-BHAA", "subtitle": "Bill Haas", "status": "active", "volume_fp": "0.00"}
+          ],
+          "dollar_volume_estimate_computed": "over captured markets: 3567.85*0.003 = $10.70 (partial coverage; estimate)"
+        },
+        {
+          "event_ticker": "KXDPWTTOP20-DPWTC26",
+          "title": "DP World Tour Championship: Top 20 Finishers (live tournament week)",
+          "category": "Sports",
+          "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXDPWTTOP20&limit=50"
+        }
+      ],
+      "orderbook_sample": {
+        "market_ticker": "KXPGATOUR-THRC26-MATK",
+        "yes_bids_dollars": [["0.0010", "166666.66"], ["0.0020", "83333.33"]],
+        "no_bids_dollars": [["0.9950", "33333.33"], ["0.9960", "41666.66"], ["0.9970", "55477.86"]],
+        "derived_yes_asks_computed": "1 - no_bid = [0.0050 x 33333.33, 0.0040 x 41666.66, 0.0030 x 55477.86]; best ask 0.0030 matches the market snapshot yes_ask_dollars 0.0030",
+        "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MATK/orderbook"
+      },
+      "resolved_examples": [
+        {"event_ticker": "KXDPWTTOP20-GEC26", "event_title": "Genesis Championship: Top 20 Finishers", "market_ticker": "KXDPWTTOP20-GEC26-YBAE", "subtitle": "Yongjun Bae", "status": "finalized", "result": "yes", "settlement_ts": "2026-10-25T13:59:39.14801Z", "settlement_value_dollars": "1.0000", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"},
+        {"event_ticker": "KXDPWTTOP20-GEC26", "market_ticker": "KXDPWTTOP20-GEC26-SOH", "subtitle": "Seung-Taek Oh", "status": "finalized", "result": "no", "settlement_ts": "2026-10-25T12:58:34.14401Z", "settlement_value_dollars": "0.0000", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"},
+        {"event_ticker": "KXDPWTTOP20-GEC26", "market_ticker": "KXDPWTTOP20-GEC26-MSON", "subtitle": "Minhyuk Song", "status": "finalized", "result": "no", "settlement_ts": "2026-10-25T12:58:34.144094Z", "settlement_value_dollars": "0.0000", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"},
+        {"event_ticker": "KXDPWTTOP20-GEC26", "market_ticker": "KXDPWTTOP20-GEC26-WCHO", "subtitle": "Wooyoung Cho", "status": "finalized", "result": "no", "settlement_ts": "2026-10-25T13:59:39.142029Z", "settlement_value_dollars": "0.0000", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"}
+      ]
+    },
+    "cross_category_trades_observed_2026-11-20": [
+      {"ticker": "KXMVECROSSCATEGORY-S2026EAZNHFHNH3S6LV4B-IKATDXDGK", "yes_price_dollars": "0.4500", "count_fp": "100.00", "created_time": "2026-11-20T11:27:26.160505Z", "note": "largest single trade observed in the captured window", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+      {"ticker": "KXRAINSHARD2-26NOV20-PHX", "yes_price_dollars": "0.5200", "count_fp": "1.00", "created_time": "2026-11-20T11:27:26.113593Z", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"},
+      {"ticker": "KXHIGHMIA-26NOV20-B80.5", "yes_price_dollars": "0.1700", "count_fp": "1.00", "created_time": "2026-11-20T11:27:25.924849Z", "note": "NO-side taker trade at 0.83", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=1000"}
+    ]
+  },
+  "dollar_volume_methodology": {
+    "official_fields_used": ["volume_fp (contracts traded, fixed-point)", "volume_24h_fp", "open_interest_fp", "last_price_dollars", "yes_bid_dollars", "yes_ask_dollars", "yes_bid_size_fp", "yes_ask_size_fp"],
+    "note": "The Kalshi Trade API market object does not return a dollar-volume field (verified against the Get Markets response schema at https://docs.kalshi.com/api-reference/market/get-markets and against live responses). Dollar volume here is a COMPUTED ESTIMATE: sum over markets of (volume_fp x last_price_dollars). The exact dollar traded value can only be computed from the trades feed (GET /markets/trades: sum of price x count per trade); the live page does this client-side over a bounded recent-trades window when the API is reachable.",
+    "ranking_caveat": "Demo volumes are dominated by synthetic 2028 election markets (e.g. KXPRESNOMD-28 with 2,656,378.77 contracts of volume and 1,924,557.49 open interest on a single market) and by demo-injected open interest on markets with zero trades (e.g. KXTIME-26-ALIU open_interest 33,419.76 with volume 0.00). Treat 'highest dollar amount' rankings on the demo environment as exercise data, not real market depth."
+  },
+  "official_docs_used": [
+    "https://docs.kalshi.com/getting_started/api_environments",
+    "https://docs.kalshi.com/getting_started/quick_start_market_data",
+    "https://docs.kalshi.com/api-reference/events/get-events",
+    "https://docs.kalshi.com/api-reference/market/get-markets",
+    "https://docs.kalshi.com/api-reference/market/get-trades",
+    "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+    "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+    "https://docs.kalshi.com/api-reference/market/get-series-list",
+    "https://docs.kalshi.com/llms.txt"
+  ]
+}

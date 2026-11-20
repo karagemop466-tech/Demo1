@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API reference — what was verified against the Kalshi demo host</title>
+<meta name="description" content="Endpoint-by-endpoint record of the Kalshi demo API: parameters, semantics, rate limits, WebSocket channels, and whether each was exercised in this session.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="api">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>API reference</h1>
+    <p class="lede">Not a copy of the vendor docs — a record of what this project actually called, what came back, and what remains documented-but-untested. The last column is the honesty column.</p>
+  </div>
+
+  <div class="card">
+    <h2>Endpoints <span class="sub">demo host <code>https://external-api.demo.kalshi.co/trade-api/v2</code></span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Endpoint</th><th scope="col">Purpose / key parameters</th><th scope="col">Behaviour recorded in this session</th><th scope="col">Status</th><th scope="col">Docs</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /exchange/status</code></td><td>exchange + shard liveness</td><td>200. <code>exchange_active: true</code>, <code>trading_active: true</code>, four shards (“Default”, “Demo shard 1”, “Demo shard 2”, one unnamed).</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">Get Exchange Status</a></td></tr>
+          <tr><td><code>GET /markets</code></td><td><code>limit</code> (default/max per docs), <code>cursor</code>, <code>status</code>, <code>event_ticker</code>, <code>series_ticker</code>, timestamp filters</td><td>200 with <code>?limit=2&amp;status=open</code>. Only one <code>status</code> per call; timestamp filters are mutually exclusive with each other and with some statuses; results are creation-ordered newest-first unless a close/settlement filter is used.</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+          <tr><td><code>GET /events</code></td><td><code>limit</code> ≤200, <code>cursor</code>, <code>status ∈ unopened|open|closed|settled</code>, <code>series_ticker</code>, <code>tickers</code>, <code>with_nested_markets</code>, <code>with_milestones</code>, <code>min_close_ts</code>, <code>min_updated_ts</code></td><td>200 for open and settled queries. <strong>No sort parameter</strong>, so any ranking is computed by the client. An unknown extra parameter (<code>with_daily_volumes</code>) was accepted without error, i.e. silently ignored.</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td></tr>
+          <tr><td><code>GET /series</code></td><td><code>category</code>, <code>tags</code>, <code>include_volume</code>, <code>include_product_metadata</code>, <code>min_updated_ts</code></td><td>200. <strong>No <code>limit</code> or <code>cursor</code> parameter exists</strong>: <code>?category=Crypto&amp;limit=5</code> returned the entire category (35 response chunks). Unknown tag → <code>{"series":null}</code>. <code>category=Elections</code> is a real, separate category from <code>Politics</code>.</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td></tr>
+          <tr><td><code>GET /series/{series_ticker}</code></td><td>one series</td><td>200 for <code>KXBTCMAX90</code>; non-2xx for tickers that do not exist in demo (<code>KXGASPRICE</code>, <code>KXPGACHAMP</code>, <code>KXMASTERS</code>, <code>KXMIDTERMSENATE</code>) — used here as a cheap existence probe.</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener">Get Series</a></td></tr>
+          <tr><td><code>GET /series/{s}/markets/{t}/candlesticks</code></td><td><code>start_ts</code>, <code>end_ts</code> (Unix <strong>seconds</strong>), <code>period_interval ∈ {1, 60, 1440}</code>, <code>include_latest_before_start</code></td><td>200 with 16 one-minute candles. ≤5,000 periods per request; milliseconds are rejected; each candle carries OHLC for <code>price</code>, <code>yes_bid</code>, <code>yes_ask</code> plus <code>volume_fp</code> and <code>open_interest_fp</code>. “The most recent candlesticks can be a few seconds behind the latest trades and quotes.”</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
+          <tr><td><code>GET /markets/{t}/orderbook</code></td><td>optional <code>depth</code></td><td>200 with <code>orderbook_fp.yes_dollars: []</code> and <code>no_dollars: []</code> because the market had just closed. Docs: bids only, ascending, best last, and an <em>unknown</em> ticker also returns 200 + empty arrays, never 404.</td><td><span class="badge yes">exercised</span></td><td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td></tr>
+          <tr><td><code>GET /trades</code></td><td>public tape; <code>ticker</code>/<code>market_tickers</code>, <code>limit</code>, cursors</td><td><strong>Both parameter forms failed to return content through the tool used for this capture</strong>, so trade-level turnover remains unverified. Not treated as unsupported — only as unconfirmed here.</td><td><span class="badge unverified">unverified</span> <a href="flagged.html#fl-6">FL-6</a></td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a></td></tr>
+          <tr><td><code>GET /search/filters_by_sport</code></td><td>sport → scopes/competitions for filtering</td><td>Documented (returns <code>filters_by_sports</code> + <code>sport_ordering</code>); not called during this capture.</td><td><span class="badge muted">documented only</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/search/get-filters-for-sports" target="_blank" rel="noopener">Get Filters for Sports</a></td></tr>
+          <tr><td><code>GET /search/tags_by_categories</code></td><td>category → tag vocabulary</td><td>Attempted on the demo host and the request did not succeed, which is why topic discovery fell back to <code>tags=</code> probes. Would be the authoritative way to enumerate tags.</td><td><span class="badge unverified">unverified</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">Get Tags for Series Categories</a></td></tr>
+          <tr><td><code>GET /live_data/milestone/{id}</code>, <code>GET /events/{t}/live_data</code></td><td>live game state; crypto price charts, commodity timeseries, weather observations keyed by event</td><td>Documented and directly relevant to “track live events” for sports and for the gas series, but not exercised in this capture — a strong candidate for the next pass.</td><td><span class="badge muted">documented only</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/live-data/get-event-live-data" target="_blank" rel="noopener">Get Event Live Data</a></td></tr>
+          <tr><td><code>GET /portfolio/*</code>, <code>POST /portfolio/events/orders</code></td><td>balance, positions, fills, settlements, orders</td><td>Requires a signed handshake; no key exists in this project, so <strong>not called</strong>. See <a href="portfolio.html">Portfolio &amp; trades</a>.</td><td><span class="badge no">not attempted</span></td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td></tr>
+          <tr><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td>streaming; channels listed below</td><td>Not connected: “Authentication is required to establish the connection … Some channels carry only public market data, but the connection itself still requires authentication.” A static page cannot sign a handshake and cannot set WebSocket headers.</td><td><span class="badge no">not attempted</span> <a href="flagged.html#fl-3">FL-3</a></td><td class="src"><a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket Connection</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>WebSocket channels (verbatim enum)</h3>
+      <div class="body prose">
+        <p style="margin-top:0"><code>orderbook_delta</code>, <code>ticker</code>, <code>trade</code>, <code>fill</code>, <code>market_positions</code>, <code>market_lifecycle_v2</code>, <code>multivariate_market_lifecycle</code>, <code>communications</code>, <code>order_group_updates</code>, <code>user_orders</code>, <code>cfbenchmarks_value</code>, <code>cfbenchmarks_value_5hz</code>, <code>pyth_value</code>, <code>ebattle_scores</code>.</p>
+        <ul>
+          <li>Subscribe: <code>{id, cmd:"subscribe", params:{channels:[…], market_ticker|market_tickers:[…]}}</code>; one subscription per channel per connection — re-subscribing adds markets to the existing <code>sid</code> rather than creating a second feed.</li>
+          <li>Sub-second price views come from <code>cfbenchmarks_value_5hz</code> (5&nbsp;Hz), which is also the settlement reference for the crypto series — the same number the rules use.</li>
+          <li>A rejected handshake returns HTTP <code>429 too_many_requests</code> for <em>both</em> “too many concurrent connections” and “opening too fast”, so reconnect with exponential backoff.</li>
+          <li>Source: <a href="https://docs.kalshi.com/websockets/websocket-connection" target="_blank" rel="noopener">WebSocket Connection</a>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Limits, pagination, accuracy</h3>
+      <div class="body prose">
+        <ul>
+          <li><strong>Tokens, not windows.</strong> Most requests cost 10 tokens; the tier sets a per-second refill; <code>GET /account/endpoint_costs</code> is authoritative for exceptions. <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a></li>
+          <li><strong>Read/write buckets</strong> are per operation, not per verb; <code>GET /portfolio/balance</code> has its own bucket (1/s on Basic-Advanced). Unauthenticated public requests have separate limits of their own.</li>
+          <li><strong>429 has no penalty and no <code>Retry-After</code></strong>; the bucket keeps refilling and “your next request succeeds once the balance covers its cost”.</li>
+          <li><strong>Cursors are opaque.</strong> Pass them back unchanged; a cursor that cannot be decoded is <em>silently ignored</em> and returns page 1 with no error; stop when the returned cursor is empty. <a href="https://docs.kalshi.com/getting_started/pagination" target="_blank" rel="noopener">Understanding Pagination</a></li>
+          <li><strong>Rows can repeat or vanish mid-scan</strong> when a market's close time changes during a close-time-sorted page walk — “deduplicate by <code>ticker</code>”, which <code>Kalshi.scanEvents</code> does by <code>event_ticker</code>.</li>
+          <li><strong>Reads lag.</strong> Responses are cached briefly so “prices, sizes and <code>status</code> can lag the exchange by several seconds”, and filtered listings lag longer than a single-market read.</li>
+          <li><strong>Historical cutoff.</strong> Markets settled before it move to <code>GET /historical/markets</code> and its candlestick/fills/positions twins — relevant as soon as this snapshot ages. <a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical Data</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fixed-point representation <span class="sub">why the maths is written the way it is</span></h3>
+    <div class="body prose">
+      <p style="margin-top:0">Prices and counts arrive as <em>decimal strings</em> (<code>"0.2900"</code>, <code>"385.82"</code>) to support sub-penny pricing and fractional contracts — see <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a>. The engine therefore (a) parses through one helper that maps <code>""</code>/garbage to <code>null</code> rather than <code>0</code>, and (b) normalises every computed dollar amount to micro-dollar precision before display, because <code>100 × 0.29</code> is <code>28.999999999999996</code> in IEEE-754. Both behaviours are asserted by tests.</p>
+      <p class="dim" style="font-size:12.5px">Every market row also carries <code>price_ranges</code> with <code>start</code>/<code>end</code>/<code>step</code>; the 15-minute crypto market uses a tapered grid (<code>0.0010</code> below 0.10, <code>0.0100</code> between, <code>0.0010</code> above 0.90). Any order price must sit on that grid or it is rejected <code>400 invalid_price</code>.</p>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

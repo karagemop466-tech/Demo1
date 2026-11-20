@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — the review queue for improving decision-making</title>
+<meta name="description" content="Ten concrete improvements to the Kalshi demo dashboard, each with its rationale, action, evidence and a blocked/deferred/approved decision control. Nothing is implemented before a human picks the path.">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="suggestions">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Suggestions</h1>
+    <p class="lede">A review queue, not a changelog. Each item states the gap, the smallest action that closes it, what it unblocks, and the official source. Mark it <em>approve</em>, <em>defer</em> or <em>reject</em> below — the decision and your note stay in this browser, and “Export decisions” produces a JSON file to commit or paste into <code>COORDINATION.md</code>. <strong>Nothing here has been implemented.</strong></p>
+  </div>
+
+  <div class="notice info">
+    <strong>How to review these.</strong> Four items are architecture- or trust-determining (S-1, S-2, S-5, S-6); the rest are quality-of-decision work. A deferral is a legitimate answer — it says “the current behaviour is acceptable for now”, which is different from silence. Items marked <em>high impact</em> that you reject should get a one-line note, because the code will keep behaving the flagged way and the next reader deserves to know that was deliberate.
+  </div>
+
+  <div class="card">
+    <h2>Decision area <span class="sub">approve · defer · reject — saved locally, exportable</span></h2>
+    <div id="mount-suggestions" data-mount="suggestions"><noscript><p class="dim">The interactive decision controls need JavaScript. The full list in prose form is in the table below; to record decisions without JS, edit the <code>decisions</code> object in <code>assets/app.js</code> and commit it.</p></noscript></div>
+  </div>
+
+  <div class="card">
+    <h2>The same ten, as a table <span class="sub">readable without scrolling the cards, and sortable</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">ID</th><th scope="col">Suggestion</th><th scope="col">Area</th><th scope="col">Impact</th><th scope="col">Effort</th><th scope="col">If approved, first step</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr id="s-1"><td><code>S-1</code></td><td>Publish an exact dollar-volume figure, or accept the proxy explicitly</td><td>data</td><td>high</td><td>M</td><td>Add a <code>--with-trades</code> pass to the collector that sums <code>price × count</code> per event; keep the proxy until it runs clean twice.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noopener">Get Trades</a> · <a href="flagged.html#fl-1">FL-1</a></td></tr>
+          <tr id="s-2"><td><code>S-2</code></td><td>Stand up a tiny signed proxy for portfolio + WebSocket work</td><td>architecture</td><td>high</td><td>S</td><td>One loopback service that holds the key, signs <code>ts + method + path</code>, and exposes two read endpoints (book, stream replay). The Pages site stays static and only swaps its base URL.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_keys.md" target="_blank" rel="noopener">API keys</a> · <a href="https://docs.kalshi.com/websockets/websocket-connection.md" target="_blank" rel="noopener">WS connection</a></td></tr>
+          <tr id="s-3"><td><code>S-3</code></td><td>Treat the 15-minute crypto series as the live-tracking test bench</td><td>product</td><td>med</td><td>S</td><td>Point the resolution tracker and chart replay at <code>KXBTC15M</code> for one session; the ~4-second settlement latency makes it the fastest possible end-to-end test.</td><td class="src"><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXBTC15M&amp;with_nested_markets=true&amp;limit=3&amp;status=settled" target="_blank" rel="noopener">settled rows</a></td></tr>
+          <tr id="s-4"><td><code>S-4</code></td><td>Store the strategy tag in <code>client_order_id</code> at order time</td><td>trading</td><td>med</td><td>S</td><td>Adopt <code>strat:&lt;id&gt;|topic:&lt;t&gt;|role:&lt;maker|taker&gt;</code> — ≤64 chars of <code>A-Za-z0-9_-=:/</code> — before the first order, because fills carry no strategy field and cannot be labelled retroactively.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_create_order.md" target="_blank" rel="noopener">first order</a></td></tr>
+          <tr id="s-5"><td><code>S-5</code></td><td>Add a spread/depth gate before any live order</td><td>risk</td><td>high</td><td>S</td><td>Refuse to quote when the top-of-book is one-sided (13 of 20 captured legs sat at 0.0000/1.0000) or when depth at the limit is below the order size — a rule, not a warning.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses.md" target="_blank" rel="noopener">Orderbook responses</a></td></tr>
+          <tr id="s-6"><td><code>S-6</code></td><td>Reconcile the demo catalog against production before drawing conclusions</td><td>data</td><td>high</td><td>S</td><td>Run the same series query against the production host and diff ticker coverage; publish which topics exist only in one place (Culture is the known case).</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">demo env</a> · <a href="flagged.html#fl-5">FL-5</a></td></tr>
+          <tr id="s-7"><td><code>S-7</code></td><td>Cache and version the snapshot in git; refresh on a schedule</td><td>ops</td><td>med</td><td>M</td><td>Keep doing it, but add an age badge rule (refuse to render as “current” past a Q-10 budget) and a nightly commit so provenance is chronological.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Get Markets</a> (read caching)</td></tr>
+          <tr id="s-8"><td><code>S-8</code></td><td>Handle the API's quirky empties explicitly in the UI</td><td>robustness</td><td>med</td><td>S</td><td>Already partly built (— vs 0.00, “no resting orders” vs “no data”); keep both branches unit-tested whenever a renderer changes.</td><td class="src"><a href="https://docs.kalshi.com/getting_started/orderbook_responses.md" target="_blank" rel="noopener">Orderbook responses</a> · <a href="flagged.html#fl-10">FL-10</a></td></tr>
+          <tr id="s-9"><td><code>S-9</code></td><td>Add alerting on resolution, not just price</td><td>product</td><td>med</td><td>M</td><td>Poll <code>GET /markets/{ticker}</code> inside the close window and raise an entry when <code>result</code> flips non-empty, recording <code>settlement_ts</code> and <code>settlement_value_dollars</code>.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market.md" target="_blank" rel="noopener">Get Market</a></td></tr>
+          <tr id="s-10"><td><code>S-10</code></td><td>Publish the questions register as a decision gate</td><td>process</td><td>med</td><td>S</td><td>Require an owner + dated answer on each <a href="questions.html">open question</a> before the matching feature is built; answers land in the table and in <code>COORDINATION.md</code>.</td><td class="src"><a href="questions.html">Open questions</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>If everything is approved, in what order</h3>
+      <div class="body prose">
+        <ol style="margin-top:0">
+          <li><strong>S-10, S-8</strong> — process and honesty guards first; they cost nothing and prevent the rest from producing confident-looking noise.</li>
+          <li><strong>S-5, S-4</strong> — risk rail and labelling, both before any order exists.</li>
+          <li><strong>S-6, S-3</strong> — reconcile the catalog, then use <code>KXBTC15M</code> as the fast test bench.</li>
+          <li><strong>S-2</strong> — the proxy; the only item that needs infrastructure and your key.</li>
+          <li><strong>S-7, S-9</strong> — scheduled refresh and resolution alerting, which turn a snapshot into a tracker.</li>
+          <li><strong>S-1</strong> — exact turnover last, because it is the most expensive and the least likely to change a decision.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="card">
+      <h3>What this project will <em>not</em> do without an approval</h3>
+      <div class="body prose">
+        <ul style="margin-top:0">
+          <li>No order will be placed, amended or cancelled by a page of this site. The signing tool exists; the call does not happen on load (<a href="portfolio.html">guardrails</a>).</li>
+          <li>No private key, token or credential will be committed, or accepted into page code or localStorage.</li>
+          <li>No number will be filled in from memory to complete a table; blanks and badges stay until a source resolves them.</li>
+          <li>No strategy will be reported as tested. The equity curve on the portfolio page is a replay of captured candles, labelled as such.</li>
+          <li>The five-topic filter stays exactly gas prices · elections · culture · crypto · golf, even where that means an empty column.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Decisions already taken outside this queue <span class="sub">so the record is complete</span></h3>
+    <div class="body prose">
+      <ul style="margin-top:0">
+        <li><strong>Taking trades is deferred</strong>, not rejected — blocked on Q-1/Q-2, with the full specification and simulator already in place so approval is a configuration change plus one guarded run.</li>
+        <li><strong>The dollar-volume proxy is adopted provisionally</strong> for ranking, and every affected header says “estimate”, with partial sums printed as a floor.</li>
+        <li><strong>The seconds view ships as labelled 60-second buckets</strong> rather than being dropped or faked, with the REST limitation stated on the markets page.</li>
+        <li><strong>Flagged items do not block publishing.</strong> They are on <a href="flagged.html">Flagged for review</a>, linked from each table that they touch.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

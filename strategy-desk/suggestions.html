@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions &amp; Open Questions — Kalshi Demo Tracker</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%2338bdf8'/></svg>">
+</head>
+<body data-page="suggestions">
+<header class="site">
+  <div class="navwrap">
+    <div class="logo"><span class="dot"></span> Kalshi Demo Tracker</div>
+    <nav class="main">
+      <a href="index.html" data-page="home">Summary</a>
+      <a href="markets.html" data-page="markets">Live Markets</a>
+      <a href="analytics.html" data-page="analytics">Analytics</a>
+      <a href="portfolio.html" data-page="portfolio">Portfolio (SIM)</a>
+      <a href="suggestions.html" data-page="suggestions">Suggestions &amp; Open Questions</a>
+      <a href="sources.html" data-page="sources">Sources &amp; Verification</a>
+      <a href="flagged.html" data-page="flagged">⚠ Flagged for Review</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">Home / Suggestions &amp; open questions</div>
+  <h1>Suggestions &amp; Open Questions</h1>
+  <p class="sub">A dedicated review section: the questions that must be answered — with what we know, what we don’t, and how to discover the missing information — <b>before</b> any decision is taken on the improvements proposed below. Nothing here is implemented without review.</p>
+
+  <h2>A · Questions, information &amp; answers needed before decisions</h2>
+  <p class="small">Format: <b>Question → Known/answer (with sources) → Missing information → How to discover it</b>. Items marked <span class="flag">gating</span> block the related suggestion.</p>
+
+  <div class="qa-item"><div class="q">Q1 · Which demo credentials will be used for real demo-account trade execution? <span class="flag">gating</span></div>
+    <div class="a"><b>Known:</b> demo accounts live at <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> with mock funds; API access requires an API key ID + Ed25519/RSA private key with signed requests (<a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">official auth docs</a>).
+    <b>Missing:</b> no demo credentials exist in this project (none were provided — correctly so; secrets must never be pasted into chat or a static site).
+    <b>Discover:</b> (1) log into demo.kalshi.co; (2) create an API key in account settings; (3) store the private key only in a server-side secret store (see S1). <b>Decision needed:</b> approve S1 proxy or accept SIM-only portfolio.</div></div>
+
+  <div class="qa-item"><div class="q">Q2 · Can the browser call <span class="mono">external-api.demo.kalshi.co</span> directly (CORS)? <span class="flag">gating</span></div>
+    <div class="a"><b>Known:</b> the endpoint is the documented recommended demo host (<a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a>) and public market data needs no key (<a href="https://docs.kalshi.com/getting_started/quick_start" target="_blank" rel="noopener">quick start</a>). Official docs do not state CORS behavior for browser origins.
+    <b>Missing:</b> whether <span class="mono">Access-Control-Allow-Origin</span> permits arbitrary origins for public GETs.
+    <b>Discover:</b> open <a href="markets.html">Live Markets</a> on the published site and check the connection badge; or run <span class="mono">curl -I -H "Origin: https://karagemop466-tech.github.io" …/markets?limit=1</span> and inspect headers. If blocked → S1 proxy (read-only variant) is required.</div></div>
+
+  <div class="qa-item"><div class="q">Q3 · Which exact series define “gas prices / elections / culture / crypto / golf”?</div>
+    <div class="a"><b>Known:</b> candidate series are committed in <span class="mono">data/series-map.json</span> and verified at runtime via <span class="mono">GET /series/{ticker}</span> (200 = verified); anything unverified is excluded and shown on the Flagged page.
+    <b>Missing:</b> the demo environment’s current market lineup changes daily — the authoritative list is only knowable live.
+    <b>Discover:</b> click “Re-verify series map” on <a href="markets.html">Live Markets</a> (fresh <span class="mono">GET /series</span> checks), then review the pills per topic. <b>Decision needed:</b> confirm/remove any candidate you don’t want tracked.</div></div>
+
+  <div class="qa-item"><div class="q">Q4 · What does “highest dollar amount” mean precisely?</div>
+    <div class="a"><b>Known:</b> Kalshi reports <b>volume in contracts</b>, plus <span class="mono">open_interest</span> and <span class="mono">liquidity</span> fields; there is no published dollar-volume field. The site sorts by <b>Est. $ volume = Σ contracts × last price</b>, clearly labeled an estimate.
+    <b>Missing:</b> your preferred ranking metric.
+    <b>Discover:</b> compare the columns side-by-side on <a href="markets.html">Live Markets</a> for a few days. <b>Decision needed:</b> keep Est. $ volume, or switch to contracts volume / open interest / liquidity.</div></div>
+
+  <div class="qa-item"><div class="q">Q5 · Demo vs production data — which should the tables show?</div>
+    <div class="a"><b>Known:</b> demo markets are a sandbox subset with mock funds; production (<a href="https://external-api.kalshi.com/trade-api/v2" target="_blank" rel="noopener">external-api.kalshi.com/trade-api/v2</a>) has the full, liquid market lineup. The brief specifies the demo environment, so all live reads use demo endpoints.
+    <b>Missing:</b> whether you also want a read-only production view (demo volumes can be thin and some topics may have no open demo markets at times).
+    <b>Discover:</b> watch <a href="markets.html">Live Markets</a> for a week; if tables are frequently empty for a topic, that is a demo-lineup issue, not a bug. <b>Decision needed:</b> add a clearly-separated production read-only toggle (S8) or stay demo-only.</div></div>
+
+  <div class="qa-item"><div class="q">Q6 · Portfolio scope — new trades only, or backfill history?</div>
+    <div class="a"><b>Known:</b> authenticated endpoints (<a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">GET /portfolio/fills</a>, <a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements" target="_blank" rel="noopener">GET /portfolio/settlements</a>) expose fills and settlements once credentials exist (Q1). Until then the SIM ledger starts empty.
+    <b>Missing:</b> whether to import the demo account’s pre-existing trade history once S1 is live.
+    <b>Discover:</b> after S1, run <span class="mono">GET /portfolio/fills</span> and inspect the historical span available. <b>Decision needed:</b> backfill or start-from-now.</div></div>
+
+  <div class="qa-item"><div class="q">Q7 · Which strategies should be auto-detected vs manually tagged?</div>
+    <div class="a"><b>Known:</b> the order ticket tags each SIM trade with one of six strategy labels; the analyzer aggregates P&amp;L/win-rate by tag and category. Auto-detection (e.g., pairing long-YES/long-NO as a hedge, or same-ticker opposite-side as a scalp) is feasible from the ledger alone.
+    <b>Missing:</b> your definitions (what counts as “hedge” vs “arbitrage” for you; whether cross-event pairs should link).
+    <b>Discover:</b> place 20–30 SIM trades with manual tags, export JSON, and see which rules would reproduce your tags. <b>Decision needed:</b> codify detection rules (S6).</div></div>
+
+  <div class="qa-item"><div class="q">Q8 · How long should price history be retained?</div>
+    <div class="a"><b>Known:</b> in-page samples persist in browser localStorage (capped, oldest-first eviction); official candlesticks provide server-side history for longer windows (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks endpoint</a>). Demo historical depth may be limited.
+    <b>Missing:</b> whether you need durable cross-day archives for research (localStorage is per-browser and can be cleared).
+    <b>Discover:</b> decide research needs, then S5 (scheduled snapshot archive via GitHub Action) can persist daily snapshots in the repo. <b>Decision needed:</b> enable S5 or keep browser-only history.</div></div>
+
+  <div class="qa-item"><div class="q">Q9 · Do you want alerts (thresholds, settlements)?</div>
+    <div class="a"><b>Known:</b> nothing alert-related is built yet (S4). Browser notifications need permission; email would need a third-party service.
+    <b>Missing:</b> which events matter enough to alert: price thresholds, order fills, market settlements, rate-limit warnings.
+    <b>Discover:</b> track usage for a week and note what you found yourself refreshing manually. <b>Decision needed:</b> scope of S4.</div></div>
+
+  <div class="qa-item"><div class="q">Q10 · Is GitHub Pages enabled on this repo?</div>
+    <div class="a"><b>Known:</b> deployment uses the official GitHub Actions Pages flow (<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener">GitHub Pages docs</a>) via <span class="mono">.github/workflows/deploy.yml</span>. <b>Missing:</b> whether Pages is enabled with “GitHub Actions” as the source (Settings → Pages). If disabled, the deploy action fails — see <a href="flagged.html">F8</a>. <b>Discover:</b> Settings → Pages → Build and deployment → Source: “GitHub Actions”. The PR merge record in COORDINATION.md will state the deploy result either way.</div></div>
+
+  <h2>B · Suggestions awaiting review — choose the best path before implementation</h2>
+  <p class="small">Each suggestion lists expected impact, effort, the question(s) that gate it, and the first concrete step. Statuses: <span class="pill">proposed</span> → review → <span class="pill">accepted</span> / <span class="pill">deferred</span>. Triage by editing the status or commenting in <span class="mono">COORDINATION.md</span>.</p>
+
+  <div class="qa-item"><div class="q"><b>S1 · Server-side credential proxy</b> — unlocks REAL demo order execution <span class="pill">proposed</span> <span class="flag">gated by Q1, Q2</span></div>
+    <div class="a"><b>What:</b> a tiny Cloudflare Worker / Vercel function holding demo API credentials as secrets, exposing signed <span class="mono">POST /portfolio/orders</span>, <span class="mono">GET /portfolio/balance|positions|fills</span> to the site.
+    <b>Why:</b> static sites can’t hold private keys (flagged <a href="flagged.html">F1</a>); auth requires Ed25519/RSA signing per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">official docs</a>.
+    <b>Impact:</b> replaces the SIM portfolio with real demo fills; enables real P&amp;L tracking. <b>Effort:</b> ~½ day. <b>First step:</b> create demo API key (Q1).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S2 · WebSocket-first market data</b> <span class="pill">proposed</span></div>
+    <div class="a"><b>What:</b> subscribe to the official demo WS (<span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span>, <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">endpoint docs</a>) for ticker + orderbook channels; keep REST polling as fallback (already implemented).
+    <b>Why:</b> true real-time updates, far fewer REST calls, respects rate limits (<a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limit docs</a>).
+    <b>Impact:</b> smoother charts, more reliable depth. <b>Effort:</b> ~2 h. <b>First step:</b> capture one live WS session and confirm subscribe-message shape (flagged <a href="flagged.html">F9</a>).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S3 · Backtesting module on official candlesticks</b> <span class="pill">proposed</span></div>
+    <div class="a"><b>What:</b> strategy backtests (momentum/mean-revert on YES price) over <span class="mono">GET /markets/{ticker}/candlesticks</span> history with the official fee formula applied.
+    <b>Why:</b> lets you compare strategy candidates before risking demo capital; data is official, not synthetic. <b>Impact:</b> better strategy selection. <b>Effort:</b> ~1 day. <b>First step:</b> confirm demo candlestick depth for target series (Q8).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S4 · Alerts</b> <span class="pill">proposed</span> <span class="flag">gated by Q9</span></div>
+    <div class="a"><b>What:</b> browser notifications on price thresholds, fills, and settlements.
+    <b>Why:</b> removes manual refresh loops while tracking live events. <b>Impact:</b> faster reactions. <b>Effort:</b> ~2–4 h. <b>First step:</b> define the alert list (Q9).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S5 · Scheduled snapshot archive</b> <span class="pill">proposed</span> <span class="flag">gated by Q8</span></div>
+    <div class="a"><b>What:</b> nightly GitHub Action (cron) fetching open/settled markets for the 5 topics into <span class="mono">data/snapshots/YYYY-MM-DD.json</span> — durable, reviewable history.
+    <b>Why:</b> localStorage is ephemeral; archived snapshots make resolution analytics and drift analysis possible. <b>Impact:</b> enables longitudinal analysis. <b>Effort:</b> ~2 h. <b>First step:</b> approve (Q8) — note the sandbox network restriction (<a href="flagged.html">F2</a>) may require running the fetch elsewhere.</div></div>
+
+  <div class="qa-item"><div class="q"><b>S6 · Strategy auto-detection + significance guard</b> <span class="pill">proposed</span> <span class="flag">gated by Q7</span></div>
+    <div class="a"><b>What:</b> codify tag rules (hedge = opposite sides same event; scalp = rapid opposite trades same ticker; momentum = entries after ≥5¢ moves…) and suppress win-rate claims below a minimum sample size.
+    <b>Why:</b> the analyzer currently warns that small samples aren’t significant; codified rules + a minimum-N guard prevent false conclusions. <b>Impact:</b> trustworthy strategy analytics. <b>Effort:</b> ~½ day. <b>First step:</b> review your 20–30 tagged SIM trades (Q7).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S7 · Saved dashboard preferences</b> <span class="pill">accepted</span> (implemented: topic filter, time window, live toggles persist per browser)</div>
+    <div class="a">Kept minimal intentionally; further persistence (columns, density) can follow demand. <b>Decision needed:</b> none — shipped; provide feedback after use.</div></div>
+
+  <div class="qa-item"><div class="q"><b>S8 · Production read-only toggle</b> <span class="pill">proposed</span> <span class="flag">gated by Q5</span></div>
+    <div class="a"><b>What:</b> a clearly-labeled switch to view the same tables against production endpoints (read-only, no keys) alongside demo.
+    <b>Why:</b> demo lineups can be sparse; production context improves decision quality. <b>Impact:</b> better topic coverage. <b>Effort:</b> ~2 h. <b>First step:</b> confirm you want production data visible (Q5).</div></div>
+
+  <div class="qa-item"><div class="q"><b>S9 · Rate-limit budget meter</b> <span class="pill">deferred</span></div>
+    <div class="a"><b>What:</b> show remaining read/write budget via <a href="https://docs.kalshi.com/api-reference/market/get-exchange-status" target="_blank" rel="noopener">account/limits</a> (authenticated). Deferred until S1 exists; the public dashboard already self-throttles (120 ms between calls) and polls on fixed schedules.</div></div>
+
+  <div class="qa-item"><div class="q"><b>S10 · This page as the review workflow</b> <span class="pill">accepted</span> (shipped)</div>
+    <div class="a">Suggestions carry status pills; decisions get logged in <span class="mono">COORDINATION.md</span> with date + rationale. Review by editing statuses there or requesting changes on the integration PR.</div></div>
+
+  <h2>C · Decision log</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Date</th><th>Decision</th><th>Rationale</th><th>Record</th></tr></thead>
+    <tbody>
+      <tr><td>2026-11-20</td><td>Ship SIM portfolio instead of real demo orders</td><td>Static site cannot safely hold signing keys (auth is required for orders — official docs); avoids blocking the whole deliverable</td><td class="src"><a href="flagged.html">F1</a></td></tr>
+      <tr><td>2026-11-20</td><td>Rank events by Est. $ volume (contracts × last price), labeled as estimate</td><td>Kalshi publishes no dollar-volume field; estimate is transparent and sortable</td><td class="src"><a href="sources.html">S-12</a></td></tr>
+      <tr><td>2026-11-20</td><td>Runtime verification for topic→series mapping</td><td>Demo lineup changes; offline confirmation impossible in build sandbox (F2/F3)</td><td class="src"><a href="flagged.html">F3</a></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div>Sub-site: <b>Strategy Desk</b> (session arena/3c51bb52-demo1) · canonical site: <a href="../index.html">canonical Demo1 root</a> · CI data snapshots: <a href="../data/markets.json">data/markets.json</a> · <a href="../sources.html">canonical sources</a></div>
+
+  <div><b>Kalshi Demo Tracker</b> — unofficial analytics for the official Kalshi demo environment. Not investment advice; not affiliated with Kalshi.</div>
+  <div>Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a></div>
+</div></footer>
+</body>
+</html>

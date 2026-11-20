@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trades, categories &amp; strategies — Kalshi demo</title>
+<meta name="description" content="Demo-account portfolio tracking, fill ingestion, rule-based trade categorization, strategy performance and an auditable order builder for the Kalshi demo Trade API.">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/live.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="../index.html">Kalshi<span>Demo</span> Dashboard</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="live.html">Live dashboard</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a class="active" href="strategy.html">Trades &amp; strategies</a>
+      <a href="portfolio.html">Portfolio (static brief)</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="flagged-review.html">Flagged</a>
+    </nav>
+    <span class="status-pill unverified" id="bridge">Bridge: not connected</span>
+  </div>
+</header>
+<main>
+  <div class="kicker">Portfolio tracking · fill analysis · strategy scoring · order drafting</div>
+  <h1>Trades &amp; strategies</h1>
+  <p class="lede">This page turns fills into a reviewable ledger: it normalises them against the official
+    <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noreferrer">fill schema</a>
+    (<code>count_fp</code>, <code>yes_price_dollars</code>, <code>no_price_dollars</code>, <code>fee_cost</code>, <code>outcome_side</code>, <code>book_side</code>, <code>is_taker</code>, <code>created_time</code>),
+    tags each trade with an auditable strategy rule, and joins the result to the resolution log so realised P&amp;L appears
+    <i>only</i> once the market actually resolves. Before that, the row shows “open”.</p>
+
+  <section class="card">
+    <h2>1 · Where the fills come from</h2>
+    <div class="controls">
+      <label>Local bridge URL <input id="bridge-url" size="42" placeholder="http://localhost:8787/trade-api/v2"></label>
+      <button class="btn primary" id="probe">Probe bridge &amp; load balance, positions, fills</button>
+      <button class="btn" id="load-fills">Load fills only</button>
+    </div>
+    <p class="footnote">Account data is authenticated. The key never lives in this static site: <code>tools/kalshi-signer.mjs</code> runs on your machine,
+      signs <code>timestamp + METHOD + path</code> (RSA-PSS/SHA-256 or Ed25519) and adds the CORS headers this page needs.
+      Without the bridge, the account columns stay blank — see <a href="flagged-review.html">Flagged for review</a>.</p>
+    <div id="account" class="kv"></div>
+  </section>
+
+  <section class="card">
+    <h2>2 · Import or record fills</h2>
+    <div class="controls">
+      <label>Paste fills JSON (API shape) <textarea id="paste" rows="3" cols="46" placeholder='{"fills":[{"ticker":"…","count_fp":"5.00","yes_price_dollars":"0.4200","action":"buy","fee_cost":"0.0100","created_time":"…"}]}'></textarea></label>
+      <label>…or a tracking export <input type="file" id="file" accept=".json"></label>
+      <div class="controls">
+        <button class="btn" id="import">Import</button>
+        <button class="btn danger" id="clear">Clear journal</button>
+        <button class="btn" id="csv">Export CSV</button>
+        <button class="btn" id="json">Export JSON</button>
+      </div>
+    </div>
+    <p class="footnote">Imported rows and locally-recorded paper entries live in this browser only (<code>localStorage.kd.journal</code>) and are marked with their source: the endpoint URL for API fills, “paper entry” for manual ones.</p>
+  </section>
+
+  <section>
+    <h2>3 · Ledger</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>Market</th><th>Action / outcome</th><th>Price</th><th>Contracts</th><th>Cost / proceeds</th><th>Fee</th><th>Liquidity role</th><th>Strategy tags</th><th>Market result</th><th>Realised net</th><th>Source</th></tr></thead>
+        <tbody id="fills"><tr><td colspan="12" class="empty">No fills loaded.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="footnote">Cost/proceeds = price × contracts. Realised net = (payoff − price) × contracts − fee for buys and (price − payoff) × contracts − fee for sells, where payoff is 1 only if the market resolved to the outcome you hold. Payout per contract uses the market’s own <code>notional_value_dollars</code>.</p>
+  </section>
+
+  <section>
+    <h2>4 · Strategy scoreboard</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Strategy rule</th><th>Definition (auditable)</th><th>Trades</th><th>Settled</th><th>Hit rate</th><th>Staked</th><th>Net after fees</th><th>ROI</th><th>Best / worst</th></tr></thead>
+        <tbody id="strategies"><tr><td colspan="9" class="empty">No settled trades yet.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="footnote">Rules are declared in <code>assets/js/kalshi-core.js</code> (STRATEGY_RULES) — no model, no black box. A trade can match several rules; a small sample is reported as a small sample and never presented as evidence of edge.</p>
+  </section>
+
+  <section class="card">
+    <h2>5 · Order builder (draft only)</h2>
+    <p class="sub" style="text-transform:none;letter-spacing:0;font-size:.9rem;color:#374151">Compose exactly what a demo order request body would be, per
+      <a href="https://docs.kalshi.com/getting_started/quick_start_create_order.md" target="_blank" rel="noreferrer">Quick Start: Create your first order</a>.</p>
+    <div class="controls">
+      <label>Market ticker <input id="o-ticker" size="34" placeholder="from the live dashboard"></label>
+      <label>Book side <select id="o-side"><option value="bid">bid (buy YES)</option><option value="ask">ask (sell YES)</option></select></label>
+      <label>Count <input id="o-count" type="number" min="1" step="1" value="1"></label>
+      <label>Price (USD) <input id="o-price" type="number" min="0" step="0.0001" value="0.5000"></label>
+      <label>Time in force <select id="o-tif"><option>good_till_canceled</option><option>immediate_or_cancel</option><option>fill_or_kill</option></select></label>
+      <button class="btn" id="draft">Draft request</button>
+      <button class="btn" id="check-book">Check book before drafting</button>
+    </div>
+    <pre id="draft-out" class="empty">No draft yet.</pre>
+    <p class="footnote">Nothing is sent unless a local bridge is running <i>and</i> it was started with <code>ALLOW_ORDERS=1</code>. This page itself has no order path — that is deliberate, and it is why a private key can never leak through GitHub Pages.</p>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>How results feed back into strategy review</h2>
+      <ul class="tight">
+        <li>The <a href="resolutions.html">resolution tracker</a> records <code>result = yes/no</code> per market with the API URL that proved it.</li>
+        <li>On load, this page joins that log to your fills, so realised P&amp;L is computed from official settlement facts, not from a price guess.</li>
+        <li>Unsettled rows stay “open”; open positions are counted separately from settled ones so the two never mix in a ratio.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>What still has to be decided</h2>
+      <ul class="tight">
+        <li>Which fills to trust as the book of record (API fills vs local journal) after a reload.</li>
+        <li>Whether fees use <code>fee_cost</code> as returned or the published schedule — see <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noreferrer">Kalshi fee schedule</a>.</li>
+        <li>Risk limits per market / per topic, and who is allowed to press “place order”. Listed on the <a href="suggestions.html">suggestions board</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer>
+  <span>Kalshi demo trade ledger · strategy tagging · draft orders</span>
+  <span>Fill fields: <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noreferrer">Get Fills</a> · Positions: <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noreferrer">Get Positions</a> · Balance: <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noreferrer">Get Balance</a></span>
+</footer>
+<script src="../assets/js/kalshi-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  const K = window.KalshiDemo;
+  const $ = (id) => document.getElementById(id);
+
+  /* ------------------------------------------------- bridge (optional, local) */
+  function bridgeBase() { return ($('bridge-url').value || 'http://localhost:8787/trade-api/v2').replace(/\/$/, ''); }
+  async function bridgeFetch(path) {
+    const res = await fetch(bridgeBase() + path, { headers: { Accept: 'application/json' } });
+    const text = await res.text();
+    let json = null; try { json = JSON.parse(text); } catch (e) { json = { raw: text }; }
+    if (!res.ok) { const err = new Error('bridge ' + res.status + ' on ' + path + (json && json.error ? ' (' + json.error + (json.detail ? ': ' + json.detail : '') + ')' : '')); err.payload = json; throw err; }
+    return { data: json, url: bridgeBase() + path };
+  }
+
+  async function probe(reportFillsOnly) {
+    $('bridge').textContent = 'Bridge: probing…'; $('bridge').className = 'status-pill';
+    let okAny = false;
+    const rows = [];
+    if (!reportFillsOnly) {
+      for (const [label, path] of [['Cash / portfolio balance (GET /portfolio/balance)', '/portfolio/balance'], ['Positions (GET /portfolio/positions)', '/portfolio/positions']]) {
+        try {
+          const r = await bridgeFetch(path);
+          okAny = true;
+          rows.push([label, '<pre style="margin:0;white-space:pre-wrap">' + K.esc(JSON.stringify(r.data, null, 1)) + '</pre><a href="' + K.esc(r.url) + '" target="_blank" rel="noreferrer">via local bridge ↗</a>']);
+        } catch (err) {
+          rows.push([label, '<span class="warn-text">' + K.esc(err.message) + ' — value left blank, not estimated.</span>']);
+        }
+      }
+    }
+    try {
+      const r = await bridgeFetch('/portfolio/fills?limit=200');
+      okAny = true;
+      const fills = (r.data && (r.data.fills || [])) || [];
+      ingest(fills.map((f) => normFill(f, r.url)));
+      $('load-fills').textContent = 'Load fills only (' + fills.length + ' loaded)';
+    } catch (err) {
+      $('load-fills').textContent = 'Load fills only';
+      rows.push(['Fills (GET /portfolio/fills)', '<span class="warn-text">' + K.esc(err.message) + '</span>']);
+    }
+    $('account').innerHTML = rows.map((r) => '<div class="row"><span>' + r[0] + '</span><b style="font-weight:400;text-align:left;max-width:62%">' + r[1] + '</b></div>').join('');
+    $('bridge').textContent = okAny ? 'Bridge: connected (demo account)' : 'Bridge: not connected';
+    $('bridge').className = 'status-pill ' + (okAny ? 'live' : 'unverified');
+  }
+
+  /* ------------------------------------------------------- normalise a fill */
+  function normFill(f, source) {
+    const outcome = f.outcome_side || (f.book_side ? (f.book_side === 'bid' ? 'yes' : 'no') : (f.side === 'no' || f.side === 'buy-no' || f.side === 'sell-yes' ? 'no' : 'yes'));
+    const action = f.action || (f.side === 'sell' ? 'sell' : 'buy');
+    const price = K.num(outcome === 'no' ? f.no_price_dollars : f.yes_price_dollars);
+    const count = K.num(f.count_fp !== undefined ? f.count_fp : f.count);
+    const t = {
+      id: f.fill_id || f.trade_id || (f.ticker + '@' + (f.created_time || f.ts)),
+      ts: f.created_time || (f.ts ? new Date(f.ts * 1000).toISOString() : ''),
+      ticker: f.ticker || '', event: (f.ticker || '').split('-').slice(0, -1).join('-') || f.event_ticker || '',
+      side: action === 'sell' ? 'sell' : 'buy', outcome: outcome, price: price, count: count,
+      fee: K.num(f.fee_cost), notional: f.notional_value_dollars, taker: f.is_taker, source: source || 'paper entry'
+    };
+    t.strategies = K.categorize(t);
+    return t;
+  }
+
+  function ingest(rows) {
+    const existing = K.journal();
+    const seen = {}; existing.forEach((r) => seen[r.id] = 1);
+    let added = 0;
+    rows.forEach((r) => { if (!seen[r.id]) { existing.push(r); seen[r.id] = 1; added++; } });
+    K.saveJournal(existing);
+    render();
+    if (added) $('fills').insertAdjacentHTML('afterbegin', '');
+  }
+
+  /* ----------------------------------------------------------------- render */
+  function resultFor(ticker) {
+    const store = K.resolutions();
+    const rec = store['m:' + ticker];
+    return rec && rec.result ? rec.result : '';
+  }
+  function render() {
+    const rows = K.journal().slice().sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
+    $('fills').innerHTML = rows.length ? rows.map((r) => {
+      const res = resultFor(r.ticker);
+      const st = res ? K.settle(r, res) : null;
+      const money = (v) => (v === null || v === undefined || !Number.isFinite(v)) ? '' : (v < 0 ? '-$' : '$') + Math.abs(v).toFixed(2);
+      return '<tr><td>' + K.esc(r.ts ? new Date(r.ts).toLocaleString('en-GB', { hour12: false }) : '') + '</td>' +
+        '<td><code>' + K.esc(r.ticker) + '</code></td>' +
+        '<td>' + K.esc(r.side) + ' · ' + (r.outcome === 'no' ? '<span class="badge-no">NO</span>' : '<span class="badge-yes">YES</span>') + '</td>' +
+        '<td class="num">' + (r.price === null ? '' : '$' + r.price.toFixed(4)) + '</td>' +
+        '<td class="num">' + K.cnt(r.count) + '</td>' +
+        '<td class="num">' + money(r.price === null ? null : (r.side === 'buy' ? -1 : 1) * r.price * (r.count || 0)) + '</td>' +
+        '<td class="num">' + money(r.fee === null ? null : -r.fee) + '</td>' +
+        '<td>' + (r.taker === undefined ? '' : (r.taker ? 'taker' : 'maker')) + '</td>' +
+        '<td>' + (r.strategies || []).map((s) => '<code>' + K.esc(s) + '</code>').join(' ') + '</td>' +
+        '<td>' + (res ? (res === 'yes' ? '<span class="badge-yes">YES</span>' : '<span class="badge-no">NO</span>') : '<span class="badge-open">open</span>') + '</td>' +
+        '<td class="num">' + (st ? money(st.net) : '') + '</td>' +
+        '<td class="src">' + (r.source ? '<a href="' + K.esc(r.source) + '" target="_blank" rel="noreferrer">' + (r.source.indexOf('localhost') > -1 ? 'bridge ↗' : 'API ↗') + '</a>' : 'paper entry') + '</td></tr>';
+    }).join('') : '<tr><td colspan="12" class="empty">No fills loaded.</td></tr>';
+
+    const perf = K.performance(rows.map((r) => Object.assign({}, r, { result: resultFor(r.ticker) })));
+    const openNote = '<tr><td colspan="9" class="empty">' + perf.open + ' trade(s) still open — excluded from every ratio below.</td></tr>';
+    $('strategies').innerHTML = perf.byStrategy.length ? perf.byStrategy.map((b) => {
+      const rule = K.STRATEGY_RULES.find((x) => x.id === b.strategy);
+      return '<tr><td><b>' + K.esc(rule ? rule.name : b.strategy) + '</b></td><td>' + K.esc(rule ? rule.note : 'No rule matched — review the definition before acting on this bucket.') + '</td>' +
+        '<td class="num">' + b.trades + '</td><td class="num">' + b.trades + '</td>' +
+        '<td class="num">' + (b.hitRate === null ? '' : (b.hitRate * 100).toFixed(1) + '%') + '</td>' +
+        '<td class="num">' + K.usd(b.staked) + '</td><td class="num">' + K.usd(b.net) + '</td>' +
+        '<td class="num">' + (b.roi === null ? '' : (b.roi * 100).toFixed(1) + '%') + '</td>' +
+        '<td class="num">' + K.usd(b.best) + ' / ' + K.usd(b.worst) + '</td></tr>';
+    }).join('') + openNote
+      : '<tr><td colspan="9" class="empty">No settled trades yet — ratios stay empty until a market returns result=yes/no.</td></tr>' + openNote;
+  }
+
+  /* ------------------------------------------------------------- order draft */
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'ko-' + Date.now() + '-' + Math.floor(Math.random() * 1e9));
+  let draftClientId = '';
+  $('draft').addEventListener('click', () => {
+    if (!draftClientId) draftClientId = uuid();
+    const body = {
+      ticker: $('o-ticker').value.trim(),
+      side: $('o-side').value,
+      count: String($('o-count').value),
+      price: Number($('o-price').value).toFixed(4),
+      time_in_force: $('o-tif').value,
+      self_trade_prevention_type: 'taker_at_cross',
+      client_order_id: draftClientId
+    };
+    $('draft-out').className = '';
+    $('draft-out').textContent = 'POST ' + bridgeBase() + '/portfolio/events/orders\n' + JSON.stringify(body, null, 2) +
+      '\n\nNothing has been sent. Sending requires the local bridge started with ALLOW_ORDERS=1,\nand the signature headers are produced there — never in the page.';
+  });
+  $('check-book').addEventListener('click', async () => {
+    const t = $('o-ticker').value.trim();
+    if (!t) { $('draft-out').className = ''; $('draft-out').textContent = 'Enter a market ticker first.'; return; }
+    try {
+      const book = await K.orderbook(t, 5);
+      $('draft-out').className = '';
+      $('draft-out').textContent = 'GET ' + book.requestedUrl + '\n' + JSON.stringify({
+        best_yes_bid: book.bestYesBid, implied_yes_ask: book.yesAsk, spread: book.spread,
+        yes_levels: book.yes.length, no_levels: book.no.length, yes_contracts: book.yesContracts, note: book.empty ? 'empty book — endpoint returned no resting orders' : ''
+      }, null, 2) + '\n\nPrices must land on this market’s own tick grid (see price_ranges on the market record).';
+    } catch (err) { $('draft-out').className = ''; $('draft-out').textContent = 'Order book unavailable: ' + err.message; }
+  });
+
+  /* ------------------------------------------------------------- input wiring */
+  $('probe').addEventListener('click', () => probe(false));
+  $('load-fills').addEventListener('click', () => probe(true));
+  $('import').addEventListener('click', () => {
+    const txt = $('paste').value.trim();
+    if (!txt) { $('fills').innerHTML = '<tr><td colspan="12" class="empty">Paste a fills JSON payload first.</td></tr>'; return; }
+    let json; try { json = JSON.parse(txt); } catch (e) { $('fills').innerHTML = '<tr><td colspan="12" class="empty">That is not valid JSON: ' + K.esc(e.message) + '</td></tr>'; return; }
+    const fills = Array.isArray(json) ? json : (json.fills || json.trades || []);
+    ingest(fills.map((f) => normFill(f, 'inline import ' + new Date().toISOString())));
+    $('paste').value = '';
+  });
+  $('file').addEventListener('change', (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const j = JSON.parse(rd.result);
+        const fills = j.fills || (j.watchList ? [] : []);
+        if (fills.length) ingest(fills.map((x) => normFill(x, 'file import ' + f.name)));
+        const journal = j.journal || (Array.isArray(j) ? j : null);
+        if (journal) { journal.forEach((r) => r.source = r.source || ('file import ' + f.name)); K.saveJournal(journal); }
+        render();
+      } catch (err) { $('fills').innerHTML = '<tr><td colspan="12" class="empty">Could not read that file: ' + K.esc(err.message) + '</td></tr>'; }
+    };
+    rd.readAsText(f);
+  });
+  $('clear').addEventListener('click', () => { if (confirm('Clear the locally stored journal?')) { K.clearJournal(); render(); } });
+  const dump = (name, text, type) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; a.click(); };
+  $('csv').addEventListener('click', () => {
+    const rows = K.journal();
+    const head = ['ts', 'ticker', 'side', 'outcome', 'price', 'count', 'fee', 'taker', 'strategies', 'result', 'realised_net', 'source'];
+    const body = rows.map((r) => {
+      const res = resultFor(r.ticker), st = res ? K.settle(r, res) : null;
+      return [r.ts, r.ticker, r.side, r.outcome, r.price, r.count, r.fee, r.taker, (r.strategies || []).join('|'), res, st ? st.net.toFixed(4) : '', r.source || '']
+        .map((v) => '"' + String(v === undefined ? '' : v).replace(/"/g, '""') + '"').join(',');
+    });
+    dump('kalshi-demo-journal.csv', head.join(',') + '\n' + body.join('\n'), 'text/csv');
+  });
+  $('json').addEventListener('click', () => dump('kalshi-demo-journal.json', JSON.stringify({ exportedAt: new Date().toISOString(), apiHost: K.state.host, journal: K.journal(), resolutions: K.resolutions() }, null, 2), 'application/json'));
+
+  $('bridge-url').value = localStorage.getItem('kd.bridge') || 'http://localhost:8787/trade-api/v2';
+  $('bridge-url').addEventListener('change', () => localStorage.setItem('kd.bridge', $('bridge-url').value));
+  render();
+})();
+</script>
+</body>
+</html>

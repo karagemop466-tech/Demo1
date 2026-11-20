@@ -1,0 +1,83 @@
+{
+  "log_id": "demo-resolution-log-2026-11-20",
+  "title": "Resolution tracking - Kalshi DEMO environment",
+  "purpose": "Track the watchlist events until they resolve, and record how each resolved (result = yes or no), with the official settlement timestamp. Updated by the live tracker page (pages/demo-live.html) in the browser when the demo API is reachable; the entries below are the verified snapshot taken on 2026-11-20.",
+  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "how_resolution_is_read": "A binary market's 'result' field is 'yes' or 'no' once finalized (status 'finalized'), with settlement_value_dollars 1.0000 for yes and 0.0000 for no, plus settlement_ts. For mutually-exclusive events (e.g. tournament winner), exactly one market resolves yes.",
+  "resolved": [
+    {
+      "category": "gas",
+      "event_ticker": "KXAAAGASM-26OCT31",
+      "event_title": "Gas prices in the US in Oct 2026?",
+      "market_ticker": "KXAAAGASM-26OCT31-4.18",
+      "question": "Will average gas prices be above $4.18 on Oct 31, 2026 (AAA)?",
+      "result": "yes",
+      "settlement_value_dollars": "1.0000",
+      "settlement_ts": "2026-10-31T14:10:30.416365Z",
+      "status": "finalized",
+      "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&limit=1"
+    },
+    {
+      "category": "golf",
+      "event_ticker": "KXDPWTTOP20-GEC26",
+      "event_title": "Genesis Championship: Top 20 Finishers",
+      "market_ticker": "KXDPWTTOP20-GEC26-YBAE",
+      "question": "Yongjun Bae finishes top 20 (incl. ties) - 2026 Genesis Championship",
+      "result": "yes",
+      "settlement_value_dollars": "1.0000",
+      "settlement_ts": "2026-10-25T13:59:39.14801Z",
+      "status": "finalized",
+      "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"
+    },
+    {
+      "category": "golf",
+      "event_ticker": "KXDPWTTOP20-GEC26",
+      "event_title": "Genesis Championship: Top 20 Finishers",
+      "market_ticker": "KXDPWTTOP20-GEC26-SOH",
+      "question": "Seung-Taek Oh finishes top 20",
+      "result": "no",
+      "settlement_value_dollars": "0.0000",
+      "settlement_ts": "2026-10-25T12:58:34.14401Z",
+      "status": "finalized",
+      "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"
+    },
+    {
+      "category": "golf",
+      "event_ticker": "KXDPWTTOP20-GEC26",
+      "event_title": "Genesis Championship: Top 20 Finishers",
+      "market_ticker": "KXDPWTTOP20-GEC26-MSON",
+      "question": "Minhyuk Song finishes top 20",
+      "result": "no",
+      "settlement_value_dollars": "0.0000",
+      "settlement_ts": "2026-10-25T12:58:34.144094Z",
+      "status": "finalized",
+      "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"
+    },
+    {
+      "category": "golf",
+      "event_ticker": "KXDPWTTOP20-GEC26",
+      "event_title": "Genesis Championship: Top 20 Finishers",
+      "market_ticker": "KXDPWTTOP20-GEC26-WCHO",
+      "question": "Wooyoung Cho finishes top 20",
+      "result": "no",
+      "settlement_value_dollars": "0.0000",
+      "settlement_ts": "2026-10-25T13:59:39.142029Z",
+      "status": "finalized",
+      "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXDPWTTOP20-GEC26&limit=1000"
+    }
+  ],
+  "tracked_until_resolution": [
+    {"category": "gas", "event_ticker": "KXAAAGASW-26NOV23", "title": "Weekly AAA gas price (settles on/before Nov 23, 2026)", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXAAAGASW-26NOV23&limit=1000"},
+    {"category": "crypto", "event_ticker": "KXBTCD-26NOV2017", "title": "Bitcoin price on Nov 20, 2026 at 5pm EST (settles today)", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXBTCD-26NOV2017&limit=1000"},
+    {"category": "golf", "event_ticker": "KXPGATOUR-THRC26", "title": "The RSM Classic winner (tournament Nov 19-22, 2026)", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXPGATOUR-THRC26&limit=1000"},
+    {"category": "golf", "event_ticker": "KXDPWTTOP20-DPWTC26", "title": "DP World Tour Championship: Top 20 Finishers", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXDPWTTOP20&limit=50"},
+    {"category": "culture", "event_ticker": "KXTIME-26", "title": "Time Person of the Year 2026 (settles early Jan 2027)", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXTIME-26&limit=1000"},
+    {"category": "elections", "event_ticker": "KXPRESNOMD-28", "title": "Democratic presidential nominee 2028 (long-dated)", "current_status": "active", "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXPRESNOMD-28&limit=1000"}
+  ],
+  "flagged_resolution_irregularities": [
+    "GET /events?series_ticker=KXBTCD&status=settled (and KXBTC equivalent) returned only synthetic future-dated events (strike dates 2027-2035, junk metadata such as cadence 'hohhggd') - the demo 'settled' index contains test artifacts rather than genuine 2026 settlements. No genuine crypto resolution example could be captured from the demo environment.",
+    "KXAGRACE status=settled returned zero events; no settled 2026-cycle election event was located on demo during this session.",
+    "KXDPWTTOP20-GEC26 markets carry occurrence_datetime 2026-11-08T00:00:00Z but were finalized on 2026-10-25 - event metadata and actual settlement disagree on the demo environment (Genesis Championship actually concluded 2026-10-25 per the settlement timestamps).",
+    "Demo open-interest values on some markets with zero trades (e.g. KXTIME-26-ALIU OI 33,419.76 with volume 0.00) indicate injected demo positions, not organic trading."
+  ]
+}

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Kalshi demo crypto markets."><title>Kalshi Demo · Crypto</title><link rel="stylesheet" href="../styles.css"></head><body data-page="topic" data-topic="crypto"><header class="top"><a class="brand" href="../index.html"><span class="mark">K</span> KALSHI <b>DEMO</b></a><nav><a href="../index.html">Home</a><a href="../markets.html">All markets</a><a href="gas.html">Gas prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html" style="color:var(--green)">Crypto</a><a href="golf.html">Golf</a><a href="../chart.html">Price chart</a><a href="../review.html">Review flags</a></nav><span class="status" id="status-block"><i id="status-dot"></i><span id="connection">Connecting…</span></span></header>
+<main>
+<div class="page-header"><div><p class="eyebrow">05 / CRYPTO</p><h1>Crypto markets</h1><p class="sub">Demo markets matched by keywords: bitcoin, ethereum, crypto, solana, btc, eth. Topic matching is keyword-based and heuristic — see Review.</p></div><div style="display:flex;gap:8px;align-items:center"><button class="button secondary" id="refresh">↻ Refresh</button><span class="badge notconn">LIVE API READ-ONLY</span></div></div>
+
+<div class="toolbar"><label>Search <input id="search" placeholder="Market title or ticker"></label><span class="badge" style="margin-left:auto"><span id="row-count" class="row-count">—</span> open matches</span></div>
+
+<div class="table-wrap"><table><thead><tr><th>Market / event</th><th>Topic</th><th>YES bid / ask (USD)</th><th>Volume (contracts)</th><th>Notional value (USD)</th><th>Open interest</th><th>Status / result</th><th>Liquidity</th><th>Source</th></tr></thead><tbody id="market-rows"><tr><td colspan="9" class="empty">Waiting for verified demo API response…</td></tr></tbody></table></div>
+<p class="footnote">Each row links to the official Kalshi market page and the official Get Markets reference. Empty cells mean the field was not returned; they are not zero.</p>
+
+<div class="source-panel"><h3>Sources on this page</h3><ul>
+<li><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000" target="_blank" rel="noreferrer">Live demo API: Get Markets</a> (official recommended demo host per <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">demo environment doc</a>).</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets</a> — schema and field definitions.</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook</a> — liquidity levels with contract counts.</li>
+<li><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement</a> — YES/NO resolution.</li>
+</ul></div>
+</main>
+<footer><div class="foot">Kalshi Demo Dashboard · demo data only · no orders placed</div><div class="foot">Unverified items: <a href="../review.html" class="source-link">Flagged for review</a></div></footer>
+<script src="../app.js"></script>
+<script>document.body.dataset.topic='crypto';</script></body></html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio &amp; trades — Kalshi demo account</title>
+<meta name="description" content="Portfolio tracking and trade execution design for the Kalshi demo account: endpoints, signing, order lifecycle, guardrails, and the current blocker (no credentials).">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="portfolio">
+<header id="site-header"></header>
+<nav id="site-nav" aria-label="Sections"></nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Portfolio &amp; trades</h1>
+    <p class="lede">Everything needed to track and analyse the demo account — endpoints, signing, order lifecycle, guardrails, ledger schema — plus a replay simulator that works without an account.</p>
+  </div>
+
+  <div class="notice stop">
+    <h3>Nothing was executed, and that is not an oversight</h3>
+    <p style="margin:0 0 6px">Executing trades and reading a portfolio both require an API key pair registered to a demo account. This project has none: no key id and no private key were supplied, and none can be created without logging in to <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a>. Rather than fake a balance or invent fills, this page states the exact call sequence, ships a tested signer reference, and leaves the account tables empty with a reason.</p>
+    <p style="margin:0" class="dim">Unblocking is one decision: <a href="questions.html#q-1">Q-1</a>. The site then needs a place to keep the key — page code cannot hold it (see <a href="suggestions.html#s-2">S-2</a>).</p>
+  </div>
+
+  <div class="card">
+    <h2>Account endpoints <span class="sub">what the tracker will call, and how it is metered</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Purpose</th><th scope="col">Endpoint</th><th scope="col">Auth</th><th scope="col">Notes from the docs</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><td>Cash + portfolio value</td><td><code>GET /portfolio/balance</code></td><td>signed</td><td>Metered in its <strong>own bucket</strong>: once per second on Basic/Advanced, five per second above that. Does not draw the Read budget. “Balance only changes on fills, settlements and transfers, so react to those … rather than polling balance.”</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a> · <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits</a></td></tr>
+          <tr><td>Open positions</td><td><code>GET /portfolio/positions</code></td><td>signed</td><td>Returns <em>unsettled</em> positions by default, “including closed markets awaiting determination” that may still carry quantity and cost basis — so a position can look open right up to settlement.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr>
+          <tr><td>Every fill</td><td><code>GET /portfolio/fills</code></td><td>signed</td><td>Fills before the historical cutoff move to <code>GET /historical/fills</code>; archived positions to <code>GET /historical/positions</code>.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a> · <a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">historical data</a></td></tr>
+          <tr><td>Settlements</td><td><code>GET /portfolio/settlements</code></td><td>signed</td><td>Live-set only; this is the “how did it resolve” side of the ledger.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements" target="_blank" rel="noopener">Get Settlements</a></td></tr>
+          <tr><td>Resting orders + queue</td><td><code>GET /portfolio/orders</code>, <code>GET /portfolio/order_queue_positions</code></td><td>signed</td><td>Order reads update <em>asynchronously</em> after a write, so a just-placed order can briefly return <code>404 not_found</code>. The write's own response is the only immediate truth.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/get-orders" target="_blank" rel="noopener">Get Orders</a> · <a href="https://docs.kalshi.com/api-reference/orders/get-order-queue-position" target="_blank" rel="noopener">queue position</a></td></tr>
+          <tr><td>Place an order</td><td><code>POST /portfolio/events/orders</code></td><td>signed · Write bucket</td><td>V2 shape with single-book <code>bid</code>/<code>ask</code> side and fixed-point prices. The legacy <code>/portfolio/orders</code> writes are removed and return <code>410 Gone</code>.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">quick start</a></td></tr>
+          <tr><td>Amend / decrease / cancel</td><td><code>POST /portfolio/events/orders/{id}/amend</code> · <code>…/decrease</code> · <code>DELETE /portfolio/events/orders/{id}</code></td><td>signed · Write bucket</td><td>Amend that changes nothing returns <code>400</code>; cancellation can be auto-routed by supplying <code>market_ticker</code> and omitting <code>exchange_index</code>.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/amend-order-v2" target="_blank" rel="noopener">Amend</a> · <a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2" target="_blank" rel="noopener">Cancel</a></td></tr>
+          <tr><td>Kill switch on spam</td><td><code>POST /portfolio/order_groups/…</code></td><td>signed</td><td>An order group auto-cancels when its contracts limit is hit over a rolling 15-second window — useful as an accidental-loop brake for any bot.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/order-groups/create-order-group" target="_blank" rel="noopener">Create Order Group</a></td></tr>
+          <tr><td>Rate budget for this account</td><td><code>GET /account/limits</code></td><td>signed</td><td>Returns tier and token-bucket numbers; <code>GET /account/endpoint_costs</code> lists endpoints whose cost is not the default 10 tokens.</td><td class="src"><a href="https://docs.kalshi.com/api-reference/account/get-account-api-limits" target="_blank" rel="noopener">Account API limits</a> · <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits</a></td></tr>
+          <tr><td>Data-accuracy clock</td><td><code>GET /exchange/user_data_timestamp</code></td><td>signed</td><td>“There is typically a short delay before exchange events are reflected in the API endpoints. Whenever possible, combine API responses to PUT/POST/DELETE requests with WebSocket data.”</td><td class="src"><a href="https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp" target="_blank" rel="noopener">Get User Data Timestamp</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>Signing, exactly as documented</h3>
+      <div class="body prose">
+        <ul>
+          <li>Keys are asymmetric: <strong>Ed25519</strong> (default, recommended) or <strong>RSA-2048</strong>. Sign <code>timestamp + HTTP method + path</code>; Ed25519 signs the string directly, RSA uses <strong>RSA-PSS with SHA-256, MGF1-SHA256, salt length = digest length</strong>. Base64 the result.</li>
+          <li>Headers: <code>KALSHI-ACCESS-KEY</code> (key id), <code>KALSHI-ACCESS-TIMESTAMP</code> (milliseconds), <code>KALSHI-ACCESS-SIGNATURE</code>.</li>
+          <li>Sign the path <strong>without the query string</strong> but including the API root: <code>/trade-api/v2/portfolio/balance</code>.</li>
+          <li>The timestamp must be within <strong>30 seconds</strong> of Kalshi's clock or you get <code>401 header_timestamp_expired</code> even with a correct signature — keep NTP on.</li>
+          <li>Create a key on the host whose data you are trading: <a href="https://demo.kalshi.co/account/profile" target="_blank" rel="noopener">demo.kalshi.co/account/profile</a> for this project, or <a href="https://kalshi.com/account/profile" target="_blank" rel="noopener">kalshi.com/account/profile</a> for production — or <code>POST /api_keys/generate</code>. The private key is shown once and is not retrievable afterwards. Production caps directly-managed keys at 100; the demo limit is not documented.</li>
+          <li>Reference implementation and its self-test: <code>python3 tools/kalshi_sign.py --self-test</code> — reproduces the RFC 8032 Ed25519 test vectors, then checks that the payload signed is <code>timestamp + METHOD + path</code> with the query string dropped. No network and no real credentials are involved, which is why the tool is trusted for the algorithm but still unproven against Kalshi's verifier (<a href="flagged.html#fl-7">FL-7</a>).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Order lifecycle the tracker must follow</h3>
+      <div class="body">
+<pre style="margin:0;font-size:12.5px;overflow:auto;background:#fafbfc;border:1px solid var(--line);border-radius:8px;padding:12px"><code>POST /portfolio/events/orders
+{
+  "ticker": "KXAAAGASM-26DEC31-3.30",
+  "side": "bid",
+  "count": "1",
+  "price": "0.0100",
+  "time_in_force": "good_till_canceled",
+  "self_trade_prevention_type": "taker_at_cross",
+  "client_order_id": "strat:longshot-decay|topic:gas-prices|role:taker|1"
+}
+→ 201 { order_id, remaining_count }   # accepted, NOT yet resting
+→ GET  /portfolio/orders/{order_id}    # may 404 briefly after the write
+→ amend / decrease / DELETE            # Write bucket
+→ fills, then settlements              # ledger closes the loop</code></pre>
+        <p class="dim" style="font-size:12.5px;margin:10px 0 0">Payload shape is quoted from the official quick start (<a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">create your first order</a>). <code>client_order_id</code> is ≤64 chars of <code>letters digits _ - : + = /</code>, is unique per subaccount on the market's shard, and its duplicate rejection is <code>409 order_already_exists</code> — which does <em>not</em> return the original order, so store it locally.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Failure modes to code for <span class="sub">all quoted from the order documentation</span></h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">HTTP / code</th><th scope="col">Meaning</th><th scope="col">Correct response</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>401</code></td><td>key or signature problem</td><td>check key id, path-without-query, and clock skew &gt;30s</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td></tr>
+          <tr><td><code>400 invalid_price</code></td><td>price off the market's tick grid</td><td>read <code>price_ranges</code> from the market and snap to its <code>step</code> (the 15-min crypto market uses a tapered grid: 0.0010 near the edges, 0.0100 in the middle)</td><td class="src"><a href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noopener">Order Errors</a></td></tr>
+          <tr><td><code>400 insufficient_balance</code></td><td>not enough buying power on that shard</td><td>reconcile per-shard balance before retrying</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">quick start</a></td></tr>
+          <tr><td><code>404</code> / <code>insufficient_shard_balance</code></td><td>market or order not on the shard reached</td><td>route by <code>exchange_index</code> from the market row (captured markets showed shards 0 and 2)</td><td class="src"><a href="https://docs.kalshi.com/getting_started/exchange_sharding" target="_blank" rel="noopener">Exchange Sharding</a></td></tr>
+          <tr><td><code>409 market_inactive</code></td><td>market closed / trading paused</td><td>stop; re-read <code>GET /exchange/status</code> and market <code>status</code></td><td class="src"><a href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noopener">Order Errors</a></td></tr>
+          <tr><td><code>429 too_many_requests</code></td><td>token bucket empty</td><td>exponential backoff; no penalty and no <code>Retry-After</code>, so retry after the refill (~8.3 ms per 10 tokens at a 1,200/s tier)</td><td class="src"><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Guardrails this project commits to before any live order</h3>
+    <div class="body prose">
+      <ol>
+        <li>Order size capped at <strong>1 contract</strong>, and only on the demo host, until a written go-ahead exists in the decision log.</li>
+        <li>The depth gate from <a href="suggestions.html#s-5">S-5</a>: if the ladder cannot absorb the order within <code>price_ranges</code>, the button stays disabled — the UI on <a href="markets.html">Price &amp; liquidity</a> already computes it.</li>
+        <li><code>client_order_id</code> carries the strategy tag and a UUID, so retries are idempotent and every fill is self-classifying.</li>
+        <li>Private key never in the repository, never in page code, never in <code>localStorage</code>; only in the proxy's environment.</li>
+        <li>Every order written to the ledger with the top-of-book snapshot taken <em>at</em> submission, so slippage is attributable later.</li>
+        <li>An order group as an automatic brake on a runaway loop (<a href="https://docs.kalshi.com/api-reference/order-groups/create-order-group" target="_blank" rel="noopener">rolling 15-second limit</a>).</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="mount-sim" data-mount></div>
+
+  <div class="card">
+    <h3>Ledger schema the simulator already writes</h3>
+    <div class="body table-scroll">
+      <table class="data">
+        <thead><tr><th scope="col">Column</th><th scope="col">Type</th><th scope="col">Source when live</th></tr></thead>
+        <tbody>
+          <tr><td><code>order_id</code> / <code>client_order_id</code></td><td>string</td><td>order write response</td></tr>
+          <tr><td><code>ticker</code>, <code>exchange_index</code></td><td>string / int</td><td>market row</td></tr>
+          <tr><td><code>topic</code>, <code>strategy</code>, <code>role</code></td><td>string</td><td><code>client_order_id</code> convention (see <a href="strategies.html">Strategy lab</a>)</td></tr>
+          <tr><td><code>entry_price</code>, <code>contracts</code>, <code>fees</code></td><td>decimal / int / decimal</td><td><code>GET /portfolio/fills</code> + fee formula</td></tr>
+          <tr><td><code>top_of_book_at_entry</code>, <code>slippage</code></td><td>decimal</td><td>order book captured at submission</td></tr>
+          <tr><td><code>result</code>, <code>settlement_ts</code>, <code>payout</code></td><td>enum / ts / decimal</td><td>market row after determination</td></tr>
+          <tr><td><code>net_pnl</code></td><td>decimal</td><td>payout − cost − fees, computed by <code>Kalshi.positionPnl</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+<script src="assets/kalshi.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

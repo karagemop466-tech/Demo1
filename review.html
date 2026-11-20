@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Kalshi demo flagged irregularities and unverified items register."><title>Kalshi Demo · Flagged for Review</title><link rel="stylesheet" href="styles.css"></head><body data-page="review"><header class="top"><a class="brand" href="index.html"><span class="mark">K</span> KALSHI <b>DEMO</b></a><nav><a href="index.html">Home</a><a href="markets.html">All markets</a><a href="markets/gas.html">Gas prices</a><a href="markets/elections.html">Elections</a><a href="markets/culture.html">Culture</a><a href="markets/crypto.html">Crypto</a><a href="markets/golf.html">Golf</a><a href="chart.html">Price chart</a><a href="portfolio.html">Portfolio</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="review.html" style="color:var(--green)">Flagged for review</a></nav><span class="status" id="status-block"><i id="status-dot" style="background:var(--red)"></i><span id="connection">Items need review</span></span></header>
+<main>
+<div class="page-header"><div><p class="eyebrow">06 / TRANSPARENCY — FLAGGED FOR REVIEW</p><h1>Irregularities and unverified items</h1><p class="sub">These do not block the site. They are published here so they can be reviewed and decided on before any change is implemented. Nothing is inferred; blanks are blank.</p></div><span class="badge notconn">Review required</span></div>
+
+<div class="section">
+<h2>A. Flagged irregularities</h2>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Irregularity</th><th>Detail</th><th>Source link</th><th>Disposition</th></tr></thead><tbody id="irregularity-rows"></tbody></table></div>
+</div>
+
+<div class="section">
+<h2>B. Unverified items left blank by design</h2>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Why it is blank</th><th>What would verify it</th><th>Source link</th></tr></thead><tbody id="blank-rows"></tbody></table></div>
+</div>
+
+<div class="section">
+<h2>C. How to review</h2>
+<ol style="font-size:12px;color:#56635c;line-height:1.8;margin:10px 0 0 18px">
+<li>Open each source link (official Kalshi documentation or the official demo API).</li>
+<li>Check the value on the related page against the official response; nothing here should be treated as true until a source confirms it.</li>
+<li>Decide per suggestion on the Suggestions page: Not reviewed / Consider / Defer / Implement.</li>
+<li>Record agreed changes in this register; implement only after review.</li>
+</ol>
+</div>
+
+<div class="source-panel"><h3>Official sources referenced on this page</h3><ul>
+<li><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">Test in the demo environment</a> — demo hosts, endpoint table.</li>
+<li><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noreferrer">Quick Start: Market Data</a> — unauthenticated market data pattern.</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets</a> — fields incl. notional_value_dollars, result, status.</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook</a> — order-book schema.</li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks</a> — period_interval values.</li>
+<li><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noreferrer">Historical Data</a> — live/historical partitioning.</li>
+<li><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement</a> — YES/NO payout.</li>
+<li><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noreferrer">Get Balance</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noreferrer">Get Positions</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">Get Fills</a> — authenticated endpoints.</li>
+<li><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noreferrer">Quick Start: Create your first order</a> — order placement.</li>
+<li><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noreferrer">Quick Start: WebSockets</a> — demo WS host and channels.</li>
+</ul></div>
+</main>
+<footer><div class="foot">Kalshi Demo Dashboard · demo data only · no orders placed</div><div class="foot">Decide on this register before implementing changes</div></footer>
+<script>
+function esc(s){return s==null?'':String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[c]))}
+function link(url,text){return `<a href="${esc(url)}" target="_blank" rel="noreferrer" class="source-link">${esc(text||'Official source')}</a>`}
+const SRC={
+  'get-markets':'https://docs.kalshi.com/api-reference/market/get-markets',
+  'quick-start-market-data':'https://docs.kalshi.com/getting_started/quick_start_market_data',
+  'candlesticks':'https://docs.kalshi.com/api-reference/market/get-market-candlesticks',
+  'historical-data':'https://docs.kalshi.com/getting_started/historical_data',
+  'get-balance':'https://docs.kalshi.com/api-reference/portfolio/get-balance',
+  'demo-env':'https://docs.kalshi.com/getting_started/demo_env',
+  'create-order':'https://docs.kalshi.com/getting_started/quick_start_create_order',
+  'get-positions':'https://docs.kalshi.com/api-reference/portfolio/get-positions',
+  'get-fills':'https://docs.kalshi.com/api-reference/portfolio/get-fills',
+  'market-settlement':'https://docs.kalshi.com/getting_started/market_settlement',
+  'orderbook':'https://docs.kalshi.com/api-reference/market/get-market-orderbook',
+  'get-markets-live':'https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000'
+};
+const irregularities=[
+ ['Contract volume is not dollars','The dashboard ranks by API-reported notional_value_dollars where present; “highest dollar amount” was requested but never defined. Volume and open interest are contract counts, not dollar liquidity.','get-markets','notional_value_dollars, volume_fp, open_interest_fp field definitions','agree metric before displaying dollar rankings'],
+ ['Topic matching is heuristic','Gas/elections/culture/crypto/golf inclusion uses keywords in title/ticker/category, not an authoritative series allowlist. It can miss or overinclude.','quick-start-market-data','topic filtering code on every markets page','approve explicit series allowlists'],
+ ['One-second candles unsupported','Get Market Candlesticks accepts period_interval 1, 60 or 1440 minutes only; seconds are not a valid interval.','candlesticks','period_interval enum','flagged; do not fabricate'],
+ ['Historical data cutoff','Settled markets and candlesticks older than the cutoff live on /historical/* endpoints; the live chart may show no points.','historical-data','GET /historical/* endpoints','document cutoff handling'],
+ ['Static Pages cannot hold credentials','Portfolio balance/positions/fills and order placement require signed headers (KALSHI-ACCESS-KEY/SIGNATURE/TIMESTAMP). Browser-only Pages must not hold private keys.','get-balance','authentication header requirements','server-side signing service before any trading'],
+ ['Demo environment disclaimer','Demo prices and behavior may not reflect real markets; demo credentials are not shared with production.','demo-env','demo.kalshi.co setup guide','treat demo data as mock'],
+ ['CORS not confirmed from GitHub Pages','Browser calls from pages.github.io to the demo API may be blocked by cross-origin policy; the dashboard reports it without substituting data.','demo-env','deploy then check connectivity status','proxy decision if blocked'],
+ ['Trade execution disabled','No orders are placed from this site; no demo credentials were supplied.','create-order','order placement requires signed request','remain disabled until backend + limits exist']
+];
+document.getElementById('irregularity-rows').innerHTML=irregularities.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${link(SRC[r[2]],'Official source')}</td><td class="blank">${esc(r[4])}</td></tr>`).join('');
+const blanks=[
+ ['Cash balance / portfolio value','Get Balance is authenticated; no credentials were supplied','Connect an authenticated demo account via a secure backend','get-balance'],
+ ['Market and event positions','Authenticated positions endpoint; not connected','Fetch Get Positions with signed headers','get-positions'],
+ ['Fills / trade history','Authenticated fills endpoint; not connected','Fetch Get Fills (plus /historical/fills after cutoff)','get-fills'],
+ ['Settled-position P&L','Settlement history requires account data','Read Get Positions settled status and settlement records','market-settlement'],
+ ['Order book contents for most markets','Sampled demo market returned an empty book; real depth not yet observed','Call Get Market Orderbook for target markets','orderbook'],
+ ['Candlestick price history','Sampled demo market returned no candlesticks','Fetch candlesticks per market once series_ticker is available','candlesticks'],
+ ['Demo market topic coverage','Sample showed Exotics/sports-style markets; no gas/elections/culture/crypto/golf matches confirmed','Page through Get Markets cursor or confirm demo series','get-markets-live']
+];
+document.getElementById('blank-rows').innerHTML=blanks.map((b,i)=>`<tr><td>${esc(b[0])}</td><td>${esc(b[1])}</td><td>${esc(b[2])}</td><td>${link(SRC[b[3]],'Official source')}</td></tr>`).join('');
+</script></body></html>

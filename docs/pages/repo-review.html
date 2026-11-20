@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repo review · Kalshi demo data hub</title><link rel="stylesheet" href="../assets/site.css"></head>
+<body data-depth="2">
+<header class="site"><a class="brand" href="../index.html">KALSHI <b>DEMO</b> · DATA HUB</a><nav></nav></header>
+<div class="wrap">
+  <h1>Repository review — line-by-line findings</h1>
+  <p class="lede">Full review performed 2026-11-20 by session <code>arena-6aa291e9-demo1</code> across all files present in the
+  repository (including the two earlier sessions' work, reviewed as-is). Sources: the files themselves at HEAD; official docs where a
+  claim in code had to be checked. Markdown mirror: <code>REVIEW.md</code> in the repo root.</p>
+
+  <h2>Repo state at session start</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>When</th><th>State</th><th>Assessment</th></tr></thead>
+    <tbody>
+      <tr><td>2026-11-20 ~11:15 UTC</td><td>Only a 7-byte stub <code>README.md</code> ("# Demo1") at commit <code>4a225ce</code></td><td>Nothing to verify; clean slate. Board created in <code>COORDINATION.md</code>.</td></tr>
+      <tr><td>mid-session</td><td>Two parallel sessions merged: single-page monitor (PRs #1/#2) then multipage site (PRs #4/#6)</td><td>Both integrated; scopes re-partitioned (see <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md" target="_blank" rel="noreferrer">COORDINATION.md ↗</a>); two rebase conflicts resolved without discarding work.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Findings by file</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>File</th><th>Owner session</th><th>Verdict</th><th>Findings</th></tr></thead>
+    <tbody>
+      <tr><td><code>index.html</code> (root)</td><td>e41f6700</td><td><span class="pill yes">sound</span></td><td>Semantic, accessible, all key sources linked; honest blank-state handling. Nav extended by integration to the data hub. <span class="pill warn">2 findings → F9/F10 on <a href="flagged.html">Flagged page</a></span>: <code>limit=1000</code> exceeds documented 200-max page size; kalshi.com links built from event tickers may 404.</td></tr>
+      <tr><td><code>app.js</code> (root)</td><td>e41f6700</td><td><span class="pill warn">2 irregularities</span></td><td>Escapes HTML correctly; no injected secrets; refresh loop 30 s. <code>/markets?status=open&limit=1000</code> (F9); <code>cleanURL()</code> link format (F10). Keyword topic matching includes "crude oil"/"natural gas" → may include non-gas energy markets (heuristic acknowledged by owner).</td></tr>
+      <tr><td><code>styles.css</code> (root)</td><td>e41f6700</td><td><span class="pill yes">sound</span></td><td>Self-contained (Google Fonts import external — fine for Pages; graceful fallback if blocked).</td></tr>
+      <tr><td><code>pages/*.html</code> (12 files)</td><td>a443fb8f</td><td><span class="pill yes">sound with caveats</span></td><td>Category tables correctly ship blank with source links (complies with "never infer"); dashboard uses simulated series only with explicit labels; portfolio/trades document official endpoints. Caveat: no real data anywhere in that site — superseded functionally by this data hub; category pages await series_map adoption (logged cross-file request).</td></tr>
+      <tr><td><code>docs/sources.md</code></td><td>a443fb8f</td><td><span class="pill yes">sound</span></td><td>Consolidated endpoint table; links resolve to docs.kalshi.com.</td></tr>
+      <tr><td><code>.github/workflows/pages.yml</code></td><td>e41f6700</td><td><span class="pill yes">works</span></td><td>Valid build+deploy; <code>node --check</code> + required-files guards. Redundant with legacy branch publishing (F12). Node 20 deprecation annotations (F13).</td></tr>
+      <tr><td><code>README.md</code> (root)</td><td>e41f6700 (+ integration)</td><td><span class="pill yes">accurate</span></td><td>Claims match code (30 s refresh, keyword filters, honest limitations). "Verified official references" table transparently marks which pages were NOT fetched — good practice.</td></tr>
+      <tr><td><code>COORDINATION.md</code></td><td>shared</td><td><span class="pill yes">merged 3×</span></td><td>Now a 3-way merged board with ownership map, handoff log, cross-file requests; conflicts resolved without loss (F11).</td></tr>
+      <tr><td><code>scripts/fetch_kalshi_data.py</code></td><td>6aa291e9</td><td><span class="pill yes">reviewed</span></td><td>Stdlib-only; paginates at documented 200; throttles 0.25 s + 429 backoff; writes provenance into every JSON; caps history size; keeps last good snapshot on partial failure.</td></tr>
+      <tr><td><code>scripts/demo_trader.py</code> + <code>scripts/strategies.json</code></td><td>6aa291e9</td><td><span class="pill yes">reviewed</span></td><td>Credential-gated; refuses to trade without <code>KALSHI_ALLOW_TRADING=1</code>; V2 order shape matches verified schema; strategies disabled by default.</td></tr>
+      <tr><td><code>.github/workflows/kalshi-data.yml</code></td><td>6aa291e9</td><td><span class="pill yes">reviewed</span></td><td>Commit loop prevented via <code>paths-ignore</code> + <code>[skip ci]</code> message; artifact upload every run for PR inspection; JSON validation step.</td></tr>
+      <tr><td><code>docs/**</code> (this hub)</td><td>6aa291e9</td><td><span class="pill yes">reviewed</span></td><td>Static; relative paths only (works under /Demo1 subpath); <code>.nojekyll</code> added so JSON is served raw; blank-never-fabricated rule enforced in renderers.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Checks run</h2>
+  <ul class="small">
+    <li><code>python3 -m py_compile</code> / AST parse on both scripts — pass.</li>
+    <li>JSON validity of every <code>docs/data/*.json</code> — pass.</li>
+    <li>JS syntax check on hub scripts — pass (node --check where available).</li>
+    <li>Internal link audit across docs/ pages (relative paths, depth-correct) — pass.</li>
+    <li>Every table row on data pages carries an official source link; unconfirmed values blank — pass.</li>
+  </ul>
+</div>
+<footer class="site"></footer>
+<script src="../assets/site.js"></script>
+</body>
+</html>

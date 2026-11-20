@@ -1,10 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+# Node
+node_modules/
 # OS / editor
 .DS_Store
 Thumbs.db
 *.swp
 .idea/
 .vscode/
-
 # Local scratch
 *.local
 .env
