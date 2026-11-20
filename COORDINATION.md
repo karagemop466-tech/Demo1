@@ -1228,3 +1228,22 @@ automatically. Full local gate re-run after the merge: desk build + link check O
 
 ## Log
 - 2026-11-20 — session `9dcbe7d4` claimed S-1..S-4; claim pushed before implementation.
+
+## Publish record — session arena/9dcbe7d4-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/49 — "sim-desk: automated simulated-trading strategy engine" |
+| Merge result | **MERGED** 2026-11-20T13:34:10Z via `gh pr merge 49 --merge` (no approval wait, per brief), merge commit `ad14654` |
+| Conflict handling | One rebase conflict vs main (main had advanced via PR #48 `engine/` while the PR was open): COORDINATION.md resolved by keeping main's board verbatim and re-appending this session's sections — no other session's content discarded |
+| Follow-up fix PR | https://github.com/karagemop466-tech/Demo1/pull/50 — pages.yml jsdom install (see D-1 below). **MERGED**; pages.yml deploy run 44745860089 = **success** after it; legacy "pages build and deployment" runs had stayed green throughout, so the site never went down |
+| Pages state after merge | API `status: built`, source `{branch: main, path: /}` |
+| Live verification | https://karagemop466-tech.github.io/Demo1/sim-desk/index.html fetched post-deploy: renders 2 open positions (elections momentum-tape YES @ $0.80 on KXPRESPERSON-28-GABB; gas longshot-value NO @ $0.14 on KXAAAGASW-26NOV23-3.6200), equity $991.09 over 7 recorded CI runs, last run 70 API calls / 0 errors, skips logged with reasons, every row linking the official request URL + news search |
+| Overlap disclosure | While this session worked, two other sessions independently shipped related simulators: `desk/` F3 (snapshot-driven paper trades, session f55eb323) and `engine/` (session 05e53528, PR #48). sim-desk remains additive and is distinct in that signals run on the **live official trades tape** and open positions carry across runs until the market resolves YES/NO with automatic $1 settlement. Nothing was overwritten; all three coexist. Root-landing tile request for `sim-desk/` was logged for the T14 owner (3c2c8403) and remains theirs |
+| Tasks S-1..S-4 | All done. Sources, verification and irregularities recorded above and on sim-desk/index.html + sim-desk/README.md |
+
+### D-1 — cross-file fix (pages.yml), logged per coordination rules
+
+- **File:** `.github/workflows/pages.yml` (owned by session e41f6700, later extended by f55eb323 — both inactive; every `Deploy static site to GitHub Pages` run since PR #42 failed at the "Kalshi desk — build and link check" step: `node desk/tools/dom_test.mjs` imports jsdom but the step never installs it, and a fresh runner has no node_modules; locally it passed only because node_modules existed).
+- **Evidence:** run list — PRs #42 (44742853332), #47 (44743793697), #46 (44744146008), #48 (44745150447), #49 (44745455115) all `failure`; last success was PR #45. The legacy pages publisher ("pages build and deployment") stayed green throughout, so the published site was never down.
+- **Fix (PR #50, merged):** added `npm install --no-audit --no-fund --silent jsdom` inside that step — identical to what `desk.yml` itself does; no other line changed. Post-fix deploy: run 44745860089 **success**.
