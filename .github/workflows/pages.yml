@@ -31,6 +31,9 @@ jobs:
         run: |
           python3 desk/tools/desk_data.py
           python3 desk/tools/build_pages.py
+          # desk/tools/dom_test.mjs imports jsdom (devDependency in package.json);
+          # a fresh runner has no node_modules, so install it first (same as desk.yml does).
+          npm install --no-audit --no-fund --silent jsdom
           node --check desk/assets/core.js
           node --check desk/assets/live.js
           node desk/tools/dom_test.mjs
