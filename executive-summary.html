@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Summary — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Executive summary</h1>
+  <p class="sub">Kalshi demo trading dashboard — what was built, what it runs on, what is verified, and what remains open.
+    As of 2026-11-20 · session <span class="mono">arena-3a5f6f1d</span> · repo <span class="mono">karagemop466-tech/Demo1</span>.</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="kpi-label">Official sources</div><div class="kpi">25</div><div class="meta">all on <a href="sources.html">Sources</a>, every table row links one</div></div>
+    <div class="card"><div class="kpi-label">Flagged items</div><div class="kpi">7</div><div class="meta">on <a href="flagged.html">Flagged for Review</a> — none block the merge</div></div>
+    <div class="card"><div class="kpi-label">Open questions</div><div class="kpi">14</div><div class="meta">5 answered · 9 need a decision — <a href="questions.html">Questions</a></div></div>
+  </div>
+
+  <h2>What this site does</h2>
+  <div class="table-scroll">
+    <table class="data">
+      <thead><tr><th>Requirement (from brief)</th><th>Delivered on</th><th>How</th><th>Verified against (official)</th></tr></thead>
+      <tbody>
+        <tr><td>Track highest dollar-amount live events in gas prices, elections, culture, crypto, golf</td>
+          <td><a href="dashboard.html">Dashboard</a>, <a href="markets.html">Markets</a></td>
+          <td>Series discovery → keyword topic classifier → open events with nested markets → ranked by 24h $ volume (toggle: open interest $ / notional $)</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Series</a> · <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Events</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Markets</a></td></tr>
+        <tr><td>Follow live events until they resolve; show YES/NO resolution</td>
+          <td><a href="markets.html">Markets</a></td>
+          <td>60s polling of open markets; on <span class="mono">result=yes/no</span> the outcome is written to a resolution watch log with observation time; Resolved view pulls settled events</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">status/result enums</a> · <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement $1</a></td></tr>
+        <tr><td>Track portfolio performance on the demo account; analyze &amp; categorize trades; build strategies</td>
+          <td><a href="portfolio.html">Portfolio</a>, <a href="trades.html">Trades</a></td>
+          <td>Official <span class="mono">/portfolio/balance|positions|settlements</span> reads with a user-supplied demo key (blank until then); every trade auto-categorized (topic · side · price band) and taggable with named strategies; win rate / P&amp;L / ROI per category and strategy</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">balance</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">positions</a> · <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">keys</a></td></tr>
+        <tr><td>Execute trades on events and track performance</td>
+          <td><a href="trades.html">Trades</a></td>
+          <td>Two modes: SIMULATED paper fills at live official quotes (always labeled) and REAL demo orders via <span class="mono">POST /portfolio/events/orders</span> (V2) when a key exists; open positions show live marks, unrealized P&amp;L, close/settle actions</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+        <tr><td>Live interactive price graph; x = time (seconds/minutes/hours), y = contract price</td>
+          <td><a href="dashboard.html">Dashboard</a></td>
+          <td>Seconds: browser-sampled mid price every 2s (official quotes only — no sub-minute candles exist); Minutes: official 1-minute candles/60min; Hours: official 1-hour candles/7d. Canvas chart, no external libraries</td>
+          <td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks 1/60/1440</a></td></tr>
+        <tr><td>Current liquidity — contracts available at a given price</td>
+          <td><a href="dashboard.html">Dashboard</a></td>
+          <td>Official orderbook depth chart (YES bids + implied YES asks), best bid/ask, spread, contracts within ±5¢, polled every 5s</td>
+          <td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">orderbook structure</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Orderbook</a></td></tr>
+        <tr><td>Suggestions section with review → choose best path before implementing</td>
+          <td><a href="suggestions.html">Suggestions</a></td>
+          <td>10 curated + live auto-suggestions; Accept/Reject/Defer with notes; implementation path picker (ordered); nothing implemented without a recorded decision</td>
+          <td class="src"><a href="docs/SOURCES.md">sources index</a></td></tr>
+        <tr><td>Clear list of questions / information / answers before decisions; discover missing info</td>
+          <td><a href="questions.html">Questions</a></td>
+          <td>14 questions tagged ANSWERED (source-linked) / UNKNOWN (missing data named) / DECISION NEEDED (facts + options); roll-up of highest-value unknowns</td>
+          <td class="src"><a href="docs/VERIFICATION.md">verification log</a></td></tr>
+        <tr><td>Repo review line-by-line with sources; flag irregularities; no hallucinations</td>
+          <td><a href="flagged.html">Flagged</a>, <a href="docs/VERIFICATION.md">docs/</a></td>
+          <td>Every claim checked against docs.kalshi.com pages (25 sources); 5 repo/API irregularities documented; unverifiable values left blank and flagged</td>
+          <td class="src"><a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">official docs index</a></td></tr>
+        <tr><td>Clean landing page + category subpages + tables, GitHub Pages deploy</td>
+          <td><a href="index.html">Home</a> + this site</td>
+          <td>Static site (no build dependencies), 10 pages, shared nav/status pill, link-checked before merge, GitHub Pages workflow</td>
+          <td class="src"><a href="https://github.com/karagemop466-tech/Demo1" target="_blank" rel="noopener">repo</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Key facts (all official, linked)</h2>
+  <div class="table-scroll">
+    <table class="data">
+      <thead><tr><th>Fact</th><th>Value</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Demo REST (recommended)</td><td class="mono">https://external-api.demo.kalshi.co/trade-api/v2</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+        <tr><td>Demo REST (also supported)</td><td class="mono">https://demo-api.kalshi.co/trade-api/v2</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+        <tr><td>Demo WebSocket (recommended)</td><td class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">environments</a></td></tr>
+        <tr><td>Demo WebSocket (also supported)</td><td class="mono">wss://demo-api.kalshi.co/trade-api/ws/v2</td><td class="src"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">environments</a></td></tr>
+        <tr><td>Market data auth</td><td>none required for series/events/markets/orderbook/candles</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">quick start</a></td></tr>
+        <tr><td>WebSocket auth</td><td>signed headers required at handshake (even public channels)</td><td class="src"><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">quick start</a></td></tr>
+        <tr><td>Winning contract payout</td><td>$1 per contract (Yes or No side)</td><td class="src"><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a></td></tr>
+        <tr><td>Order creation (this site)</td><td class="mono">POST /portfolio/events/orders</td><td class="src"><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2</a></td></tr>
+        <tr><td>Demo environment warning</td><td>demo prices/behavior may not reflect real markets</td><td class="src"><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a></td></tr>
+        <tr><td>Candlestick intervals</td><td>1, 60, 1440 minutes only</td><td class="src"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candles</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Top risks &amp; open decisions (summary)</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Risks</h3><div class="meta">
+      • <b>Browser CORS unknown</b> — live data may need the flagged relay (<a href="flagged.html">UNVERIFIED-01/03</a>).<br>
+      • <b>No demo key</b> — portfolio stays blank; paper mode covers workflow only (<a href="flagged.html">UNVERIFIED-02</a>).<br>
+      • <b>Demo ≠ production data</b> by official warning (<a href="flagged.html">UNVERIFIED-05</a>).<br>
+      • <b>Ranking metric undefined</b> by the API — default is computed 24h $ volume (<a href="flagged.html">UNVERIFIED-04</a>).</div></div>
+    <div class="card"><h3>First decisions to make (from <a href="questions.html">Questions</a>)</h3><div class="meta">
+      Q2 resolve CORS (one browser check) → Q3 supply a demo key → Q1 fix the ranking metric → Q7 accept or replace the topic classifier → Q10 accept/decline the relay.<br>
+      Each maps to a reviewable item on <a href="suggestions.html">suggestions.html</a> (C1–C10) with the implementation path picker.</div></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+</body>
+</html>

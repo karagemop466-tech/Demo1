@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markets &amp; Resolution Tracking — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Markets — live until resolved</h1>
+  <p class="sub">Each topic's open markets are polled until the exchange determines them, then the official
+    <span class="mono">result</span> (<span class="mono">yes</span> / <span class="mono">no</span>) is recorded with the observation time.
+    Status lifecycle &amp; result enums: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets (official)</a>.
+    Settlement pays $1 per winning contract — <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement (official)</a>.</p>
+
+  <div id="conn-banner" class="banner" hidden></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="controls" style="margin-top:0">
+      <span class="meta">Topic</span>
+      <div class="seg" id="topic-seg"></div>
+      <div class="seg" id="view-seg" style="margin-left:12px">
+        <button data-view="open" class="on">Live (open)</button>
+        <button data-view="resolved">Resolved</button>
+        <button data-view="watch">Resolution watch log</button>
+      </div>
+      <span class="meta" style="margin-left:auto" id="asof"></span>
+      <button class="btn sub sm" id="btn-refresh">Refresh</button>
+    </div>
+    <div class="meta" id="series-list"></div>
+  </div>
+
+  <div class="table-scroll">
+    <table class="data" id="m-table">
+      <thead><tr>
+        <th>Event / market</th><th>Ticker</th><th>Status</th><th>Resolved (yes/no)</th>
+        <th class="num">YES price</th><th class="num">24h contracts</th><th class="num">Total volume</th>
+        <th>Close time (UTC)</th><th>Observed resolution</th><th>Source</th>
+      </tr></thead>
+      <tbody><tr><td colspan="10" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card">
+      <h3>Resolution rules (official)</h3>
+      <div class="meta">• On a <b>Yes</b> outcome, each Yes contract pays <b>$1</b>; on a <b>No</b> outcome, each No contract pays <b>$1</b> (source:
+        <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>).<br>
+        • Market lifecycle: <span class="mono">initialized → inactive → active → closed → determined → (disputed) → finalized</span> (source:
+        <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>).<br>
+        • <span class="mono">result</span> is <span class="mono">yes</span>, <span class="mono">no</span>, <span class="mono">scalar</span> or empty while pending.<br>
+        • Settlement typically follows expiration shortly; timing varies by data source and review (source: Market Settlement docs).</div>
+    </div>
+    <div class="card">
+      <h3>How this page tracks resolutions</h3>
+      <div class="meta">1. Fetch open events for the topic's highest-volume series (<span class="mono">GET /events?status=open&amp;with_nested_markets=true</span>).<br>
+        2. Re-poll every 60s; when a market's <span class="mono">status</span> becomes <span class="mono">determined</span>/<span class="mono">finalized</span> and
+        <span class="mono">result</span> is non-empty, write an entry to the <b>Resolution watch log</b> (browser-local) with ticker, result and observation time.<br>
+        3. The Resolved view pulls <span class="mono">GET /events?status=settled</span> for the same series so past resolutions stay visible.</div>
+    </div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/markets.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Suggestions — review before anything is implemented</h1>
+  <p class="sub">This section is dedicated to proposals that would improve decision-making on the site. Each item is reviewed here first:
+    <b>Accept → Reject → Defer</b>, then accepted items are ordered into an implementation path (the "best path" picker at the bottom).
+    Nothing is implemented without an explicit decision recorded in this browser. Auto-suggestions are computed live from official API
+    values and labeled with the data they came from.</p>
+
+  <div class="grid g3" style="margin-bottom:18px">
+    <div class="card"><div class="kpi-label">Suggestions</div><div class="kpi" id="s-total">—</div><div class="meta" id="s-break"></div></div>
+    <div class="card"><div class="kpi-label">Auto (from live data)</div><div class="kpi" id="s-auto">—</div><div class="meta">recomputed each load</div></div>
+    <div class="card"><div class="kpi-label">Chosen path</div><div class="kpi" id="s-path" style="font-size:17px">not chosen</div><div class="meta">see implementation path picker</div></div>
+  </div>
+
+  <h2>Auto-suggestions <span class="badge topic">computed from live official data</span></h2>
+  <div id="auto-list"></div>
+
+  <h2>Curated suggestions <span class="badge">human review required</span></h2>
+  <div id="cur-list"></div>
+
+  <h2>Implementation path (choose the best path)</h2>
+  <div class="card">
+    <div class="meta">Order the accepted suggestions into a sequence, then commit the choice. The path is stored locally and shown on this page;
+      implementation work happens only for items on the chosen path.</div>
+    <div id="path-list" style="margin-top:10px"></div>
+    <div class="controls">
+      <button class="btn" id="btn-save-path">Save chosen path</button>
+      <button class="btn sub" id="btn-reset">Reset all decisions</button>
+      <span class="meta" id="path-status"></span>
+    </div>
+    <div class="meta">Recommended default ordering logic: (1) unblock data (transport/credentials), (2) fix measurement definitions
+      (ranking metric), (3) deepen analysis (strategy tagging), (4) automation (alerts). This ordering is itself a suggestion, not an implementation.</div>
+  </div>
+
+  <h2>How decisions flow</h2>
+  <div class="grid g3">
+    <div class="card"><h3>1 · Discover</h3><div class="meta">Auto-suggestions are derived from live values (spread, depth, connection state, resolution activity) — each shows its input values.</div></div>
+    <div class="card"><h3>2 · Review</h3><div class="meta">A reviewer marks each suggestion Accept / Reject / Defer with a note. Decisions persist in this browser only.</div></div>
+    <div class="card"><h3>3 · Choose path</h3><div class="meta">Accepted items are ranked into an implementation path; the chosen path is the only queue that may be implemented.</div></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/trade-exec.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/suggestions.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Live Dashboard</h1>
+  <p class="sub">Highest dollar-amount live events on the Kalshi <b>demo</b> exchange across five topics — Gas prices · Elections · Culture · Crypto · Golf.
+    Prices move live; the chart x-axis switches between seconds, minutes and hours. Source of every value:
+    <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">official market-data API</a> (no key needed).</p>
+
+  <div id="conn-banner" class="banner" hidden></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="controls" style="margin-top:0">
+      <span class="meta">Topic</span>
+      <div class="seg" id="topic-seg"></div>
+      <span class="meta" style="margin-left:12px">Rank by</span>
+      <div class="seg" id="rank-seg">
+        <button data-rank="dvol" class="on">24h $ volume</button>
+        <button data-rank="oi">Open interest $</button>
+        <button data-rank="notional">Notional $</button>
+      </div>
+      <span class="meta" style="margin-left:auto" id="asof"></span>
+      <button class="btn sub sm" id="btn-refresh">Refresh now</button>
+    </div>
+    <div class="meta" id="rank-note"></div>
+  </div>
+
+  <h2 style="margin-top:8px">Top live events — <span id="topic-title">…</span></h2>
+  <div class="table-scroll">
+    <table class="data" id="top-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Event / market</th><th>Ticker</th><th>Status</th>
+          <th class="num">Last $</th><th class="num">Bid / Ask</th>
+          <th class="num">24h contracts</th><th class="num">24h $ vol*</th>
+          <th class="num">Open int. $*</th><th class="num">Notional $</th>
+          <th>Resolution</th><th>Source</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="12" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="meta">* Computed values: 24h $ vol = <span class="mono">volume_24h_fp × last_price_dollars</span>; Open int. $ = <span class="mono">open_interest_fp × last_price_dollars</span>. The API publishes no dollar-volume field — see <a href="flagged.html">UNVERIFIED-04</a>. Notional is the official <span class="mono">notional_value_dollars</span> field.</div>
+
+  <h2>Price &amp; liquidity — <span id="sel-title" class="mono">select a market above</span></h2>
+  <div class="card">
+    <div class="controls" style="margin-top:0">
+      <div class="seg" id="tf-seg">
+        <button data-tf="seconds" class="on">Seconds</button>
+        <button data-tf="minutes">Minutes</button>
+        <button data-tf="hours">Hours</button>
+      </div>
+      <span class="meta" id="tf-note"></span>
+      <span class="meta" style="margin-left:auto" id="quote-meta"></span>
+    </div>
+    <canvas class="chart" id="price-chart"></canvas>
+    <div class="meta" style="margin-top:6px" id="chart-src"></div>
+
+    <h3>Liquidity — contracts available at each price</h3>
+    <canvas class="depth" id="depth-chart"></canvas>
+    <div class="grid g4" style="margin-top:12px">
+      <div class="card"><div class="kpi-label">Best YES bid</div><div class="kpi" id="k-bid">—</div><div class="meta" id="k-bid-q"></div></div>
+      <div class="card"><div class="kpi-label">Best YES ask (implied)</div><div class="kpi" id="k-ask">—</div><div class="meta" id="k-ask-q"></div></div>
+      <div class="card"><div class="kpi-label">Spread</div><div class="kpi" id="k-spread">—</div><div class="meta">ask − bid</div></div>
+      <div class="card"><div class="kpi-label">Depth within ±5¢</div><div class="kpi" id="k-depth">—</div><div class="meta">contracts both sides</div></div>
+    </div>
+    <div class="meta" style="margin-top:8px">Orderbook returns bids only (a NO bid at p = a YES ask at 1−p) —
+      <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">official docs</a>.</div>
+  </div>
+
+  <h2>How to read this page</h2>
+  <div class="grid g3">
+    <div class="card"><h3>Live, not stored</h3><div class="meta">Every number is fetched from
+      <span class="mono">external-api.demo.kalshi.co</span> when this page loads and re-polled while open. Nothing on this page is pre-filled.</div></div>
+    <div class="card"><h3>Seconds vs minutes vs hours</h3><div class="meta">Official candlesticks exist only at 1 / 60 / 1440-minute intervals. “Seconds” mode therefore samples the official quote every few seconds in your browser
+      (<a href="flagged.html">UNVERIFIED-07</a>).</div></div>
+    <div class="card"><h3>Resolution</h3><div class="meta">Markets run until they resolve YES or NO; settlement pays $1 per winning contract
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">docs</a>).
+      Track full resolution history on the <a href="markets.html">Markets</a> page.</div></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

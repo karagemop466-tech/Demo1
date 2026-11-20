@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-exchange dashboard: highest dollar-amount events across gas, elections, culture, crypto and golf; portfolio & trade analysis; suggestions and flagged items.">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Kalshi Demo Dashboard</h1>
+  <p class="sub">A clean, live dashboard over the Kalshi <b>demo</b> Trade API — events tracked to resolution, portfolio &amp; trade analysis,
+    price/liquidity charts, reviewable suggestions, and a fully sourced verification trail. Data is fetched live in your browser from the
+    official demo endpoints; nothing on this site is pre-filled or guessed.</p>
+
+  <div class="grid g3">
+    <div class="card"><h3><a href="executive-summary.html">Executive summary</a></h3>
+      <div class="meta">What was built, requirement-by-requirement delivery table, key official facts, top risks and the first decisions to make.</div></div>
+    <div class="card"><h3><a href="dashboard.html">Live dashboard</a></h3>
+      <div class="meta">Top dollar-amount live events across five topics · price chart with seconds/minutes/hours x-axis · liquidity depth with contracts available at each price.</div></div>
+    <div class="card"><h3><a href="markets.html">Markets &amp; resolution</a></h3>
+      <div class="meta">Polls open markets until the exchange determines them; records how each resolved (YES/NO) with timestamps; settled history per topic.</div></div>
+    <div class="card"><h3><a href="portfolio.html">Portfolio</a></h3>
+      <div class="meta">Official demo-account balance/positions/settlements (blank until a key is added) plus the paper ledger: P&amp;L, win rate, ROI by category and strategy.</div></div>
+    <div class="card"><h3><a href="trades.html">Execute &amp; analyze</a></h3>
+      <div class="meta">Trade ticket against live quotes — SIMULATED paper fills or REAL demo orders; auto-categorization; strategy tags; open positions with live marks.</div></div>
+    <div class="card"><h3><a href="suggestions.html">Suggestions</a></h3>
+      <div class="meta">Dedicated review section: curated + live auto-suggestions, Accept/Reject/Defer, and an implementation path picker — nothing changes without a decision.</div></div>
+    <div class="card"><h3><a href="questions.html">Questions &amp; answers</a></h3>
+      <div class="meta">What we know (sourced), what we don't (missing information named), and what must be decided before moving — with discovery steps.</div></div>
+    <div class="card"><h3><a href="flagged.html">Flagged for review</a></h3>
+      <div class="meta">7 unverified items + 5 repository/API irregularities, each with a verification step and an official source link. None block the site.</div></div>
+    <div class="card"><h3><a href="sources.html">Sources</a></h3>
+      <div class="meta">25 official Kalshi sources used across the site — every table row links back to one. Verification log in <span class="mono">docs/</span>.</div></div>
+  </div>
+
+  <div class="banner info" style="margin-top:20px">
+    <b>Surface &amp; endpoints (official):</b> REST <span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span> (also
+    <span class="mono">https://demo-api.kalshi.co/trade-api/v2</span>) · WebSocket
+    <span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span> (also
+    <span class="mono">wss://demo-api.kalshi.co/trade-api/ws/v2</span>) —
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official source</a>. Demo uses mock funds;
+    <a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">create a demo account</a>.
+  </div>
+
+  <div class="banner" id="conn-banner" hidden></div>
+
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><h3>Live status</h3><div class="meta" id="home-status">Checking the official API…</div></div>
+    <div class="card"><h3>Verification</h3><div class="meta">Every value on this site is either (a) read live from an official endpoint with a source link, or (b) left blank and flagged. See <a href="docs/VERIFICATION.md">docs/VERIFICATION.md</a>.</div></div>
+    <div class="card"><h3>Coordination</h3><div class="meta">Multi-session task board: <a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md">COORDINATION.md</a> — claims, sources, verification and PR record.</div></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+<script>
+(function(){
+  function tick(){
+    var s = KALSHI.state, el = document.getElementById("home-status");
+    if (s.transport === "direct") el.innerHTML = "<span class='badge open'>LIVE</span> official demo API reachable directly · last success " + KALSHI.ago(s.lastOk);
+    else if (s.transport === "relay") el.innerHTML = "<span class='badge unv'>LIVE via relay</span> direct blocked · flagged fallback active (<a href='flagged.html'>UNVERIFIED-01/03</a>)";
+    else if (s.transport === "unavailable") el.innerHTML = "<span class='badge no'>BLOCKED</span> official API unreachable from this browser (<a href='flagged.html'>UNVERIFIED-01</a>)";
+    var b = document.getElementById("conn-banner");
+    if (s.transport === "direct") { b.className="banner ok"; b.hidden=false; b.innerHTML="Connected to the official Kalshi demo API — open the <a href='dashboard.html'>dashboard</a> for live markets."; }
+    else if (s.transport === "relay") { b.className="banner"; b.hidden=false; b.innerHTML="Connected through the flagged third-party relay — see <a href='flagged.html'>UNVERIFIED-03</a>."; }
+    else if (s.transport === "unavailable") { b.className="banner err"; b.hidden=false; b.innerHTML="Could not reach the official API from this browser — live tables will stay blank (never guessed). Details: <a href='flagged.html'>UNVERIFIED-01</a>."; }
+    else b.hidden = true;
+  }
+  KALSHI.onStatus(tick); tick();
+  KALSHI.get("/exchange/status").then(function(){ tick(); }).catch(function(){
+    KALSHI.get("/markets",{limit:1}).then(function(){ tick(); }).catch(function(){ tick(); });
+  });
+  setInterval(tick, 5000);
+})();
+</script>
+</body>
+</html>

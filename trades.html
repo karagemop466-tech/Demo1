@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trades — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Execute &amp; analyze trades</h1>
+  <p class="sub">Execute on live demo-exchange prices, then track and categorize every trade. Two modes:
+    <span class="badge sim">SIMULATED</span> paper fills against official quotes (always labeled), and
+    <span class="badge open">REAL DEMO</span> orders sent to the official demo exchange when an API key is configured
+    (<a href="flagged.html">UNVERIFIED-02</a>). Order spec: <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2 (official)</a>.</p>
+
+  <div id="conn-banner" class="banner" hidden></div>
+
+  <h2>Settings</h2>
+  <div class="card">
+    <div class="grid g2">
+      <label class="ctl">Demo API key ID <span class="meta">from demo.kalshi.co → Account → API Keys (<a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">docs</a>)</span>
+        <input type="text" id="key-id" placeholder="key id" autocomplete="off"></label>
+      <label class="ctl">Private key (PEM, PKCS8) <span class="meta">stored ONLY in this browser's localStorage — never sent anywhere except signed requests to the official demo API</span>
+        <textarea id="key-pem" placeholder="-----BEGIN PRIVATE KEY-----"></textarea></label>
+    </div>
+    <div class="controls">
+      <button class="btn" id="btn-save-key">Save key</button>
+      <button class="btn sub" id="btn-clear-key">Clear key</button>
+      <label class="meta" style="display:flex;gap:6px;align-items:center">
+        <input type="checkbox" id="relay-toggle"> Allow third-party relay fallback (UNVERIFIED-03)</label>
+      <span class="meta" id="key-state"></span>
+    </div>
+  </div>
+
+  <h2>Execute</h2>
+  <div class="card">
+    <div class="controls" style="margin-top:0">
+      <label class="ctl">Topic<select id="ex-topic"></select></label>
+      <label class="ctl">Market<select id="ex-market" style="min-width:340px"></select></label>
+      <span class="meta" id="ex-quote">—</span>
+    </div>
+    <div class="controls">
+      <label class="ctl">Direction<select id="ex-side">
+        <option value="yes">Buy YES (bid)</option>
+        <option value="no">Buy NO</option>
+      </select></label>
+      <label class="ctl">Contracts<input type="number" id="ex-count" value="10" min="1" step="1"></label>
+      <label class="ctl">Limit price $<input type="number" id="ex-price" min="0.01" max="0.99" step="0.01"></label>
+      <label class="ctl">Auto-price<select id="ex-auto">
+        <option value="ask">at best ask (taker)</option>
+        <option value="bid">at best bid (maker)</option>
+        <option value="manual">use limit price above</option>
+      </select></label>
+      <label class="ctl">Mode<select id="ex-mode">
+        <option value="paper">SIMULATED paper fill</option>
+        <option value="real">REAL demo order (needs key)</option>
+      </select></label>
+      <label class="ctl">Strategy tag<select id="ex-strategy"><option value="">— none —</option></select></label>
+    </div>
+    <div class="controls">
+      <button class="btn" id="btn-execute">Execute</button>
+      <span class="meta" id="ex-status"></span>
+    </div>
+    <div class="meta">Price must respect the market's price-level structure (official <span class="mono">price_level_structure</span> field);
+      the ticket rounds to the exchange tick shown in the quote line. Fees follow the official
+      <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">fee schedule</a> and are excluded from paper P&amp;L estimates.</div>
+  </div>
+
+  <h2>Open positions <span class="badge sim">SIMULATED</span></h2>
+  <div class="table-scroll">
+    <table class="data" id="open-table">
+      <thead><tr><th>Opened</th><th>Market</th><th>Side</th><th class="num">Qty</th><th class="num">Entry $</th><th class="num">Cost $</th><th class="num">Live mark $</th><th class="num">Unrealized $</th><th>Category</th><th>Action</th></tr></thead>
+      <tbody><tr><td colspan="10" class="empty">No open paper positions.</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Trade log &amp; categorization</h2>
+  <div class="table-scroll">
+    <table class="data" id="log-table">
+      <thead><tr><th>Time</th><th>Market</th><th>Side</th><th class="num">Qty</th><th class="num">Entry $</th><th>Status</th><th class="num">P&amp;L $</th><th>Auto category</th><th>Strategy tag</th><th>Mode</th></tr></thead>
+      <tbody><tr><td colspan="10" class="empty">No trades yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Strategies</h2>
+  <div class="card">
+    <div class="controls" style="margin-top:0">
+      <label class="ctl">New strategy name <input type="text" id="strat-name" placeholder="e.g. 'toss-up YES scalps'"></label>
+      <button class="btn" id="btn-add-strat">Add strategy</button>
+      <span class="meta">Trades tagged with a strategy roll up into the strategy performance table on <a href="portfolio.html">Portfolio</a>.</span>
+    </div>
+    <div class="pill-row" id="strat-list"></div>
+    <div class="meta">Strategy creation workflow: (1) define a name here → (2) tag trades above or at execution → (3) review win rate &amp; P&amp;L per tag on Portfolio → (4) promote the best tag into a
+      <a href="suggestions.html">suggestion</a> for adoption.</div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/trade-exec.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/trades.js"></script>
+</body>
+</html>
