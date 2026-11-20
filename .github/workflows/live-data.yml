@@ -1,9 +1,9 @@
 name: Collect Kalshi demo data
 
-# Runs on GitHub-hosted runners, which have unrestricted outbound internet and
-# can therefore reach the official Kalshi demo Trade API. The sandbox used to
-# author this repo cannot, so this workflow is how live official data is
-# obtained. Artifacts are inspected and committed deliberately, never blindly.
+# GitHub-hosted runners have unrestricted outbound internet, so this is where
+# live official Kalshi demo data is collected. The collector writes data/*.json
+# plus a full request log, which the job commits back to this branch so the
+# values can be reviewed (and each row keeps the exact API URL it came from).
 on:
   push:
     branches:
@@ -19,7 +19,11 @@ on:
         default: "collect"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: live-data
+  cancel-in-progress: false
 
 jobs:
   collect:
@@ -29,31 +33,38 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Reachability check (official demo host)
+      - name: Reachability check against official hosts
         run: |
+          set +e
           curl -sS -m 20 -o /dev/null -w "demo exchange/status: %{http_code}\n" \
             https://external-api.demo.kalshi.co/trade-api/v2/exchange/status
+          curl -sS -m 20 -o /dev/null -w "demo alt host: %{http_code}\n" \
+            https://demo-api.kalshi.co/trade-api/v2/exchange/status
           curl -sS -m 20 -o /dev/null -w "docs.kalshi.com: %{http_code}\n" \
             https://docs.kalshi.com/llms.txt
       - name: Explore data landscape
-        if: ${{ github.event.inputs.mode == 'explore' || github.event.inputs.mode == '' || github.event_name == 'push' }}
         run: python tools/collect_kalshi.py explore
       - name: Collect dataset
         run: python tools/collect_kalshi.py collect
-      - name: Show collection log
-        run: cat data/collect-log.txt || true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: kalshi-data
-          path: data/
-          if-no-files-found: warn
-      - name: Job summary
+      - name: Summary
         if: always()
         run: |
           {
-            echo "### Kalshi demo collection";
-            echo '```';
-            cat data/collect-log.txt 2>/dev/null | tail -80 || echo "no log";
-            echo '```';
+            echo "### Kalshi demo collection log"
+            echo '```'
+            tail -c 12000 data/collect-log.txt 2>/dev/null || echo "no log written"
+            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit collected data back to the branch
+        if: always()
+        run: |
+          git config user.name "kalshi-collector"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/ || true
+          if git diff --cached --quiet; then
+            echo "no data changes to commit"
+          else
+            git commit -m "data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
