@@ -16,7 +16,8 @@ A static GitHub Pages site (repository root, served from `main` at `/`) that tra
 | `snapshot/*.json`, `snapshot/collect-log.txt` | The verified snapshot + request-by-request log (485 requests, 0 failures) |
 | `build_site.py` | Renders `site/` from `snapshot/` only; fails on any broken internal link |
 | `tools/account_worker.py` | Optional **read-only** signed client for demo portfolio data (no write path, no orders) |
-| `site/` | Overview, live markets, 5 topic pages, resolved outcomes, liquidity + chart, data browser, portfolio, strategies, suggestions, questions, flagged, sources |
+| `tools/verify_site.py` | Automated line-by-line verifier: re-derives every rendered value from `snapshot/*.json` and audits every data row's official source link; writes `site/verification-report.json` |
+| `site/` | Overview, live markets, 5 topic pages, resolved outcomes, liquidity + chart, data browser, portfolio, strategies, suggestions, questions, flagged, sources, **verification** |
 
 Definitions used: dollar ranking = computed 24 h traded notional (Σ `yes_price_dollars` × `count_fp`, trade count
 shown); liquidity = order-book bids with contract counts (asks derived as 1.00 − opposite bid); resolution =
