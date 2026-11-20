@@ -27,6 +27,7 @@ Official documentation verified for this script (all fetched 2026-11-20):
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -44,40 +45,82 @@ DATA = ROOT / "data"
 
 MAX_SERIES_PER_TOPIC = int(os.environ.get("MAX_SERIES_PER_TOPIC", "10"))
 MAX_MARKETS_PER_SERIES = int(os.environ.get("MAX_MARKETS_PER_SERIES", "60"))
-MAX_DOLLAR_SCAN = int(os.environ.get("MAX_DOLLAR_SCAN", "12"))   # markets per topic
+MAX_DOLLAR_SCAN = int(os.environ.get("MAX_DOLLAR_SCAN", "6"))    # markets per topic
 MAX_CANDLE_MARKETS = int(os.environ.get("MAX_CANDLE_MARKETS", "2"))  # per topic
+MAX_SERIES_PER_TOPIC_SELECT = MAX_SERIES_PER_TOPIC
 
 TOPIC_RULES = {
+    # Each rule is a list of (regex, why) checked against a series' title, ticker
+    # and tags. Regexes keep matching precise (e.g. "golf" must not match inside
+    # "NFL Golf"-like strings, and "gas" must not match "Vega"). Every matched
+    # series is published with the exact reason string below, so the rule can be
+    # audited and corrected.
     "gas_prices": {
         "label": "Gas prices",
-        "words": ["gas price", "gas prices", "gasoline", "pump price", "aaa",
-                  "national average gas", "retail gas", "fuel price", "kxaaagas"],
-        "categories": ["Economics", "Commodities", "Financials"],
+        "patterns": [
+            (r"kxaaagas", "series ticker is a Kalshi AAA gas-price series"),
+            (r"gas\s*prices?", "title/tags mention gas prices"),
+            (r"gasoline", "title/tags mention gasoline"),
+            (r"pump\s*price", "title/tags mention pump price"),
+        ],
+        "categories": [],
     },
     "elections": {
         "label": "Elections",
-        "words": ["election", "president", "senate", "governor", "congress",
-                  "primary", "electoral", "ballot", "house", "mayor", "poll"],
-        "categories": ["Politics", "Elections"],
+        "patterns": [
+            (r"election", "title/tags mention election"),
+            (r"\bnominee\b", "title/tags mention nominee"),
+            (r"\bgovernorship\b", "title/tags mention governorship"),
+            (r"\bpresiden(t|cy|tial)\b", "title/tags mention president/presidency"),
+            (r"\bsenate\b", "title/tags mention senate"),
+            (r"\bhouse\s+of\s+representatives\b", "title/tags mention House of Representatives"),
+            (r"\bmayoral\b", "title/tags mention mayoral"),
+            (r"kxpres|kxgov|kxsenate|kxhouse|kxmayor", "series ticker is an election series"),
+        ],
+        "categories": [],
     },
     "culture": {
         "label": "Culture",
-        "words": ["album", "movie", "film", "box office", "grammy", "oscar",
-                  "emmy", "celebrity", "taylor swift", "song", "netflix",
-                  "spotify", "billboard", "award", "rotten tomatoes"],
-        "categories": ["Culture", "Entertainment", "Pop Culture", "Awards"],
+        "patterns": [
+            (r"\boscar", "title/tags mention Oscar"),
+            (r"\bgrammy", "title/tags mention Grammy"),
+            (r"\bemmy", "title/tags mention Emmy"),
+            (r"box\s*office", "title/tags mention box office"),
+            (r"rotten\s*tomatoes|\bmetacritic\b", "title/tags mention a culture review score"),
+            (r"\bbillboard\b", "title/tags mention Billboard"),
+            (r"\bspotify\b", "title/tags mention Spotify"),
+            (r"\bnetflix\b", "title/tags mention Netflix"),
+            (r"\bbest\s+(picture|album|actor|actress|director)\b", "title/tags mention a culture award category"),
+            (r"\bsurvivor\b|\bbig\s+brother\b|\bmet\s+gala\b", "title/tags mention a named culture event"),
+            (r"\bmovie\b|\bfilm\b|\balbum\b", "title/tags mention movie/film/album"),
+        ],
+        "categories": [],
     },
     "crypto": {
         "label": "Crypto",
-        "words": ["bitcoin", "btc", "ethereum", "eth", "solana", "sol",
-                  "dogecoin", "doge", "xrp", "ripple", "crypto"],
-        "categories": ["Crypto", "Financials"],
+        "patterns": [
+            (r"\bbitcoin\b|\bbtc\b|kxbtc", "title/tags mention Bitcoin"),
+            (r"\bethereum\b|\beth\b|kxeth", "title/tags mention Ethereum"),
+            (r"\bsolana\b", "title/tags mention Solana"),
+            (r"\bdogecoin\b|\bdoge\b", "title/tags mention Dogecoin"),
+            (r"\bxrp\b|\bripple\b", "title/tags mention XRP"),
+            (r"\bcrypto", "title/tags mention crypto"),
+        ],
+        "categories": [],
     },
     "golf": {
         "label": "Golf",
-        "words": ["golf", "pga", "lpga", "masters", "ryder cup",
-                  "open championship", "tour championship", "liv golf", "kxpgatour"],
-        "categories": ["Sports", "Golf"],
+        "patterns": [
+            (r"\bgolf\b", "title/tags mention golf"),
+            (r"\bpga\b", "title/tags mention the PGA"),
+            (r"\blpga\b", "title/tags mention the LPGA"),
+            (r"\bmasters\b", "title/tags mention the Masters"),
+            (r"ryder\s*cup", "title/tags mention the Ryder Cup"),
+            (r"open\s*championship", "title/tags mention the Open Championship"),
+            (r"tour\s*championship", "title/tags mention the Tour Championship"),
+            (r"kxpgatour|kxpgatop20|kxdpworldtour|kxpgar", "series ticker is a Kalshi golf series"),
+        ],
+        "categories": [],
     },
 }
 
@@ -143,19 +186,21 @@ def post_fixed(d):
 # Explore
 # ---------------------------------------------------------------------------
 def series_matches(series, rule):
-    title = (series.get("title") or "").lower()
-    ticker = (series.get("ticker") or "").lower()
-    cats = [str(c).lower() for c in (series.get("categories") or [])]
-    if series.get("category"):
-        cats.append(str(series["category"]).lower())
-    tags = [str(t).lower() for t in (series.get("tags") or [])]
-    hay = " ".join([title, ticker] + tags)
-    for w in rule["words"]:
-        if w in hay:
-            return True, f'title/ticker/tags contain "{w}"'
-    for c in rule["categories"]:
-        if c.lower() in cats:
-            return True, f'discovery category "{c}"'
+    """Explicit, auditable matching rule. Returns (matched, why)."""
+    title = (series.get("title") or "")
+    ticker = (series.get("ticker") or "")
+    tags = " ".join(str(t) for t in (series.get("tags") or []))
+    hay = f"{title} | {ticker} | {tags}"
+    low = hay.lower()
+    for pattern, why in rule["patterns"]:
+        if re.search(pattern, low, re.I):
+            return True, f'{why} (pattern "{pattern}")'
+    for cat in rule["categories"]:
+        cats = [str(c).lower() for c in (series.get("categories") or [])]
+        if series.get("category"):
+            cats.append(str(series["category"]).lower())
+        if cat.lower() in cats:
+            return True, f'discovery category "{cat}"'
     return False, ""
 
 
@@ -263,26 +308,36 @@ def implied_ask_from_bids(opposite_levels):
     return Decimal("1.00") - best
 
 
-def traded_notional(ticker, hours=24):
-    """Sum of trade price x count over the window, from GET /markets/trades.
+def _trades_page(ticker, min_ts, max_ts, cursor=None, limit=1000):
+    params = {"ticker": ticker, "min_ts": min_ts, "limit": limit}
+    if max_ts:
+        params["max_ts"] = max_ts
+    if cursor:
+        params["cursor"] = cursor
+    return get_json(f"{BASE}/markets/trades", params, retries=1)
 
-    Formula: SUM(yes_price_dollars * count_fp) for every trade returned with
-    min_ts = now - hours*3600. Both fields are documented on Get Trades.
+
+def traded_notional(ticker, hours=24, max_pages=10, depth=0, span=None):
+    """Exact dollar notional: SUM(yes_price_dollars * count_fp) over public trades.
+
+    Both operands are documented fields of Get Trades. If the page/limit budget
+    is exhausted before the cursor is empty, the time window is split in half and
+    each half is summed instead of reporting a truncated (i.e. understated) total.
+    When even that is impossible the result is marked incomplete, never guessed.
     """
     now = int(time.time())
-    min_ts = now - hours * 3600
+    if span:
+        start, end = span
+    else:
+        start, end = now - hours * 3600, now
     cursor, total, n, pages = None, Decimal("0"), 0, 0
     first_url = None
-    truncated = False
-    while pages < 5:
-        params = {"ticker": ticker, "min_ts": min_ts, "limit": 1000}
-        if cursor:
-            params["cursor"] = cursor
-        url, payload, err = get_json(f"{BASE}/markets/trades", params, retries=1)
+    while pages < max_pages:
+        url, payload, err = _trades_page(ticker, start, end, cursor)
         first_url = first_url or url
         pages += 1
         if err or not payload:
-            return None, n, first_url, err or "no payload"
+            return None, n, first_url, err or "no payload", False
         trades = payload.get("trades") or []
         for t in trades:
             p = dec(t.get("yes_price_dollars"))
@@ -293,10 +348,19 @@ def traded_notional(ticker, hours=24):
             n += 1
         cursor = payload.get("cursor") or ""
         if not cursor or not trades:
-            break
-        if pages == 5:
-            truncated = True
-    return total, n, first_url, ("truncated at 5000 trades" if truncated else None)
+            return total, n, first_url, None, True
+    # budget exhausted with more data available: split the window
+    mid = start + (end - start) // 2
+    if depth >= 3 or end - start <= 120:
+        return total, n, first_url, (
+            f"incomplete: more than {n} trades in the window; "
+            "window splitting depth reached, total is a lower bound"), False
+    a_total, a_n, _, a_err, a_ok = traded_notional(ticker, depth=depth + 1, span=(start, mid))
+    b_total, b_n, _, b_err, b_ok = traded_notional(ticker, depth=depth + 1, span=(mid, end))
+    if not (a_ok and b_ok):
+        return total, n, first_url, (
+            f"incomplete: sub-window failure ({a_err or b_err}); total is a lower bound"), False
+    return a_total + b_total, a_n + b_n, first_url, None, True
 
 
 def fetch_candles(market_ticker, series_ticker, period_min, span_hours):
@@ -415,7 +479,8 @@ def collect():
         "websocket": "wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2",
         "official_docs": "https://docs.kalshi.com/",
         "collector": "tools/collect_kalshi.py",
-        "topics": {k: {"label": v["label"], "words": v["words"],
+        "topics": {k: {"label": v["label"],
+                       "patterns": [{"pattern": p, "why": w} for p, w in v["patterns"]],
                        "categories": v["categories"]}
                    for k, v in TOPIC_RULES.items()},
         "notes": [
@@ -473,27 +538,38 @@ def collect():
                 shaped = shape_market(m, s["ticker"], topic_key, murl, event_cache)
                 shaped["series_volume_contracts"] = s["volume_contracts"]
                 open_markets.append(shaped)
-            # resolved tracking: settled == finalized per market_lifecycle docs
+            # resolved tracking: settled == finalized per market_lifecycle docs.
+            # "closed" is also requested so markets that closed but are not yet
+            # finalized are tracked too (they have no result yet, which matters).
             settled, surl, serr = fetch_markets_for_series(s["ticker"], "settled")
+            closed, curl, cerr = fetch_markets_for_series(s["ticker"], "closed")
+            if cerr:
+                series_errors.append({"series": s["ticker"], "error": cerr, "url": curl})
+            for m in closed:
+                shaped = shape_market(m, s["ticker"], topic_key, curl, event_cache)
+                shaped["closed_pending"] = True
+                resolved_out.append(shaped)
             if serr:
                 series_errors.append({"series": s["ticker"], "error": serr, "url": surl})
             for m in settled:
                 shaped = shape_market(m, s["ticker"], topic_key, surl, event_cache)
                 resolved_out.append(shaped)
-            log(f"  {s['ticker']}: open={len(mkts)} settled={len(settled)}"
+            log(f"  {s['ticker']}: open={len(mkts)} settled={len(settled)} closed={len(closed)}"
                 f"{' err=' + str(err) if err else ''}")
 
         # rank by reported 24h contract volume first; dollar notional computed below
         def vol_key(x):
+            # API-reported 24h contract volume: a documented field, not a derived one.
             return -(fnum(x.get("volume_24h_contracts")) or 0)
 
         open_markets.sort(key=vol_key)
         scan = open_markets[:MAX_DOLLAR_SCAN]
         for m in scan:
-            total, n, url, err = traded_notional(m["market_ticker"])
+            total, n, url, err, complete = traded_notional(m["market_ticker"])
             m["dollar_notional_24h"] = {
                 "value": None if total is None else round(float(total), 2),
                 "trades_counted": n,
+                "complete": complete,
                 "formula": "SUM(yes_price_dollars * count_fp) over trades with "
                            "min_ts = now-24h from GET /markets/trades",
                 "source": url,
@@ -538,6 +614,10 @@ def collect():
 
         topics_out[topic_key] = {
             "label": rule["label"],
+            "patterns": [{"pattern": p, "why": w} for p, w in rule["patterns"]],
+            "top_series": [{"ticker": x["ticker"], "title": x["title"],
+                            "volume_contracts": x["volume_contracts"],
+                            "match_reason": x["match_reason"]} for x in selected],
             "series_matched": len(matched),
             "series_selected": [s["ticker"] for s in selected],
             "series": matched,

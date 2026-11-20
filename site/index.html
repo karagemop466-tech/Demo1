@@ -11,7 +11,7 @@
 <header class="top">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
-    <nav class="nav"><a href='index.html' class='on'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+    <nav class="nav"><a href='index.html' class='on'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html'>Questions</a><a href='explore.html'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
   </div>
 </header>
 <main class="wrap">
@@ -36,9 +36,9 @@
   <aside class="card">
     <p class="kicker">Snapshot health</p>
     <ul class="kv">
-      <li><span>Snapshot</span><b><span class='na' title='not returned by the official API'>—</span></b></li>
-      <li><span>Requests</span><b><span class='na' title='not returned by the official API'>—</span></b></li>
-      <li><span>Failed</span><b><span class='na' title='not returned by the official API'>—</span></b></li>
+      <li><span>Snapshot</span><b>2026-11-20T11:21:02Z</b></li>
+      <li><span>Requests</span><b>593</b></li>
+      <li><span>Failed</span><b>0</b></li>
       <li><span>Environment</span><b>DEMO</b></li>
     </ul>
     <p class="fine">Collected by <code>tools/collect_kalshi.py</code> on a GitHub Actions runner; the
@@ -49,11 +49,12 @@
 <h2>Executive summary</h2>
 <div class="callout">
   <ul class="tight">
-    <li><b>Data is real and official, but demo.</b> All figures come from <code></code>,
+    <li><b>Data is real and official, but demo.</b> All figures come from <code>https://external-api.demo.kalshi.co/trade-api/v2</code>,
     the recommended demo base URL documented at <a href="https://docs.kalshi.com/getting_started/api_environments">docs.kalshi.com</a>.
     The demo exchange is a test venue — values are not real-money liquidity.</li>
     <li><b>Scope.</b> Only five topics are tracked. Topic membership is decided by an explicit,
-    published keyword/category rule set, listed on each topic page so its accuracy can be audited.</li>
+    published regular-expression rule set; every matched series shows the exact rule that matched it,
+    and series that match by ticker prefix are marked for review.</li>
     <li><b>Resolution tracking.</b> Markets are followed until settled; the API's <code>result</code>
     field (yes / no) and settlement value are recorded with the resolution source from the event.</li>
     <li><b>“Highest dollar amount” is measured, not assumed.</b> Contract volume is <i>not</i> dollars.
@@ -67,20 +68,20 @@
 </div>
 
 <h2>Snapshot at a glance</h2>
-<div class='tablewrap'><table class=''><thead><tr><th>Item</th><th>Value (from official API)</th></tr></thead><tbody><tr><td>Official REST base</td><td><code></code></td></tr><tr><td>Exchange active</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Trading active</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Series discovered</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Open markets collected</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Resolved markets collected</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Price-history series</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>API requests this snapshot</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Failed requests</td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td>Snapshot (UTC)</td><td><span class='na' title='not returned by the official API'>—</span></td></tr></tbody></table></div>
+<div class='tablewrap'><table class=''><thead><tr><th>Item</th><th>Value (from official API)</th></tr></thead><tbody><tr><td>Official REST base</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td></tr><tr><td>Exchange active</td><td>True</td></tr><tr><td>Trading active</td><td>True</td></tr><tr><td>Series discovered</td><td>16643</td></tr><tr><td>Open markets collected</td><td>1369</td></tr><tr><td>Resolved markets collected</td><td>2202</td></tr><tr><td>Price-history series</td><td>10</td></tr><tr><td>API requests this snapshot</td><td>593</td></tr><tr><td>Failed requests</td><td>0</td></tr><tr><td>Snapshot (UTC)</td><td>2026-11-20T11:21:02Z</td></tr></tbody></table></div>
 
 <h2>Topic coverage</h2>
-<div class='tablewrap'><table class=''><thead><tr><th>Topic</th><th>Series matched by rule</th><th>Open markets collected</th><th>Resolved markets found</th></tr></thead><tbody><tr><td><a href='gas-prices.html'>gas_prices</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='elections.html'>elections</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='culture.html'>culture</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='crypto.html'>crypto</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='golf.html'>golf</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr></tbody></table></div>
+<div class='tablewrap'><table class=''><thead><tr><th>Topic</th><th>Series matched by rule</th><th>Open markets collected</th><th>Resolved markets found</th></tr></thead><tbody><tr><td><a href='gas-prices.html'>Gas prices</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='elections.html'>Elections</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='culture.html'>Culture</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='crypto.html'>Crypto</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr><tr><td><a href='golf.html'>Golf</a></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td><td><span class='na' title='not returned by the official API'>—</span></td></tr></tbody></table></div>
 
 <h2>Discovery categories on the demo exchange</h2>
-<p class="fine">Read from <code>GET /series</code> (<a href="">this snapshot's request</a>).
+<p class="fine">Read from <code>GET /series</code> (<a href="https://external-api.demo.kalshi.co/trade-api/v2/series?include_volume=true">this snapshot's request</a>).
 Counts are series per discovery category as returned by the API; they are not a Kalshi-official topic taxonomy for this project.</p>
-<div class='tablewrap'><table class=''><thead><tr><th>Discovery category (API)</th><th>Series in category</th></tr></thead><tbody><tr><td colspan='2' class='empty'>No records returned by the official API for this view.</td></tr></tbody></table></div>
+<div class='tablewrap'><table class=''><thead><tr><th>Discovery category (API)</th><th>Series in category</th></tr></thead><tbody><tr><td>Sports</td><td>4238</td></tr><tr><td>Elections</td><td>2709</td></tr><tr><td>Entertainment</td><td>2630</td></tr><tr><td>Politics</td><td>2424</td></tr><tr><td>Financials</td><td>1194</td></tr><tr><td>Economics</td><td>962</td></tr><tr><td>Climate and Weather</td><td>538</td></tr><tr><td>Mentions</td><td>503</td></tr><tr><td>Science and Technology</td><td>409</td></tr><tr><td>Crypto</td><td>320</td></tr><tr><td>Companies</td><td>217</td></tr><tr><td>Commodities</td><td>197</td></tr><tr><td>World</td><td>145</td></tr><tr><td>Health</td><td>96</td></tr><tr><td>(none)</td><td>80</td></tr><tr><td>Social</td><td>50</td></tr><tr><td>Transportation</td><td>39</td></tr><tr><td>other</td><td>26</td></tr><tr><td>Exotics</td><td>14</td></tr><tr><td>Test</td><td>8</td></tr><tr><td>harrison-test</td><td>6</td></tr><tr><td>AI</td><td>6</td></tr><tr><td>Finance</td><td>2</td></tr><tr><td>Culture</td><td>2</td></tr><tr><td>test</td><td>1</td></tr><tr><td>Business</td><td>1</td></tr><tr><td>Education</td><td>1</td></tr><tr><td>Other</td><td>1</td></tr></tbody></table></div>
 
 </main>
 <footer class="foot">
   <div class="wrap">
-    <p>Data snapshot: <b>not collected yet</b> · Source: official Kalshi demo Trade API
+    <p>Data snapshot: <b>2026-11-20T11:21:02Z</b> · Source: official Kalshi demo Trade API
     (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
     Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
     <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.

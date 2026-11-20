@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.pyc
+# Local build output is generated in CI and by build_site.py; site/ IS published,
+# data/ IS committed deliberately (it is the verified snapshot the site renders).
+.DS_Store

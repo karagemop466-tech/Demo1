@@ -1,17 +1,17 @@
 /* Native SVG price chart. No CDN, no external dependency, no fabricated points.
    Reads data collected from GET /series/{s}/markets/{t}/candlesticks. */
 (function () {
-  var dataEl = document.getElementById('chartData');
+  var me = document.currentScript;
   var svg = document.getElementById('chart');
-  if (!dataEl || !svg) return;
-  var data = JSON.parse(dataEl.textContent || '{"series":[]}');
-  var series = data.series || [];
+  if (!me || !svg) return;
+  var series = [];
   var marketSel = document.getElementById('chartMarket');
   var bucketSel = document.getElementById('chartBucket');
   var seriesSel = document.getElementById('chartSeries');
   var note = document.getElementById('chartNote');
   var tableHost = document.getElementById('chartTable');
 
+  function boot() {
   if (!series.length) {
     note.textContent = 'No candlestick history was returned for this snapshot, so nothing is plotted.';
     return;
@@ -121,4 +121,18 @@
   bucketSel.addEventListener('change', draw);
   seriesSel.addEventListener('change', draw);
   draw();
+  }
+  fetch(me.getAttribute('data-src'))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      series = (d.series || []).filter(function (x) {
+        return Object.keys(x.windows || {}).some(function (k) {
+          return (x.windows[k].points || []).length;
+        });
+      });
+      boot();
+    })
+    .catch(function (e) {
+      note.textContent = 'Could not load chart data (' + e + '). Nothing is plotted.';
+    });
 })();
