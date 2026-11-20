@@ -730,7 +730,7 @@ Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
 
 ### Task 23 record (arena/639ec37c-demo1)
 
-- **Result:** 37 checks — 25 Confirmed, 1 Mismatch, 6 Irregularity, 5 Unverified. Rendered to `spec-audit/REPORT.md` and `spec-audit/index.html` by `spec-audit/build_audit.py` from `spec-audit/register.json`. Every row carries an https link to an official page.
+- **Result:** 37 checks — 27 Confirmed, 1 Mismatch, 7 Irregularity, 2 Unverified (second pass closed C-22, C-26, C-36; see below). Rendered to `spec-audit/REPORT.md` and `spec-audit/index.html` by `spec-audit/build_audit.py` from `spec-audit/register.json`. Every row carries an https link to an official page.
 - **Sources (official):** https://docs.kalshi.com/getting_started/demo_env · https://docs.kalshi.com/api-reference/market/get-markets · https://docs.kalshi.com/api-reference/market/get-trades · https://docs.kalshi.com/api-reference/market/get-market-candlesticks · https://docs.kalshi.com/api-reference/market/get-series-list · https://docs.kalshi.com/getting_started/orderbook_responses · https://docs.kalshi.com/api-reference/market/get-market-orderbook · https://docs.kalshi.com/api-reference/orders/create-order-v2 · https://docs.kalshi.com/getting_started/market_lifecycle · https://docs.kalshi.com/api-reference/events/get-events · https://docs.kalshi.com/api-reference/portfolio/get-positions · https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
 - **Live official reads (GET only, via the page fetcher; the audit sandbox cannot reach kalshi.co directly):** `external-api.demo.kalshi.co/trade-api/v2/exchange/status`, `/search/tags_by_categories`, `/series?category=Economics|Crypto|Culture`, `/series?tags=Golf`.
 - **Verification performed:** each code path listed in the register was matched to the doc page or the live response; signing rule matched across all five signers in the repo; the order body was checked against the required-field list; the doc links were fetched (two slugs failed, see below). No orders were placed; no credentials used.
@@ -741,13 +741,15 @@ Claim log entry: 2026-11-20 — arena/639ec37c-demo1 claimed task 23.
   4. Resolution counted at `determined` in `decision/js/resolutions.js`, before settlement (`finalized`) (C-07).
   5. A 401 retry with an undocumented PSS salt length in `exec-desk/js/trade-exec.js` (C-28).
   6. A PEM private key kept in browser localStorage on the public site (`exec-desk/trades.html`) — high-severity review item, not an exploit verified here (C-30).
-  7. Mismatch: the exec-desk 'open' view includes `initialized` and `inactive` markets (C-05).
-- **Unverified (left open, not assumed):** `GET /markets?tickers=` (C-22); positions `settlement_status=all` / `count_filter` (C-26); the rate-limit cadence (C-33); browser CORS from the github.io origin (C-34; the sandbox has no browser); `api-reference/series/get-series` slug used by strategy-desk (C-36).
+  7. The strategy-desk Get Series link `api-reference/series/get-series` does not load; the official slug is `api-reference/market/get-series` (C-36).
+  8. Mismatch: the exec-desk 'open' view includes `initialized` and `inactive` markets (C-05).
+- **Unverified (left open, not assumed):** `GET /markets?tickers=` (C-22); positions `settlement_status=all` / `count_filter` (C-26); the poll-cadence compliance against the rate-limit budgets (C-33: official budgets now read, but polled-market count and account tier are unknown); browser CORS from the github.io origin (C-34; the sandbox has no browser).
+- **Second pass (2026-11-20):** `tickers` on GET /markets confirmed (C-22). Positions `settlement_status=all` and `count_filter` confirmed (C-26; CR-5 closed, no change needed). Official Get Series slug is `api-reference/market/get-series`; the strategy-desk slug `api-reference/series/get-series` does not load (C-36 → Irregularity, CR-8). Sandbox curl to the demo host and Pages URL still fails (exit 35).
 - **Change requests (owned files — logged here, not applied):** CR-1 to CR-8 in `spec-audit/register.json` / `spec-audit/REPORT.md`. Owners: exec-desk (CR-1, CR-4–CR-7), decision desk (CR-2, CR-3), integration owner for `build_site.py` / `README.md` (CR-8).
 - **Overlap note:** task 22 (final integration) stays with `arena/358db039-demo1`, and the dashboard integration with `arena/17f80f01-demo1`. This session did not touch their files.
 - **Scope change (logged):** the claim said `audit/**`; `main` had already taken `audit/` from `arena/ca4f2da1-demo1` (PR #36, its task A-1..A-3). This session moved all output to `spec-audit/**` and did not edit `audit/`.
 - **Overlap (logged):** `ca4f2da1`'s audit covers the same subject (official-source check of Kalshi API claims). This session's 37-check register is additive. Integration owner decides whether to keep both; neither session edits the other's files.
-- **PR:** branch `arena/639ec37c-demo1` → `main` opened for integration. Merge is left to the integration session that holds task 22, so its combined re-verification covers this folder (see Integration log row below).
+- **PR:** none opened by this session. Task 23 does not include integration into `main`; the integration session (task 22, `arena/358db039-demo1`) decides whether to merge `spec-audit/` (see Integration log below).
 
 ### Integration log (arena/639ec37c-demo1)
 
