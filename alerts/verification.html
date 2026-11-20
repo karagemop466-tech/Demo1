@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Line-by-line verification · Kalshi Demo Alerts</title>
+<meta name="description" content="Every claim and every number on the live alert chat page, checked against the official Kalshi documentation and the committed official responses.">
+<link rel="stylesheet" href="assets/alerts.css">
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> · Alerts</a>
+  <nav class="main" aria-label="Main navigation">
+    <a href="index.html">Alert chat</a>
+    <a href="verification.html" aria-current="page">Verification</a>
+    <a href="../index.html">Home</a>
+    <a href="../integration/flagged-review.html">Flagged for review</a>
+  </nav>
+</div></header>
+<main class="wrap">
+  <section class="head">
+    <p class="kicker">Generated 2026-11-20 19:23 UTC by alerts/tools/build_verification.py</p>
+    <h1>Line-by-line verification</h1>
+    <p class="lead">This page is regenerated from the test suite, so it cannot drift away from the code. Every
+      automated check below was executed against the committed official responses; every written claim was re-read
+      from the official documentation page it links to.</p>
+    <div class="banner ok"><b>23 of 23 automated checks pass.</b> Regenerate with
+      <code>python3 alerts/tools/build_verification.py</code>; the test suite is
+      <code>python3 alerts/tools/test_alerts.py</code>.</div>
+  </section>
+
+  <section>
+    <h2>Automated checks</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Check</th><th>Result</th><th>Official documentation read</th></tr></thead>
+      <tbody><tr><td class='mono'>test_base_url_is_the_documented_demo_endpoint</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">↗ demo_env</a> <a class="src" href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">↗ api_environments</a></td></tr>
+<tr><td class='mono'>test_coverage_counts_match_the_arrays</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_delta_equals_to_minus_from</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_depth_component_only_counts_levels_within_the_band</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">↗ orderbook_responses</a> <a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">↗ orderbook</a></td></tr>
+<tr><td class='mono'>test_every_alert_meets_the_threshold</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_every_alert_row_is_present_in_the_scanner_output</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_every_alert_row_points_at_the_request_that_produced_it</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_fee_component_uses_the_published_formula</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr>
+<tr><td class='mono'>test_feed_is_reproducible_from_the_committed_inputs</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_horizon_component_matches_close_time</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">↗ markets</a></td></tr>
+<tr><td class='mono'>test_implied_ask_is_one_minus_the_best_no_bid</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">↗ orderbook_responses</a></td></tr>
+<tr><td class='mono'>test_markets_without_an_alert_are_real_markets_with_candles</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">↗ markets</a></td></tr>
+<tr><td class='mono'>test_move_component_matches_the_published_move</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_no_alert_uses_a_window_outside_the_published_set</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_published_fee_table_is_reproduced</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr>
+<tr><td class='mono'>test_recency_component_matches_the_published_formula</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_resolution_fields_come_from_the_official_records</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">↗ market_lifecycle</a> <a class="src" href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">↗ market_settlement</a></td></tr>
+<tr><td class='mono'>test_scan_list_bases_are_the_last_official_candle</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_scores_are_recomputable_from_the_published_components</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr>
+<tr><td class='mono'>test_shortlist_covers_one_candidate_per_alerting_market</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ candlesticks</a></td></tr>
+<tr><td class='mono'>test_shortlist_is_sorted_by_score</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr>
+<tr><td class='mono'>test_weights_sum_to_one</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr>
+<tr><td class='mono'>test_zero_fee_series_are_the_published_zero_multiplier_series</td><td><span class='badge ok'>PASS</span></td><td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ fees</a></td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Written claims, re-read from the official documentation</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Claim made on the page</th><th>What the official source says</th><th>Source</th></tr></thead>
+      <tbody><tr><td>The demo REST base used by this page is the one Kalshi recommends for the demo environment.</td><td>The demo table names <code>https://external-api.demo.kalshi.co/trade-api/v2</code> as the recommended demo REST root and <code>https://demo-api.kalshi.co/trade-api/v2</code> as also supported.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/demo_env' target='_blank' rel='noopener'>↗ demo_env</a></td></tr>
+<tr><td>A WebSocket surface exists for the demo environment.</td><td>The same table lists <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> and <code>wss://demo-api.kalshi.co/trade-api/ws/v2</code>. This page does not use it: the WebSocket handshake needs a signed session and no key is available here.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/demo_env' target='_blank' rel='noopener'>↗ demo_env</a></td></tr>
+<tr><td>Candles are published at 1, 60 and 1440 minutes only, so no seconds-resolution series exists on the REST API.</td><td>The candlestick reference lists <code>period_interval</code> valid values 1, 60, 1440 and rejects anything else. A seconds view therefore has to be built from client polling and must be labelled as such.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noopener'>↗ candlesticks</a></td></tr>
+<tr><td>A move is measured between two adjacent official candles, and the request that produced them is published.</td><td>Each alert row carries the exact <code>GET /series/{series}/markets/{ticker}/candlesticks</code> request, including <code>start_ts</code>, <code>end_ts</code> and <code>period_interval</code>.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noopener'>↗ candlesticks</a></td></tr>
+<tr><td>The order book publishes bids only; a YES ask is <code>1 − best NO bid</code>.</td><td>The order-book guide states the reciprocal relationship and gives the spread calculation. The implied ask used in the depth component follows that rule and is re-checked in the test suite.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/orderbook_responses' target='_blank' rel='noopener'>↗ orderbook_responses</a></td></tr>
+<tr><td>Order-book levels are <code>[price_dollars, count_fp]</code> pairs, sorted ascending, best bid last.</td><td>The response structure section of the order-book guide.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/orderbook_responses' target='_blank' rel='noopener'>↗ orderbook_responses</a></td></tr>
+<tr><td>“Traded dollars” is not an exchange field; it has to be computed from public trades.</td><td>The trades endpoint returns <code>yes_price_dollars</code> and <code>count_fp</code> per trade. The desk sums <code>price × contracts</code> and labels the result as a computed measure.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-trades' target='_blank' rel='noopener'>↗ trades</a></td></tr>
+<tr><td>A market result is <code>yes</code>, <code>no</code> or <code>scalar</code>, and the shortlist shows all three cases honestly.</td><td>The lifecycle page states that after determination the result is set to yes, no or scalar, and lists the statuses used in this feed.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/market_lifecycle' target='_blank' rel='noopener'>↗ market_lifecycle</a></td></tr>
+<tr><td>Settlement pays $1 per contract to the winning side.</td><td>The settlement page: yes-contract holders receive $1 per contract, no-contract holders $1 per contract. Settlement fees are zero for simple yes/no determinations.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/market_settlement' target='_blank' rel='noopener'>↗ market_settlement</a></td></tr>
+<tr><td>The taker fee is <code>round up(M × 0.07 × C × P × (1−P))</code> and the maker fee is <code>round up(M × 0.0175 × C × P × (1−P))</code>.</td><td>The published fee schedule, last updated and effective 7 July 2026. The 21-row general fee table is asserted in the test suite.</td><td><a class='src' href='https://kalshi.com/docs/kalshi-fee-schedule.pdf' target='_blank' rel='noopener'>↗ fees</a></td></tr>
+<tr><td>The demo environment uses mock funds and its prices may not reflect real markets.</td><td>The demo-environment page states this directly; the page repeats the warning in its banner and footer.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/demo_env' target='_blank' rel='noopener'>↗ demo_env</a></td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Irregularities found while verifying</h2>
+    <p class="fine">None of these block the page. Each one is published so a reviewer can settle it.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>ID</th><th>Finding</th><th>Detail</th><th>Source</th><th>How to settle it</th></tr></thead>
+      <tbody><tr id='al-01'><td class='mono'>AL-01</td><td><b>The fee schedule's prose and its own table disagree on rounding</b></td><td>The PDF says the fee is rounded up “to a centicent”, but its 21-row table only reproduces when the total is rounded up to a whole cent. The desk uses the table's rule (whole cent) because that is what the published numbers show, and publishes the discrepancy rather than choosing silently.</td><td><a class='src' href='https://kalshi.com/docs/kalshi-fee-schedule.pdf' target='_blank' rel='noopener'>↗ source</a></td><td>Ask Kalshi support to confirm; the difference is sub-cent per order.</td></tr>
+<tr id='al-02'><td class='mono'>AL-02</td><td><b>Multipliers were transcribed for the series this feed uses only</b></td><td>The published non-standard fee table is long and its PDF text extraction is partly garbled. Only KXAAAGASM (1) and KXBTCY (0) were transcribed, because KXBTCY is the only non-default series in this feed. Any other series falls back to the document's default M = 1, which is an assumption rather than a verified value.</td><td><a class='src' href='https://kalshi.com/docs/kalshi-fee-schedule.pdf' target='_blank' rel='noopener'>↗ source</a></td><td>Transcribe the full table once it is available in a machine-readable form.</td></tr>
+<tr id='al-03'><td class='mono'>AL-03</td><td><b>Candle coverage is 10 markets, not the whole five-topic universe</b></td><td>The committed snapshot holds official candles for 10 markets (the top market of each topic plus a few comparators). Every alert on this page comes from those 10 markets. The live poller scans the same list, so a wide swing in a market outside the list will not appear here.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noopener'>↗ source</a></td><td>Widen the collector's candle coverage, or scan the top markets by traded notional on every poll.</td></tr>
+<tr id='al-04'><td class='mono'>AL-04</td><td><b>Two of the ten candle markets produced no alert at all</b></td><td>The two golf markets never moved by $0.10 or more between adjacent candles in the scanned windows. They are listed explicitly on the page rather than silently omitted.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-market-candlesticks' target='_blank' rel='noopener'>↗ source</a></td><td>Nothing to fix — a quiet market is a legitimate result.</td></tr>
+<tr id='al-05'><td class='mono'>AL-05</td><td><b>The model score is a ranking, not a probability</b></td><td>The QLM score uses only official API fields, but it cannot estimate the chance that an event resolves YES, because no official field carries a probability. It is published with its weights and its limits so a reader can disagree with it explicitly.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/market_settlement' target='_blank' rel='noopener'>↗ source</a></td><td>Compare the score against realised settlement results once enough markets have resolved.</td></tr>
+<tr id='al-06'><td class='mono'>AL-06</td><td><b>Live polling could not be exercised from the build sandbox</b></td><td>This sandbox has no route to *.kalshi.co, so the live poller's behaviour against the real API was verified by unit test and by code review only. The page shows the exact request it tried and keeps working from the committed feed when a request fails.</td><td><a class='src' href='https://docs.kalshi.com/getting_started/api_environments' target='_blank' rel='noopener'>↗ source</a></td><td>Open the published page from a normal network to see the live path run.</td></tr>
+<tr id='al-07'><td class='mono'>AL-07</td><td><b>The model score normalises depth and notional against the other candidates in the same snapshot</b></td><td>Those two components are therefore relative, not absolute: the same market can score differently in a different snapshot. The absolute values are shown next to every score so the reader can see the inputs.</td><td><a class='src' href='https://docs.kalshi.com/api-reference/market/get-trades' target='_blank' rel='noopener'>↗ source</a></td><td>Fix the scale to a published constant once the feed covers enough markets.</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>What could not be verified here</h2>
+    <ul class="plain">
+      <li><b>Live API calls from the build sandbox.</b> This environment has no route to <code>*.kalshi.co</code>,
+        so the live poller's behaviour against the real API was checked by unit test and code review, not by a
+        live request. The page shows the request it tried and falls back to the committed feed.</li>
+      <li><b>Account data.</b> No Kalshi demo API key exists in this project, so balance, positions and fills are
+        blank everywhere and no order was ever sent. Reading them needs a signed request, which needs a key:
+        <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API-key guidance ↗</a>.</li>
+      <li><b>Realised ROI.</b> The score in the model card is a ranking. Realised ROI needs settled markets, which
+        the demo exchange produces over weeks; the simulation ledger pages track that separately.</li>
+    </ul>
+  </section>
+</main>
+<footer class="foot"><div class="wrap">
+  <p class="fine">Generated 2026-11-20 19:23 UTC · <a href="index.html">alert chat</a> ·
+    <a href="../integration/flagged-review.html">Flagged for review</a> ·
+    <a href="README.md">build notes</a></p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Alerts desk · line-by-line verification · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .audit-nav{background:#12202f;color:#fff;padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .audit-nav a{color:#cfe6ff;text-decoration:none;font-size:14px}
+    .audit-nav a:first-child{font-weight:700;margin-right:auto}
+    .table-wrap{overflow-x:auto;margin:16px 0}
+    .audit-table{min-width:940px;border-collapse:collapse}
+    .audit-table th,.audit-table td{border:1px solid #374a5f;padding:8px 10px;font-size:13px;text-align:left;vertical-align:top}
+    .audit-table th{background:#1d2f3e;color:#e8f2fb}
+    .ok{color:#2e8b57;font-weight:700}
+    .warn{color:#b8860b;font-weight:700}
+    .blank{color:#8a9aab;font-style:italic}
+    .ref{font-size:12px}
+    .ref a{color:#7fb3d5;text-decoration:underline}
+    .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+    .kpi .c{background:#0e1b26;border:1px solid #27404f;border-radius:10px;padding:12px 14px}
+    .kpi .big{font-size:1.5rem;font-weight:700;color:#fff}
+    .kpi .lab{font-size:.82rem;color:#9fb6c8;margin-top:3px}
+    .note{font-size:.88rem;color:#b9c6d0;margin:10px 0 0}
+    h2{font-size:1.15rem;margin-top:22px;border-bottom:1px solid #27404f;padding-bottom:5px}
+    p{font-size:14px;color:#d7e3ec;line-height:1.5}
+    ul{font-size:14px;color:#d7e3ec;line-height:1.6;padding-left:20px}
+  </style>
+</head>
+<body>
+  <header class="audit-nav" aria-label="Site navigation">
+    <a href="../index.html">Kalshi Demo Desk</a>
+    <a href="../alerts/index.html">Alerts desk</a>
+    <a href="audit.html" aria-current="page">Line-by-line verification</a>
+    <a href="../site/flagged.html">Snapshot flags</a>
+  </header>
+  <main class="wrap" style="max-width:1100px;margin:0 auto;padding:20px 16px">
+    <p class="eyebrow" style="font-size:.85rem;color:#7fb3d5">ALERTS DESK · LINE-BY-LINE VERIFICATION · 2026-11-20 UTC</p>
+    <h1>Alerts desk — verification record</h1>
+    <p class="lead">Every published figure in the alerts desk is re-derived here from the committed official snapshot and traced to its exact official API request. Values that cannot be confirmed from an official source are left blank and flagged. No market values are invented.</p>
+
+    <div class="banner bad" style="margin:14px 0">
+      <b>Demo venue only.</b> The Kalshi demo exchange uses mock funds and its prices may not reflect real markets. No credentials were available and no authenticated account or live order was used. Authenticated portfolio figures are blank.
+    </div>
+
+    <div class="kpi">
+      <div class="c"><div class="big">662</div><div class="lab">Qualifying &ge;$0.10 alerts published</div></div>
+      <div class="c"><div class="big">8</div><div class="lab">Shortlisted high-ROI candidate markets</div></div>
+      <div class="c"><div class="big">4,768</div><div class="lab">Official candles scanned</div></div>
+      <div class="c"><div class="big">30</div><div class="lab">Source windows (candle periods)</div></div>
+      <div class="c"><div class="big">23 / 23</div><div class="lab">Automated checks passing</div></div>
+    </div>
+
+    <h2>1. Alert rule (verified against official docs)</h2>
+    <table class="audit-table">
+      <thead><tr><th>Claim</th><th>Verified value</th><th>Status</th><th>Official source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Alert trigger</td>
+          <td>Adjacent official candle closes changing by at least <b>$0.10</b> in either direction (&ge; +$0.10 or &le; &minus;$0.10).</td>
+          <td class="ok">Verified</td>
+          <td class="ref"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">GET /markets/candlesticks (docs)</a> · close is the official close price per period</td>
+        </tr>
+        <tr>
+          <td>Price unit</td>
+          <td>Dollars per contract; demo markets quote in dollars (e.g. $0.50).</td>
+          <td class="ok">Verified</td>
+          <td class="ref"><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market settlement (docs): YES/NO pays $1 per contract</a></td>
+        </tr>
+        <tr>
+          <td>Both directions</td>
+          <td>Up moves and down moves are both alerted; direction is recorded per row.</td>
+          <td class="ok">Verified</td>
+          <td class="ref">Computed from adjacent close deltas in <code>snapshot/charts.json</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Feed composition (re-derived from committed snapshot)</h2>
+    <table class="audit-table">
+      <thead><tr><th>Figure</th><th>Published value</th><th>Re-derived value</th><th>Match</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Qualifying alerts</td><td>662</td><td>662</td><td class="ok">Match</td><td class="ref"><code>alerts/data/feed.json</code>, built from <code>snapshot/charts.json</code> + <code>snapshot/markets.json</code></td></tr>
+        <tr><td>Shortlisted markets</td><td>8</td><td>8</td><td class="ok">Match</td><td class="ref"><code>alerts/data/feed.json</code> shortlist; QLM-ranked</td></tr>
+        <tr><td>Candles scanned</td><td>4,768</td><td>4,768</td><td class="ok">Match</td><td class="ref">10 covered candle markets &times; their periods</td></tr>
+        <tr><td>Source windows</td><td>30</td><td>30</td><td class="ok">Match</td><td class="ref">1m/6h, 1h/7d, 1d/90d period windows</td></tr>
+        <tr><td>1m/6h alerts</td><td>385</td><td>385</td><td class="ok">Match</td><td class="ref">feed metadata</td></tr>
+        <tr><td>1h/7d alerts</td><td>185</td><td>185</td><td class="ok">Match</td><td class="ref">feed metadata</td></tr>
+        <tr><td>1d/90d alerts</td><td>92</td><td>92</td><td class="ok">Match</td><td class="ref">feed metadata</td></tr>
+        <tr><td>Crypto alerts</td><td>569</td><td>569</td><td class="ok">Match</td><td class="ref">feed topic counts</td></tr>
+        <tr><td>Culture alerts</td><td>39</td><td>39</td><td class="ok">Match</td><td class="ref">feed topic counts</td></tr>
+        <tr><td>Elections alerts</td><td>36</td><td>36</td><td class="ok">Match</td><td class="ref">feed topic counts</td></tr>
+        <tr><td>Gas prices alerts</td><td>18</td><td>18</td><td class="ok">Match</td><td class="ref">feed topic counts</td></tr>
+        <tr><td>Golf alerts</td><td>0 (two covered markets, none qualified)</td><td>0</td><td class="ok">Match</td><td class="ref">feed topic counts; two golf markets scanned, no &ge;$0.10 adjacent-close move</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Topic membership uses published keyword rules, not an official Kalshi taxonomy. Each topic page shows the rule that matched each series.</p>
+
+    <h2>3. QLM high-ROI model (formula and weights published on the desk)</h2>
+    <table class="audit-table">
+      <thead><tr><th>Component</th><th>Weight</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Move size</td><td>25%</td><td class="ok">Official fields</td><td>Adjacent close delta absolute value.</td></tr>
+        <tr><td>Fee efficiency</td><td>15%</td><td class="ok">Official fields</td><td>Kalshi taker fee schedule applied to official price.</td></tr>
+        <tr><td>Resting depth</td><td>20%</td><td class="ok">Official fields</td><td>Order-book levels at/near the move.</td></tr>
+        <tr><td>Measured 24-hour traded notional</td><td>15%</td><td class="ok">Official fields</td><td>Public trades in the window.</td></tr>
+        <tr><td>Time to close</td><td>10%</td><td class="ok">Official fields</td><td>Market expiry/close from the market record.</td></tr>
+        <tr><td>Recency</td><td>15%</td><td class="ok">Computed</td><td><code>1 / (1 + age_hours / 6)</code>; missing official values dropped with explicit reasons.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Formula: <code>100 &times; SUM(weight &times; normalised component) / SUM(weight of available components)</code>. Missing official values are dropped and the denominator re-normalised. This is a disclosed ranking heuristic, not a probability model; it asserts no win probability.</p>
+    <p class="note">Official fee reference: <a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Kalshi Fee Schedule (July 7, 2026)</a> — taker fee <code>roundup(M &times; 0.07 &times; C &times; P &times; (1 &minus; P))</code>; maker fee <code>roundup(M &times; 0.0175 &times; C &times; P &times; (1 &minus; P))</code>; no settlement or membership fee.</p>
+
+    <h2>4. Sources and traceability</h2>
+    <table class="audit-table">
+      <thead><tr><th>Item</th><th>Official request recorded</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Market list &amp; topics</td><td><code>GET /markets</code> on <code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td class="ok">Recorded per row</td></tr>
+        <tr><td>Candlesticks</td><td><code>GET /markets/{ticker}/candlesticks</code> (series_ticker, ticker, start_ts, end_ts, period, limit&le;5000)</td><td class="ok">Recorded per row</td></tr>
+        <tr><td>Order book</td><td><code>GET /markets/{ticker}/orderbook</code> (bids only; NO bid at p implies YES ask at 1&minus;p)</td><td class="ok">Recorded per row</td></tr>
+        <tr><td>Trades</td><td><code>GET /markets/{ticker}/trades</code> (public completed trades, cursor pagination)</td><td class="ok">Recorded per row</td></tr>
+        <tr><td>Settlement / result</td><td>Market record <code>result</code> field (yes / no / scalar)</td><td class="ok">Recorded per row</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Every chat row in the alerts desk carries the exact official request URL that produced it. Demo REST base: <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (official <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a>).</p>
+
+    <h2>5. Automated checks</h2>
+    <table class="audit-table">
+      <thead><tr><th>Suite</th><th>Result</th><th>What it verifies</th></tr></thead>
+      <tbody>
+        <tr><td><code>alerts/tools/test_alerts.py</code> (23 checks)</td><td class="ok">23 / 23 passing</td><td>Feed construction, fee-table reproduction, QLM score recomputation, source traceability, coverage consistency, fresh-build reproducibility.</td></tr>
+        <tr><td><code>alerts/tools/test_dom.mjs</code> (jsdom)</td><td class="ok">All assertions passing</td><td>Both chat renders, counts, scores, source links, model card, coverage, warnings, unresolved placeholders.</td></tr>
+        <tr><td><code>alerts/tools/build_verification.py</code></td><td class="ok">23 / 23 automated checks passing</td><td>Generated <code>alerts/verification.html</code>: official-source claim ledger.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>6. Items left blank / flagged (unverified)</h2>
+    <table class="audit-table">
+      <thead><tr><th>Item</th><th>Reason</th><th>Disposition</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Authenticated demo-account balance, positions, fills</td>
+          <td>No Kalshi demo API key or connected account exists in this sandbox; authenticated access is unavailable.</td>
+          <td class="blank">Left blank; not fabricated. See <a href="../integration/flagged-review.html">Flagged for Review</a> (AUTH-01, KEY-01, FILL-01).</td>
+        </tr>
+        <tr>
+          <td>Real order execution</td>
+          <td>No credentials; public static site must not hold keys.</td>
+          <td class="blank">Left blank; simulated/paper mode only.</td>
+        </tr>
+        <tr>
+          <td>Live-poll against the real demo API from this sandbox</td>
+          <td><code>*.kalshi.co</code> is blocked from the shell; the live-poll path is code-reviewed, unit-tested, and falls back to the committed snapshot.</td>
+          <td class="warn">Covered by review + fallback; not exercised live here.</td>
+        </tr>
+        <tr>
+          <td>Third-party venue/news cause of any jump</td>
+          <td>No cause is asserted; source links are the official API request only.</td>
+          <td class="blank">Left blank deliberately; no third-party fallback in this desk.</td>
+        </tr>
+        <tr>
+          <td>Seconds-resolution candles</td>
+          <td>Official REST candlestick periods are 1, 60, or 1440 seconds only.</td>
+          <td class="blank">Left blank; selector offers minutes/hours/day, not seconds.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>7. Overlap note (parallel session)</h2>
+    <p>Parallel session PR #53 (<code>arena/d973ced5-demo1</code>) implemented a root-level <code>alerts.html</code> + <code>assets/js/alerts.js</code> for the same &ge;$0.10 alert requirement. That PR was merged to main <b>before</b> this session's namespaced <code>alerts/</code> desk was rebased onto main. Both implementations are kept; neither was discarded. The root-level page and the namespaced desk are separate entry points covering the same requirement. Recorded in <a href="../COORDINATION.md">COORDINATION.md</a>; no file owned by the other session was edited.</p>
+
+    <h2>8. Verification method</h2>
+    <ul>
+      <li>All figures re-derived by <code>alerts/tools/build_alerts.py</code> from <code>snapshot/charts.json</code> and <code>snapshot/markets.json</code> (official demo-API captures, collected 2026-11-20T11:43:59Z).</li>
+      <li><code>python3 alerts/tools/test_alerts.py</code> passes 23/23; <code>node alerts/tools/test_dom.mjs</code> passes all jsdom assertions.</li>
+      <li><code>python3 alerts/tools/build_verification.py</code> generated <code>alerts/verification.html</code> reporting 23/23 automated checks passing.</li>
+      <li>Repo-wide link audit passes; no broken links.</li>
+    </ul>
+
+    <p class="note" style="margin-top:24px">Flagged and unverified items do not block publication. They are published here and on <a href="../integration/flagged-review.html">Flagged for Review</a> with source links for later review.</p>
+  </main>
+</body>
+</html>
