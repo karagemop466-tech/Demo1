@@ -603,6 +603,7 @@
     badge.textContent = state.mode === 'LIVE' ? 'LIVE — demo API' : state.mode === 'SNAPSHOT' ? 'SNAPSHOT ONLY' : state.mode;
     badge.className = 'badge ' + (state.mode === 'LIVE' ? 'live' : state.mode === 'SNAPSHOT' ? 'snap' : 'boot');
     $('stWatch').textContent = state.tickers.length;
+    $('stSnap').textContent = state.meta.snapshot_generated_utc ? 'collected ' + state.meta.snapshot_generated_utc : '–';
     $('stInterval').textContent = (state.interval / 1000) + ' s';
     $('stLast').textContent = state.lastPoll ? fmtClock(state.lastPoll) + ' UTC' : '—';
     $('stReq').textContent = state.requests;

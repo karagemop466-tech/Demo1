@@ -19,19 +19,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Install jsdom
+      - name: "Install jsdom"
         run: npm install --no-audit --no-fund --silent jsdom
-      - name: Syntax check
+      - name: "Syntax check (python + node)"
         run: |
           python3 -m py_compile tape-desk/tools/build_watchlist.py tape-desk/tools/build_map.py
           node --check tape-desk/core.js
           node --check tape-desk/app.js
           node --check tape-desk/test_boot.mjs
+      - name: Content invariants of the published dataset (no row without an official source URL)
+        run: python3 tape-desk/tools/build_watchlist.py --check
       - name: The published dataset is reproducible from the committed inputs
         run: |
           python3 tape-desk/tools/build_watchlist.py
-          git diff --exit-code -- tape-desk/data tape-desk/verified.html
-      - name: Tests (core rules, build parity, jsdom boot: live path and snapshot fallback)
+          if ! git diff --quiet -- tape-desk/data tape-desk/verified.html; then
+            echo "::error::tape-desk/data does not match what the builder derives from the committed snapshot on this revision"
+            echo "Regenerate it: python3 tape-desk/tools/build_watchlist.py && git add tape-desk && git commit"
+            echo "Note: this job only runs when tape-desk/** changes, so snapshot refreshes on main do not redden it by themselves."
+            git diff --stat -- tape-desk/data tape-desk/verified.html
+            exit 1
+          fi
+      - name: "Tests (core rules, builder parity, jsdom boot of the live path and the snapshot fallback)"
         run: node tape-desk/test_boot.mjs
       - name: Consolidation map regenerates
         run: python3 tape-desk/tools/build_map.py

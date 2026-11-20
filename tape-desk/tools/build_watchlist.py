@@ -841,5 +841,57 @@ absent from both sides and listed under “not re-verified”.</p>
         fh.write(html)
 
 
+def check_committed():
+    """--check: validate the committed outputs without rewriting them.
+
+    Used by CI as a content invariant that cannot drift with the snapshot refresh cadence:
+    every published row must cite an official request URL, every live re-check must cite the
+    request it came from, and no blank value may be presented as a number.
+    """
+    bad = []
+    with open(os.path.join(DESK, "data", "watchlist.json"), encoding="utf-8") as fh:
+        data = json.load(fh)
+    meta = data.get("meta") or {}
+    if meta.get("rest_base") != OFFICIAL_BASE:
+        bad.append("watchlist meta rest_base is not the official demo base")
+    rows = 0
+    for topic, block in (data.get("watchlist") or {}).items():
+        for ev in block.get("events") or []:
+            for m in ev.get("markets") or []:
+                rows += 1
+                src = ((m.get("snapshot") or {}).get("sources") or {}).get("market") or ""
+                if not src.startswith(OFFICIAL_BASE + "/markets/"):
+                    bad.append(f"{m.get('market_ticker')}: snapshot row has no official market URL")
+                chk = m.get("live_check") or {}
+                if chk.get("verdict") == "NOT-FETCHED" and (chk.get("request_url") or chk.get("fields")):
+                    bad.append(f"{m.get('market_ticker')}: NOT-FETCHED row carries live data")
+                if chk.get("fields"):
+                    for f in chk["fields"]:
+                        if f.get("verdict") in ("MATCH", "DIFFER") and (f.get("live") in (None, "")):
+                            bad.append(f"{m.get('market_ticker')}: {f.get('field')} verdict {f.get('verdict')} with a blank live value")
+                for key in ("last_price", "yes_bid", "yes_ask"):
+                    v = (m.get("snapshot") or {}).get(key)
+                    if v is None and (m.get("snapshot") or {}).get(key + "_size"):
+                        bad.append(f"{m.get('market_ticker')}: {key} blank but a size is shown")
+    with open(os.path.join(DESK, "data", "live-check.json"), encoding="utf-8") as fh:
+        lc = json.load(fh)
+    for r in lc.get("rows") or []:
+        if r["verdict"] != "NOT-FETCHED" and not str(r.get("request_url") or "").startswith(OFFICIAL_BASE):
+            bad.append(f"{r.get('market_ticker')}: live row without an official request URL")
+    total = (lc.get("meta") or {}).get("fields_compared")
+    counted = sum(len(r["fields"]) for r in lc.get("rows") or [] if r["verdict"] != "NOT-FETCHED")
+    if total != counted:
+        bad.append(f"live-check meta counts {total} compared fields, rows carry {counted}")
+    if bad:
+        for b in bad[:20]:
+            print("CHECK FAIL:", b)
+        sys.exit(1)
+    print(f"CHECK OK: {rows} watchlist rows and {len(lc.get('rows') or [])} verification rows, "
+          f"{total} compared fields, every value tied to an official request URL")
+
+
 if __name__ == "__main__":
-    main()
+    if "--check" in sys.argv:
+        check_committed()
+    else:
+        main()

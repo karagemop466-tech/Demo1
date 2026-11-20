@@ -124,7 +124,8 @@ data, **not** a forecast, and the simulated ledger is allowed to show losses.
 ## Refreshing it
 
 ```bash
-python3 tape-desk/tools/build_watchlist.py   # dataset + verified.html (deterministic; CI checks it)
+python3 tape-desk/tools/build_watchlist.py            # dataset + verified.html (deterministic; CI checks it)
+python3 tape-desk/tools/build_watchlist.py --check    # validate the committed files without rewriting them
 python3 tape-desk/tools/build_map.py         # consolidation map (repo-dependent, not a CI diff gate)
 node tape-desk/test_boot.mjs                 # 71 assertions
 ```
