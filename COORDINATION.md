@@ -641,5 +641,6 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 8. Repo/API irregularities R1–R5 (placeholder README pre-integration; prose vs enum `paused`; deprecated market `title`; legacy order writes 410; sandbox egress) on exec-desk/flagged.html.
 
 ## PR & deploy record
-- PR: created from `arena/3a5f6f1d-demo1` → `main` (link recorded in the PR description and in the commit that follows creation).
-- Merge: `gh pr merge --merge` executed in the same session after CI + link checks passed; merge result and Pages status recorded in the follow-up entry below (written post-merge).
+- **PR #25:** https://github.com/karagemop466-tech/Demo1/pull/25 — `arena/3a5f6f1d-demo1` → `main`.
+- CI on the PR head: `site-check` (exec-desk links + JS) **pass**; `Strategy-desk link & syntax check` **pass**; repo-wide `node tools/check-links.mjs` **pass** locally; all `pages.yml` deploy steps verified locally (build_site.py link check OK).
+- Merge: `gh pr merge 25 --merge` executed immediately after this record was pushed (no waiting for review, per brief). Post-merge merge SHA and Pages build status are recorded in the follow-up entry below.
