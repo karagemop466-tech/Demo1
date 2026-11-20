@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Source-linked executive summary of the Kalshi demo dashboard and its verified limits.">
+  <title>Executive Summary · Kalshi Demo Desk</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .audit-nav{background:#12202f;color:#fff;padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .audit-nav a{color:#cfe6ff;text-decoration:none;font-size:14px}
+    .audit-nav a:first-child{font-weight:700;margin-right:auto}
+    .table-wrap{overflow-x:auto}
+    .summary-table{min-width:850px}
+    .summary-table td{font-size:13px}
+    .status-ok{color:var(--ok);font-weight:700}
+    .status-limit{color:var(--warn);font-weight:700}
+    .source-links a{display:inline-block;margin:2px 6px 2px 0}
+  </style>
+</head>
+<body>
+  <header class="audit-nav" aria-label="Site navigation">
+    <a href="../index.html">Kalshi Demo Desk</a>
+    <a href="../exec-desk/dashboard.html">Live dashboard</a>
+    <a href="../site/index.html">Topic snapshots</a>
+    <a href="../exec-desk/jumps.html">Price jumps</a>
+    <a href="../pages/paper-trading.html">Paper strategies</a>
+    <a href="flagged-review.html">Flagged for Review</a>
+  </header>
+  <main>
+    <p class="eyebrow-small">EXECUTIVE SUMMARY · UPDATED 2026-11-20</p>
+    <h1>Kalshi Demo Market Desk</h1>
+    <p class="lead">This repository now has a curated GitHub Pages landing page, a direct-to-demo live market dashboard, five source-linked topic snapshot pages, a resolution view, a price-jump scanner, simulated-strategy tooling, and review registers. A separate consolidated desk built by another session is linked from the landing page; this integration does not change its implementation, and its <a href="../desk/requirements.html">requirements matrix</a> and <a href="../desk/flagged.html">review register</a> document that surface. This summary distinguishes verified API capabilities from this project’s estimates, bounded scans, and credential-dependent features.</p>
+
+    <div class="banner"><b>Demo only:</b> Kalshi’s demo environment uses mock funds, and demo prices and behavior may not reflect real markets. Public market-data endpoints are separate from authenticated account and order endpoints. <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Official demo environment warning ↗</a></div>
+
+    <h2>Official demo endpoints</h2>
+    <div class="table-wrap">
+      <table class="summary-table">
+        <thead><tr><th>Surface</th><th>Recommended demo endpoint</th><th>Also supported</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr><td>REST Trade API</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><code>https://demo-api.kalshi.co/trade-api/v2</code></td><td class="source-links"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments ↗</a></td></tr>
+          <tr><td>WebSocket API</td><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td><code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td><td class="source-links"><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments ↗</a><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Requirements and delivery status</h2>
+    <div class="table-wrap">
+      <table class="summary-table">
+        <thead><tr><th>Requirement</th><th>Current implementation</th><th>Status / constraint</th><th>Official source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Track live gas, election, culture, crypto and golf markets</td>
+            <td><a href="../exec-desk/dashboard.html">Live dashboard</a> queries public demo market data; <a href="../site/index.html">topic pages</a> browse the last committed source-linked snapshot.</td>
+            <td class="status-limit">Live scan is bounded and topic matching is heuristic, not an exhaustive exchange census.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Series list ↗</a><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Events ↗</a></td>
+          </tr>
+          <tr>
+            <td>Rank highest-dollar activity</td>
+            <td>Dashboard offers computed 24-hour dollar volume, open-interest value, and the API’s notional-value field.</td>
+            <td class="status-limit">The estimate uses <code>volume_24h_fp</code> × a price input. Current code falls back to a quote-derived value when <code>last_price_dollars</code> is absent, while the dashboard label describes last price. It is not an official dollar-volume field, and ranking applies only to the currently scanned set; see <a href="flagged-review.html#rank-01">RANK-01</a>.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Market schema ↗</a></td>
+          </tr>
+          <tr>
+            <td>Track markets through YES/NO resolution</td>
+            <td><a href="../exec-desk/markets.html">Markets &amp; resolution</a> reads returned statuses/results and records observations in this browser.</td>
+            <td class="status-limit">The browser-local watch log is not a shared server-side archive. Outcomes remain blank until returned by Kalshi.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Market status/result fields ↗</a><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Settlement ↗</a></td>
+          </tr>
+          <tr>
+            <td>Interactive price chart and contract liquidity</td>
+            <td><a href="../exec-desk/dashboard.html">Dashboard chart</a> provides seconds-mode client sampling and minute/hour candle modes; its order-book view shows reported bid quantities and implied YES asks.</td>
+            <td class="status-limit">Seconds are sampled in the browser, not official sub-minute candles. Order-book levels are bids; implied asks are derived from the opposite-side bid.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Order book ↗</a><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Order-book responses ↗</a></td>
+          </tr>
+          <tr>
+            <td>Flag contract-price jumps of at least $0.10</td>
+            <td><a href="../exec-desk/jumps.html">Jump scanner</a> compares consecutive one-minute closes and supplies a Kalshi link plus a news-search link.</td>
+            <td class="status-limit">The scanner checks a bounded set. A news search is a lead only; it does not verify that an article caused a price move. A known no-results refresh issue is published on the review page.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks ↗</a></td>
+          </tr>
+          <tr>
+            <td>Automated simulated strategies and trade analysis</td>
+            <td><a href="../pages/paper-trading.html">Paper-strategy runner</a> evaluates four predeclared rules, categorizes results, and reports performance by strategy/category.</td>
+            <td class="status-limit">On-demand, fixed-watchlist, browser-local simulation; not a continuous full-market service. It sends no exchange orders. Displayed liquidity does not guarantee simulated fills, and the documented fee gap remains.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Market prices and quantities ↗</a><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Settlement outcomes ↗</a></td>
+          </tr>
+          <tr>
+            <td>Demo-account balance, positions, fills and real demo orders</td>
+            <td>The <a href="../exec-desk/portfolio.html">portfolio</a> and experimental trade-page implementation describe authenticated reads and V2 order submission; the experimental page is not recommended for credential use.</td>
+            <td class="status-limit">No credentials were provided; account figures are unavailable and no orders were placed. The public page’s local-storage key path is unsafe; the signer has a documented-path mismatch, and the RSA importer appears incompatible with Kalshi’s generated PEM format. Its local order mirror may also treat a zero/partial fill as fully filled. Authenticated execution and order analysis remain unverified; use simulated mode only until secure credential handling, signing, and fill reconciliation are fixed and tested. See <a href="flagged-review.html#sec-01">SEC-01</a>, <a href="flagged-review.html#auth-01">AUTH-01</a>, <a href="flagged-review.html#key-01">KEY-01</a>, and <a href="flagged-review.html#fill-01">FILL-01</a>.</td>
+            <td class="source-links"><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API-key security ↗</a><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Balance ↗</a><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2 ↗</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Important limits and next actions</h2>
+    <ol>
+      <li><b>Use demo-only data.</b> Official documentation warns that demo market prices and behavior may not reflect production. <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Review Kalshi’s warning ↗</a></li>
+      <li><b>Do not enter a private key in the public site.</b> The experimental page currently stores one in browser local storage; the integration audit records this and asks for a protected server-side design. <a href="flagged-review.html#sec-01">SEC-01 ↗</a></li>
+      <li><b>Review known code issues before relying on analytics.</b> The simulated YES close-P&amp;L calculation (<a href="flagged-review.html#paper-01">PAPER-01</a>) and the jump scanner’s empty-result refresh path (<a href="flagged-review.html#jump-01">JUMP-01</a>) are flagged with code evidence. <a href="flagged-review.html">Open Flagged for Review ↗</a></li>
+      <li><b>Mocked tests are not a live API check.</b> After the integration rebase, <code>node --test tests/dashboard.test.mjs</code> passed all 46 assertions; an earlier fixture mismatch was not reproducible. The suite mocks network responses, so its pass does not verify current live exchange availability. See the test record in <a href="flagged-review.html#test-01">TEST-01</a>.</li>
+      <li><b>Interpret results within their scope.</b> The live scanner uses a bounded set and heuristic topic matching; the snapshot pages are historical to their recorded collection time.</li>
+      <li><b>Check sources per row.</b> Market tables link to the official response/schema used; absent or unconfirmed data stays blank. The build’s snapshot generator and link audit are part of the deployment checks.</li>
+    </ol>
+
+    <div class="grid">
+      <a class="tile" href="../exec-desk/dashboard.html"><b>Open live dashboard</b><span>Current demo markets, price chart, order book and topic filters.</span></a>
+      <a class="tile" href="../site/index.html"><b>Browse topic snapshots</b><span>Gas, elections, culture, crypto and golf pages with row provenance.</span></a>
+      <a class="tile" href="flagged-review.html"><b>Flagged for Review</b><span>Integration findings and existing desk-specific review registers.</span></a>
+    </div>
+  </main>
+  <footer>Kalshi Demo Market Desk · Source-linked project status · <a href="../index.html">Return home</a></footer>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Integration audit findings for the Kalshi demo dashboard, with evidence and official source links.">
+  <title>Flagged for Review · Kalshi Demo Desk</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .audit-nav{background:#12202f;color:#fff;padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .audit-nav a{color:#cfe6ff;text-decoration:none;font-size:14px}
+    .audit-nav a:first-child{font-weight:700;margin-right:auto}
+    .table-wrap{overflow-x:auto}
+    .audit-table{min-width:980px}
+    .audit-table td{font-size:13px}
+    .id{font-weight:700;white-space:nowrap}
+    .status{font-weight:700;color:var(--warn)}
+    .refs a{display:inline-block;margin:2px 6px 2px 0}
+  </style>
+</head>
+<body>
+  <header class="audit-nav" aria-label="Site navigation">
+    <a href="../index.html">Kalshi Demo Desk</a>
+    <a href="../exec-desk/dashboard.html">Live dashboard</a>
+    <a href="../site/index.html">Topic snapshots</a>
+    <a href="../exec-desk/jumps.html">Price jumps</a>
+    <a href="../pages/paper-trading.html">Paper strategies</a>
+    <a href="flagged-review.html" aria-current="page">Flagged for Review</a>
+  </header>
+  <main>
+    <p class="eyebrow-small">INTEGRATION AUDIT · 2026-11-20</p>
+    <h1>Flagged for Review</h1>
+    <p class="lead">This page records implementation gaps found during the final repository review. Findings are based on the cited repository code and official Kalshi references. No market values are supplied here. Requests to change code owned by earlier sessions are recorded in <a href="../COORDINATION.md">COORDINATION.md</a> rather than edited in this integration pass.</p>
+
+    <div class="banner bad"><b>Account safety:</b> do not save a private key in the public GitHub Pages app. Use SIMULATED mode only. No demo credentials were supplied and no real orders were placed.</div>
+
+    <h2>Integration findings</h2>
+    <div class="table-wrap">
+      <table class="audit-table">
+        <thead>
+          <tr><th>ID</th><th>Finding</th><th>Impact / verification</th><th>Status</th><th>Evidence and official source</th></tr>
+        </thead>
+        <tbody>
+          <tr id="sec-01">
+            <td class="id">SEC-01</td>
+            <td>Real-order credentials are stored in browser local storage by the experimental <code>exec-desk</code> trade page.</td>
+            <td><code>trade-exec.js</code> reads and writes the private PEM under a local-storage key and exposes a real-order mode. This is not a safe credential boundary for a public static site; do not enter a private key there. A protected server-side signing service is needed before real account use.</td>
+            <td class="status">Open · use paper mode only</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trade-exec.js" target="_blank" rel="noopener">Repository evidence ↗</a><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Kalshi API-key guidance ↗</a></td>
+          </tr>
+          <tr id="auth-01">
+            <td class="id">AUTH-01</td>
+            <td>The experimental browser trade signer omits the documented <code>/trade-api/v2</code> prefix from the signed path.</td>
+            <td><code>authFetch</code> sends to the demo base URL plus an application-relative path, while <code>signedHeaders</code> signs that relative path alone. Kalshi’s official signing example uses the full API path (for example, <code>/trade-api/v2/portfolio/balance</code>). No key was available, so this mismatch was not exercised against an account; authenticated execution must be treated as unverified.</td>
+            <td class="status">Open · correction requested; no account test</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trade-exec.js" target="_blank" rel="noopener">Signer evidence ↗</a><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Official signing path ↗</a><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Official order endpoint ↗</a></td>
+          </tr>
+          <tr id="key-01">
+            <td class="id">KEY-01</td>
+            <td>The browser key importer appears not to accept the documented Kalshi-generated RSA private-key PEM format.</td>
+            <td><code>pemToBuf</code> strips only a generic <code>PRIVATE KEY</code> header and <code>signedHeaders</code> imports the bytes as PKCS#8. Kalshi’s API-key guide shows generated RSA keys with a <code>BEGIN RSA PRIVATE&#32;KEY</code> PEM header (PKCS#1); no credential was available to test this path. RSA-key import is therefore unverified and likely incompatible with the documented generated file.</td>
+            <td class="status">Open · format handling/test requested</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trade-exec.js" target="_blank" rel="noopener">Importer evidence ↗</a><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">Official key generation and formats ↗</a></td>
+          </tr>
+          <tr id="paper-01">
+            <td class="id">PAPER-01</td>
+            <td>Closing a simulated YES position applies the wrong close-value expression.</td>
+            <td>The position renderer passes a YES-market mark to <code>closePaper</code>, but the YES branch calculates proceeds using <code>1 − closePrice</code>. This can make closed-paper P&amp;L incorrect. Do not rely on closed YES results until the owner fixes the formula and adds a regression test.</td>
+            <td class="status">Open · correction requested</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trades.js" target="_blank" rel="noopener">Caller evidence ↗</a><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trade-exec.js" target="_blank" rel="noopener">Calculation evidence ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Official market price fields ↗</a></td>
+          </tr>
+          <tr id="fill-01">
+            <td class="id">FILL-01</td>
+            <td>An accepted real-order response is copied into the local trade ledger using the requested quantity, even when the displayed fill count is zero or partial.</td>
+            <td><code>trades.js</code> displays <code>resp.fill_count</code> but then unconditionally creates a local ledger record from the original ticket quantity and price. Kalshi documents that order acceptance is not proof of a fill; until the ledger reconciles with official fills, its real-order mirror may overstate executed positions and P&amp;L.</td>
+            <td class="status">Open · reconciliation/correction requested</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/trades.js" target="_blank" rel="noopener">Ledger evidence ↗</a><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Official order acceptance behavior ↗</a><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Official fills endpoint ↗</a></td>
+          </tr>
+          <tr id="jump-01">
+            <td class="id">JUMP-01</td>
+            <td>The jump scanner can stop accepting refreshes after a scan returns no qualifying jumps.</td>
+            <td>In <code>jumps.js</code>, the no-results branch returns before resetting the <code>scanning</code> guard. Since later scans exit while that guard is true, a no-jump result can leave the page stuck until reload.</td>
+            <td class="status">Open · correction requested</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/jumps.js" target="_blank" rel="noopener">Repository evidence ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Official candlesticks reference ↗</a></td>
+          </tr>
+          <tr id="scope-01">
+            <td class="id">SCOPE-01</td>
+            <td>The direct live dashboard ranks a bounded, keyword-classified scan—not every market in the exchange.</td>
+            <td>The current code reads a bounded number of series pages, selects a limited set of high-volume matched series for each topic, then requests a bounded event page. Results should be described as the scanned set, not as an exhaustive category census. The five-topic classifier is heuristic.</td>
+            <td class="status">Known limitation · keep disclosed</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/dashboard.js" target="_blank" rel="noopener">Repository evidence ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Official series endpoint ↗</a><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Official events endpoint ↗</a></td>
+          </tr>
+          <tr id="rank-01">
+            <td class="id">RANK-01</td>
+            <td>The dashboard’s computed dollar ranking can substitute a quote when the last-traded price is missing.</td>
+            <td><code>dollarVolume24h</code> and the open-interest estimate call <code>midPrice</code> when <code>last_price_dollars</code> is absent. That helper can use a bid/ask midpoint or a single reported bid/ask. The dashboard text describes the last-price formula but does not disclose this fallback; these figures are estimates, not confirmed traded notional.</td>
+            <td class="status">Open · label/data rule correction requested</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/kalshi.js" target="_blank" rel="noopener">Calculation evidence ↗</a><a href="https://github.com/karagemop466-tech/Demo1/blob/main/exec-desk/js/dashboard.js" target="_blank" rel="noopener">Dashboard label ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Official market price fields ↗</a></td>
+          </tr>
+          <tr id="sim-01">
+            <td class="id">SIM-01</td>
+            <td>The automatic paper-strategy runner is on-demand and uses a fixed watchlist.</td>
+            <td>The page evaluates predeclared strategies only after “Run engine” is selected; the current script lists ten event tickers. It is not a continuous, full-market autonomous trading service. Results persist in the current browser and must not be confused with demo-account fills.</td>
+            <td class="status">Known limitation · scope disclosed</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/assets/js/paper-trading.js" target="_blank" rel="noopener">Repository evidence ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Official markets endpoint ↗</a></td>
+          </tr>
+          <tr id="root-01">
+            <td class="id">LEGACY-01</td>
+            <td>The older root market-table order-book button references a variable outside its scope.</td>
+            <td>In <code>app.js</code>, <code>bookId</code> is declared inside a mapping callback and later referenced from a separate click callback. The legacy root market pages are not used as the canonical live desk; keep them out of the primary navigation until corrected.</td>
+            <td class="status">Open · legacy path de-emphasized</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/app.js" target="_blank" rel="noopener">Repository evidence ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Official order-book endpoint ↗</a></td>
+          </tr>
+          <tr id="test-01">
+            <td class="id">TEST-01</td>
+            <td>A previously reported mocked-fixture mismatch was not reproducible after rebasing onto the latest main.</td>
+            <td>The current <code>node --test tests/dashboard.test.mjs</code> run passes all 46 assertions across <code>pages/live.html</code>, resolutions, strategy, and shared-engine behavior. The suite mocks network calls, so this pass is not evidence that the live API is reachable or that current exchange values match the fixtures. No other session's test or implementation files were changed.</td>
+            <td class="status">Rechecked · 46/46 pass; mocked coverage only</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/tests/dashboard.test.mjs" target="_blank" rel="noopener">Mocked test evidence ↗</a><a href="https://github.com/karagemop466-tech/Demo1/blob/main/pages/live.html" target="_blank" rel="noopener">Tested dashboard page ↗</a><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Official public market-data guide ↗</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Existing desk-specific review register</h2>
+    <p class="section-intro">The live desk also maintains its original UNVERIFIED and repository-irregularity register. This audit addendum does not replace it.</p>
+    <div class="grid">
+      <a class="tile" href="../exec-desk/flagged.html"><b>Exec-desk Flagged for Review</b><span>Runtime, data-definition, credential, relay, and category-classification flags with source links.</span></a>
+      <a class="tile" href="../site/flagged.html"><b>Snapshot dashboard flags</b><span>Snapshot-specific provenance, scope, and data-quality review notes.</span></a>
+      <a class="tile" href="../COORDINATION.md"><b>Coordination and change requests</b><span>Session ownership, integration findings, requested follow-ups, source log, and release record.</span></a>
+    </div>
+  </main>
+  <footer>Integration audit · Findings are review items, not recommendations to trade. <a href="../index.html">Return to the dashboard home</a>.</footer>
+</body>
+</html>

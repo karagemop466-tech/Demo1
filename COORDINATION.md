@@ -23,9 +23,47 @@ Sessions in this repo:
 |---|------|--------|------------|------------|---------|--------------|----------------|
 | 20 | Live official-market snapshot collection script + generated verified dataset (gas/elections/culture/crypto/golf), resolved-outcome tracking | in progress | arena/4df8be5b-demo1 | `tools/collect_kalshi.py`, `data/markets.json`, `data/metadata.json`, `.github/workflows/live-data.yml` | docs.kalshi.com (See sources log) | Live fetch from `external-api.demo.kalshi.co` on GitHub Actions runners; every value carries the API URL it came from | Demo environment is a test exchange; values are demo-book values, not real-money liquidity |
 | 21 | Verified static site build: landing + category pages + price-history chart (time axis, s/m/h windows) + depth-at-price + portfolio/trades documentation | in progress | arena/4df8be5b-demo1 | `build_site.py`, `site/**` (generated), `assets/**`, `pages/**` | docs.kalshi.com | Build validates every row has a source URL and every internal link resolves | Auth-only items (portfolio, order placement) cannot be verified without a demo API key — flagged, blank |
-| 22 | Final integration: pull combined data, broken-link check, PR to main, merge, confirm Pages deploy | unclaimed | — | GitHub Actions / repo settings | — | — | — |
+| 22 | Final integration: repository-wide source/link/build verification, simplify the canonical landing/navigation, publish review findings, PR to main, merge, confirm Pages deploy | in progress | arena/17f80f01-demo1 | `COORDINATION.md` (claim/audit/release records), root `index.html`, `assets/common.js`, new `integration/executive-summary.html` and `integration/flagged-review.html`; integration-only verification, PR, and Pages operations. Do not alter another task's market/data implementation; log requests instead. | Official Kalshi docs: demo environment, API environments/keys, markets, series, events, candlesticks, order books, settlement, V2 orders/fills/WebSockets; GitHub Pages docs (full URLs in Task 22 record below) | Rebased onto `e6e0790` after PR #46's conflict round; 17-page build, repository link/source audits, all JS/Python syntax checks, 26 source-linked table rows, five nav URL cases, npm and desk tests pass. The new standalone `desk/` is surfaced by link only; its implementation remains untouched. PR/merge/deploy verification pending. | No Kalshi credentials; no real orders. Unsafe local key storage, signed-path/key-format/fill/P&L issues, ranking fallback, jump refresh and legacy scope items are published with owner follow-up requests below. |
 
 Claim log entry: 2026-11-20 — arena/4df8be5b-demo1 claimed tasks 20-21 (new file scope only; no edits to existing session files other than this board and the generated `site/` tree added by final integration).
+
+### Task 22 integration record — session arena/17f80f01-demo1
+
+- **Claim / branch:** Task 22 was claimed and pushed on `arena/17f80f01-demo1` at `406111c`; before integration edits, the branch was rebased onto `origin/main` at `f9fab19` (HEAD `5699b70`). Scope is limited to this board, the root landing/navigation, and `integration/` summary/review pages. No market, data, trade, or test implementation owned by another session was edited.
+- **Release state:** local implementation and checks are complete; PR, merge, and post-merge GitHub Pages deployment are still pending and will be recorded here after verification.
+- **Rebase conflict resolution:** `origin/main` advanced to `b916f1e` (PR #39) before the first integration push and conflicted in `index.html` and `assets/common.js`. Kept the newer main landing’s snapshot KPIs, sourced topic table, existing desk links and the new `pages/price-jumps.html` link; merged in the integration summary/review links, credential/ranking disclosures, paper-strategy path and root-aware active navigation. Corrected an extra closing `</div>` in the inherited live-desk section and removed an orphaned separator line in the coordination board. No other session’s feature or data was discarded.
+
+#### Official sources reviewed
+
+- `https://docs.kalshi.com/getting_started/demo_env` and `https://docs.kalshi.com/getting_started/api_environments` — recommended demo REST/WebSocket endpoints and demo-environment limits.
+- `https://docs.kalshi.com/api-reference/market/get-markets`, `https://docs.kalshi.com/api-reference/market/get-series-list`, and `https://docs.kalshi.com/api-reference/events/get-events` — market/series/event fields, filters, pagination, and bounded-scan disclosure.
+- `https://docs.kalshi.com/api-reference/market/get-market-orderbook`, `https://docs.kalshi.com/getting_started/orderbook_responses`, and `https://docs.kalshi.com/api-reference/market/get-market-candlesticks` — bid-side order-book payload, implied opposite-side prices, and supported REST candle intervals.
+- `https://docs.kalshi.com/getting_started/market_settlement` — YES/NO settlement and $1-per-contract payout mechanics.
+- `https://docs.kalshi.com/getting_started/api_keys`, `https://docs.kalshi.com/api-reference/orders/create-order-v2`, `https://docs.kalshi.com/api-reference/portfolio/get-fills`, and `https://docs.kalshi.com/getting_started/quick_start_websockets` — signing path/key formats, V2 order acceptance, official fills, and authenticated WebSocket handshake.
+- `https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages` — GitHub Pages serves static repository files; deployment state is recorded after merge.
+
+#### Verification log (post-rebase, pre-release)
+
+- `python3 build_site.py` — PASS: 17 pages; 1,399 open markets, 2,469 collected resolved/closed records, 10 chart series; built-in link check OK.
+- `python3 tools/verify_site.py` — PASS: re-derived 250 market rows, 250 resolved rows, 600 topic rows, 48 liquidity rows, and 8 overview figures; 0 errors, 2 informational warnings (36 full-ladder rows use a section-level order-book source, and official external settlement-source hosts are listed).
+- The separate `desk/` build/test suite, run read-only for integration verification: `python3 desk/tools/build_pages.py` — 14 pages, link check OK; `python3 desk/tools/kalshi_fees.py` — 21/21; `node desk/tools/dom_test.mjs` — 105/105; `node desk/tools/page_runtime_test.mjs` — 40/40. No `desk/` implementation or generated output was retained as a Task 22 change.
+- `npm run check:links` — PASS: exec-desk audit found 123 internal links and 86 sourced external links; repository checker scanned 283 files and audited source links on 11 pages, with no broken links or secret material. The landing and two integration tables were separately checked: all 26 table rows link to official `docs.kalshi.com` sources.
+- `node --check` on every repository `.js` file and `python3 -m py_compile` on all repository `.py` files (excluding caches/dependencies) — PASS.
+- Root `assets/common.js` DOM check — PASS for five root/nested GitHub Pages URL cases (root with and without trailing slash, nested live desk, nested summary, and existing price-jumps page); 22 navigation links per case target existing files under `/Demo1/`, with the correct active item.
+- `npm test` — PASS, all 10 exec-desk DOM assertions. `node --test verified-desk/tests/kalshi.test.mjs verified-desk/tests/browser_boot.test.mjs tests/dashboard.test.mjs tests/dashboard-jumps.test.mjs` — PASS, 50/50 TAP subtests; the dashboard and root jump harnesses report 46 and 9 passing assertions respectively.
+- `python3 exec-desk/scripts/check_links.py` — PASS, 123 internal links; `python3 live-desk/scripts/check_site.py` — PASS, 11 pages / 56 sourced research rows.
+- `python3 -m unittest discover -s tests -p 'test_*.py'` — PASS, 7/7; existing unclosed-file `ResourceWarning`s in `tests/test_fetch_kalshi_data.py` lines 115, 124, 126, and 128 remain.
+- `TEST-01` caveat: the mocked dashboard suite currently passes 46 assertions; the earlier fixture mismatch was not reproducible after rebasing. Mocked coverage is not a live API availability check, as documented on the review page.
+- `git diff --check` — PASS. No Kalshi credentials were available; no real/demo orders were placed.
+
+#### Cross-session follow-up requests (logged, not applied)
+
+| Finding | Existing owner / scope | Requested follow-up |
+|---|---|---|
+| SEC-01, AUTH-01, KEY-01, PAPER-01, FILL-01, RANK-01, JUMP-01 | `arena/3a5f6f1d-demo1`, `exec-desk/**` | Remove/disable public browser-local private-key entry or use protected server-side signing; sign the documented full API path; support or explicitly validate Kalshi’s generated RSA PEM format; correct YES close proceeds and add a regression test; reconcile accepted orders against actual fills; disclose/remove quote-derived ranking fallback; always release the scanner guard on empty/error results. Evidence and official sources are on `integration/flagged-review.html`.
+| LEGACY-01 | `arena/7bc11020-demo1`, root `app.js` | Keep legacy order-book controls out of primary navigation until the out-of-scope `bookId` reference is fixed and tested.
+| TEST-01 | `8c8d4499`, `tests/dashboard.test.mjs` and the tested `pages/live.html` integration | Previous fixture mismatch not reproduced after rebase; current run passes 46/46 assertions. No code fix requested in this integration. Keep the warning that mocked test success is not live API evidence.
+
 
 
 ## Tasks — session arena/4df8be5b-demo1 (verified live data + source-linked site)
@@ -908,7 +946,6 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
 | Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
 | Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
-======
 
 ## Publish record — follow-up (session arena/3c2c8403-demo1)
 
@@ -1059,6 +1096,7 @@ The user's requirement "Live charts should include events and website links that
 | 2026-11-20 | PR #39 (`arena/b10c4954-demo1` → `main`) was not mergeable: `main` advanced while the PR was open (PRs #35–#38 merged, including concurrent session `arena/c8617443-demo1`'s jump-alert work, plus a data snapshot refresh). Add/add content conflicts on `COORDINATION.md` and `index.html`. | Merged `origin/main` into the feature branch and kept **both** sides: `index.html` keeps main's KPI block AND this session's Live demo desk section (with the new Sharp moves tile); `COORDINATION.md` keeps main's accumulated board verbatim and re-appends this session's section. No session's work discarded. |
 | 2026-11-20 | Both desks (this session and c8617443) implemented jump/alert features independently; both are additive and cross-linked. | Coordination rule applied: each session owns its files; no shared file was overwritten. The board records both. |
 | 2026-11-20 | Second pre-merge round: `main` advanced again (PR #41, session arena/1e09bd4a-demo1, "automated line-by-line verification of the Kalshi demo site"). Content conflict on `COORDINATION.md` only (`index.html` auto-merged). | Resolved by keeping main's accumulated board verbatim and re-appending this session's section. No session's work discarded. |
+| 2026-11-20 | PR #46 opened, then `main` advanced from `b916f1e` to `e6e0790` (PRs #42, #44, #45 plus snapshot refresh). Rebase conflicted only in `index.html`; `COORDINATION.md` auto-merged. | Kept main's corrected landing structure and snapshot/data updates, then reapplied Task 22's additive live-desk tiles, security/ranking disclosures, navigation and integration links; added a link to main's separate `desk/` without changing its implementation. Main's other changes remain untouched. |
 
 ## Merge log — session arena/f55eb323-demo1 (PR #42)
 
