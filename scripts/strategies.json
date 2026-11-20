@@ -1,0 +1,39 @@
+{
+  "enabled": false,
+  "note": "Strategy configuration for scripts/demo_trader.py auto mode. Deliberately DISABLED. To arm: (1) configure demo API-key secrets, (2) set KALSHI_ALLOW_TRADING=1, (3) set enabled=true after reviewing caps. All caps are conservative defaults for the DEMO environment (mock funds, thin books).",
+  "risk_notes": [
+    "Demo books are thin: small orders can move prices; always prefer post-only resting bids.",
+    "Categorize every fill with topic + strategy tag so the portfolio page can compute per-strategy stats.",
+    "Per docs.kalshi.com/getting_started/rate_limits.md, order writes cost 10 tokens each; keep rates modest.",
+    "self_trade_prevention_type is required by the V2 order schema; 'taker_at_cross' allows resting-maker behavior with post_only=true."
+  ],
+  "series_map_example": {
+    "gas": ["KXAAAGASMIN", "KXAAAGASMAX", "KXAAAGASW"],
+    "elections": ["KXNEXTNATOSECGEN", "KXNEWPOPE"],
+    "culture": ["KXOSCARSUPACTO", "KXOSCARSONG"],
+    "crypto": ["KXBTCMINMON", "KXSOLMINMON", "KXETHMINMON"],
+    "golf": ["KXPGACUT", "KXPGAPLAYOFF", "KXTHEOPEN"]
+  },
+  "strategies": [
+    {
+      "name": "value-bid-yes",
+      "topic": "crypto",
+      "side": "yes",
+      "max_contracts_per_trade": 5,
+      "max_entry_price_dollars": 0.60,
+      "min_entry_price_dollars": 0.05,
+      "max_spread_dollars": 0.05,
+      "rationale": "Rest a post-only YES bid below mid on liquid crypto ladder markets; capture spread rather than chase."
+    },
+    {
+      "name": "event-drift-gas",
+      "topic": "gas",
+      "side": "yes",
+      "max_contracts_per_trade": 2,
+      "max_entry_price_dollars": 0.50,
+      "min_entry_price_dollars": 0.02,
+      "max_spread_dollars": 0.10,
+      "rationale": "Gas ladder markets on demo are extremely thin; tiny size only, resting orders."
+    }
+  ]
+}

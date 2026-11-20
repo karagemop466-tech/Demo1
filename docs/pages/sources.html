@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sources · Kalshi demo data hub</title><link rel="stylesheet" href="../assets/site.css"></head>
+<body data-depth="2">
+<header class="site"><a class="brand" href="../index.html">KALSHI <b>DEMO</b> · DATA HUB</a><nav></nav></header>
+<div class="wrap">
+  <h1>Sources — official, verified, and third-party</h1>
+  <p class="lede">Everything on this site traces to the list below. Official Kalshi sources were fetched on <b>2026-11-20</b>;
+  live probes hit the demo API directly the same day. Third-party items are used only as leads and are always labeled.</p>
+
+  <h2>1. Official Kalshi documentation (fetched and read)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Page</th><th>Used for</th><th>Link</th></tr></thead>
+    <tbody id="docs-rows"></tbody>
+  </table></div>
+
+  <h2>2. Official DEMO API endpoints (live probes / pipeline targets)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Endpoint</th><th>Used for</th><th>Link</th></tr></thead>
+    <tbody id="api-rows"></tbody>
+  </table></div>
+
+  <h2>3. Kalshi official non-docs pages</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Page</th><th>Used for</th><th>Link</th></tr></thead>
+    <tbody>
+      <tr><td>Kalshi fee schedule (PDF)</td><td>fee_type/fee_multiplier interpretation for trade analysis</td><td><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noreferrer">kalshi.com/docs/kalshi-fee-schedule.pdf ↗</a></td></tr>
+      <tr><td>Demo trading site</td><td>Where demo accounts/keys are created</td><td><a href="https://demo.kalshi.co/" target="_blank" rel="noreferrer">demo.kalshi.co ↗</a></td></tr>
+      <tr><td>Gas market page (official venue page)</td><td>Cross-check that gas ladder series exist (KXAAAGASMIN)</td><td><a href="https://kalshi.com/markets/kxaaagasmin/us-lowest-gas-price-yearly/kxaaagasmin-26dec31" target="_blank" rel="noreferrer">kalshi.com/markets/kxaaagasmin ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>4. Third-party (leads only — labeled, not official)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Item</th><th>Used for</th><th>Link</th></tr></thead>
+    <tbody>
+      <tr><td>kalshi-bot PR #222 (dtmiescke)</td><td>Lead: claim that Kalshi REST returns 403 for cross-origin browser requests (CORS) — flagged unverified (F1)</td><td><a href="https://github.com/dtmiescke/kalshi-bot/pull/222" target="_blank" rel="noreferrer">github.com ↗</a></td></tr>
+      <tr><td>CryptoStruct series page</td><td>Lead confirming gas series ticker KXAAAGASW exists (verified later live via demo API)</td><td><a href="https://cryptostruct.com/prediction-markets/kalshi-kxaaagasw" target="_blank" rel="noreferrer">cryptostruct.com ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>5. Repo-internal documents</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Document</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>SOURCES.md</code></td><td>Markdown mirror of this page (repo root)</td></tr>
+      <tr><td><code>EXECUTIVE_SUMMARY.md</code></td><td>Executive summary with important details</td></tr>
+      <tr><td><code>REVIEW.md</code></td><td>Repo review (line-by-line findings)</td></tr>
+      <tr><td><code>COORDINATION.md</code></td><td>Shared task board, ownership, merge record</td></tr>
+      <tr><td><code>docs/data/*.json</code></td><td>Provenance-stamped data files (each records the API URL it came from)</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<footer class="site"></footer>
+<script src="../assets/site.js"></script>
+<script>
+const DOCS = [
+  ["API Environments and Endpoints", "REST/WS base URLs for demo + production", "https://docs.kalshi.com/getting_started/api_environments.md"],
+  ["Test In The Demo Environment", "demo host, mock funds, credential separation", "https://docs.kalshi.com/getting_started/demo_env.md"],
+  ["Quick Start: Market Data", "public unauthenticated market-data endpoints", "https://docs.kalshi.com/getting_started/quick_start_market_data.md"],
+  ["Quick Start: Authenticated Requests", "API-key headers, RSA-PSS/Ed25519 signing", "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md"],
+  ["Quick Start: WebSockets", "WS handshake auth requirement, channels", "https://docs.kalshi.com/getting_started/quick_start_websockets.md"],
+  ["Get Events", "events params (status enum, limit≤200, tickers, nested markets), category deprecation", "https://docs.kalshi.com/api-reference/events/get-events.md"],
+  ["Get Series List", "category/tags filters, fee_type, settlement_sources", "https://docs.kalshi.com/api-reference/market/get-series-list.md"],
+  ["Get Market Candlesticks", "1/60/1440-minute candles, start/end_ts", "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md"],
+  ["Orderbook Responses", "orderbook_fp schema, bid-only + implied asks", "https://docs.kalshi.com/getting_started/orderbook_responses.md"],
+  ["Fixed-Point Representation", "_dollars/_fp field semantics, price_ranges", "https://docs.kalshi.com/getting_started/fixed_point_migration.md"],
+  ["Create Order (V2)", "POST /portfolio/events/orders, legacy 410 Gone", "https://docs.kalshi.com/api-reference/orders/create-order-v2.md"],
+  ["Cancel Order (V2)", "DELETE path, market_ticker auto-routing", "https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md"],
+  ["Get Balance", "balance/portfolio_value fields, own bucket", "https://docs.kalshi.com/api-reference/portfolio/get-balance.md"],
+  ["Rate Limits and Tiers", "token buckets, 429 handling, unauthenticated limits", "https://docs.kalshi.com/getting_started/rate_limits.md"],
+  ["Market Settlement", "YES/NO payout mechanics", "https://docs.kalshi.com/getting_started/market_settlement.md"],
+  ["Pagination", "cursor-based pagination used by the pipeline", "https://docs.kalshi.com/getting_started/pagination.md"],
+  ["API Keys", "key scopes, storage guidance", "https://docs.kalshi.com/getting_started/api_keys.md"],
+  ["Historical Data", "older-than-cutoff data endpoints (backtesting lead)", "https://docs.kalshi.com/getting_started/historical_data.md"],
+];
+const APIX = [
+  ["Events list", "topic scan + tracking", "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=3&status=open"],
+  ["Series by category", "topic → series mapping", "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto"],
+  ["Series by tag", "gas/golf discovery", "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf"],
+  ["Tags by categories", "authoritative taxonomy", "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"],
+  ["Markets list", "snapshot rows", "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2"],
+  ["Orderbook", "depth + liquidity", "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINMON-BTC-26NOV30-7250000/orderbook"],
+  ["Candlesticks", "price history", "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINMON/markets/KXBTCMINMON-BTC-26NOV30-7250000/candlesticks"],
+  ["Gas event", "resolution example", "https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXAAAGASMIN&status=open&with_nested_markets=true"],
+];
+document.getElementById("docs-rows").innerHTML = DOCS.map(d => `<tr><td>${d[0]}</td><td>${d[1]}</td><td><a href="${d[2]}" target="_blank" rel="noreferrer">${d[2].replace("https://", "")} ↗</a></td></tr>`).join("");
+document.getElementById("api-rows").innerHTML = APIX.map(d => `<tr><td>${d[0]}</td><td>${d[1]}</td><td><a href="${d[2]}" target="_blank" rel="noreferrer">${d[2].replace("https://", "").split("?")[0]} ↗</a></td></tr>`).join("");
+</script>
+</body>
+</html>
