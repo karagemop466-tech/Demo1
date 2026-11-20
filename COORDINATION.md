@@ -2259,7 +2259,9 @@ Log:
 
 ## Done record — 2026-11-20 (session `2db27b09`)
 
-**AD-1 — shipped.** New `alert-desk/` tree: `index.html`, `assets/style.css`, `assets/alert.js`, `data/seed.json`, `tools/build_seed.py`.
+**AD-1 — shipped.** New `alert-desk/` tree: **`chat.html`**, `assets/style.css`, `assets/alert.js`, `data/seed.json`, `tools/build_seed.py`.
+
+**Conflict log (rebase onto main 453d4a8, 2026-11-20):** main had advanced ~150 commits during implementation; session `0ad208bf` had independently shipped its own `alert-desk/` (index.html + app.js + style.css + test_boot.mjs + alert-desk-check.yml, PRs #59/#67/#75), so `alert-desk/index.html` conflicted. Resolution — **nothing discarded**: their `index.html`/`app.js`/`style.css`/`test_boot.mjs`/`README.md` kept byte-for-byte (their suite re-verified 35/35 after the rebase); this session's page renamed to **`alert-desk/chat.html`** (test updated to load it; nav/tile in root `index.html` point at `chat.html`, their existing tile at `index.html` kept). Their `alert-desk-check.yml` untouched. COORDINATION.md conflict resolved by keeping both sides (protocol). Root `index.html`: main's three alert tiles + this session's fourth tile.
 - Two scrolling chat feeds: **All events** and **High-ROI** (≥4-of-5 model rules, R1 price ∈ [$0.05,$0.90], R2 volume 24h ≥ 100, R3 spread ≤ $0.05 both sides quoted, R4 price band, R5 open interest ≥ 100). Both scroll newest-at-top with auto-pause on hover.
 - Alerts on ≥ $0.10 moves **either direction** across gas prices, elections, culture, crypto, golf (5-topic classifier mirrors `desk/assets/core.js`, including the `KXWTI` exclusion).
 - Every message row links: (a) the exact official API request it came from (`external-api.demo.kalshi.co/trade-api/v2/...`), (b) the venue event page `https://kalshi.com/events/{event_ticker}` (pattern verified firsthand), (c) a Google News search lead labelled *lead, not a verified cause*.
@@ -2267,7 +2269,7 @@ Log:
 - Offline fallback: committed `alert-desk/data/seed.json` (rebuilt 2026-11-20T11:43:59Z — 10 day-delta swings, 5 model picks, 12 resolutions stratified across all five topics) rendered with **SNAPSHOT** chip; live responses flip banner to **LIVE**. Seed builder: `python3 alert-desk/tools/build_seed.py`.
 - Dedupe by message id (`s|ticker|basis|before|after`, `r|ticker|ts`); `window.__alertdesk` test hook.
 
-**AD-2 — shipped.** `alert-desk/test_alert_desk.mjs` (jsdom; alert.js inlined verbatim, fetch mocked with official-shaped payloads): **46/46 pass** — offline seed path (feeds, ROI subset, source/venue/news links, topic filter, clear, pause, tape, rules table, no KXWTI in messages), live path (day-move pass, ≥$0.10 alert, <$0.10 no-alert, resolution watch → RESOLVED YES, no duplicates, 429 → RETRY badge), seed-failure degradation. Root `index.html`: additive nav link + tile to `alert-desk/index.html`.
+**AD-2 — shipped.** `alert-desk/test_alert_desk.mjs` (jsdom; alert.js inlined verbatim, fetch mocked with official-shaped payloads): **46/46 pass** — offline seed path (feeds, ROI subset, source/venue/news links, topic filter, clear, pause, tape, rules table, no KXWTI in messages), live path (day-move pass, ≥$0.10 alert, <$0.10 no-alert, resolution watch → RESOLVED YES, no duplicates, 429 → RETRY badge), seed-failure degradation. Root `index.html`: additive nav link + tile to `alert-desk/chat.html`.
 
 **Gates (all green 2026-11-20):** `node --check` alert.js + test ✓ · `node tools/check-links.mjs` PASS (352 files) · `python3 build_site.py` OK (17 pages, link check OK) · `python3 -m unittest discover -s tests` 7 tests OK · `npm test` ALL ASSERTIONS PASSED · `node alert-desk/test_alert_desk.mjs` 46/46.
 
