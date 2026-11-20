@@ -1,29 +1,32 @@
-name: Deploy static site to GitHub Pages
+name: Pages deploy validation
 # SINGLE-PUBLISHER POLICY (session fab3e340, task PD-2 — see DEPLOYMENT.md):
-# This workflow is the ONLY publisher for the GitHub Pages site. The repository's
-# Pages settings must keep build_type "workflow" (Source: GitHub Actions).
-# GitHub documents exactly one publishing source per site — a branch (built-in
-# builder) or a custom workflow — and having both configured (branch source +
-# this workflow) left the built-in "pages build and deployment" runs failing
-# with "Page build failed." and the site stale (5 of 7 builds errored 19:36–19:42 UTC).
+# The ONLY publisher for the GitHub Pages site is the built-in branch builder
+# (Pages source `main:/`, REST `build_type: "legacy"`). This workflow VALIDATES
+# the tree (required files, JS syntax, verified-dashboard rebuild with its link
+# check, desk DOM tests, repository link/secret audit) on pushes to main and on
+# pull requests, but it deliberately has NO deploy job and NO artifact upload,
+# so it can never cancel or race the deployment.
+#
+# History that motivated this: while this workflow still had a deploy job, the
+# two publishers shared the "pages" concurrency group and cancelled each other
+# on every push during the 2026-11-20 merge storm (Actions runs show cancel
+# pairs from 19:36 UTC; the Pages builds API recorded the superseded builds as
+# errored "Page build failed.", and the live site froze at the 19:37:57Z build —
+# trade-desk/ and alert-desk/ stayed undeployed). Making the Pages build_type
+# switch to "workflow" (REST PUT /pages) was attempted and denied:
+# {"message":"Resource not accessible by integration","status":403} — the token
+# lacks the administrator-level "manage GitHub Pages settings" permission, so the
+# built-in builder stays the publisher and this workflow validates only.
 # Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 on:
   push:
     branches: [main]
-  schedule:
-    # The three data pipelines commit to main with the repository's GITHUB_TOKEN
-    # every 15 minutes; pushes made with GITHUB_TOKEN do not trigger push events
-    # for Actions workflows, so this timed redeploy of the default-branch tip
-    # keeps bot-committed data refreshes flowing to Pages. Timed runs of the
-    # default branch deploy its latest commit (docs: "schedule" event).
-    - cron: "9,24,39,54 * * * *"
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
+  group: pages-validation
   cancel-in-progress: true
 jobs:
   build:
@@ -55,20 +58,3 @@ jobs:
 
       - name: Site link, secrets and source-citation audit
         run: node tools/check-links.mjs
-      - name: Remove dev dependencies from the deployed artifact
-        # The desk test step installs jsdom into ./node_modules; upload-pages-artifact
-        # uploads everything under `path`, so dev dependencies must be dropped before
-        # upload or they are published with the site.
-        run: rm -rf node_modules
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
