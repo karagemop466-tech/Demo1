@@ -1,6 +1,6 @@
 {
   "schema": "ops-desk/cors-probe v1",
-  "probed_at_utc": "2026-11-20T19:37:50Z",
+  "probed_at_utc": "2026-11-20T20:24:58Z",
   "method": "urllib GET with no Origin header and with Origin: null replaced by a plain GET; headers recorded verbatim. Browsers send Origin and enforce CORS client-side; the observed Access-Control-Allow-Origin: * is the header a browser would receive. Re-run the probe to refresh.",
   "results": [
     {
@@ -10,7 +10,7 @@
         "access-control-allow-origin": "*",
         "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
         "x-ratelimit-limit": "5450",
-        "x-ratelimit-remaining": "2980"
+        "x-ratelimit-remaining": "4592"
       }
     },
     {
@@ -20,7 +20,7 @@
         "access-control-allow-origin": "*",
         "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
         "x-ratelimit-limit": "5450",
-        "x-ratelimit-remaining": "2978"
+        "x-ratelimit-remaining": "4591"
       }
     },
     {
@@ -30,7 +30,7 @@
         "access-control-allow-origin": "*",
         "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning",
         "x-ratelimit-limit": "5450",
-        "x-ratelimit-remaining": "2976"
+        "x-ratelimit-remaining": "4590"
       }
     }
   ]
