@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 364,
+    "files_scanned": 409,
     "findings": 5,
     "errors": 0,
     "warnings": 3,
@@ -726,7 +726,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/events/get-events",
-      "uses": 35,
+      "uses": 38,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -768,7 +768,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
-      "uses": 5,
+      "uses": 6,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
@@ -1298,14 +1298,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
-      "uses": 61,
+      "uses": 78,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts.html",
-        "app.js",
-        "assets/js/price-jumps.js"
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts.html"
       ]
     },
     {
@@ -1331,14 +1331,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
-      "uses": 47,
+      "uses": 55,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
         "COORDINATION.md",
         "README.md",
-        "app.js",
-        "archive/monitor.html"
+        "alerts/README.md",
+        "alerts/data/feed.json"
       ]
     },
     {
@@ -1365,14 +1365,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 72,
+      "uses": 82,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "README.md",
-        "app.js",
-        "audit/index.html"
+        "alerts/README.md",
+        "alerts/data/feed.json"
       ]
     },
     {
@@ -1410,7 +1410,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-series",
-      "uses": 6,
+      "uses": 8,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
@@ -1455,14 +1455,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-trades",
-      "uses": 26,
+      "uses": 42,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "data/demo-snapshot.json",
-        "decision/js/api-notes.js",
-        "decision/js/kalshi.js"
+        "alert-desk/README.md",
+        "alert-desk/app.js",
+        "alert-desk/index.html"
       ]
     },
     {
@@ -2333,14 +2333,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_environments",
-      "uses": 57,
+      "uses": 68,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "audit/flagged.html",
-        "audit/index.html",
-        "data/demo-snapshot.json"
+        "alerts/README.md",
+        "alerts/audit.html",
+        "alerts/data/feed.json"
       ]
     },
     {
@@ -2357,14 +2357,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_keys",
-      "uses": 32,
+      "uses": 36,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "decision/api-notes.html",
-        "decision/js/kalshi.js",
-        "decision/js/portfolio.js"
+        "alerts/tools/build_verification.py",
+        "alerts/verification.html",
+        "decision/api-notes.html"
       ]
     },
     {
@@ -2390,14 +2390,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 82,
+      "uses": 96,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "alerts.html",
-        "app.js",
-        "audit/index.html"
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts.html"
       ]
     },
     {
@@ -2520,14 +2520,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
-      "uses": 38,
+      "uses": 49,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "audit/flagged.html",
-        "audit/index.html",
-        "decision/js/kalshi.js"
+        "alerts/README.md",
+        "alerts/data/feed.json",
+        "alerts/index.html"
       ]
     },
     {
@@ -2541,14 +2541,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_settlement",
-      "uses": 31,
+      "uses": 46,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "app.js",
-        "audit/index.html",
-        "decision/js/kalshi.js"
+        "alert-desk/README.md",
+        "alert-desk/index.html",
+        "alerts/README.md"
       ]
     },
     {
@@ -2627,14 +2627,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
-      "uses": 46,
+      "uses": 60,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
-        "audit/index.html",
-        "chart.html",
-        "decision/api-notes.html"
+        "alerts/README.md",
+        "alerts/data/feed.json",
+        "alerts/index.html"
       ]
     },
     {
@@ -2755,7 +2755,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
-      "uses": 21,
+      "uses": 27,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2779,7 +2779,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/rate_limits",
-      "uses": 23,
+      "uses": 27,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
