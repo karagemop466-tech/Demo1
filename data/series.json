@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-20T11:23:02Z",
+ "fetched_at": "2026-11-20T19:12:46Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/series",
  "series": [
   {
@@ -67317,6 +67317,35 @@
     {
      "name": "CF Benchmarks",
      "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXBTCDIFFEOY",
+   "title": "Bitcoin mining difficulty at year-end",
+   "category": "Crypto",
+   "categories": [
+    "Crypto"
+   ],
+   "tags": [],
+   "frequency": "annual",
+   "settlement_sources": [
+    {
+     "name": "Bitcoin blockchain",
+     "url": "https://developer.bitcoin.org/reference/block_chain.html"
+    },
+    {
+     "name": "Blockchain.com",
+     "url": "https://www.blockchain.com/explorer"
+    },
+    {
+     "name": "mempool.space",
+     "url": "https://mempool.space/"
+    },
+    {
+     "name": "Blockstream Explorer",
+     "url": "https://blockstream.info/"
     }
    ],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
@@ -190814,6 +190843,36 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
   },
   {
+   "ticker": "KXINDIATARIFF",
+   "title": "Additional U.S. tariff on Indian goods",
+   "category": "Politics",
+   "categories": [
+    "Politics"
+   ],
+   "tags": [
+    "Economy",
+    "Trade & tariffs",
+    "Trump",
+    "International"
+   ],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "U.S. Customs and Border Protection",
+     "url": "https://www.cbp.gov/"
+    },
+    {
+     "name": "U.S. International Trade Commission",
+     "url": "https://hts.usitc.gov/"
+    },
+    {
+     "name": "Federal Register",
+     "url": "https://www.federalregister.gov/"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
    "ticker": "KXINDIAVJAPAN",
    "title": "Higher GDP: India vs Japan",
    "category": "Economics",
@@ -230597,6 +230656,33 @@
     {
      "name": "Courthouse News Service",
      "url": "https://www.courthousenews.com/"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXLOVBPROMATCH",
+   "title": "LOVB Pro Match",
+   "category": "Sports",
+   "categories": [
+    "Sports"
+   ],
+   "tags": [
+    "Volleyball"
+   ],
+   "frequency": "custom",
+   "settlement_sources": [
+    {
+     "name": "League One Volleyball",
+     "url": "https://www.lovb.com/"
+    },
+    {
+     "name": "Fox Sports",
+     "url": "https://www.foxsports.com"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
     }
    ],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
@@ -332033,6 +332119,18 @@
      "url": "https://finance.yahoo.com/"
     }
    ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXPFEE7CEC",
+   "title": "Portfolio cash out QA",
+   "category": "Demo",
+   "categories": [
+    "Demo"
+   ],
+   "tags": [],
+   "frequency": "custom",
+   "settlement_sources": [],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
   },
   {
@@ -447109,9 +447207,9 @@
   {
    "ticker": "KXUBERKPI",
    "title": "Uber KPI",
-   "category": "Companies",
+   "category": "Financials",
    "categories": [
-    "Companies"
+    "Financials"
    ],
    "tags": [
     "KPIs"
@@ -447281,8 +447379,7 @@
    "title": "Uber Annual KPI",
    "category": "Financials",
    "categories": [
-    "Financials",
-    "Companies"
+    "Financials"
    ],
    "tags": [
     "KPIs"
