@@ -127,17 +127,20 @@
   }
 
   function renderSummary(m) {
+    // [label, value, kind]: kind "price" = dollars per contract, "count" = contracts, "text" = as returned
     var rows = [
-      ["YES bid", m.yes_bid_dollars], ["YES ask", m.yes_ask_dollars], ["Last trade", m.last_price_dollars],
-      ["Volume (contracts)", m.volume_fp], ["Open interest (contracts)", m.open_interest_fp],
-      ["YES ask size (contracts)", m.yes_ask_size_fp], ["YES bid size (contracts)", m.yes_bid_size_fp],
-      ["Status", m.status], ["Close time (UTC)", m.close_time]
+      ["YES bid", m.yes_bid_dollars, "price"], ["YES ask", m.yes_ask_dollars, "price"],
+      ["Last trade", m.last_price_dollars, "price"],
+      ["Volume (contracts)", m.volume_fp, "count"], ["Open interest (contracts)", m.open_interest_fp, "count"],
+      ["YES ask size (contracts)", m.yes_ask_size_fp, "count"], ["YES bid size (contracts)", m.yes_bid_size_fp, "count"],
+      ["Status", m.status, "text"], ["Close time (UTC)", m.close_time, "text"]
     ];
     $("summary").innerHTML = rows.map(function (r) {
-      var v = r[1] == null || r[1] === "" ? '<span class="blank">not returned</span>' : esc(r[1]);
-      if (/_dollars$/.test(String(r[0])) || /price/i.test(r[0]) || /bid|ask/i.test(r[0])) {
-        if (r[1] !== "" && r[1] != null && /^[0-9.]+$/.test(String(r[1]))) v = "$" + Number(r[1]).toFixed(4) + " (" + (Number(r[1]) * 100).toFixed(1) + "¢)";
-      }
+      var v;
+      if (r[1] == null || r[1] === "") v = '<span class="blank">not returned</span>';
+      else if (r[2] === "price") v = "$" + Number(r[1]).toFixed(4) + " (" + (Number(r[1]) * 100).toFixed(1) + "¢)";
+      else if (r[2] === "count") v = Number(r[1]).toLocaleString("en-US", { maximumFractionDigits: 2 });
+      else v = esc(r[1]);
       return "<tr><th>" + esc(r[0]) + "</th><td>" + v + "</td></tr>";
     }).join("");
     $("title").textContent = m.title || state.ticker;
@@ -171,7 +174,6 @@
   function refresh() {
     if (!state.ticker) return;
     var tasks = [fetchMarket(), fetchOrderbook()];
-    var candleTask = state.gran === "seconds" ? null : fetchCandles();
     return Promise.all(tasks).then(function (res) {
       var m = res[0], ob = res[1];
       renderSummary(m);
@@ -188,7 +190,7 @@
         setBanner("ok", "Live: polling every " + POLL_MS / 1000 + "s from Kalshi (" + state.env + "). Y = mid of YES bid/ask; " +
           "points collected in this browser session only. Updated " + new Date().toLocaleTimeString() + ".");
       } else {
-        return candleTask.then(function (pts) {
+        return fetchCandles().then(function (pts) {
           drawChart(pts);
           setBanner("ok", "Live: candlesticks (" + (state.gran === "minutes" ? "1-minute" : "1-hour") + " periods) and current orderbook from Kalshi (" +
             state.env + "). Updated " + new Date().toLocaleTimeString() + ".");
