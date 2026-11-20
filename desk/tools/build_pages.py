@@ -127,13 +127,16 @@ def badge(text, kind="info"):
     return f'<span class="badge {kind}">{e(text)}</span>'
 
 
+BUILD_STAMP = {"utc": ""}
+
+
 def page(title: str, current: str, body: str, description: str = "", scripts: str = "") -> str:
     AC = ' aria-current="page"'
     nav = "".join(
         '<a href="%s"%s>%s</a>' % (href, AC if href == current else "", e(label))
         for href, label in NAV
     )
-    gen = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")
+    gen = BUILD_STAMP["utc"] or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -1485,6 +1488,8 @@ def main() -> int:
     ledger = read_json(DATA / "paper-trades.json", {"trades": [], "by_strategy": [], "strategies": []})
     reslog = read_json(DATA / "resolutions-log.json", {"entries": [], "totals": {}, "by_topic": {}})
 
+    BUILD_STAMP["utc"] = str(data.get("generated_utc") or "")[:16].replace("T", " ") + " UTC" \
+        if data.get("generated_utc") else ""
     written = []
 
     def emit(name: str, html_text: str):
