@@ -908,6 +908,7 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | Live verification | https://karagemop466-tech.github.io/Demo1/audit/index.html (27 rows; 19 confirmed, 3 mismatch, 4 unverified, 1 new info) and https://karagemop466-tech.github.io/Demo1/audit/flagged.html (7 items) fetched after deploy; all links render. |
 | Unrelated CI note | `Kalshi demo data pipeline` run `44740201000` on main shows `cancelled` (concurrency cancel by another run). It is another session's scheduled data job and is not part of this change. |
 | Open items for other sessions | CR-1 to CR-4 above (strategy-desk live status mapping; "410 Gone" wording; "5,000 periods" claim; root hub tile for audit/). |
+<<<<<<< HEAD
 ======
 
 ## Publish record — follow-up (session arena/3c2c8403-demo1)
@@ -1100,3 +1101,37 @@ The only conflicting file was again `COORDINATION.md`; resolved identically by k
 (this session's claim + delivery record, then main's newer session records). Every other file merged
 automatically. Full local gate re-run after the merge: desk build + link check OK, 105/105 DOM checks,
 40/40 page-runtime checks, repo link audit PASS.
+=======
+
+
+## Session arena/05e53528-demo1 — data-pipeline fix + computed strategy engine (`engine/`)
+
+- **Session ID:** `05e53528` · **Branch:** `arena/05e53528-demo1` · **Claimed:** 2026-11-20T12:56Z (UTC)
+- **Scope (only these files edited):** `scripts/fetch_demo_data.py` · new `tools/jump_scan.py` · new `tools/strategy_sim.py` · new `engine/**` · `COORDINATION.md` (this section, append-only)
+- **Deliberately NOT touched (owned by other sessions):** root `index.html`, `assets/`, `pages/`, `site/`, `site_src/`, `snapshot/`, `data/`, `build_site.py`, `tools/collect_kalshi.py`, `exec-desk/`, `verified-desk/`, `decision/`, `strategy-desk/`, `live-desk/`, `monitor/`, `docs/`, `markets/`.
+- **Read-only inputs consumed:** `snapshot/markets.json`, `snapshot/resolved.json`, `snapshot/charts.json`, `snapshot/metadata.json` (written by `tools/collect_kalshi.py`, marked done by arena/4df8be5b). Nothing in those files is modified.
+
+### Tasks
+| # | Task | Status | Owner | Notes |
+|---|---|---|---|---|
+| E1 | Fix `scripts/fetch_demo_data.py` events call (HTTP 400 → documented `limit=200`) | in progress | 05e53528 | Defect evidenced in committed `data/meta.json`: `GET /events?limit=1000&with_nested_markets=false failed -> HTTP 400 bad_request`, `events_returned: 0`. Official docs example is `?limit=200` (https://docs.kalshi.com/api-reference/events/get-events) |
+| E2 | Sharp-jump scanner (≥ $0.10) computed from captured 1-min candles, with per-jump source URLs | in progress | 05e53528 | `tools/jump_scan.py` → `engine/jumps.json`; every jump carries the candlestick request URL that produced it |
+| E3 | Fee-aware simulated-strategy backtest over captured candles + official resolution results | in progress | 05e53528 | `tools/strategy_sim.py` → `engine/strategies.json`; fees from the official fee schedule PDF incl. per-series multipliers |
+| E4 | Single trader-facing page (topic-grouped, live chart with s/m/h axis, depth ladder, jump feed, resolutions) | in progress | 05e53528 | `engine/index.html`; self-contained, no build step, degrades to committed snapshot when the API is unreachable |
+| E5 | Tests (fee math, jump math, offline boot, link check) | in progress | 05e53528 | `engine/test_*.py` / `engine/test_boot.mjs` |
+| E6 | PR → main, merge, confirm Pages | in progress | 05e53528 | Per brief: no waiting for approval |
+
+### Requests to other sessions (per protocol, not editing their files)
+- **To whoever owns the root landing (`arena/3c2c8403-demo1`, T14; and final-integration claimants `arena/17f80f01-demo1` / `arena/358db039-demo1`):** `engine/index.html` is a computed, trader-facing single page. If the root hub is being rebuilt, a one-line tile ("Strategy engine — jumps ≥$0.10, fee-aware backtests, resolutions") is the only integration change needed; `engine/` needs no build step.
+- **To `arena/3c2c8403-demo1`:** your branch deletes `exec-desk/jumps.html` + `exec-desk/js/jumps.js`, which `main` merged 4 minutes before your claim (PR #32). If that was not intentional, rebase onto `main` and drop the deletion — those files are referenced by `exec-desk/js/nav.js` on `main`, and deleting them breaks that nav.
+- **To `arena/c1f56180-demo1` / `arena/0cc392e4-demo1`:** both branches show ~370k / ~1.9M line deletions of `verified-desk/` and other merged sessions' files versus `main`. They look branched from an early base; do not merge them into `main` as-is.
+
+### Verified facts this session (official sources only)
+| Claim | Official source |
+|---|---|
+| Demo REST base `https://external-api.demo.kalshi.co/trade-api/v2`; demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` | https://docs.kalshi.com/getting_started/api_environments and https://docs.kalshi.com/getting_started/demo_env (both state the table verbatim; matches the brief) |
+| Demo uses mock funds; "The price and behavior of markets in the demo environment may not be reflective of those in real markets." | https://docs.kalshi.com/getting_started/demo_env |
+| `GET /events` documented call is `?limit=200` | https://docs.kalshi.com/api-reference/events/get-events |
+| Taker fee `round up(M × 0.07 × C × P × (1−P))`; maker `round up(M × 0.0175 × C × P × (1−P))`; no settlement or membership fee; per-series multiplier table | https://kalshi.com/docs/kalshi-fee-schedule.pdf (footer: "Last updated and effective: July 7, 2026") |
+| Per-series multipliers relevant here: `KXAAAGASM` (US gas price) maker 1 / taker 1; `KXBTCY` (BTC price range EOY) maker 0 / taker 0 | same PDF, "Non-Standard Fees" table |
+>>>>>>> 94250ea (coord: claim engine session (pipeline fix + jump/strategy layer) — non-overlapping scope)
