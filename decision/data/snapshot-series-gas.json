@@ -1,0 +1,12 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&include_volume=true",
+  "fetched_at_utc": "2026-11-20T11:24:00Z",
+  "note": "Sample (first page of many — full response spans 118 pages, so the total Economics series count is not asserted here). Gas-price series are tagged 'Oil and energy' and settle on AAA data. Series trimmed to fields used by site tables.",
+  "series": [
+    { "ticker": "KXAAAGASW", "title": "US gas price up", "category": "Economics", "categories": ["Economics"], "tags": ["Econ Weekly", "Oil and energy"], "frequency": "weekly", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "94710752.00", "settlement_sources": [{ "name": "AAA", "url": "https://gasprices.aaa.com/" }] },
+    { "ticker": "KXDIESELMAXY", "title": "Highest U.S. diesel price by year", "category": "Economics", "categories": ["Economics"], "tags": ["Oil and energy"], "frequency": "annual", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "20.00", "settlement_sources": [{ "name": "AAA", "url": "https://gasprices.aaa.com/" }] },
+    { "ticker": "KXTERMINALRATE", "title": "Fed funds highest rate", "category": "Economics", "categories": ["Economics"], "tags": ["Fed"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "Federal Reserve", "url": "https://www.federalreserve.gov/monetarypolicy/openmarket.htm" }] },
+    { "ticker": "KXAIRFARECPI", "title": "US airline fares CPI in [month]", "category": "Economics", "categories": ["Economics"], "tags": ["Inflation"], "frequency": "monthly", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "164.00", "settlement_sources": [{ "name": "Bureau of Labor Statistics- Employment Situation", "url": "https://www.bls.gov/news.release/empsit.nr0.htm" }] },
+    { "ticker": "KXCPISHELTER", "title": "CPI on shelter", "category": "Economics", "categories": ["Economics"], "tags": ["Inflation", "Housing"], "frequency": "monthly", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "", "settlement_sources": [{ "name": "Bureau of Labor Statistics", "url": "https://www.bls.gov/news.release/empsit.nr0.htm" }], "volume_note": "value present in response but page cut mid-field; left blank rather than guessed" }
+  ]
+}

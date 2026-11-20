@@ -1,0 +1,14 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&include_volume=true",
+  "fetched_at_utc": "2026-11-20T11:23:00Z",
+  "note": "Sample (first page of ~36 pages in demo). Crypto category confirmed present and populated. Series trimmed to fields used by site tables.",
+  "series": [
+    { "ticker": "KXAIRDROPPUMPFUN", "title": "PumpFun airdrop", "category": "Crypto", "categories": ["Crypto"], "tags": ["Crypto", "Pre-Market"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "3696.00" },
+    { "ticker": "KXAIRDROPHYPE", "title": "HYPE airdrop", "category": "Crypto", "categories": ["Crypto"], "tags": ["Crypto", "HYPE", "Pre-Market"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "394.00" },
+    { "ticker": "KXETHATH", "title": "ETH ATH", "category": "Crypto", "categories": ["Crypto"], "tags": ["Crypto", "Ethereum"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/" }] },
+    { "ticker": "KXAVAXMINY", "title": "Avalanche min", "category": "Crypto", "categories": ["Crypto"], "tags": ["Crypto"], "frequency": "annual", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "40427.00", "settlement_sources": [{ "name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/" }] },
+    { "ticker": "KXDOGEPERP", "title": "100 DOGE", "category": "Crypto", "categories": ["Crypto"], "tags": null, "frequency": "often", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00" },
+    { "ticker": "KXSUIATH", "title": "Sui ATH 2026", "category": "Crypto", "categories": ["Crypto"], "tags": ["Hourly"], "frequency": "one_off", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00", "settlement_sources": [{ "name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/" }] },
+    { "ticker": "KXBTC75VS100", "title": "Will BTC fall below 75k before hitting 100k?", "category": "Crypto", "categories": ["Crypto"], "tags": ["Crypto", "Bitcoin"], "frequency": "custom", "fee_type": "quadratic", "fee_multiplier": 1, "volume_fp": "0.00" }
+  ]
+}

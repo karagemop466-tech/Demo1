@@ -1,0 +1,13 @@
+{
+  "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=6",
+  "fetched_at_utc": "2026-11-20T11:28:33Z",
+  "note": "First page of the global trades feed, verbatim. Demonstrates public access and the fixed-point trade schema (yes_price_dollars / no_price_dollars / count_fp / taker_outcome_side).",
+  "trades": [
+    { "count_fp": "1.88", "created_time": "2026-11-20T11:28:33.342562Z", "is_block_trade": false, "no_price_dollars": "0.4500", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXHEISMAN-27-JSMIT", "trade_id": "07261a70-8ef9-a4bf-ceca-a24727372fa6", "yes_price_dollars": "0.5500" },
+    { "count_fp": "1.55", "created_time": "2026-11-20T11:28:33.341058Z", "is_block_trade": false, "no_price_dollars": "0.9950", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXPRESNOMR-28-BD", "trade_id": "0726162d-75c9-a324-063d-ebbce1f2c762", "yes_price_dollars": "0.0050" },
+    { "count_fp": "0.32", "created_time": "2026-11-20T11:28:33.338233Z", "is_block_trade": false, "no_price_dollars": "0.9920", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXPGATOUR-THRC26-KBRA", "trade_id": "0726178e-4e21-9e65-978f-be1fd6c96105", "yes_price_dollars": "0.0080" },
+    { "count_fp": "0.25", "created_time": "2026-11-20T11:28:33.337741Z", "is_block_trade": false, "no_price_dollars": "0.9100", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXNCAAF-27-MIA", "trade_id": "07261ab3-4f61-8e9f-3907-e9213053b7da", "yes_price_dollars": "0.0900" },
+    { "count_fp": "15.00", "created_time": "2026-11-20T11:28:33.328397Z", "is_block_trade": false, "no_price_dollars": "0.4500", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXDEMOFUTHOURLY-26NOV20H12-UP", "trade_id": "07261a6b-6549-8673-1230-430b6285036b", "yes_price_dollars": "0.5500" },
+    { "count_fp": "0.19", "created_time": "2026-11-20T11:28:33.252154Z", "is_block_trade": false, "no_price_dollars": "0.9620", "taker_book_side": "bid", "taker_outcome_side": "yes", "taker_side": "yes", "ticker": "KXPGATOUR-THRC26-JSVE", "trade_id": "07261a70-c161-aa26-b636-fac8f33aada0", "yes_price_dollars": "0.0380" }
+  ]
+}
