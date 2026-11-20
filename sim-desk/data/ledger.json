@@ -3,8 +3,8 @@
  "meta": {
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "started_cash_dollars": 1000.0,
-  "updated_ts": "2026-11-20T13:34:50Z",
-  "runs": 7,
+  "updated_ts": "2026-11-20T13:37:15Z",
+  "runs": 8,
   "simulated": true,
   "notes": [
    "All fills are SIMULATED \u2014 no orders were placed and no Kalshi account was touched.",
@@ -45,7 +45,7 @@
    "volume_24h_at_entry": 4451.64,
    "band": "0.00-0.20",
    "mark_price": 0.07,
-   "mark_ts": "2026-11-20T13:34:50Z",
+   "mark_ts": "2026-11-20T13:37:15Z",
    "mark_basis": "official last_price_dollars (held side)",
    "notional_dollars": 1.4,
    "signal_reason": "NO implied ask $0.14 <= $0.20 with 24h volume 4452 contracts",
@@ -73,7 +73,7 @@
    "volume_24h_at_entry": 61123.63,
    "band": "0.80-1.01",
    "mark_price": 0.003,
-   "mark_ts": "2026-11-20T13:34:50Z",
+   "mark_ts": "2026-11-20T13:37:15Z",
    "mark_basis": "official last_price_dollars (held side)",
    "notional_dollars": 8.03,
    "signal_reason": "tape trend over last 6 trades +0.80 >= +0.05; YES implied ask $0.80 in band",
@@ -731,6 +731,161 @@
      "topic": "culture",
      "notional_24h": 893.95,
      "volume_24h": 29798.31,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    }
+   ],
+   "new_trades": 0,
+   "settled": 0,
+   "api_calls": 70,
+   "errors": 0,
+   "cash": 990.36,
+   "equity": 991.09,
+   "open_positions": 2
+  },
+  {
+   "ts": "2026-11-20T13:37:15Z",
+   "run_id": "20261120T133633Z",
+   "universe_markets": 10998,
+   "candidates": 20,
+   "candidate_list": [
+    {
+     "ticker": "KXPGATOUR-THRC26-SSTR",
+     "topic": "golf",
+     "notional_24h": 12882.02,
+     "volume_24h": 515280.89,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JP",
+     "topic": "elections",
+     "notional_24h": 7338.78,
+     "volume_24h": 7782.38,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MTHO",
+     "topic": "golf",
+     "notional_24h": 5357.54,
+     "volume_24h": 41211.82,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MGRE",
+     "topic": "golf",
+     "notional_24h": 5242.36,
+     "volume_24h": 109215.77,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-LHOD",
+     "topic": "golf",
+     "notional_24h": 4821.02,
+     "volume_24h": 209609.53,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-RCAS",
+     "topic": "golf",
+     "notional_24h": 4748.77,
+     "volume_24h": 215853.16,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-KMIT",
+     "topic": "golf",
+     "notional_24h": 4675.13,
+     "volume_24h": 59178.82,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXAAAGASW-26NOV23-3.6200",
+     "topic": "gas",
+     "notional_24h": 4141.4,
+     "volume_24h": 4453.12,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXPRESNOMR-28-JDV",
+     "topic": "elections",
+     "notional_24h": 2506.99,
+     "volume_24h": 7596.93,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMR-28-MR",
+     "topic": "elections",
+     "notional_24h": 2503.8,
+     "volume_24h": 11380.9,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JOSS",
+     "topic": "elections",
+     "notional_24h": 2071.71,
+     "volume_24h": 7644.7,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXAAAGASM-26NOV30-3.50",
+     "topic": "gas",
+     "notional_24h": 1753.83,
+     "volume_24h": 3507.66,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXTIME-26-GPT",
+     "topic": "culture",
+     "notional_24h": 1748.81,
+     "volume_24h": 43720.36,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-ZOH",
+     "topic": "culture",
+     "notional_24h": 1660.09,
+     "volume_24h": 6917.03,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-MARK",
+     "topic": "culture",
+     "notional_24h": 1521.62,
+     "volume_24h": 16906.86,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-JON",
+     "topic": "culture",
+     "notional_24h": 1497.96,
+     "volume_24h": 18724.55,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-WM",
+     "topic": "elections",
+     "notional_24h": 1492.63,
+     "volume_24h": 82923.9,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-MK",
+     "topic": "elections",
+     "notional_24h": 1233.37,
+     "volume_24h": 37374.83,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXTIME-26-JP",
+     "topic": "culture",
+     "notional_24h": 1198.66,
+     "volume_24h": 29966.49,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-CHR",
+     "topic": "culture",
+     "notional_24h": 1088.41,
+     "volume_24h": 36280.23,
      "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
     }
    ],
