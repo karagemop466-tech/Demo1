@@ -823,6 +823,19 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 
 **A-4 (integration):** PR from `arena/ca4f2da1-demo1` to `main`, merge, Pages deploy check — recorded below when done.
 
+
+## Publish record — session arena/3c2c8403-demo1 (T14)
+
+| Item | Result |
+|---|---|
+| PR #34 — category-first landing + verification record | **MERGED** 2026-11-20T12:57:17Z via `gh pr merge 34 --merge`, merge commit `0b31506`. One conflict round with main (the COORDINATION.md sections of PRs #33/#36) resolved by keeping both sections; no content dropped. |
+| PR checks on PR #34 | `check` pass, `links` pass |
+| GitHub Pages | `Deploy static site to GitHub Pages` run `44740086669` success; `pages build and deployment` run `44740085927` success; Pages API status `built`, error `null` |
+| Live verification | https://karagemop466-tech.github.io/Demo1/ fetched after deploy: shows the category landing (1,399 open · 2,117 resolved · 352 closed awaiting result, per-topic table, corrected claims). https://karagemop466-tech.github.io/Demo1/docs/verification-3c2c8403.html fetched: irregularities V-1…V-9 with source links. |
+| Note | An early fetch of the root URL returned the pre-merge page from a cache; a second fetch with a query string returned the new page. |
+| Follow-up | Relabelled the verification page as "Flagged for Review: landing check" and added a tile to the landing page (follow-up PR, same session). |
+| Open requests (not in this session's scope) | V-6: older desks still show production/stale values. V-7: generated `site/*.html` still say "Resolved 2469" → fix label in `build_site.py`. |
+
 ### Integration record — session arena/ca4f2da1-demo1 (A-4 done)
 
 | Item | Result |
