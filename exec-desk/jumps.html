@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price jumps ≥ $0.10 — Kalshi Demo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Sharp price jumps (≥ $0.10)</h1>
+  <p class="sub">Live scan of the five tracked topics (Gas prices · Elections · Culture · Crypto · Golf) on the Kalshi
+    <b>demo</b> exchange. A “jump” is a move of <b>$0.10 or more in either direction</b> between consecutive official
+    1-minute candle closes. Each row links to the market on Kalshi and to a news search for that event — the search
+    link is a starting point for investigation, <b>not</b> a verified cause (see <a href="flagged.html">Flagged for Review</a>).
+    Source of every price: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">official candlesticks API</a>.</p>
+
+  <div id="conn-banner" class="banner" hidden></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="controls" style="margin-top:0">
+      <span class="meta">Threshold</span>
+      <div class="seg" id="th-seg">
+        <button data-th="0.10" class="on">$0.10</button>
+        <button data-th="0.05">$0.05</button>
+        <button data-th="0.20">$0.20</button>
+      </div>
+      <span class="meta" style="margin-left:12px">Window</span>
+      <div class="seg" id="win-seg">
+        <button data-win="3600" class="on">Last hour</button>
+        <button data-win="86400">Last 24h</button>
+      </div>
+      <span class="meta" style="margin-left:auto" id="asof"></span>
+      <button class="btn sub sm" id="btn-refresh">Scan now</button>
+    </div>
+    <div class="meta" id="scan-note">Scanning top markets by 24h $ volume per topic…</div>
+  </div>
+
+  <div class="table-scroll">
+    <table class="data" id="jump-table">
+      <thead>
+        <tr>
+          <th>Jump time (UTC)</th><th>Topic</th><th>Event / market</th><th>Ticker</th>
+          <th class="num">From $</th><th class="num">To $</th><th class="num">Δ $</th>
+          <th>Market link</th><th>News search (cause unverified)</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="9" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="meta">Method: for the top markets per topic (ranked by computed 24h $ volume =
+    <span class="mono">volume_24h_fp × last_price_dollars</span>, UNVERIFIED-04), fetch official 1-minute candles
+    (<span class="mono">GET /series/{series}/markets/{ticker}/candlesticks?period_interval=1</span>) and flag consecutive
+    closes differing by ≥ the selected threshold. Demo prices may not reflect real markets (UNVERIFIED-05).
+    No cause is asserted for any jump — use the news search to investigate.</div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/kalshi.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/jumps.js"></script>
+</body>
+</html>
