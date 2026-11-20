@@ -87,6 +87,10 @@ class Test(unittest.TestCase):
         def fake_http(url, retries=1):
             if "/events?tickers=" in url:
                 return {"events": [GAS_EVENT, BTC_EVENT]}
+            if "series_ticker=KXAAAGASMIN" in url:
+                return {"events": [GAS_EVENT]}
+            if "series_ticker=KXBTCMINMON" in url:
+                return {"events": [BTC_EVENT]}
             if "/events?" in url and "status=open" in url:
                 return {"events": [GAS_EVENT, BTC_EVENT], "cursor": ""}
             if "/series?category=Economics" in url:

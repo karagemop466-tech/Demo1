@@ -80,7 +80,9 @@ KEYWORDS_FOR_TOPIC = {
     "culture": [],
 }
 
-MAX_PAGES_EVENTS = 18          # 200 events/page -> up to 3600 open events scanned
+MAX_PAGES_EVENTS = 25          # 200 events/page -> up to 5000 open events scanned
+UNDERCOVER_THRESHOLD = 5       # topics with fewer matches get a targeted per-series fetch
+UNDERCOVER_SERIES_CAP = 60     # per-topic series cap for the targeted fetch (bounded runtime)
 TOP_EVENTS_PER_TOPIC = 8       # events captured per topic in snapshot
 TOP_MARKETS_FOR_BOOK = 4       # orderbooks fetched per topic
 TOP_MARKETS_FOR_HISTORY = 3    # candlestick series fetched per topic
@@ -348,6 +350,36 @@ def main():
         topic = classify_event(ev, series_map)
         if topic:
             by_topic[topic].append(ev)
+
+    # Targeted per-series fetch for under-covered topics: the global scan is alphabetical,
+    # so series late in the alphabet (KXB*, KXS*...) can fall off the page cap. This tops up
+    # those topics directly from their verified series list (bounded, throttled).
+    covered = set()
+    for topic in TOPICS:
+        if len(by_topic[topic]) >= UNDERCOVER_THRESHOLD or not series_map.get(topic):
+            continue
+        for st in sorted(series_map[topic])[:UNDERCOVER_SERIES_CAP]:
+            try:
+                q = f"/events?limit=200&status=open&with_nested_markets=true&series_ticker={urllib.parse.quote(st)}"
+                data = http_get_json(BASE + q)
+                for ev in data.get("events") or []:
+                    if ev.get("event_ticker") in covered:
+                        continue
+                    covered.add(ev.get("event_ticker"))
+                    by_topic[topic].append(ev)
+                time.sleep(REQUEST_GAP_S)
+            except Exception as e:
+                errors.append(f"per_series[{topic}/{st}]: {e}")
+    for topic in TOPICS:
+        # dedupe (global scan + per-series can overlap)
+        seen, uniq = set(), []
+        for ev in by_topic[topic]:
+            t = ev.get("event_ticker")
+            if t in seen:
+                continue
+            seen.add(t)
+            uniq.append(ev)
+        by_topic[topic] = uniq
 
     # 3) Rank + build snapshot
     snapshot_topics = {}

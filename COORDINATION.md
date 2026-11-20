@@ -16,6 +16,50 @@ Sessions in this repo:
 - Never mark anything verified without checking it against an official source; link that source.
 - Shared outputs (table data, site index/navigation) are changed only by the final integration session once all other tasks are done.
 
+
+## Tasks — session arena/4df8be5b-demo1 (live data + verification build)
+
+| # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
+|---|------|--------|------------|------------|---------|--------------|----------------|
+| 20 | Live official-market snapshot collection script + generated verified dataset (gas/elections/culture/crypto/golf), resolved-outcome tracking | in progress | arena/4df8be5b-demo1 | `tools/collect_kalshi.py`, `data/markets.json`, `data/metadata.json`, `.github/workflows/live-data.yml` | docs.kalshi.com (See sources log) | Live fetch from `external-api.demo.kalshi.co` on GitHub Actions runners; every value carries the API URL it came from | Demo environment is a test exchange; values are demo-book values, not real-money liquidity |
+| 21 | Verified static site build: landing + category pages + price-history chart (time axis, s/m/h windows) + depth-at-price + portfolio/trades documentation | in progress | arena/4df8be5b-demo1 | `build_site.py`, `site/**` (generated), `assets/**`, `pages/**` | docs.kalshi.com | Build validates every row has a source URL and every internal link resolves | Auth-only items (portfolio, order placement) cannot be verified without a demo API key — flagged, blank |
+| 22 | Final integration: pull combined data, broken-link check, PR to main, merge, confirm Pages deploy | unclaimed | — | GitHub Actions / repo settings | — | — | — |
+
+Claim log entry: 2026-11-20 — arena/4df8be5b-demo1 claimed tasks 20-21 (new file scope only; no edits to existing session files other than this board and the generated `site/` tree added by final integration).
+
+
+## Tasks — session arena/4df8be5b-demo1 (verified live data + source-linked site)
+
+| # | Task | Status | Owner | File scope | Verification |
+|---|---|---|---|---|---|
+| 20 | Official demo-API collection: series, markets (open/settled/closed), events, order books, candlesticks, public trades | done | arena/4df8be5b-demo1 | `tools/collect_kalshi.py`, `snapshot/**`, `.github/workflows/live-data.yml` | Run 44728543994 on a GitHub runner: 485 requests, **0 failures**; log committed at `snapshot/collect-log.txt`; every record stores the exact request URL |
+| 21 | Verified static site build (17 checks, broken-link gate) + data browser + chart + portfolio/reporting pages | done | arena/4df8be5b-demo1 | `build_site.py`, `site/**`, `site_src/**` | `python build_site.py` exits 0 with "link check: OK"; `node tools/check-links.mjs` PASS; every table row carries an official request URL |
+| 22 | Read-only demo-account worker (no write path) so portfolio renders once a key exists | done | arena/4df8be5b-demo1 | `tools/account_worker.py`, `.github/workflows/account.yml` | Verified it refuses to run without credentials and writes nothing; signing follows the documented message format |
+| 23 | Integration with parallel sessions' work | done | arena/4df8be5b-demo1 | merge commit `f3bd9a3` | Merged origin/main (PRs #8–#13). Kept main's hub `index.html`, `data/` cron schema, `assets/style.css`, and `pages.yml` audit steps; added `site/` build + audit step to that workflow. Snapshot isolated in `snapshot/` so main's 15-minute `data/` cron cannot overwrite it. No session's work discarded. |
+
+### Sources (this session)
+- https://docs.kalshi.com/getting_started/api_environments (REST/WS base URLs, demo hosts)
+- https://docs.kalshi.com/getting_started/quick_start_market_data (public endpoints, order book example)
+- https://docs.kalshi.com/getting_started/quick_start_authenticated_requests (signing: ts+method+path; RSA-PSS/Ed25519)
+- https://docs.kalshi.com/getting_started/quick_start_websockets (WS handshake requires a signed session)
+- https://docs.kalshi.com/getting_started/orderbook_responses (bids only; ask = 1.00 − opposite bid)
+- https://docs.kalshi.com/getting_started/market_lifecycle (statuses; settled ↔ finalized; result values)
+- https://docs.kalshi.com/api-reference/market/get-markets, /get-market-orderbook, /get-market-candlesticks,
+  /get-trades, /get-series-list, /api-reference/events/get-events,
+  /api-reference/portfolio/get-balance, /get-positions, /get-fills, /api-reference/orders/create-order-v2
+- https://docs.kalshi.com/getting_started/demo_env (demo = mock funds; not representative of real markets)
+
+### Irregularities flagged (published on site/flagged.html)
+1. Demo venue only — values are not production liquidity (official warning on demo_env page).
+2. No demo API key in the repo or environment → portfolio/fills/settlements have **no numbers**; the read-only
+   worker is provided instead of fabricated figures. A static Pages site must never hold a key.
+3. No orders placed; `tools/account_worker.py` has no write path.
+4. "Highest dollar amount" is not a Kalshi field: ranking uses computed 24 h traded notional, disclosed per row.
+5. Topic rules are published regexes; matches resting on series **ticker/tags** rather than title is flagged
+   (28 of 50 selected series in the current snapshot — mostly short titles like "US gas price up").
+6. Fee-adjusted edge not shown; fee formula not yet verified against the official fee schedule.
+7. Sub-minute chart resolution is not offered by REST candlesticks; streaming needs the authenticated WS handshake.
+
 ## Tasks — session arena-a443fb8f-demo1
 
 | # | Task | Status | Session ID | File scope | Sources | Verification | Irregularities |
@@ -410,7 +454,7 @@ Integration requests: (a) add nav links to `pages/demo-live.html` and `pages/pap
 | 5 | Demo trading scaffold (Python, signed; order V2; strategies disabled) | done | create-order-v2, cancel-order-v2, get-balance, auth quick start | Refuses without creds + KALSHI_ALLOW_TRADING=1 | Blocked on demo credentials (F4) |
 | 6 | docs/ data hub: live dashboard (chart windows seconds→7d, depth, liquidity), resolutions (YES/NO), portfolio, suggestions+questions, flagged, verification, review, sources | done | per-row official links | node --check pass; JSON validity pass; internal link audit pass | Seed snapshot sample:true until first CI run (F7) |
 | 7 | Executive summary + SOURCES.md + REVIEW.md | done | see files | — | — |
-| 8 | Final integration (nav/README tiles + PR #16 + merge + Pages confirm) | in progress | — | PR #16: https://github.com/karagemop466-tech/Demo1/pull/16 | — |
+| 8 | Final integration (nav/README tiles + PR #16 + merge + Pages confirm) | done (follow-up fix PR also records board) | — | PR #16: https://github.com/karagemop466-tech/Demo1/pull/16 | — |
 
 ## Cross-file requests (not applied to owned files)
 
@@ -515,6 +559,7 @@ Claimed 2026-11-20 ~11:15 UTC at base commit `4a225ce`. Branch name is fixed by 
 | 2026-11-20 | `index.html`, `dashboard.html`, `markets.html`, `portfolio.html`, `questions.html`, `suggestions.html`, `flagged.html`, `README.md`, `.nojekyll`, `COORDINATION.md` | Before pushing, `origin/main` had advanced from `4a225ce` to `db76c63`: four other sessions merged their own sites and each had also written **root-level** pages with the same filenames this desk chose (PRs #11, #12, #16, #17, #18). `git merge-tree` predicted add/add conflicts on all of them | **No other session's file was overwritten or deleted.** This desk relocated in full to `verified-desk/` (pages + assets + data + tests + tools) in commit `b567888`, matching the `docs/`, `live-desk/`, `monitor/`, `strategy-desk/` convention main had already established. `README.md` and root `index.html` took **theirs**, then received one additive section each. `COORDINATION.md` took theirs (the accumulated board) and this section is appended. `.nojekyll` already existed on main — this desk's copy was dropped. Result: only `COORDINATION.md` conflicted; canonical `tools/check-links.mjs` passes repo-wide afterwards |
 | 2026-11-20 | `assets/app.js` (pre-move) | Latent contention: tasks 4/5/8/9 all needed one shell file. Resolved by keeping `dataTable`/`NAV`/renderers in one integration-owned module and pages as pure markup | noted above as a convention |
 
+| 2026-11-20 | `.gitignore` | Second collision while PR #20 was open: `main` advanced again (PRs #14 and #19 merged, incl. a `snapshot/` isolation move by session 4df8be5b). Only `.gitignore` conflicted (add/add) — `index.html`, `README.md` and this board auto-merged, so the additive desk sections from both sides survived | Resolved as a **union**: main's Python/build-output comments kept verbatim, this desk's `node_modules/` line (optional jsdom dev dependency) added with its comment. Re-ran all three gates after the merge: 48 desk tests pass, `verified-desk/tools/check_links.py` clean, canonical `node tools/check-links.mjs` PASS |
 ## Irregularities flagged by this session (mirrored on `verified-desk/flagged.html`)
 
 | ID | Item | Severity |

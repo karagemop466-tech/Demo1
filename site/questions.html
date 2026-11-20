@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions, information and answers · Kalshi Demo Research</title>
+<meta name="description" content="Verified Kalshi demo-market research dashboard: live official API data for gas prices, elections, culture, crypto and golf, with every row linked to its source.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Research</a>
+    <nav class="nav"><a href='index.html'>Overview</a><a href='markets.html'>Live markets</a><a href='gas-prices.html'>Gas prices</a><a href='elections.html'>Elections</a><a href='culture.html'>Culture</a><a href='crypto.html'>Crypto</a><a href='golf.html'>Golf</a><a href='resolved.html'>Resolved</a><a href='liquidity.html'>Liquidity &amp; chart</a><a href='portfolio.html'>Portfolio</a><a href='strategies.html'>Strategies</a><a href='suggestions.html'>Suggestions</a><a href='questions.html' class='on'>Questions</a><a href='explore.html'>Data browser</a><a href='flagged.html'>Flagged for review</a><a href='sources.html'>Sources</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Decision preconditions · unknowns stated plainly</p>
+    <h1>Questions, information and answers</h1>
+  </div>
+  
+<div class="callout">
+  <b>Read this before trusting any number.</b> These are the questions that must be answered before a trading or
+  design decision can be made fairly from what we have. For each: what is known from an official source, what is
+  genuinely missing, and the specific input that would resolve it.
+</div>
+<div class='tablewrap'><table class='wide'><thead><tr><th>#</th><th>Question</th><th>What we know (official)</th><th>What is missing</th><th>What would resolve it</th><th>Source</th></tr></thead><tbody><tr><td><b>Q1</b></td><td>Is there a Kalshi demo API key available for this project, and may a server-side worker use it?</td><td>No key exists in the repository or the build environment (verified by inspection).</td><td>Every portfolio, fills and settlement figure is blank because of this — not because the API failed.</td><td>A read-only demo key issued from demo.kalshi.co. Until then portfolio analysis cannot be verified.</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_authenticated_requests' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q2</b></td><td>Should the dashboard be allowed to place real orders on the demo exchange?</td><td>Order placement requires a signed request to POST /portfolio/events/orders.</td><td>No order has been placed and no order form is live.</td><td>Explicit go/no-go plus risk limits (max order size, daily loss cap, permitted topics, kill switch).</td><td><a href='https://docs.kalshi.com/api-reference/orders/create-order-v2' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q3</b></td><td>What exactly does “highest dollar amount live events” mean?</td><td>Three defensible readings: dollars traded, dollars of resting depth, open interest × price.</td><td>The dashboard currently shows a computed 24 h traded notional and labels it as such.</td><td>A definition. Until chosen, ranking is disclosed as one interpretation, not the only one.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-trades' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q4</b></td><td>Is the demo exchange&#x27;s liquidity representative of production?</td><td>Demo and production are separate environments with separate credentials and separate books.</td><td>Conclusion: demo depth cannot be used to estimate real fill sizes.</td><td>Confirm that strategy calibration on demo data is acceptable, or provide a production read-only key.</td><td><a href='https://docs.kalshi.com/getting_started/api_environments' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q5</b></td><td>Which series belong to each of the five topics?</td><td>The API exposes discovery categories and tags, but no project-specific topic taxonomy.</td><td>Keyword/category rules are published per topic page with the match reason for every series.</td><td>Approve or edit the series allowlist per topic.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-series-list' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q6</b></td><td>How should fees and net edge be computed?</td><td>Each series reports fee_type and fee_multiplier; fees are quadratic and price-dependent.</td><td>Gross spreads are shown and explicitly labelled as pre-fee.</td><td>Verification of the fee formula against the official fee schedule before any net figure is published.</td><td><a href='https://kalshi.com/docs/kalshi-fee-schedule.pdf' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q7</b></td><td>How fresh must prices be?</td><td>REST candlesticks support only 1/60/1440-minute buckets and can trail trades by seconds; streaming needs a signed WebSocket session.</td><td>Charts show bucketed official history, not tick data.</td><td>A refresh target (e.g. sub-minute) decides whether streaming is required.</td><td><a href='https://docs.kalshi.com/getting_started/quick_start_websockets' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q8</b></td><td>What is the minimum sample before a strategy performance claim is shown?</td><td>Nothing on the site currently claims strategy performance.</td><td>Win rates and averages are withheld until closed trades exist.</td><td>A threshold (e.g. ≥ 30 closed trades) below which the dashboard reports “insufficient sample”.</td><td><a href='https://docs.kalshi.com/api-reference/portfolio/get-positions' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q9</b></td><td>Should resolved markets outside the five topics be tracked?</td><td>Collection is limited to matched series by design.</td><td>Resolved tables include only gas, elections, culture, crypto, golf.</td><td>Confirm the scope limit is intended.</td><td><a href='https://docs.kalshi.com/api-reference/market/get-markets' target='_blank' rel='noreferrer'>official ↗</a></td></tr><tr><td><b>Q10</b></td><td>Who reviews the flagged irregularities, and how often?</td><td>Flagged items are published openly on the site.</td><td>Irregularities do not block publication; they are listed with sources.</td><td>A review cadence and an owner.</td><td><a href='flagged.html'>flagged.html</a></td></tr></tbody></table></div>
+
+<h2>Information we do not have (and did not invent)</h2>
+<ul class="tight">
+  <li>Demo-account cash, positions, fills, fees and realised P&amp;L — no key.</li>
+  <li>Fee-adjusted edge for any market — fee formula not yet verified per series.</li>
+  <li>Production liquidity, order-book depth and slippage — demo books are separate.</li>
+  <li>Seconds-level price history — not offered by REST candlesticks.</li>
+  <li>Any forward-looking forecast — out of scope; the dashboard reports market prices, not our predictions.</li>
+</ul>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="fine"><a href="../index.html">Repository home</a> ·
+    <a href="../pages/landing-executive-summary.html">Research notes (earlier pages)</a> ·
+    <a href="../archive/monitor.html">Archived single-page monitor</a></p>
+    <p>Data snapshot: <b>2026-11-20T11:43:59Z</b> · Source: official Kalshi demo Trade API
+    (<a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">external-api.demo.kalshi.co/trade-api/v2</a>) ·
+    Documentation: <a href="https://docs.kalshi.com">docs.kalshi.com</a></p>
+    <p class="fine">The Kalshi demo environment is a test exchange. Prices, depth and balances there are simulated, not real-money liquidity.
+    Values absent from the API are shown as “—” and are never inferred. Unverified items are listed on
+    <a href="flagged.html">Flagged for review</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

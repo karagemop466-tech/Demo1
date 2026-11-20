@@ -1,0 +1,152 @@
+[11:43:59] exchange/status err=None payload={"exchange_active": true, "exchange_index_statuses": [{"description": "Default", "exchange_active": true, "exchange_index": 0, "intra_exchange_transfers_active"
+[11:44:01] series: 16643 returned
+[11:44:01] topic gas_prices: 142 series matched, collecting 10
+[11:44:04]   KXAAAGASW: open=21 settled=60 closed=0
+[11:44:07]   KXAAAGASM: open=31 settled=60 closed=0
+[11:44:10]   KXAAAGASD: open=3 settled=60 closed=17
+[11:44:12]   KXAAAGASMTX: open=15 settled=24 closed=0
+[11:44:13]   KXNGASMAX: open=7 settled=0 closed=0
+[11:44:14]   KXAAAGASMINCA: open=4 settled=3 closed=0
+[11:44:15]   KXAAAGASMINTX: open=6 settled=2 closed=0
+[11:44:17]   KXAAAGASWNJ: open=21 settled=60 closed=0
+[11:44:20]   KXAAAGASDGA: open=0 settled=60 closed=0
+[11:44:21]   KXAAAGASMAXCA: open=8 settled=21 closed=0
+[11:44:24]   notional KXAAAGASW-26NOV23-3.6400: 2746.88 from 4292 trades err=None
+[11:44:26]   notional KXAAAGASW-26NOV23-3.6200: 3811.23 from 3892 trades err=None
+[11:44:29]   notional KXAAAGASW-26NOV23-3.6600: 88.0 from 4158 trades err=None
+[11:44:29]   notional KXAAAGASM-26NOV30-3.50: 1772.32 from 31 trades err=None
+[11:44:30]   notional KXAAAGASW-26NOV23-3.6000: 938.63 from 955 trades err=None
+[11:44:30]   notional KXAAAGASW-26NOV23-3.6800: 24.31 from 609 trades err=None
+[11:44:31]   orderbook KXAAAGASW-26NOV23-3.6400: err=None
+[11:44:31]   orderbook KXAAAGASW-26NOV23-3.6200: err=None
+[11:44:31]   orderbook KXAAAGASW-26NOV23-3.6600: err=None
+[11:44:31]   orderbook KXAAAGASM-26NOV30-3.50: err=None
+[11:44:32]   orderbook KXAAAGASW-26NOV23-3.6000: err=None
+[11:44:32]   orderbook KXAAAGASW-26NOV23-3.6800: err=None
+[11:44:32]   candles KXAAAGASW-26NOV23-3.6400 1m/6h: 342 points err=None
+[11:44:33]   candles KXAAAGASW-26NOV23-3.6400 1h/7d: 62 points err=None
+[11:44:33]   candles KXAAAGASW-26NOV23-3.6400 1d/90d: 4 points err=None
+[11:44:33]   candles KXAAAGASW-26NOV23-3.6200 1m/6h: 340 points err=None
+[11:44:34]   candles KXAAAGASW-26NOV23-3.6200 1h/7d: 71 points err=None
+[11:44:34]   candles KXAAAGASW-26NOV23-3.6200 1d/90d: 4 points err=None
+[11:44:34] topic elections: 2472 series matched, collecting 10
+[11:44:36]   KXPRESNOMD: open=60 settled=0 closed=1
+[11:44:37]   KXPRESPERSON: open=53 settled=0 closed=0
+[11:44:38]   KXPRESNOMR: open=56 settled=0 closed=0
+[11:44:40]   KXGOVCA: open=0 settled=25 closed=0
+[11:44:41]   KXGOVCAPRIMARY: open=0 settled=15 closed=0
+[11:44:44]   KXWTI: open=60 settled=60 closed=15
+[11:44:45]   KXGOVAK: open=8 settled=0 closed=0
+[11:44:47]   KXMAYORLA: open=18 settled=0 closed=0
+[11:44:48]   KXCAGOVPRIMARY1ST: open=0 settled=8 closed=0
+[11:44:49]   KXMOVVAREDISTRICT: open=0 settled=8 closed=0
+[11:44:54]   notional KXPRESNOMD-28-AYAN: 525.33 from 7658 trades err=None
+[11:44:58]   notional KXPRESNOMR-28-LHOG: 522.72 from 7743 trades err=None
+[11:45:03]   notional KXPRESNOMR-28-ETRU: 521.18 from 7375 trades err=None
+[11:45:07]   notional KXPRESPERSON-28-MOBA: 523.67 from 6387 trades err=None
+[11:45:11]   notional KXPRESNOMR-28-MPEN: 520.75 from 7184 trades err=None
+[11:45:16]   notional KXPRESNOMR-28-MTG: 711.94 from 7719 trades err=None
+[11:45:16]   orderbook KXPRESNOMD-28-AYAN: err=None
+[11:45:16]   orderbook KXPRESNOMR-28-LHOG: err=None
+[11:45:16]   orderbook KXPRESNOMR-28-ETRU: err=None
+[11:45:17]   orderbook KXPRESPERSON-28-MOBA: err=None
+[11:45:17]   orderbook KXPRESNOMR-28-MPEN: err=None
+[11:45:17]   orderbook KXPRESNOMR-28-MTG: err=None
+[11:45:17]   candles KXPRESNOMD-28-AYAN 1m/6h: 360 points err=None
+[11:45:18]   candles KXPRESNOMD-28-AYAN 1h/7d: 154 points err=None
+[11:45:18]   candles KXPRESNOMD-28-AYAN 1d/90d: 71 points err=None
+[11:45:19]   candles KXPRESNOMR-28-LHOG 1m/6h: 360 points err=None
+[11:45:19]   candles KXPRESNOMR-28-LHOG 1h/7d: 165 points err=None
+[11:45:19]   candles KXPRESNOMR-28-LHOG 1d/90d: 14 points err=None
+[11:45:20] topic culture: 1140 series matched, collecting 10
+[11:45:25]   KXRT: open=60 settled=60 closed=0
+[11:45:27]   KXOSCARPIC: open=41 settled=16 closed=0
+[11:45:28]   KXMETGALA: open=0 settled=31 closed=0
+[11:45:30]   KXSURVIVOR: open=0 settled=26 closed=0
+[11:45:31]   KXBIGBROTHER: open=0 settled=17 closed=0
+[11:45:33]   KXRANKLISTSONGSPOTUSA: open=0 settled=60 closed=0
+[11:45:34]   KXOSCARACTO: open=25 settled=16 closed=0
+[11:45:36]   KXTOPALBUMRECORD: open=0 settled=22 closed=0
+[11:45:41]   KXNETFLIXRANKSHOW: open=12 settled=60 closed=60
+[11:45:43]   KXOSCARNOMPIC: open=53 settled=60 closed=0
+[11:45:44]   notional KXRT-FUR-85: 1697.75 from 1262 trades err=None
+[11:45:44]   notional KXOSCARPIC-27-INV: 333.33 from 3 trades err=None
+[11:45:45]   notional KXOSCARPIC-27-WIL: 333.33 from 3 trades err=None
+[11:45:45]   notional KXOSCARPIC-27-ART: 333.33 from 3 trades err=None
+[11:45:49]   notional KXRT-HUN-77: 748.57 from 6909 trades err=None
+[11:45:52]   notional KXRT-HUN-72: 2142.04 from 4913 trades err=None
+[11:45:52]   orderbook KXRT-FUR-85: err=None
+[11:45:52]   orderbook KXOSCARPIC-27-INV: err=None
+[11:45:53]   orderbook KXOSCARPIC-27-WIL: err=None
+[11:45:53]   orderbook KXOSCARPIC-27-ART: err=None
+[11:45:53]   orderbook KXRT-HUN-77: err=None
+[11:45:53]   orderbook KXRT-HUN-72: err=None
+[11:45:54]   candles KXRT-FUR-85 1m/6h: 319 points err=None
+[11:45:54]   candles KXRT-FUR-85 1h/7d: 56 points err=None
+[11:45:54]   candles KXRT-FUR-85 1d/90d: 6 points err=None
+[11:45:55]   candles KXOSCARPIC-27-INV 1m/6h: 298 points err=None
+[11:45:55]   candles KXOSCARPIC-27-INV 1h/7d: 121 points err=None
+[11:45:56]   candles KXOSCARPIC-27-INV 1d/90d: 8 points err=None
+[11:45:56] topic crypto: 306 series matched, collecting 10
+[11:46:01]   KXBTCD: open=60 settled=60 closed=60
+[11:46:02]   KXBTCY: open=28 settled=0 closed=0
+[11:46:06]   KXBTCMAXMON: open=8 settled=60 closed=0
+[11:46:07]   KXETHY: open=18 settled=0 closed=0
+[11:46:11]   KXETHD: open=60 settled=60 closed=60
+[11:46:14]   KXBTC: open=60 settled=60 closed=60
+[11:46:18]   KXETH: open=60 settled=60 closed=60
+[11:46:21]   KXXRP: open=60 settled=60 closed=60
+[11:46:24]   KXXRPD: open=60 settled=60 closed=60
+[11:46:28]   KXDOGE: open=60 settled=60 closed=60
+[11:46:28]   notional KXBTCY-27JAN0100-T149999.99: 1503.6 from 650 trades err=None
+[11:46:28]   notional KXBTCY-27JAN0100-B127500: 1004.0 from 419 trades err=None
+[11:46:29]   notional KXBTCY-27JAN0100-B112500: 1003.9 from 403 trades err=None
+[11:46:30]   notional KXBTCY-27JAN0100-B107500: 978.77 from 954 trades err=None
+[11:46:30]   notional KXBTCY-27JAN0100-B117500: 978.6 from 863 trades err=None
+[11:46:31]   notional KXBTCY-27JAN0100-B97500: 708.43 from 930 trades err=None
+[11:46:31]   orderbook KXBTCY-27JAN0100-T149999.99: err=None
+[11:46:31]   orderbook KXBTCY-27JAN0100-B127500: err=None
+[11:46:31]   orderbook KXBTCY-27JAN0100-B112500: err=None
+[11:46:32]   orderbook KXBTCY-27JAN0100-B107500: err=None
+[11:46:32]   orderbook KXBTCY-27JAN0100-B117500: err=None
+[11:46:32]   orderbook KXBTCY-27JAN0100-B97500: err=None
+[11:46:33]   candles KXBTCY-27JAN0100-T149999.99 1m/6h: 344 points err=None
+[11:46:33]   candles KXBTCY-27JAN0100-T149999.99 1h/7d: 142 points err=None
+[11:46:33]   candles KXBTCY-27JAN0100-T149999.99 1d/90d: 90 points err=None
+[11:46:34]   candles KXBTCY-27JAN0100-B127500 1m/6h: 347 points err=None
+[11:46:34]   candles KXBTCY-27JAN0100-B127500 1h/7d: 147 points err=None
+[11:46:35]   candles KXBTCY-27JAN0100-B127500 1d/90d: 90 points err=None
+[11:46:35] topic golf: 148 series matched, collecting 10
+[11:46:37]   KXPGATOUR: open=60 settled=60 closed=0
+[11:46:39]   KXDPWORLDTOUR: open=0 settled=60 closed=0
+[11:46:41]   KXPGAR1LEAD: open=3 settled=60 closed=0
+[11:46:44]   KXPGATOP20: open=60 settled=60 closed=14
+[11:46:46]   KXLPGATOUR: open=60 settled=60 closed=0
+[11:46:48]   KXPGATOP10: open=60 settled=60 closed=14
+[11:46:50]   KXDPWORLDTOURR1LEAD: open=0 settled=60 closed=0
+[11:46:53]   KXPGATOP5: open=60 settled=60 closed=14
+[11:46:54]   KXLIVTOUR: open=0 settled=60 closed=0
+[11:46:56]   KXPGAR2LEAD: open=60 settled=60 closed=0
+[11:47:01]   notional KXPGATOUR-THRC26-TMOO: 4206.97 from 7655 trades err=None
+[11:47:05]   notional KXPGATOUR-THRC26-SSTR: 6162.2 from 7839 trades err=None
+[11:47:10]   notional KXPGATOUR-THRC26-MPEN: 2555.05 from 7605 trades err=None
+[11:47:15]   notional KXPGATOUR-THRC26-MPAV: 1370.31 from 7585 trades err=None
+[11:47:19]   notional KXPGATOUR-THRC26-SSTE: 2046.65 from 7649 trades err=None
+[11:47:22]   notional KXPGATOUR-THRC26-ZBLA: 2036.4 from 5961 trades err=None
+[11:47:23]   orderbook KXPGATOUR-THRC26-TMOO: err=None
+[11:47:23]   orderbook KXPGATOUR-THRC26-SSTR: err=None
+[11:47:23]   orderbook KXPGATOUR-THRC26-MPEN: err=None
+[11:47:23]   orderbook KXPGATOUR-THRC26-MPAV: err=None
+[11:47:24]   orderbook KXPGATOUR-THRC26-SSTE: err=None
+[11:47:24]   orderbook KXPGATOUR-THRC26-ZBLA: err=None
+[11:47:24]   candles KXPGATOUR-THRC26-TMOO 1m/6h: 357 points err=None
+[11:47:25]   candles KXPGATOUR-THRC26-TMOO 1h/7d: 73 points err=None
+[11:47:25]   candles KXPGATOUR-THRC26-TMOO 1d/90d: 3 points err=None
+[11:47:26]   candles KXPGATOUR-THRC26-SSTR 1m/6h: 358 points err=None
+[11:47:26]   candles KXPGATOUR-THRC26-SSTR 1h/7d: 59 points err=None
+[11:47:26]   candles KXPGATOUR-THRC26-SSTR 1d/90d: 3 points err=None
+[11:47:26] wrote snapshot/metadata.json (1660756 bytes)
+[11:47:26] wrote snapshot/markets.json (3049550 bytes)
+[11:47:26] wrote snapshot/resolved.json (5398249 bytes)
+[11:47:26] wrote snapshot/charts.json (1289916 bytes)
+[11:47:26] done: open=1399 resolved=2469 charts=10 requests=494 failed=0
