@@ -85,7 +85,7 @@ Checked on 2026-11-20 with `git ls-files`, `git branch -a`, `git ls-remote origi
 ## Pull request and deploy
 
 - Branch: `arena/175cafdf-demo1` → `main`.
-- PR: recorded below once created.
+- PR: https://github.com/karagemop466-tech/Demo1/pull/5 (base `main`, head `arena/175cafdf-demo1`). Merge method: merge commit, after the Pages build check.
 - GitHub Pages: source `main` branch, folder `/docs`.
 
 ## Log
