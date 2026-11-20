@@ -47,6 +47,7 @@ for (const f of files) {
   while ((m = attr.exec(text))) {
     const raw = m[1];
     if (/^(https?:|mailto:|data:|#|\/\/)/.test(raw)) continue;
+    if (raw.includes('${') || raw.includes('" +') || raw.includes("' +")) continue;   /* template-literal placeholder built at runtime, not a static link */
     const target = path.resolve(here, raw.split('#')[0].split('?')[0]);
     if (!fs.existsSync(target)) broken.push(rel + ' → ' + raw);
   }
