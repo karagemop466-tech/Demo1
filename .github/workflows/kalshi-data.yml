@@ -19,6 +19,10 @@ on:
     paths-ignore:
       - "docs/data/**"
       - "**.md"
+  pull_request:
+    paths-ignore:
+      - "docs/data/**"
+      - "**.md"
 
 permissions:
   contents: write
