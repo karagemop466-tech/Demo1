@@ -114,12 +114,12 @@ The brief's two scrolling chat feeds, running in the browser against the officia
 
 | Path | What it is |
 |---|---|
-| `alerts.html` | Tape A = every contract move of ≥ **$0.10** in either direction across gas prices, elections, culture, crypto and golf; Tape B = only the lines that clear a published five-gate high-ROI screen. Auto-starts, polls every 15 s, pauses on hover, and every line carries its own source links. |
+| `alerts-live.html` | Tape A = every contract move of ≥ **$0.10** in either direction across gas prices, elections, culture, crypto and golf; Tape B = only the lines that clear a published five-gate high-ROI screen. Auto-starts, polls every 15 s, pauses on hover, and every line carries its own source links. |
 | `assets/alerts.js` | The engine: price series from `GET /markets` + `GET /markets/trades` (VWAP) + `GET /markets/orderbooks` (fillable ask and resting size), swing detection, the screen, and the blank-on-missing rule. |
 | `assets/alerts-app.js` | Page wiring: chat rendering, click-through sparkline, per-gate pass/fail breakdown, watchlist, 429 backoff. |
 | `docs/alerts-model.html` | The model spec: each gate as a formula with its official source, the fee maths (`t = 0.07·P·(1−P)`, rounded up to a centicent), and what the screen cannot see. No win rate or expected value is claimed. |
 | `tests/alerts.test.mjs` | 81 jsdom checks over both feeds (threshold both directions, blank cells, pause, source links, no-order rule). |
-| `alerts-snapshot.html` | Session `d973ced5`'s implementation of the same rule over the committed candlestick capture, preserved as built with a cross-reference banner. |
+| `alerts.html` (root) | Session `d973ced5`'s implementation over the committed candlestick capture, kept at the path it was merged to — `tests/alerts.test.mjs` (23 checks, session `b62e8188`) pins that page, so this session moved its own page to `alerts-live.html` instead of overwriting it. |
 
 Topic membership, the `≥ $0.10` baseline and every value on the page are traceable to a request; anything not confirmable is printed as **blank** and listed on `flagged.html` (section E records what this session found in the data pipeline, including the mis-categorised gas topic and the all-`$0.00` gas ranking).
 

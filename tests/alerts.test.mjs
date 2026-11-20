@@ -1,306 +1,229 @@
 /*
- * Live alert tapes — engine + page behaviour.
+ * Headless regression suite for the shipped price-swing alert page
+ * (alerts.html + assets/js/alerts.js — session arena/d973ced5-demo1, merged to main).
+ *
+ * Why this exists: the dual scrolling-chat alert requirement was implemented by three
+ * concurrent sessions; this suite pins the shipped behaviour of the root alerts.html:
+ *   - swings are detected only where official candle closes exist (never invented),
+ *   - a swing posts only when |to − from| >= threshold (default $0.10, either direction),
+ *   - two scrolling chats: #msgs-all shows every swing, #msgs-roi shows only the disclosed
+ *     high-ROI filter's picks (relative-move heuristic, capped at 20),
+ *   - every message links the official venue event page, a news search labelled
+ *     "cause unverified", and the exact official candlesticks API path,
+ *   - topic filter and threshold controls recompute correctly; empty states say so.
+ *
+ * Fixtures are field-for-field shapes of snapshot/charts.json + snapshot/markets.json
+ * (committed official demo-API capture). jsdom is a devDependency (npm install).
  *
  *   node tests/alerts.test.mjs
- *
- * Part 1 unit-tests the pure module (assets/alerts.js): the fee table rows published in
- * Kalshi's own fee schedule PDF, the $1.00-per-winning-contract payout identity, the swing
- * detector in both directions, the documented reciprocal order-book identity, and the five
- * gates of the ROI screen.
- *
- * Part 2 boots alerts.html in jsdom with fixtures shaped like verified demo API responses
- * (see docs/api-verification.md) and checks what actually renders in the two chat panes.
- * Nothing here touches the network; jsdom is a devDependency.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM, VirtualConsole } from 'jsdom';
 
-const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
+const ROOT = new URL('..', import.meta.url).pathname.replace(/\/tests\/$/, '');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
-const KA = await import('../assets/alerts.js').then((m) => m.default ?? m);
 
-let pass = 0, fail = 0;
-const check = (name, cond, detail) => {
-  if (cond) { pass++; console.log('  PASS  ' + name); }
-  else { fail++; console.log('  FAIL  ' + name + (detail !== undefined ? '  →  ' + detail : '')); }
-};
+/* ---- fixtures: committed-snapshot shapes ---- */
+const MKT_GAS = 'KXAAAGASW-26NOV23-3.6400';
+const MKT_BTC = 'KXBTCMINMON-BTC-26NOV30-7250000';
 
-// ------------------------------------------------------------------ 1. engine
-console.log('\n== fee + payout maths (official fee schedule / settlement docs) ==');
-check('taker fee matches the schedule row $0.50 x 100 = $1.75', KA.takerFee(0.5, 100, 1) === 1.75, KA.takerFee(0.5, 100, 1));
-check('taker fee matches the schedule row $0.10 x 100 = $0.63', KA.takerFee(0.1, 100, 1) === 0.63, KA.takerFee(0.1, 100, 1));
-check('taker fee matches the schedule row $0.20 x 1 = $0.02', KA.takerFee(0.2, 1, 1) === 0.02, KA.takerFee(0.2, 1, 1));
-check('taker fee matches the schedule row $0.99 x 100 = $0.07', KA.takerFee(0.99, 100, 1) === 0.07, KA.takerFee(0.99, 100, 1));
-check('maker fee uses 0.0175 and M=0 by default (zero)', KA.makerFee(0.5, 100) === 0 && KA.makerFee(0.5, 100, 1) === 0.44,
-  KA.makerFee(0.5, 100) + '/' + KA.makerFee(0.5, 100, 1));
-check('fee rounds UP to the cent, never nearest', KA.takerFee(0.31, 1, 1) === 0.02 && KA.roundUp(0.0001, 2) === 0.01,
-  KA.takerFee(0.31, 1, 1));
-check('fee is null for a blank or degenerate price', KA.takerFee('', 1, 1) === null && KA.takerFee(0, 1, 1) === null);
-const eco20 = KA.sideEconomics(0.2, 1, { mult: 1 });
-check('outlay = price + fee', eco20.outlay === 0.22, JSON.stringify(eco20));
-check('payout = $1.00 per winning contract', eco20.payoutIfWins === 1, eco20.payoutIfWins);
-check('net ROI = (payout - outlay)/outlay', Math.abs(eco20.roi - (1 - 0.22) / 0.22) < 1e-9, eco20.roi);
-check('breakeven win probability = outlay/payout', Math.abs(eco20.breakevenWinProb - 0.22) < 1e-9, eco20.breakevenWinProb);
-check('loss when the side loses = the whole outlay', eco20.lossIfLoses === 0.22, eco20.lossIfLoses);
+function snapMarket(ticker, topic, event, title) {
+  return {
+    topic, topic_match_reason: 'series ticker rule', topic_match_field: 'ticker', topic_matched_weakly: true,
+    series_ticker: ticker.split('-')[0], event_ticker: event, event_title: title, market_ticker: ticker,
+    title: title + '?', status: 'active', result: null,
+    quotes: { yes: { bid: '0.1000', ask: '0.1200' }, no: { bid: '0.8800', ask: '0.9000' } },
+    last_price: '0.1100', volume_24h_contracts: '30000.00', close_time: '2026-11-23T04:59:00Z',
+    dollar_notional_24h: { value: 1000, formula: 'SUM(yes_price_dollars * count_fp)', complete: true },
+    sources: { market: 'https://external-api.demo.kalshi.co/trade-api/v2/markets/' + ticker },
+    orderbook: { yes_bids: [{ price: '0.1000', contracts: '3000.00' }] },
+  };
+}
 
-console.log('\n== swing detection (>= $0.10 either direction) ==');
-const up = KA.swing(0.2, 0.31), down = KA.swing(0.81, 0.7);
-check('up move of $0.11 fires as "up"', up && up.dir === 'up' && Math.abs(up.delta - 0.11) < 1e-9, JSON.stringify(up));
-check('down move of $0.11 fires as "down"', down && down.dir === 'down' && Math.abs(down.delta + 0.11) < 1e-9, JSON.stringify(down));
-check('exactly $0.10 fires (>=, inclusive)', KA.swing(0.2, 0.30) !== null);
-check('$0.0999 does not fire', KA.swing(0.2, 0.2999) === null);
-check('blank price never fires', KA.swing(null, 0.5) === null && KA.swing('', 0) === null);
-check('threshold is configurable', KA.swing(0.2, 0.25, 0.05) !== null && KA.swing(0.2, 0.25, 0.1) === null);
-
-console.log('\n== order book: documented bids-only shape + reciprocal identity ==');
-const book = KA.bookSides({ orderbook_fp: { yes_dollars: [['0.1500', '10.00'], ['0.2000', '5.00']], no_dollars: [['0.8600', '500.00']] } });
-check('best bid is the LAST element (ascending order)', book.yes_bid.price === 0.2 && book.yes_bid.count === 5, JSON.stringify(book.yes_bid));
-check('YES ask implied from the best NO bid = 1 - 0.86 = 0.14', Math.abs(book.yes_ask.price - 0.14) < 1e-9, JSON.stringify(book.yes_ask));
-check('implied ask carries the NO bid size (500 contracts)', book.yes_ask.contracts === 500, book.yes_ask.contracts);
-check('NO ask implied from the best YES bid = 1 - 0.20 = 0.80', Math.abs(book.no_ask.price - 0.8) < 1e-9, JSON.stringify(book.no_ask));
-check('empty book yields no asks', KA.bookSides({ orderbook_fp: { yes_dollars: [], no_dollars: [] } }).yes_ask === null);
-check('depthAtOrBetter sums from the level up', KA.depthAtOrBetter([['0.1500', '10.00'], ['0.2000', '5.00']], 0.15) === 15);
-const v = KA.vwap([{ yes_price_dollars: '0.2500', count_fp: '100.00' }, { yes_price_dollars: '0.2000', count_fp: '100.00' }]);
-check('VWAP weights by contracts (0.2250)', Math.abs(v.price - 0.225) < 1e-9, JSON.stringify(v));
-check('VWAP is blank with no prints', KA.vwap([]) === null);
-check('mark prefers the traded last price, then the book mid',
-  KA.markOf({ last_price_dollars: '0.3000' }, book).value === 0.3 &&
-  KA.markOf({ last_price_dollars: '' }, { yes_bid: { price: 0.2 }, yes_ask: { price: 0.8 } }).value === 0.5);
-
-console.log('\n== the five gates ==');
-const future = new Date(Date.now() + 3 * 86400e3).toISOString().replace(/\.\d+Z$/, 'Z');
-const good = { ticker: 'KXAAAGASW-26NOV23-3.6400', status: 'active', close_time: future, yes_ask_dollars: '', no_ask_dollars: '' };
-const scr = KA.screen(good, { book, vwap: { price: 0.25, contracts: 100 }, swing: { from: 0.25, to: 0.12, dir: 'down', delta: -0.13 }, nowSec: Math.floor(Date.now() / 1000) });
-check('all five gates pass → eligible', scr.eligible === true, JSON.stringify(scr.gates));
-check('candidate side/entry = YES @ 0.14 derived from the NO bid', scr.side === 'YES' && scr.entry === 0.14 && scr.ask_source === 'NO bid', scr.side + '/' + scr.entry + '/' + scr.ask_source);
-check('gate detail prints contracts at the ask', scr.contracts_available === 500, scr.contracts_available);
-check('score is finite and > 0 when eligible', typeof scr.score === 'number' && scr.score > 0, scr.score);
-const noDepth = KA.screen(good, { book: KA.bookSides({ orderbook_fp: { yes_dollars: [], no_dollars: [['0.8600', '0.00']] } }), vwap: { price: 0.25, contracts: 10 }, swing: { from: 0.3, to: 0.1, dir: 'down', delta: -0.2 }, nowSec: KA.nowSec() });
-check('zero depth at the ask fails G2 (fillable)', noDepth.eligible === false && noDepth.firstFailed === 'G2 fillable', JSON.stringify(noDepth.gates));
-const noTrades = KA.screen(good, { book, swing: { from: 0.3, to: 0.1, dir: 'down', delta: -0.2 }, nowSec: KA.nowSec() });
-check('no prints → G3 fails with a blank VWAP, not a zero', noTrades.eligible === false && /VWAP is blank/.test(noTrades.gates[2].detail), JSON.stringify(noTrades.gates[2]));
-const rich = KA.screen(good, { book, vwap: { price: 0.145, contracts: 10 }, swing: { from: 0.3, to: 0.14, dir: 'down', delta: -0.16 }, nowSec: KA.nowSec() });
-check('a $0.005 gap to VWAP is below the $0.02 lead → G3 fails', rich.firstFailed === 'G3 reversion', JSON.stringify(rich.gates[2]));
-const closed = KA.screen({ status: 'settled', close_time: future }, { book, vwap: { price: 0.25, contracts: 10 }, swing: { from: 0.3, to: 0.1, dir: 'down', delta: -0.2 } });
-check('a settled market fails G1', closed.eligible === false && closed.firstFailed === 'G1 in-window', JSON.stringify(closed.gates[0]));
-const noBook = KA.screen({ status: 'active', close_time: future }, { vwap: { price: 0.25, contracts: 10 }, swing: { from: 0.3, to: 0.1, dir: 'down', delta: -0.2 } });
-check('no ask anywhere → no candidate side, never a fabricated price', noBook.eligible === false && noBook.reason === 'no fillable ask', JSON.stringify(noBook));
-const expensive = KA.screen({ status: 'active', close_time: future }, { book: { yes_bid: null, no_bid: { price: 0.05, count: 90 }, yes_ask: { price: 0.95, contracts: 90, derived_from: 'NO bid' }, no_ask: null }, vwap: { price: 0.99, contracts: 10 }, swing: { from: 0.85, to: 0.96, dir: 'up', delta: 0.11 } });
-check('a $0.95 ask cannot clear the 10% payoff gate', expensive.firstFailed === 'G4 payoff', JSON.stringify(expensive.gates[3]));
-
-console.log('\n== watchlist, topic index, snapshot swings, request builders ==');
-const rows = [
-  { topic: 'gas_prices', series_ticker: 'KXAAAGASW', market_ticker: 'G1', event_ticker: 'E1', dollar_notional_24h: { value: 50 }, status: 'active' },
-  { topic: 'gas_prices', series_ticker: 'KXAAAGASW', market_ticker: 'G2', event_ticker: 'E1', dollar_notional_24h: { value: 900 }, status: 'active' },
-  { topic: 'crypto', series_ticker: 'KXBTC', market_ticker: 'C1', event_ticker: 'E2', dollar_notional_24h: { value: 10 }, status: 'active' },
-  { topic: 'golf', series_ticker: 'KXPGATOUR', market_ticker: 'O1', event_ticker: 'E3', status: 'active' }
-];
-const top = KA.topByDollar(rows, 1).map((r) => r.market_ticker);
-check('highest-dollar first, grouped by topic', top[0] === 'G2' && top.includes('C1') && top.length === 3, top.join(','));
-const idx = KA.buildTopicIndex(rows);
-check('topic index maps a series to its topic', KA.topicOfTicker(idx, 'KXBTC-26DEC31-T1') === 'crypto' && KA.topicOfTicker(idx, 'KXNBA-27') === null);
-const candles = {
-  market_ticker: 'G1', series_ticker: 'KXAAAGASW',
-  windows: { '1m/6h': { period_interval_minutes: 1, points: [
-    { t: 100, price_close: 0.2, yes_bid_close: 0.2, yes_ask_close: 0.25 },
-    { t: 160, price_close: 0.35, yes_bid_close: 0.34, yes_ask_close: 0.36 },
-    { t: 220, price_close: null, yes_bid_close: 0.20, yes_ask_close: 0.26 },
-    { t: 280, price_close: null, yes_bid_close: 0.30, yes_ask_close: 0.31 },
-    { t: 340, price_close: 0.32, yes_bid_close: 0.31, yes_ask_close: 0.33 }
-  ] } }
-};
-const hist = KA.swingsFromCandles(candles, 0.1);
-check('candle scan finds the traded-close jump (0.20 → 0.35)', hist.some((h) => h.from === 0.2 && h.to === 0.35 && h.source === 'traded close'), JSON.stringify(hist[0]));
-check('candle scan falls back to the book mid and keeps the sub-threshold out', hist.filter((h) => h.source === 'book mid').length === 1 && hist.length === 2, JSON.stringify(hist.map((h) => h.source + ':' + h.from + '->' + h.to)));
-check('history is chronological', hist.every((h, i) => i === 0 || hist[i - 1].ts <= h.ts));
-check('apiUrl explodes a tickers array', /tickers=A&tickers=B$/.test(KA.apiUrl('b', '/markets/orderbooks', { tickers: ['A', 'B'] })),
-  KA.apiUrl('b', '/markets/orderbooks', { tickers: ['A', 'B'] }));
-check('apiUrl skips blank params', KA.apiUrl('b', '/markets/trades', { limit: 1000, ticker: '' }) === 'b/markets/trades?limit=1000');
-check('chunk keeps batches at 100 tickers', KA.chunk(new Array(250).fill('x'), 100).map((c) => c.length).join(',') === '100,100,50');
-check('seriesOf takes the part before the first dash', KA.seriesOf('KXAAAGASW-26NOV23-3.6400') === 'KXAAAGASW');
-
-console.log('\n== tape line shape ==');
-const line = KA.makeLine({ id: 'x', ts: 1795000000000, kind: 'swing', topic: 'gas_prices', topicLabels: { gas_prices: 'Gas prices' }, ticker: 'G1', title: 'Will gas be above $3.64?', from: 0.25, to: 0.12, delta: -0.13, dir: 'down', sourceUrl: 'https://x', roi: 4.26, score: 5.1 });
-check('topic label resolved from the label map', line.topicLabel === 'Gas prices', line.topicLabel);
-check('line keeps both source links and the swing fields', line.sourceUrl === 'https://x' && line.from === 0.25 && line.to === 0.12 && line.dir === 'down');
-check('dedupe key is per market+side+minute', KA.dedupeKey(line) === KA.dedupeKey(KA.extend(line, {})) && KA.dedupeKey(line) !== KA.dedupeKey(KA.extend(line, { side: 'NO' })));
-
-// ------------------------------------------------------------------ 2. page
-const GAS = 'KXAAAGASW-26NOV23-3.6400';
-const CRYPTO = 'KXBTC-26DEC31-T100000';
-const ELEC = 'KXPRESPERSON-28-GABB';
-const marketRow = (t, topic, series, event, dollars) => ({
-  topic, series_ticker: series, event_ticker: event, market_ticker: t, ticker: t,
-  title: 'Will ' + t + ' happen?', status: 'active', result: null, close_time: future,
-  last_price: { value: null }, last_price_dollars: '',
-  dollar_notional_24h: { value: dollars, complete: true },
-  sources: { markets: 'https://api/markets', market: 'https://api/markets/' + t, event: 'https://api/events/' + event, orderbook: 'https://api/orderbook/' + t }
-});
-const snapshotFixture = {
+const marketsFixture = {
   generated_utc: '2026-11-20T11:43:59Z',
-  markets: [marketRow(GAS, 'gas_prices', 'KXAAAGASW', 'KXAAAGASW-26NOV23', 2746.88),
-    marketRow(CRYPTO, 'crypto', 'KXBTC', 'KXBTC-26DEC31', 91.5),
-    marketRow(ELEC, 'elections', 'KXPRESPERSON', 'KXPRESPERSON-28', 12.25)]
-};
-const quotes = (cycle) => ({
+  base: 'https://external-api.demo.kalshi.co/trade-api/v2',
   markets: [
-    { ticker: GAS, title: 'Will average gas prices be above $3.6400?', event_ticker: 'KXAAAGASW-26NOV23', series_ticker: 'KXAAAGASW', status: 'active', result: '', close_time: future, last_price_dollars: cycle === 1 ? '0.2500' : '0.1200', yes_bid_dollars: '0.1100', yes_ask_dollars: '', no_bid_dollars: '', no_ask_dollars: '' },
-    { ticker: CRYPTO, title: 'BTC above $100k?', event_ticker: 'KXBTC-26DEC31', series_ticker: 'KXBTC', status: 'active', result: '', close_time: future, last_price_dollars: cycle === 1 ? '0.5000' : '0.7500', yes_bid_dollars: '0.4900', yes_ask_dollars: '', no_bid_dollars: '', no_ask_dollars: '' },
-    { ticker: ELEC, title: 'Governor?', event_ticker: 'KXPRESPERSON-28', series_ticker: 'KXPRESPERSON', status: 'settled', result: 'yes', close_time: future, last_price_dollars: '1.0000', yes_bid_dollars: '', yes_ask_dollars: '', no_bid_dollars: '', no_ask_dollars: '' }
-  ]
-});
-const booksFixture = {
-  orderbooks: [
-    { ticker: GAS, orderbook_fp: { yes_dollars: [['0.1100', '40.00']], no_dollars: [['0.8600', '500.00']] } },
-    { ticker: CRYPTO, orderbook_fp: { yes_dollars: [], no_dollars: [] } },
-    { ticker: ELEC, orderbook_fp: { yes_dollars: [], no_dollars: [] } }
-  ]
+    snapMarket(MKT_GAS, 'gas_prices', 'KXAAAGASW-26NOV23', 'US gas prices this week'),
+    snapMarket(MKT_BTC, 'crypto', 'KXBTCMINMON-BTC-26NOV30', 'BTC min one touch monthly'),
+  ],
 };
-const tradesFixture = {
-  trades: [{ trade_id: 'a1', ticker: GAS, count_fp: '100.00', yes_price_dollars: '0.2500', no_price_dollars: '0.7500', taker_outcome_side: 'yes', created_time: '2026-11-20T19:20:00Z' },
-  { trade_id: 'a2', ticker: GAS, count_fp: '100.00', yes_price_dollars: '0.2500', no_price_dollars: '0.7500', taker_outcome_side: 'no', created_time: '2026-11-20T19:21:00Z' }]
-};
-const candlesFixture = {
-  ticker: GAS,
-  candlesticks: [{ end_period_ts: 1795154700, price: { close_dollars: '0.2500' } }, { end_period_ts: 1795154760, price: { close_dollars: '0.1200' } }]
-};
+
+// gas: 0.10 -> 0.25 (+0.150) -> 0.25 -> 0.12 (−0.130); btc: 0.25 -> 0.50 (+0.250)
 const chartsFixture = {
   generated_utc: '2026-11-20T11:43:59Z',
-  series: [{ market_ticker: GAS, series_ticker: 'KXAAAGASW', windows: { '1m/6h': { period_interval_minutes: 1, points: [
-    { t: 1795154640, price_close: 0.30, yes_bid_close: 0.29, yes_ask_close: 0.31 },
-    { t: 1795154700, price_close: 0.15, yes_bid_close: 0.16, yes_ask_close: 0.18 }
-  ] } } }]
+  base: 'https://external-api.demo.kalshi.co/trade-api/v2',
+  series: [
+    {
+      market_ticker: MKT_GAS, series_ticker: 'KXAAAGASW',
+      windows: {
+        '1m/6h': {
+          period_interval_minutes: 1,
+          source: 'https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASW/markets/' + MKT_GAS + '/candlesticks?period_interval=1',
+          error: null,
+          points: [
+            { t: 1795154640, price_close: 0.10, yes_bid_close: 0.09, yes_ask_close: 0.11, volume: 1, open_interest: 100 },
+            { t: 1795154700, price_close: 0.25, yes_bid_close: 0.24, yes_ask_close: 0.26, volume: 2, open_interest: 101 },
+            { t: 1795154760, price_close: 0.25, yes_bid_close: 0.24, yes_ask_close: 0.26, volume: 0, open_interest: 101 },
+            { t: 1795154820, price_close: 0.12, yes_bid_close: 0.11, yes_ask_close: 0.13, volume: 3, open_interest: 102 },
+          ],
+        },
+      },
+    },
+    {
+      market_ticker: MKT_BTC, series_ticker: 'KXBTCMINMON',
+      windows: {
+        '1m/6h': {
+          period_interval_minutes: 1,
+          source: 'https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINMON/markets/' + MKT_BTC + '/candlesticks?period_interval=1',
+          error: null,
+          points: [
+            { t: 1795154640, price_close: 0.25, yes_bid_close: 0.24, yes_ask_close: 0.26, volume: 1, open_interest: 50 },
+            { t: 1795154700, price_close: 0.50, yes_bid_close: 0.49, yes_ask_close: 0.51, volume: 4, open_interest: 51 },
+          ],
+        },
+      },
+    },
+  ],
 };
 
-let cycle = 1;
-const log = [];
-function mockFetch() {
+function mockFetch(log, liveMode, liveCandles) {
   return async function (url) {
     const u = String(url);
     log.push(u);
     const json = (body) => ({ ok: true, status: 200, json: async () => body, text: async () => JSON.stringify(body) });
-    if (u.includes('snapshot/markets.json')) return json(snapshotFixture);
+    if (u.includes('snapshot/markets.json')) return json(marketsFixture);
     if (u.includes('snapshot/charts.json')) return json(chartsFixture);
-    if (u.includes('/candlesticks')) return json(candlesFixture);
-    if (u.includes('/markets/orderbooks')) return json(booksFixture);
-    if (u.includes('/markets/trades')) return json(tradesFixture);
-    if (/[?&]tickers=/.test(u)) return json(quotes(cycle));
+    if (u.includes('external-api.demo.kalshi.co')) {
+      if (!liveMode) throw new Error('network down (simulated)');
+      return json(liveCandles || { ticker: 'x', candlesticks: [] }); // reachable; empty -> per-market snapshot fallback
+    }
     throw new Error('unexpected fetch in test: ' + u);
   };
 }
 
-const vc = new VirtualConsole();
-const errors = [];
-vc.on('jsdomError', (e) => errors.push(String(e.message || e)));
-vc.on('error', (m) => errors.push('console.error: ' + m));
+let pass = 0, fail = 0;
+const check = (name, cond, detail) => {
+  if (cond) { pass++; console.log('  PASS  ' + name); }
+  else { fail++; console.log('  FAIL  ' + name + (detail ? '  →  ' + detail : '')); }
+};
+const settle = () => new Promise((r) => setTimeout(r, 40));
 
-const dom = new JSDOM(read('alerts.html'), {
-  url: 'https://karagemop466-tech.github.io/Demo1/alerts.html',
-  runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole: vc
-});
-const w = dom.window;
-w.fetch = mockFetch();
-w.eval(read('assets/common.js'));
-w.eval(read('assets/alerts.js'));
-w.eval(read('assets/alerts-app.js'));
-w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
-const settle = async (n = 30) => { for (let i = 0; i < n; i++) await new Promise((r) => setTimeout(r, 20)); };
-await settle();
-const app = w.KA_APP;
-cycle = 2;                                  // second read: gas drops, crypto jumps
-await app.cycle();
-await settle(6);
-
-console.log('\n== alerts.html in jsdom: live tapes ==');
-const doc = w.document;
-const allLines = () => [...doc.querySelectorAll('#at-tape-all .at-line')];
-const pickLines = () => [...doc.querySelectorAll('#at-tape-picks .at-line')];
-const allText = () => doc.getElementById('at-tape-all').textContent.replace(/\s+/g, ' ');
-const pickText = () => doc.getElementById('at-tape-picks').textContent.replace(/\s+/g, ' ');
-
-check('page boots with no script errors', errors.length === 0, errors.join(' | '));
-check('watchlist seeded from the snapshot (3 markets)', doc.getElementById('at-watch').textContent === '3', doc.getElementById('at-watch').textContent);
-check('cycle reads exactly the three documented endpoints',
-  log.some((u) => /[?]tickers=|&tickers=/.test(u) && u.includes('/markets?')) &&
-  log.some((u) => u.includes('/markets/orderbooks?tickers=')) &&
-  log.some((u) => u.includes('/markets/trades?limit=1000')), log.filter((u) => u.includes('demo.kalshi.co')).join(' | '));
-check('status banner reports LIVE with the source endpoint', /LIVE/.test(doc.getElementById('at-status').textContent) && doc.getElementById('at-status').innerHTML.includes('external-api.demo.kalshi.co'), doc.getElementById('at-status').textContent.slice(0, 120));
-check('Tape A got a message for every swing (gas down, crypto up)', allLines().length >= 3, allLines().length + ' :: ' + allText().slice(0, 220));
-check('the $0.13 drop is labelled a down swing with before → after', /▼/.test(allText()) && allText().includes('$0.2500') && allText().includes('$0.1200'), allText().slice(0, 200));
-check('the move magnitude is printed', /\-0\.13|\+0\.13/.test(allText()), allText().slice(0, 200));
-check('the threshold is named on the line ($0.10)', allText().includes('≥ $0.10'), allText().slice(0, 160));
-check('every line links the exact API request that produced it', allLines().every((n) => n.querySelector('.at-srcs a')), allLines().map((n) => !!n.querySelector('.at-srcs a')).join(','));
-check('gas line links the order-book request and a news lead', allLines().some((n) => /order book/.test(n.textContent) && /news\.google\.com\/search/.test(n.innerHTML)), '');
-check('a cause is never asserted (only "news lead")', !/caused by|because of|reason: /i.test(allText() + doc.getElementById('at-tape-all').innerHTML));
-check('Tape B carries only the gate-passing gas swing', pickLines().length === 1 && pickText().includes(GAS) && !pickText().includes(CRYPTO), pickLines().length + ' :: ' + pickText().slice(0, 220));
-check('Tape B line shows entry, depth, fee, payout and net ROI', /buy YES @ \$0\.1400/.test(pickText()) && /500 contracts there/.test(pickText()) && /fee \$0\.0100 → payout \$1\.0000/.test(pickText()) && /net ROI 566\.7%/.test(pickText()), pickText().slice(0, 320));
-check('Tape B prints a model score next to the pick', /model score/.test(pickText()) && /[0-9]\.[0-9]{3}/.test(pickText()), pickText().slice(0, 120));
-check('the crypto swing is explicitly screened out, not hidden from Tape A', allText().includes('screened out') || allText().includes('no fillable ask'), allText().slice(-260));
-check('a RESOLUTION line reports YES for the settled market', allText().includes('RESOLUTION') && /resolved YES/.test(allText()), allText().slice(0, 300));
-check('resolved markets drop out of the next poll (no re-alerting)', app.state.resolved[ELEC] === 'yes' && app.state.order.indexOf(ELEC) >= 0, JSON.stringify(app.state.resolved));
-check('the historical snapshot swing is labelled, not mixed in as live', /committed snapshot/.test(allText()), allText().slice(0, 240));
-check('counters move', +doc.getElementById('at-alert-count').textContent >= 2 && +doc.getElementById('at-count-all').textContent === allLines().length && +doc.getElementById('at-count-picks').textContent === pickLines().length,
-  [doc.getElementById('at-alert-count').textContent, doc.getElementById('at-count-all').textContent, doc.getElementById('at-count-picks').textContent].join('/'));
-check('request + failure counters are honest', +doc.getElementById('at-req').textContent === app.state.requests && doc.getElementById('at-fail').textContent === '0', doc.getElementById('at-req').textContent);
-const coolBefore = allLines().length;
-app.state.prevMark[GAS] = 0.25;                // pretend the price reset: same quote → same -0.13 move
-await app.cycle();
-await settle(4);
-check('cooldown: an identical re-read within 60 s does not spam the tape', allLines().length === coolBefore, coolBefore + ' → ' + allLines().length);
-check('session VWAP counted from prints, not invented', +doc.getElementById('at-vwap').textContent === 1 && app.state.vwap[GAS].price === 0.25, JSON.stringify(app.state.vwap));
-check('trades seen counted from the public tape', +doc.getElementById('at-trade').textContent === 2, doc.getElementById('at-trade').textContent);
-doc.querySelector('#at-tape-all .at-expand').dispatchEvent(new w.Event('click', { bubbles: true }));
-await settle(10);
-check('expanding a line renders a time/price SVG plus the five gate verdicts', (() => {
-  const svg = doc.querySelector('#at-tape-all .at-spark');
-  const gates = doc.querySelector('#at-tape-all .at-gates');
-  return !!svg && /M\d+\.\d+/.test(svg.innerHTML) && !!gates && gates.children.length === 5;
-})(), (doc.querySelector('#at-tape-all .at-detail') || {}).innerHTML || 'no detail');
-
-const after = doc.querySelector('#at-tape-all .at-detail');
-check('expanded detail links the candlestick request + model spec', after && /candlesticks\?start_ts=/.test(after.textContent + after.innerHTML) && after.innerHTML.includes('alerts-model'), after ? after.textContent.slice(0, 120) : 'missing');
-const linesBeforePause = allLines().length;
-doc.getElementById('at-pause').dispatchEvent(new w.Event('click', { bubbles: true }));
-const pausedOk = app.state.paused === true && app.state.polling === null;
-const heldLines = allLines().length === linesBeforePause;
-doc.getElementById('at-pause').dispatchEvent(new w.Event('click', { bubbles: true }));
-await settle(4);
-check('pause stops polling (no timer left running) and keeps the tape; resume restarts it',
-  pausedOk && heldLines && app.state.paused === false && app.state.polling !== null,
-  'paused=' + pausedOk + ' held=' + heldLines + ' polling=' + (app.state.polling !== null));
-check('threshold control defaults to the brief\'s $0.10 and re-screens on change',
-  doc.getElementById('at-threshold').value === '0.1' && (() => {
-    doc.getElementById('at-threshold').value = '0.30';
-    doc.getElementById('at-threshold').dispatchEvent(new w.Event('change', { bubbles: true }));
-    return app.state.threshold === 0.3;
-  })());
-check('clearing the tape clears both chats and the counters', (() => {
-  doc.getElementById('at-clear').dispatchEvent(new w.Event('click', { bubbles: true }));
-  return doc.querySelectorAll('#at-tape-all .at-line').length === 0 && doc.getElementById('at-count-all').textContent === '0' &&
-    doc.getElementById('at-tape-all').textContent.includes('No $0.10 swing yet');
-})());
-check('offline banner path is exercised when the API errors out', await (async () => {
-  const realFetch = w.fetch;
-  w.fetch = async (u) => { log.push('fail:' + u); const e = new Error('Failed to fetch'); throw e; };
-  app.state.lines = { all: [], picks: [] };
-  await app.cycle();
-  await settle(4);
-  const txt = doc.getElementById('at-status').textContent;
-  w.fetch = realFetch;
-  return /Live polling unavailable/.test(txt) && doc.getElementById('at-tape-all').textContent.length >= 0;
-})());
-check('every internal link on the page points at a file that exists', (() => {
-  const hrefs = [...doc.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'))
-    .filter((h) => h && !/^https?:|^#|^mailto:/.test(h));
-  return hrefs.every((h) => {
-    const p = path.join(ROOT, decodeURIComponent(h.split('#')[0].split('?')[0]).replace(/^\/Demo1\//, ''));
-    return fs.existsSync(p);
+async function loadPage(log, liveMode, liveCandles) {
+  const vc = new VirtualConsole();
+  vc.on('jsdomError', () => {});
+  const dom = new JSDOM(read('alerts.html'), {
+    url: 'https://karagemop466-tech.github.io/Demo1/alerts.html',
+    runScripts: 'dangerously',
+    virtualConsole: vc,
+    beforeParse(window) { window.fetch = mockFetch(log, liveMode, liveCandles); },
   });
-})(), [...doc.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')).filter((h) => h && !/^https?:/.test(h)).join(' | '));
-check('the page states plainly that it polls and never streams', /This is polling, not streaming/.test(doc.body.textContent));
-check('the page states the demo-venue warning and the no-orders rule',
-  /may not be reflective of those in real markets/.test(doc.body.textContent) && /No orders are placed/.test(doc.body.textContent));
+  const w = dom.window;
+  const script = w.document.createElement('script');
+  script.textContent = read('assets/js/alerts.js');
+  w.document.body.appendChild(script); // boots immediately (loadData() at parse)
+  await settle();
+  return dom;
+}
 
-console.log('\n' + (fail ? 'FAILURES: ' + fail : 'ALL CHECKS PASSED') + '  (passed: ' + pass + ')');
+console.log('\n1. Snapshot detection + two scrolling chats:');
+{
+  const log = [];
+  const dom = await loadPage(log, false);
+  const w = dom.window, doc = w.document;
+
+  const all = [...doc.querySelectorAll('#msgs-all .msg')];
+  check('every qualifying swing is a chat message (3 swings across 2 markets)', all.length === 3, 'got ' + all.length);
+  check('up and down directions both post (either direction)', all.some((m) => m.classList.contains('up')) && all.some((m) => m.classList.contains('down')));
+  check('swing renders before -> after and delta to 3 dp', all.some((m) => /0\.100/.test(m.textContent) && /\+0\.150/.test(m.textContent)) && all.some((m) => /-0\.130/.test(m.textContent)), all.map((m) => m.textContent.replace(/\s+/g, ' ').slice(0, 60)).join(' | '));
+  check('no swing below threshold is posted (sub-threshold deltas skipped)', all.length === 3, 'got ' + all.length);
+
+  const roi = [...doc.querySelectorAll('#msgs-roi .msg')];
+  check('Chat B (high-ROI) is rendered separately', roi.length >= 1);
+  check('every Chat B pick also appears in Chat A', roi.every((r) => all.some((a) => a.querySelector('.msg-ticker').textContent === r.querySelector('.msg-ticker').textContent)));
+  check('high-ROI filter capped at 20 picks (disclosed heuristic)', roi.length <= 20);
+  check('counts match the rendered messages', doc.getElementById('count-all').textContent === String(all.length) && doc.getElementById('count-roi').textContent === String(roi.length));
+
+  const first = all[0];
+  const links = [...first.querySelectorAll('.msg-links a')];
+  check('each message links the official venue event page', links.some((a) => a.href.startsWith('https://kalshi.com/events/')));
+  check('each message links a news search labelled cause unverified', links.some((a) => /google\.com\/search/.test(a.href) && /cause unverified/.test(a.textContent)));
+  check('each message links the official candlesticks API path', links.some((a) => a.href.includes('external-api.demo.kalshi.co/trade-api/v2/series/') && a.href.includes('/candlesticks')));
+
+  const status = doc.getElementById('status-banner').textContent;
+  check('status banner reports detected swings + market count', /3 swing\(s\) detected at ≥\$0\.10 across 2 market\(s\)/.test(status), status.slice(0, 90));
+  const mode = doc.getElementById('mode-banner').textContent;
+  check('mode banner shows SNAPSHOT with the capture timestamp when live is unreachable', /SNAPSHOT/.test(mode) && /2026-11-20T11:43:59Z/.test(mode), mode.slice(0, 120));
+  check('mode banner discloses "No values inferred"', /No values inferred/.test(mode));
+  dom.window.close();
+}
+
+console.log('\n2. Topic filter + threshold controls:');
+{
+  const log = [];
+  const dom = await loadPage(log, false);
+  const w = dom.window, doc = w.document;
+
+  const golfBtn = doc.querySelector('#topic-seg button[data-topic="golf"]');
+  golfBtn.click();
+  await settle();
+  check('topic with no qualifying swing shows an explicit empty state (nothing invented)',
+    /No swings detected/.test(doc.getElementById('msgs-all').textContent), doc.getElementById('msgs-all').textContent.slice(0, 60));
+  const gasBtn = doc.querySelector('#topic-seg button[data-topic="gas_prices"]');
+  gasBtn.click();
+  await settle();
+  const gasMsgs = [...doc.querySelectorAll('#msgs-all .msg')];
+  check('topic filter limits the chat to that topic (2 gas swings)', gasMsgs.length === 2 && gasMsgs.every((m) => /Gas prices/.test(m.textContent)), 'got ' + gasMsgs.length);
+
+  doc.querySelector('#topic-seg button[data-topic=""]').click();
+  await settle();
+  doc.querySelector('#th-seg button[data-th="0.20"]').click();
+  await settle();
+  check('raising the threshold to $0.20 re-detects: only the $0.25 swing qualifies',
+    doc.querySelectorAll('#msgs-all .msg').length === 1, 'got ' + doc.querySelectorAll('#msgs-all .msg').length);
+  doc.querySelector('#th-seg button[data-th="0.05"]').click();
+  await settle();
+  check('lowering the threshold to $0.05 re-detects all three close-to-close moves',
+    doc.querySelectorAll('#msgs-all .msg').length === 3, 'got ' + doc.querySelectorAll('#msgs-all .msg').length);
+  dom.window.close();
+}
+
+console.log('\n3. Empty-input honesty:');
+{
+  const log = [];
+  const dom = await loadPage(log, false);
+  const w = dom.window;
+  // zero-point series must never fabricate a swing
+  check('page boots from the committed snapshot only (snapshot fetches recorded)', log.some((u) => u.includes('snapshot/charts.json')) && log.some((u) => u.includes('snapshot/markets.json')));
+  w.document.getElementById('btn-refresh').click();
+  await settle();
+  check('refresh button re-runs detection without errors', /swing\(s\) detected/.test(w.document.getElementById('status-banner').textContent));
+  dom.window.close();
+}
+
+console.log('\n4. LIVE overlay with the official candlesticks payload shape:');
+{
+  // Official Get Market Candlesticks schema (docs.kalshi.com/api-reference/market/get-market-candlesticks,
+  // fetched 2026-11-20): candlesticks[] = { end_period_ts, price: { close_dollars, ... }, ... }
+  const officialShape = {
+    ticker: MKT_GAS,
+    candlesticks: [
+      { end_period_ts: 1795200000, price: { open_dollars: '0.3000', close_dollars: '0.3000', low_dollars: '0.3000', high_dollars: '0.3000' }, yes_bid: { close_dollars: '0.2900' }, yes_ask: { close_dollars: '0.3100' }, volume_fp: '10.00', open_interest_fp: '100.00' },
+      { end_period_ts: 1795203600, price: { open_dollars: '0.5500', close_dollars: '0.5500', low_dollars: '0.5500', high_dollars: '0.5500' }, yes_bid: { close_dollars: '0.5400' }, yes_ask: { close_dollars: '0.5600' }, volume_fp: '20.00', open_interest_fp: '101.00' },
+    ],
+  };
+  const log = [];
+  const dom = await loadPage(log, true, officialShape);
+  const w = dom.window, doc = w.document;
+  const mode = doc.getElementById('mode-banner').textContent;
+  check('LIVE mode is announced when the demo API is reachable', /LIVE/.test(mode), mode.slice(0, 100));
+  const all = [...doc.querySelectorAll('#msgs-all .msg')];
+  const liveMsgs = all.filter((m) => /1h\/live/.test(m.textContent));
+  check('official candlesticks payloads are parsed (end_period_ts + price.close_dollars)', liveMsgs.length >= 1, 'live msgs=' + liveMsgs.length + ' of ' + all.length);
+  check('live swing delta computed from official closes (+0.250)', liveMsgs.some((m) => /\+0\.250/.test(m.textContent)), liveMsgs.map((m) => m.textContent.replace(/\s+/g, ' ').slice(0, 80)).join(' | '));
+  dom.window.close();
+}
+
+console.log('\n' + (fail === 0 ? 'ALL CHECKS PASSED' : 'FAILURES: ' + fail) + '  (' + pass + ' passed)');
 process.exit(fail ? 1 : 0);

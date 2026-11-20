@@ -230,13 +230,20 @@ def build_verification(meta):
 def build_index(meta, markets, resolved):
     counts = meta.get("counts", {})
     exch = meta.get("exchange_status") or {}
+    # Correct taxonomy (verified against docs.kalshi.com/getting_started/market_lifecycle):
+    # a collected closed record is only "resolved" once the API sets `result`;
+    # `closed`/`determined`/`disputed` records are still awaiting determination.
+    n_with = len([r for r in resolved if (r.get("result") or "").lower() in ("yes", "no")])
+    n_wait = len(resolved) - n_with
     stat_rows = [
         ["Official REST base", f"<code>{esc(meta.get('rest_base'))}</code>"],
         ["Exchange active", dash(exch.get("exchange_active"))],
         ["Trading active", dash(exch.get("trading_active"))],
         ["Series discovered", dash(meta.get("series_count"))],
         ["Open markets collected", dash(counts.get("open_markets"))],
-        ["Resolved markets collected", dash(counts.get("resolved_markets"))],
+        ["Closed records collected (settled + awaiting)", dash(counts.get("resolved_markets"))],
+        ["Settled with YES/NO result", dash(n_with)],
+        ["Closed — awaiting result", dash(n_wait)],
         ["Price-history series", dash(counts.get("chart_series"))],
         ["API requests this snapshot", dash((meta.get("request_stats") or {}).get("requests"))],
         ["Failed requests", dash((meta.get("request_stats") or {}).get("failed"))],
@@ -247,6 +254,9 @@ def build_index(meta, markets, resolved):
         t = meta.get("topics", {}).get(key, {})
         n_open = len([m for m in markets if m["topic"] == key])
         n_res = len([r for r in resolved if r["topic"] == key])
+        n_set = len([r for r in resolved if r["topic"] == key
+                     and (r.get("result") or "").lower() in ("yes", "no")])
+        n_await = n_res - n_set
         n_series = t.get("series_matched")
         if n_series is None and (t.get("top_series") or t.get("series")):
             n_series = len(t.get("series") or t.get("top_series"))
@@ -255,7 +265,8 @@ def build_index(meta, markets, resolved):
             dash(n_series) if n_series is not None else
             "<span class='na' title='series count was not stored in this snapshot'>see topic page</span>",
             dash(n_open) if n_open else dash(None),
-            dash(n_res) if n_res else dash(None),
+            dash(n_set) if n_res else dash(None),
+            dash(n_await) if n_res else dash(None),
         ])
     cat_rows = [[esc(k), dash(v)] for k, v in (meta.get("categories") or {}).items()]
 
@@ -312,7 +323,7 @@ def build_index(meta, markets, resolved):
 {table(["Item", "Value (from official API)"], stat_rows)}
 
 <h2>Topic coverage</h2>
-{table(["Topic", "Series matched by rule", "Open markets collected", "Resolved markets found"], per_topic)}
+{table(["Topic", "Series matched by rule", "Open markets collected", "Settled w/ YES/NO result", "Awaiting result"], per_topic)}
 
 <h2>Discovery categories on the demo exchange</h2>
 <p class="fine">Read from <code>GET /series</code> (<a href="{esc(meta.get('series_list_url') or '')}">this snapshot's request</a>).
@@ -443,8 +454,11 @@ every record is searchable in the <a href="explore.html">data browser</a>.</p>
 {table(["Market / event", "Ticker", "YES bid ¢", "YES ask ¢", "Last ¢", "24h volume", "Open interest",
         "Notional 24h (USD, computed)", "Close time", "Status", "Source"], rows, "wide")}
 
-<h2>Resolved markets (followed until settled)</h2>
-<p class="fine">Showing {len(res_rows)} of {len(res_all)}. A market with status <code>finalized</code> has paid out;
+<h2>Resolved &amp; closed markets (followed until settled)</h2>
+<p class="fine">Showing {len(res_rows)} of {len(res_all)} closed records
+({len([r for r in res_all if (r.get('result') or '').lower() in ('yes', 'no')])} with a YES/NO result,
+{len([r for r in res_all if (r.get('result') or '').lower() not in ('yes', 'no')])} awaiting result).
+A market with status <code>finalized</code> has paid out;
 <code>closed</code>/<code>determined</code> ones are tracked but have no final result yet.</p>
 {table(["Market / event", "Ticker", "Result", "Settlement value", "Settled (UTC)",
         "Resolution source (from event)", "Source"], res_rows, "wide")}
@@ -489,7 +503,10 @@ def build_resolved(meta, resolved, total_records=None):
   event's <code>settlement_sources</code> give the official outside source used to determine the market.
   A market with an empty <code>result</code> is shown as “no result field” rather than guessed.
 </div>
-<p class="fine">Resolved/closed records in this snapshot: <b>{dash(total_records)}</b>. Showing the
+<p class="fine">Closed records collected: <b>{dash(total_records)}</b> · with a YES/NO result:
+<b>{dash(len([r for r in resolved if (r.get('result') or '').lower() in ('yes', 'no')]))}</b> ·
+awaiting result: <b>{dash(len([r for r in resolved if (r.get('result') or '').lower() not in ('yes', 'no')]))}</b>.
+Showing the
 <b>{len(rows)}</b> most recent; the complete set is searchable in the
 <a href="explore.html">data browser</a>.</p>
 {table(["Topic", "Market / event", "Ticker", "Result (YES/NO)", "Settlement value",

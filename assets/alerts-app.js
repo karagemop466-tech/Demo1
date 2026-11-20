@@ -1,5 +1,6 @@
 /*
- * Kalshi demo — alert tapes: the live half of alerts.html.
+ * Kalshi demo — alert tapes: the page logic behind alerts-live.html.
+ * The root alerts.html belongs to session d973ced5 (snapshot-driven) and is not touched here.
  *
  * Auto-starts with no user input. Every ~15 s it spends three unauthenticated
  * requests on the official demo Trade API (documented at docs.kalshi.com) and appends

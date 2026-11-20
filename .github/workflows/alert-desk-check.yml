@@ -18,7 +18,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # jsdom 31 -> undici 8 requires node:zstd (Node >= 22); under Node 20 the
+          # test crashes at import time with
+          # "TypeError: Cannot read properties of undefined (reading 'bind')" in
+          # undici/lib/interceptor/decompress.js. Node 22 verified: 35/35 locally.
+          node-version: "22"
       - name: Install jsdom
         run: npm install --no-audit --no-fund --silent jsdom
       - name: Syntax check

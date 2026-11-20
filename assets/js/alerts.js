@@ -143,10 +143,16 @@
 
   function normalizeCandle(c){
     if (c == null) return null;
+    // Accepts both the committed-snapshot point shape ({t, price_close}) and the official
+    // Get Market Candlesticks shape ({end_period_ts, price: {close_dollars}, ...}) —
+    // schema verified 2026-11-20 at https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+    const price = c.price || {};
     const close = c.close != null ? c.close :
                   c.price_close != null ? c.price_close :
-                  c.close_dollars != null ? c.close_dollars : null;
-    const t = c.t != null ? c.t : c.start_ts != null ? c.start_ts : null;
+                  c.close_dollars != null ? c.close_dollars :
+                  price.close_dollars != null ? price.close_dollars : null;
+    const t = c.t != null ? c.t : c.start_ts != null ? c.start_ts :
+              c.end_period_ts != null ? c.end_period_ts : null;
     if (close == null || t == null) return null;
     return { t: Number(t), price_close: Number(close) };
   }
@@ -272,16 +278,19 @@
 
   async function loadData(){
     els.status.textContent = 'Loading official candle data…';
-    let charts;
+    let loaded;
     try {
-      charts = await loadSnapshot();
+      loaded = await loadSnapshot();
     } catch (e){
       els.status.textContent = 'Snapshot data unavailable.';
       els.modeBanner.textContent = 'Cannot load official data.';
       return;
     }
+    // loadSnapshot() returns { charts: <snapshot/charts.json>, markets: <snapshot/markets.json> }
+    const charts = loaded.charts || {};
+    const markets = loaded.markets || {};
 
-    const lookups = buildLookups(charts.markets);
+    const lookups = buildLookups(markets);
     state.marketByTicker = lookups.marketByTicker;
     state.seriesTopic = lookups.seriesTopic;
 

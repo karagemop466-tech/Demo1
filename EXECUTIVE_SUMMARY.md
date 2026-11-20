@@ -127,16 +127,62 @@ re-verification against the official Kalshi sources, one missing feature, and th
   Flagged, not fixed (test owned by an earlier session; left untouched per the coordination protocol).
 - **Publish.** PR from `arena/5487be47-demo1` → `main`, merged, GitHub Pages redeploy confirmed.
 
-## 9. Live alert tapes + data-pipeline repair — session `arena/65df996f-demo1` (2026-11-20)
+## 9. Session `arena/b62e8188-demo1` — repo review, verification fixes, dual alert-chat (2026-11-20)
+
+Line-by-line review of the merged tree with re-verification against the official docs, four open
+board requests closed, and the one brief requirement still unimplemented anywhere in the repo
+implemented. Full evidence: [`docs/verification-b62e8188.html`](docs/verification-b62e8188.html).
+
+- **Dual scrolling-chat alert requirement — covered on main; shipped page repaired and pinned.**
+  The brief's "two scrolling chat" alerting (≥ $0.10 swings either direction; one chat with all
+  events, one high-ROI filter) was unimplemented on this session's base but was landed concurrently
+  by other sessions (root [`alerts.html`](alerts.html) + [`assets/js/alerts.js`](assets/js/alerts.js),
+  plus `alerts/`, `alert-desk/`, `trade-desk/`). Per coordination rules this session did **not** add
+  a fourth variant. It instead: (1) wrote [`tests/alerts.test.mjs`](tests/alerts.test.mjs) (**23/23**),
+  a headless regression suite pinning the shipped page's behaviour (swing detection both directions
+  at the threshold, the two scrolling chats and the disclosed high-ROI filter, per-message official
+  API + venue + *cause-unverified* links, topic/threshold controls, empty-state honesty); and
+  (2) found and fixed **two real bugs in the shipped page** — `loadData()` read the snapshot payload
+  one level off, so every visit rendered zero swings and a "—" capture date; and `normalizeCandle()`
+  did not accept the official candlesticks schema (`end_period_ts` + `price.close_dollars`), so the
+  live overlay never worked and silently fell back to snapshot. Both are acceptance-tested.
+- **V-3/F6 fixed.** `build_site.py` no longer labels all 2,469 closed records "Resolved": the
+  snapshot-derived split (2,117 settled with YES/NO result — 222 YES / 1,895 NO — and 352 closed
+  awaiting result) now renders on the overview, topic and resolved pages, and
+  `tools/verify_site.py` re-derives the split (PASS, 0 errors).
+- **CR-1/F-01 fixed.** `strategy-desk/assets/app.js` now normalizes raw REST statuses
+  (`active`/`initialized`/`inactive` → open, `determined`/`disputed`/`amended`/`finalized` → settled,
+  `closed`/unknown → closed) per the official lifecycle page — live events are no longer mislabelled
+  "closed".
+- **Audit F-02/F-03 withdrawn as wrong; repo claims confirmed.** The current official
+  [create-order-v2](https://docs.kalshi.com/api-reference/orders/create-order-v2) description states
+  the legacy `/portfolio/orders` writes "have been removed and now return `410 Gone` with code
+  `deprecated_v1_order_endpoint`" — the repo's "410 Gone" wording was correct all along (the audit's
+  partial search-index excerpt was stale). The candlestick page confirms "One request can span at
+  most 5,000 periods" — `docs/api-verification.md` was correct. Corrected rows are published on
+  [`audit/index.html`](audit/index.html).
+- **CR-4 fixed.** Root hub now tiles the API audit and its flagged items.
+- **Gates (combined tree):** `build_site.py` link check OK · `tools/verify_site.py` PASS ·
+  `check-links.mjs` PASS · `tests/alerts.test.mjs` 29/29 · `tests/dashboard.test.mjs` 46/46 ·
+  `tests/dashboard-jumps.test.mjs` 9/9 · `npm test` PASS · unittest 7/7 · syntax checks PASS.
+- **Carried-forward irregularities:** demo venue only (mock funds); no demo API key → authenticated
+  cells blank + flagged; jump causes unverified (no official causal field); sub-minute swings not in
+  REST candles; historical-cutoff date unstated in docs (audit F-05); error-code case disagreement
+  (audit F-07); multi-desk site fragmentation (consolidation remains the owner's call).
+- **Note for reviewers:** the earlier `tests/dashboard.test.mjs` time-sensitive fixture issue
+  (section 8) was subsequently fixed by session `arena/358db039-demo1` (time-relative fixtures) and
+  the suite passes 46/46 on this tree.
+>>>>>>> origin/main
+## 10. Live alert tapes + data-pipeline repair — session `arena/65df996f-demo1` (2026-11-20)
 
 **What the brief asked for that this section covers:** “live alerting on changes in contract prices of at least $0.10 in
 either direction, shown as two scrolling chat feeds — all events, and a selective feed of the events the model likes / high ROI.”
 
 | Deliverable | Path | State |
 |---|---|---|
-| Two live scrolling tapes (all swings / high-ROI screen), auto-start, no key, no orders | [`alerts.html`](alerts.html), [`assets/alerts.js`](assets/alerts.js), [`assets/alerts-app.js`](assets/alerts-app.js) | built; 81 jsdom checks in [`tests/alerts.test.mjs`](tests/alerts.test.mjs) |
+| Two live scrolling tapes (all swings / high-ROI screen), auto-start, no key, no orders | [`alerts-live.html`](alerts-live.html), [`assets/alerts.js`](assets/alerts.js), [`assets/alerts-app.js`](assets/alerts-app.js) | built; 81 jsdom checks in [`tests/alerts.test.mjs`](tests/alerts.test.mjs) |
 | The screen as arithmetic, with what it cannot see | [`docs/alerts-model.html`](docs/alerts-model.html) | published; fee maths checked against `t = 0.07·P·(1−P)` and the schedule's round-up-to-a-centicent rule |
-| Preserved sibling implementation (session `d973ced5`, committed candlesticks) | [`alerts-snapshot.html`](alerts-snapshot.html) | kept as built, with a cross-reference banner |
+| Preserved sibling implementation (session `d973ced5`, committed candlesticks) | [`alerts.html`](alerts.html) (root) | session `d973ced5`’s page kept at the merged path; this session moved its own page to `alerts-live.html` rather than overwrite it, because `tests/alerts.test.mjs` (23 checks, session `b62e8188`) pins the root path’s DOM |
 | Topic-ranking and mis-categorisation repairs in the CI collector | [`scripts/fetch_kalshi_data.py`](scripts/fetch_kalshi_data.py) | 26 new offline tests (17 classification + 9 full-`main()` against a stubbed transport) |
 | Data-commit step that survives a rejected push | [`.github/workflows/kalshi-data.yml`](.github/workflows/kalshi-data.yml) | main’s harder variant kept after a same-window collision; rationale recorded in comments |
 | Hub reorganisation (task groups, no link dropped, stale claims corrected) | [`index.html`](index.html), [`assets/common.js`](assets/common.js), [`dashboard.html`](dashboard.html) | `node tools/check-links.mjs` PASS, `python3 build_site.py` 17 pages |
@@ -166,7 +212,7 @@ either direction, shown as two scrolling chat feeds — all events, and a select
 
 ### Decisions and limits, published rather than hidden
 
-- The `≥ $0.10` two-chat requirement now exists **five times** (this session, plus `alerts-snapshot.html`, `alerts/`, `trade-desk/`,
+- The `≥ $0.10` two-chat requirement now exists **five times** (this session, plus `alerts.html`, `alerts/`, `trade-desk/`,
   `alert-desk/`) because five sessions worked the same brief in parallel. Nothing was deleted; all five are cross-linked from the home
   page, and [`suggestions.html#s16`](suggestions.html) asks for a survivor. Their baselines differ (best ask, last print, candle close),
   so identical thresholds do not produce identical tapes — recorded in [`flagged.html`](flagged.html) §E-08.

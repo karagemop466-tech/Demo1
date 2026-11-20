@@ -3,6 +3,7 @@
   var pages = [
     ["index.html", "Home"],
     ["alerts.html", "Price swing alerts"],
+    ["alerts-live.html", "Alert tapes (live)"],
     ["site/gas-prices.html", "Gas prices"],
     ["site/elections.html", "Elections"],
     ["site/culture.html", "Culture"],
@@ -25,7 +26,6 @@
     ["analysis.html", "Analysis"],
     ["questions.html", "Questions & gaps"],
     ["suggestions.html", "Suggestions"],
-    ["alerts-snapshot.html", "Snapshot alert feed"],
     ["alerts/index.html", "Alert chat (generated feed)"],
     ["trade-desk/index.html", "Trade desk"],
     ["alert-desk/index.html", "Alert desk"],
