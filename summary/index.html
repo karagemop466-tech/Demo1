@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive summary · Kalshi Demo Monitor</title>
+<meta name="description" content="Executive summary of the Kalshi demo dashboard: what was built, what the data shows, what remains unverified and what should happen next.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="summary">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Overview / executive summary</p>
+      <h1>Executive summary</h1>
+      <p class="lede">
+        What this project is, what was built against the Kalshi demo API, which findings are
+        verified, which decisions are still open, and what to do next. Every factual claim below
+        links to the official documentation that supports it.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">At a glance</span>
+      <dl class="kvlist">
+        <div><dt>Environment</dt><dd>Kalshi demo (mock funds)</dd></div>
+        <div><dt>REST base</dt><dd>external-api.demo.kalshi.co</dd></div>
+        <div><dt>Topics tracked</dt><dd>gas · elections · culture · crypto · golf</dd></div>
+        <div><dt>Markets in scope</dt><dd id="x-count">—</dd></div>
+        <div><dt>Snapshot captured</dt><dd id="x-captured">—</dd></div>
+        <div><dt>Account connected</dt><dd id="x-account">—</dd></div>
+        <div><dt>Flagged items</dt><dd id="x-flagged">—</dd></div>
+      </dl>
+      <p class="small" style="margin-top:12px">
+        Sources: <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noreferrer">environments ↗</a> ·
+        <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">demo env ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-head"><div><p class="eyebrow">01 / Purpose</p><h2>What was asked for, and what exists</h2></div></div>
+    <div class="tablewrap">
+      <table data-source="repository">
+        <thead><tr><th>Requirement</th><th>How it is met</th><th>State</th><th>Where</th><th>Official reference</th></tr></thead>
+        <tbody>
+          <tr><td class="title">Collect, organise and analyse Kalshi demo markets</td><td>A refresh job pulls markets, events, order books and candles from the demo Trade API and publishes a snapshot the site reads.</td><td><span class="badge ok">built</span></td><td><a href="../markets/">Markets</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a></td></tr>
+          <tr><td class="title">Dashboard tracking the highest dollar amount on live events</td><td>Three named dollar metrics are computed from the documented fields and ranked; the formula is printed next to every figure.</td><td><span class="badge ok">built</span></td><td><a href="../markets/">Markets</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a></td></tr>
+          <tr><td class="title">Only gas prices, elections, culture, crypto and golf</td><td>Topic filters with the classification method recorded on every row.</td><td><span class="badge warn">heuristic</span></td><td><a href="../questions/">Questions</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noreferrer">Get Series List ↗</a></td></tr>
+          <tr><td class="title">Follow live events until they resolve, and record how</td><td>Lifecycle status and the reported result, plus an append-only ledger of observed transitions.</td><td><span class="badge ok">built</span></td><td><a href="../events/">Events</a></td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noreferrer">Market Lifecycle ↗</a></td></tr>
+          <tr><td class="title">Track portfolio performance on the demo account</td><td>Balance, portfolio value, positions, realised P&amp;L, fees and fills from the official portfolio endpoints.</td><td><span class="badge bad">blocked on credentials</span></td><td><a href="../portfolio/">Portfolio</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noreferrer">Get Balance ↗</a></td></tr>
+          <tr><td class="title">Analyse trade results, categorise trades, build strategies by type</td><td>Fills are grouped by topic, side and price band and scored against reported resolutions; a strategy library states each rule, limit and state.</td><td><span class="badge ok">built</span></td><td><a href="../analysis/">Analysis</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">Get Fills ↗</a></td></tr>
+          <tr><td class="title">Execute trades and track performance</td><td>A signed order ticket against the current V2 endpoint, plus a documented automated runner with hard limits.</td><td><span class="badge bad">blocked on credentials</span></td><td><a href="../trading/">Trading</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a></td></tr>
+          <tr><td class="title">Live interactive price graph, x-axis time in seconds/minutes/hours, y-axis current price</td><td>Official candles for minutes, hours and days; browser-sampled live ticks for seconds. The x-axis granularity and window length are selectable.</td><td><span class="badge ok">built</span></td><td><a href="../chart/">Price chart</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a></td></tr>
+          <tr><td class="title">Show current liquidity and contracts available at a given price</td><td>Every price level with its contract count and dollar value, plus cumulative depth and the derived ask side.</td><td><span class="badge ok">built</span></td><td><a href="../liquidity/">Liquidity</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook ↗</a></td></tr>
+          <tr><td class="title">Suggestions section for reviewing changes before implementing them</td><td>Fourteen improvement proposals and eight discovery actions, each reviewable in the browser.</td><td><span class="badge ok">built</span></td><td><a href="../suggestions/">Suggestions</a></td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noreferrer">API Environments ↗</a></td></tr>
+          <tr><td class="title">A clear list of questions, known information and answers needed</td><td>A register of twenty-four questions split into known / missing / recommended answer, with a source on every row.</td><td><span class="badge ok">built</span></td><td><a href="../questions/">Questions</a></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noreferrer">Get Series List ↗</a></td></tr>
+          <tr><td class="title">Live GitHub Pages site with subpages by category</td><td>Thirteen pages grouped into Overview, Market data, Demo account and Review.</td><td><span class="badge ok">built</span></td><td><a href="../">Home</a></td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">Demo Environment ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">02 / Verified findings</p><h2>What the official documentation establishes</h2></div></div>
+    <div class="grid c2">
+      <article class="card">
+        <h3>The dollar question has an answer, but not the one that was asked for</h3>
+        <p>
+          Kalshi exposes <code class="mono">open_interest_fp</code>, <code class="mono">volume_fp</code>,
+          <code class="mono">volume_24h_fp</code> and <code class="mono">notional_value_dollars</code>. A binary
+          contract pays <strong>$1</strong> on a winning outcome. That makes three defensible dollar
+          measures: open-interest notional, 24-hour traded notional, and resting depth notional.
+        </p>
+        <p>
+          There is no published “highest dollar amount” ranking, and contract volume is not dollars.
+          This site therefore names each metric and prints its formula rather than substituting one for
+          another. Choosing the default ranking is a decision for a human — it is item&nbsp;1 on the
+          questions register.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a> ·
+          <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement ↗</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Resolution is a documented lifecycle, and it is auditable</h3>
+        <p>
+          Markets move through <code class="mono">initialized → active → closed → determined → finalized</code>,
+          with <code class="mono">disputed</code> and <code class="mono">amended</code> as the exception
+          states. The <code class="mono">result</code> field becomes <strong>yes</strong>,
+          <strong>no</strong> or <strong>scalar</strong>, and a settlement timer runs before payout.
+        </p>
+        <p>
+          Each event also carries its settlement sources, which is what makes a resolution
+          checkable rather than merely reported. The events page shows status, result and settlement
+          time side by side, and the ledger records what this project observed between captures.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noreferrer">Market Lifecycle ↗</a> ·
+          <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noreferrer">Get Events ↗</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>The order book answers the liquidity question directly</h3>
+        <p>
+          The book publishes <strong>bids only</strong>, on both the YES and the NO leg, as
+          <code class="mono">[price, contracts]</code> pairs sorted ascending — so the best bid is the
+          last element. The ask side is derived: a YES ask is <code class="mono">$1.00</code> minus the
+          best NO bid. A <code class="mono">depth</code> parameter returns the best N levels per side.
+        </p>
+        <p>
+          That is exactly the “how many contracts are available at a given price” question, so the
+          liquidity page answers it per level with the dollar value resting at each price.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Orderbook Responses ↗</a> ·
+          <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook ↗</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Seconds-resolution history is not on the server</h3>
+        <p>
+          The candlestick endpoint accepts <code class="mono">period_interval</code> of
+          <strong>1, 60 or 1440 minutes only</strong>. There is no sub-minute candle. A seconds view
+          is therefore produced by sampling the live public quote in the browser, and the page says
+          so rather than passing it off as an official series.
+        </p>
+        <p>
+          A true tick tape would need a signed WebSocket relay, because the Kalshi WebSocket API
+          requires handshake headers that a browser cannot set. That is the single highest-value
+          suggestion on the list.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a> ·
+          <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noreferrer">Quick Start: WebSockets ↗</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Account access is signed, and it can stay in the browser</h3>
+        <p>
+          Signed requests need three headers, with the signature taken over
+          <code class="mono">timestamp + method + path</code> using RSA-PSS SHA-256 or Ed25519, and a
+          30-second timestamp tolerance. This project signs in the browser with the Web Crypto API,
+          so a private key never has to be uploaded to any server, and it is discarded when the tab
+          closes.
+        </p>
+        <p>
+          The blocker is not technical: no Kalshi demo account exists for this project. The demo
+          environment uses mock funds and its credentials are separate from production.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">API Keys ↗</a> ·
+          <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">Demo Environment ↗</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>The order endpoint moved, and the side is quoted on one leg</h3>
+        <p>
+          The legacy <code class="mono">/portfolio/orders</code> write endpoints now return
+          <strong>410 Gone</strong>; order entry is <code class="mono">POST /portfolio/events/orders</code>.
+          Its <code class="mono">side</code> refers to the YES leg only:
+          <code class="mono">bid</code> buys YES and <code class="mono">ask</code> sells YES, with selling
+          YES economically equal to buying NO at <code class="mono">1 − price</code>.
+        </p>
+        <p>
+          The trading ticket uses that endpoint, quotes the price on the YES leg and shows the
+          equivalent NO price so a direction can never be misread.
+        </p>
+        <p class="small">
+          <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a> ·
+          <a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noreferrer">Order direction ↗</a>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">03 / Current numbers</p><h2>The dashboard, as measured right now</h2></div></div>
+    <div class="stats" id="x-stats">
+      <article><span class="k">Markets in the five topics</span><span class="v" id="x-markets">—</span><span class="d">Topic-filtered, live or snapshot</span></article>
+      <article><span class="k">Largest open-interest notional</span><span class="v" id="x-oi">—</span><span class="d">Contracts × contract notional</span></article>
+      <article><span class="k">Largest 24h traded notional</span><span class="v" id="x-vol">—</span><span class="d">Contracts × contract notional</span></article>
+      <article><span class="k">Settled markets recorded</span><span class="v" id="x-settled">—</span><span class="d" id="x-settled-note">YES / NO outcomes</span></article>
+    </div>
+    <p class="small" style="margin-top:12px" id="x-note">
+      Figures come from the demo Trade API. A blank value means the API did not return it.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">04 / What to do next</p><h2>Recommended sequence</h2></div></div>
+    <div class="tablewrap">
+      <table data-source="repository">
+        <thead><tr><th class="num">#</th><th>Action</th><th>Why it is first</th><th>Owner</th><th>Blocks</th><th>Official reference</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="title">Create the Kalshi demo account and register an API key</td><td>Every account number, every fill and every executed order depends on it. Nothing else on this list is blocked by anything that is not also blocked by this.</td><td>Account holder</td><td>Portfolio, trade execution, realised P&amp;L</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">Demo Environment ↗</a></td></tr>
+          <tr><td class="num">2</td><td class="title">Add the key as repository secrets</td><td>Lets the refresh workflow publish a portfolio snapshot on a schedule, which makes the site useful without anyone signing in.</td><td>Repository admin</td><td>Scheduled account snapshots</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">API Keys ↗</a></td></tr>
+          <tr><td class="num">3</td><td class="title">Decide the dollar ranking</td><td>Three metrics are published side by side; the leader of the board depends on this choice. It is a five-minute decision with a large effect on what the dashboard says.</td><td>Decision owner</td><td>Headline ranking</td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a></td></tr>
+          <tr><td class="num">4</td><td class="title">Approve the series allowlist</td><td>Replaces heuristic keyword matching with a reviewed scope, which is what makes the five topics defensible.</td><td>Decision owner</td><td>Topic scope accuracy</td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noreferrer">Get Series List ↗</a></td></tr>
+          <tr><td class="num">5</td><td class="title">Measure browser CORS behaviour</td><td>Determines whether the live layer is fully live or snapshot-backed, and whether a proxy is worth building.</td><td>Any reviewer with a browser</td><td>Live data guarantee</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noreferrer">Quick Start: Market Data ↗</a></td></tr>
+          <tr><td class="num">6</td><td class="title">Agree the risk limits</td><td>Size caps, price band and orders-per-run are already enforced in code, but the values are placeholders until they are agreed.</td><td>Decision owner</td><td>Enabling the automated runner</td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a></td></tr>
+          <tr><td class="num">7</td><td class="title">Review the flagged register</td><td>Twelve items are listed with a verification step for each. Accepting them documents the behaviour; correcting them changes the site.</td><td>Reviewer</td><td>Sign-off</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noreferrer">Order Errors ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">05 / Architecture</p><h2>How the site is built</h2></div></div>
+    <div class="grid c3">
+      <article class="card"><span class="idx">Data layer</span><h3>Refresh workflow</h3><p>A scheduled GitHub Actions job pulls the demo API and writes <code class="mono">data/*.json</code>. The ledger is persisted through the Actions cache so events can be followed across captures. A best-effort step commits the snapshot back to the repository.</p></article>
+      <article class="card"><span class="idx">Data layer</span><h3>Browser layer</h3><p>Every page reads the snapshot first, then tries a live public REST request. If the browser can reach the API it wins and the header shows “live”; otherwise the header shows “snapshot” with its capture time. The two are never mixed inside one table.</p></article>
+      <article class="card"><span class="idx">Presentation</span><h3>Static pages</h3><p>Thirteen pages of plain HTML, CSS and ES modules with no framework and no third-party assets, so the site has no runtime dependency to break and no build step to get wrong.</p></article>
+      <article class="card"><span class="idx">Account layer</span><h3>Browser-side signing</h3><p>Private keys are imported into the Web Crypto API and used to sign locally. Nothing is uploaded, and the key lives in <code class="mono">sessionStorage</code> only.</p></article>
+      <article class="card"><span class="idx">Account layer</span><h3>Automated runner</h3><p><code class="mono">scripts/run-demo-trade.mjs</code> places demo orders under a documented strategy with hard limits, and refuses to act unless trading is explicitly enabled and a key exists.</p></article>
+      <article class="card"><span class="idx">Quality</span><h3>Verification</h3><p>A site check validates every internal link and anchor and asserts that each data table carries a source link. The workflow runs it on every build.</p></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout warn">
+      <strong>Scope statement.</strong> Everything on this site runs against the Kalshi
+      <strong>demo</strong> environment, which uses mock funds and whose prices and behaviour may not
+      reflect real markets
+      (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">official notice ↗</a>).
+      Nothing here is evidence of live profitability, and no order is placed without an explicit
+      signed confirmation.
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/summary.js"></script>
+</body>
+</html>

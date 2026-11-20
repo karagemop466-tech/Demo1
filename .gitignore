@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build and cache output
+.cache/
+build/
+dist/
+out/
+
+# Local secrets — never commit a Kalshi private key
+*.pem
+*.key
+.env
+.env.*
+kalshi-key*
+!data/series-allowlist.json
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*

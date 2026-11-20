@@ -1,0 +1,4 @@
+{
+  "_comment": "Approved series-ticker allowlist for the five focus topics. A market whose series ticker appears here is classified with the method 'series-allowlist' and the evidence is the ticker itself, which makes the scope of the dashboard auditable. Add entries only after a human has reviewed the series and its title. Example shape: { \"KXGASREGULAR\": \"gas\" }. The topic must be one of: gas, elections, culture, crypto, golf.",
+  "_source": "https://docs.kalshi.com/api-reference/market/get-series-list"
+}

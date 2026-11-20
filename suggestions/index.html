@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions · Kalshi Demo Monitor</title>
+<meta name="description" content="Reviewable improvement suggestions for the Kalshi demo dashboard, each with the decision it needs and the official reference behind it.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="suggestions">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Review / suggestions</p>
+      <h1>Proposed improvements — review before anything changes</h1>
+      <p class="lede">
+        Every row is a proposal, not a change. Each one names what it would improve, the decision
+        a human still has to make, the blast radius, and the official reference that grounds it.
+        Your review choice is stored in this browser so you can compare options before implementing.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Review state</span>
+      <div class="value" id="s-count">—</div>
+      <p class="small" id="s-count-note">Suggestions reviewed in this browser</p>
+      <dl class="kvlist" style="margin-top:12px">
+        <div><dt>Consider</dt><dd id="s-consider">0</dd></div>
+        <div><dt>Defer</dt><dd id="s-defer">0</dd></div>
+        <div><dt>Implement now</dt><dd id="s-now">0</dd></div>
+        <div><dt>Not reviewed</dt><dd id="s-none">0</dd></div>
+      </dl>
+      <button class="btn small" id="s-reset" style="margin-top:12px">Reset my review</button>
+      <p class="small" style="margin-top:12px">
+        Reviews live in this browser's local storage. They are not published anywhere and they do
+        not change the application.
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">A / Site improvements</p>
+        <h2>Improvements to this dashboard</h2>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>Suggestion</th><th>Why it helps</th><th>Decision needed</th><th>Impact</th><th>Official reference</th><th>Your review</th></tr></thead>
+        <tbody id="s-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">B / Missing information</p>
+        <h2>Suggestions for discovering what is still unknown</h2>
+        <p class="sub">
+          Each of these is a concrete way to close a gap that currently blocks a decision. They
+          are listed here so the investigation work can be chosen deliberately.
+        </p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>Discovery action</th><th>Gap it closes</th><th>How to run it</th><th>Evidence it produces</th><th>Official reference</th><th>Your review</th></tr></thead>
+        <tbody id="d-rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/suggestions.js"></script>
+</body>
+</html>

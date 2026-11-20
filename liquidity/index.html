@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidity · Kalshi Demo Monitor</title>
+<meta name="description" content="Order-book depth for Kalshi demo markets: how many contracts rest at each price, the dollar value at each level, and the implied spread.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="liquidity">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Market data / order book</p>
+      <h1>How much rests at each price</h1>
+      <p class="lede">
+        The Kalshi order book publishes bids only, on both the YES and the NO side. The ask side is
+        derived from the reciprocal relationship between the two. This page shows, for every
+        price level, how many contracts are resting and what that depth is worth in dollars.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">How the book is read</span>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--ink-soft)">
+        <li>Level arrays are sorted ascending; the <strong>last</strong> element is the best (highest) bid.</li>
+        <li>A YES bid at $X is the same as a NO ask at $1.00 − X.</li>
+        <li>Depth shown is resting liquidity, not guaranteed fill size.</li>
+      </ul>
+      <p class="small" style="margin-top:12px">
+        Source: <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Orderbook responses ↗</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="controls">
+      <label class="field"><span>Market</span><select id="l-market"><option value="">Loading…</option></select></label>
+      <label class="field"><span>Depth levels per side</span>
+        <select id="l-depth">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+        </select>
+      </label>
+      <button class="btn" id="l-refresh">↻ Refresh book</button>
+      <span class="mono" id="l-freshness" style="color:var(--muted)"></span>
+    </div>
+
+    <div class="grid c4" style="margin-bottom:18px">
+      <article class="card"><span class="idx">Best YES bid</span><div class="value" id="l-yesbid">—</div><p class="small">Highest resting YES bid</p></article>
+      <article class="card"><span class="idx">Implied YES ask</span><div class="value" id="l-yesask">—</div><p class="small">$1.00 − best NO bid</p></article>
+      <article class="card"><span class="idx">Spread</span><div class="value" id="l-spread">—</div><p class="small">Ask − bid</p></article>
+      <article class="card"><span class="idx">Resting depth (both sides)</span><div class="value" id="l-depthv">—</div><p class="small" id="l-depthnote">Contracts · dollar value</p></article>
+    </div>
+
+    <div class="grid c2" style="align-items:start">
+      <div>
+        <h3 style="margin-bottom:10px">YES bids</h3>
+        <div class="tablewrap">
+          <table data-source="runtime">
+            <thead><tr><th class="num">Price</th><th class="num">Contracts available</th><th class="num">Value at price</th><th class="num">Cumulative contracts</th><th>Source</th></tr></thead>
+            <tbody id="l-yes"><tr><td colspan="5" class="empty">Select a market.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px">NO bids</h3>
+        <div class="tablewrap">
+          <table data-source="runtime">
+            <thead><tr><th class="num">Price</th><th class="num">Contracts available</th><th class="num">Value at price</th><th class="num">Cumulative contracts</th><th>Source</th></tr></thead>
+            <tbody id="l-no"><tr><td colspan="5" class="empty">Select a market.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="chartbox" style="margin-top:18px;height:300px">
+      <canvas id="l-chart" aria-label="Cumulative order-book depth by price"></canvas>
+      <div class="chartmsg" id="l-msg">Select a market to plot depth.</div>
+    </div>
+    <div class="chart-legend" id="l-legend"></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/liquidity.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markets · Kalshi Demo Monitor</title>
+<meta name="description" content="Live Kalshi demo markets in gas prices, elections, culture, crypto and golf, ranked by explicit dollar metrics.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="markets">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Market data / live scan</p>
+      <h1>Markets, ranked by dollar amount</h1>
+      <p class="lede">
+        Every market in the five focus topics that the demo API returns, with the full price and
+        size snapshot per ticker. Ranking uses <strong>named</strong> dollar metrics so no row can
+        be mistaken for a different one.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Metric definitions</span>
+      <dl class="kvlist">
+        <div><dt>Open interest notional</dt><dd>open_interest_fp × notional_value_dollars</dd></div>
+        <div><dt>24h traded notional</dt><dd>volume_24h_fp × notional_value_dollars</dd></div>
+        <div><dt>Lifetime traded notional</dt><dd>volume_fp × notional_value_dollars</dd></div>
+        <div><dt>YES ask</dt><dd>$1.00 − best NO bid</dd></div>
+      </dl>
+      <p class="small" style="margin-top:12px">
+        Kalshi publishes no single “dollar amount” ranking, so this site computes and names the
+        metric rather than substituting contract volume. Sources:
+        <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a> ·
+        <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">Orderbook responses ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="stats" style="margin-bottom:26px">
+    <article><span class="k">Rows in view</span><span class="v" id="m-count">—</span><span class="d" id="m-count-note">Filtered from the topic set</span></article>
+    <article><span class="k">Open now</span><span class="v" id="m-open">—</span><span class="d">status = active</span></article>
+    <article><span class="k">Largest OI notional</span><span class="v" id="m-topoi">—</span><span class="d" id="m-topoi-note">—</span></article>
+    <article><span class="k">Largest 24h notional</span><span class="v" id="m-topvol">—</span><span class="d" id="m-topvol-note">—</span></article>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="controls">
+      <div class="pill-row" id="m-topics" style="margin:0"></div>
+      <label class="field"><span>Search</span><input type="search" id="m-search" placeholder="Title, ticker or event"></label>
+      <label class="field"><span>Status</span>
+        <select id="m-status">
+          <option value="all">All</option>
+          <option value="active">Open (active)</option>
+          <option value="closed">Closed</option>
+          <option value="finalized">Settled (finalized)</option>
+        </select>
+      </label>
+      <label class="field"><span>Sort by</span>
+        <select id="m-sort">
+          <option value="oi">Open interest notional</option>
+          <option value="vol24">24h traded notional</option>
+          <option value="vol">Lifetime traded notional</option>
+          <option value="contracts">Open interest (contracts)</option>
+          <option value="spread">Spread (tightest first)</option>
+          <option value="updated">Recently updated</option>
+        </select>
+      </label>
+      <button class="btn" id="m-refresh">↻ Refresh</button>
+    </div>
+
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead>
+          <tr>
+            <th>Market / event</th>
+            <th>Topic &amp; how it was classified</th>
+            <th class="num">YES bid (size)</th>
+            <th class="num">YES ask (size)</th>
+            <th class="num">NO bid (size)</th>
+            <th class="num">Last</th>
+            <th class="num">Open interest (contracts)</th>
+            <th class="num">OI notional</th>
+            <th class="num">24h notional</th>
+            <th class="num">Spread</th>
+            <th>Status</th>
+            <th>Resolution</th>
+            <th>Sources</th>
+          </tr>
+        </thead>
+        <tbody id="m-rows">
+          <tr><td colspan="13" class="empty">Loading market data…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="small" style="margin-top:12px">
+      A blank cell means the API did not return that value — it is never a zero and never an estimate.
+      “Spread” is derived as (implied YES ask − best YES bid) from the live quote fields; the order-book
+      depth behind it is on the <a href="../liquidity/">liquidity</a> page.
+      <span id="m-freshness" class="mono"></span>
+    </p>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/markets.js"></script>
+</body>
+</html>

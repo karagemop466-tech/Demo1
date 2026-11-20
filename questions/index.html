@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions &amp; gaps · Kalshi Demo Monitor</title>
+<meta name="description" content="Every open question that must be answered before a reasonable decision can be made: what is known from official sources, what is missing, and how to find the answer.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="questions">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Review / questions and gaps</p>
+      <h1>What has to be answered before a decision is reasonable</h1>
+      <p class="lede">
+        Three columns of truth for every question: what the official documentation already
+        establishes, what this project still does not know, and the answer or the evidence that
+        would close it. A question is only marked answered when an official source backs it.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Status of the list</span>
+      <div class="value" id="q-count">—</div>
+      <p class="small" id="q-count-note">Questions in the register</p>
+      <dl class="kvlist" style="margin-top:12px">
+        <div><dt>Answered from an official source</dt><dd id="q-answered">0</dd></div>
+        <div><dt>Needs a decision</dt><dd id="q-decision">0</dd></div>
+        <div><dt>Needs evidence that does not exist yet</dt><dd id="q-evidence">0</dd></div>
+      </dl>
+      <p class="small" style="margin-top:12px">
+        The "answer" column is the recommended resolution. It is a proposal for a human to
+        confirm, not an applied change.
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="controls">
+      <label class="field"><span>Area</span>
+        <select id="q-area">
+          <option value="all">All areas</option>
+          <option value="Metric">Metric definitions</option>
+          <option value="Scope">Scope &amp; taxonomy</option>
+          <option value="Data">Data &amp; freshness</option>
+          <option value="Resolution">Resolution &amp; settlement</option>
+          <option value="Account">Account &amp; performance</option>
+          <option value="Risk">Risk &amp; execution</option>
+          <option value="Governance">Governance &amp; deployment</option>
+        </select>
+      </label>
+      <label class="field"><span>Status</span>
+        <select id="q-status">
+          <option value="all">All</option>
+          <option value="answered">Answered</option>
+          <option value="decision">Needs a decision</option>
+          <option value="evidence">Needs evidence</option>
+        </select>
+      </label>
+      <label class="field"><span>Search</span><input type="search" id="q-search" placeholder="Question text"></label>
+    </div>
+
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead>
+          <tr>
+            <th class="num">#</th><th>Question</th><th>What we already know (official source)</th>
+            <th>What is still missing</th><th>Recommended answer / next step</th>
+            <th>Status</th><th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="q-rows"></tbody>
+      </table>
+    </div>
+    <p class="small" style="margin-top:12px">
+      Every row links to the official Kalshi documentation that supports the “known” column.
+      Nothing in the “missing” column is filled in by assumption.
+    </p>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/questions.js"></script>
+</body>
+</html>

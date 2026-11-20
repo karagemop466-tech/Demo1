@@ -1,12 +1,215 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Kalshi demo-market monitoring dashboard and decision-support workspace."><title>Kalshi Demo · Market Monitor</title><link rel="stylesheet" href="styles.css"></head>
-<body><header class="top"><a class="brand" href="#overview"><span class="mark">K</span> KALSHI <b>DEMO</b></a><nav><a href="#markets">Markets</a><a href="#portfolio">Portfolio</a><a href="#analysis">Analysis</a><a href="#suggestions">Suggestions</a><a href="#review">Review flags</a></nav><span class="status"><i></i><span id="connection">Connecting…</span></span></header>
-<main><section class="hero" id="overview"><div><p class="eyebrow">DEMO ENVIRONMENT · DECISION SUPPORT</p><h1>Market activity,<br><em>without the guesswork.</em></h1><p class="lede">Monitor eligible Kalshi demo markets, inspect order-book depth, and keep uncertainty visible. Public market data only; no orders are sent from this dashboard.</p><div class="actions"><a class="button primary" href="#markets">Explore markets <span>↓</span></a><a class="button secondary" href="#review">Open review list</a></div></div><aside class="hero-card"><span class="label">DATA STATUS</span><strong id="last-updated">Waiting for first refresh</strong><p id="status-note">Connecting to Kalshi demo public market data. Values remain blank until an official response is received.</p><div class="divider"></div><div class="mini-row"><span>Environment</span><b>DEMO</b></div><div class="mini-row"><span>Automatic trading</span><b>OFF</b></div></aside></section>
-<section class="stats"><article><span>OPEN MATCHES</span><b id="stat-count">—</b><small>Selected topics only</small></article><article><span>HIGHEST OBSERVED VOLUME</span><b id="stat-volume">—</b><small>Contracts; not dollar liquidity</small></article><article><span>PORTFOLIO VALUE</span><b>—</b><small>Private account data not connected</small></article><article><span>RESOLVED EVENTS</span><b id="stat-resolved">—</b><small>History not loaded</small></article></section>
-<section class="section" id="markets"><div class="section-head"><div><p class="eyebrow">01 / LIVE MARKET SCAN</p><h2>Markets in focus</h2><p class="sub">Gas prices, elections, culture, crypto and golf. Ranking is by reported contract volume—not a claim about dollar exposure.</p></div><button class="button secondary" id="refresh">↻ Refresh data</button></div><div class="toolbar"><div class="chips" id="topic-filter"><button class="chip active" data-topic="all">All topics</button><button class="chip" data-topic="gas">Gas prices</button><button class="chip" data-topic="elections">Elections</button><button class="chip" data-topic="culture">Culture</button><button class="chip" data-topic="crypto">Crypto</button><button class="chip" data-topic="golf">Golf</button></div><label>Search <input id="search" placeholder="Market title or ticker"></label></div><div class="table-wrap"><table><thead><tr><th>Market / event</th><th>Topic</th><th>YES bid / ask</th><th>Volume (contracts)</th><th>Liquidity / depth</th><th>Status / resolution</th><th>Source</th></tr></thead><tbody id="market-rows"><tr><td colspan="7" class="empty">Waiting for verified demo API response…</td></tr></tbody></table></div><p class="footnote">Empty values indicate unavailable data; they are not zero. “Volume” is the API-reported contract count and does not establish dollars traded, current executable size, or total event exposure.</p></section>
-<section class="section split" id="chart"><div><p class="eyebrow">02 / PRICE HISTORY</p><h2>Contract price movement</h2><p class="sub">Select a market above to inspect prices. Historical charting requires a supported candle/history endpoint; this page does not invent datapoints.</p><div class="toolbar chart-controls"><label>Market <select id="chart-market"><option value="">Select a market</option></select></label><label>Interval <select id="interval"><option value="1m">1 minute</option><option value="5m">5 minutes</option><option value="1h">1 hour</option><option value="1d">1 day</option></select></label><label>Window <select id="window"><option value="1h">1 hour</option><option value="6h">6 hours</option><option value="24h">24 hours</option><option value="7d">7 days</option></select></label></div><div class="chartbox"><canvas id="price-chart" aria-label="Selected contract price over time"></canvas><div id="chart-empty">Choose a market. Historical points appear only when returned by the official API.</div></div><small class="footnote">Y axis: YES contract price (USD). X axis: timestamp. No price history loaded.</small></div><aside class="panel"><p class="eyebrow">ORDER BOOK</p><h3>Available at each price</h3><p class="sub">Select a market. Public order book levels represent displayed bid depth; they are not guaranteed fills.</p><div id="book"><div class="empty">No market selected.</div></div><a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market-order-book" target="_blank" rel="noreferrer">Official order-book API ↗</a></aside></section>
-<section class="section" id="portfolio"><div class="section-head"><div><p class="eyebrow">03 / DEMO ACCOUNT</p><h2>Portfolio performance</h2><p class="sub">Account metrics, fills and P&amp;L require authenticated demo API access. No credentials are requested or stored in this static site.</p></div><span class="badge warn">NOT CONNECTED</span></div><div class="table-wrap"><table><thead><tr><th>Metric</th><th>Value</th><th>Availability</th><th>Official reference</th></tr></thead><tbody><tr><td>Cash balance</td><td> </td><td>Private authenticated endpoint; not connected</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noreferrer">Get balance ↗</a></td></tr><tr><td>Positions / realized P&amp;L</td><td> </td><td>Requires authenticated portfolio data</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noreferrer">Positions API ↗</a></td></tr><tr><td>Trade history / fees</td><td> </td><td>Requires fills, fees and timestamps; not loaded</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">Fills API ↗</a></td></tr></tbody></table></div><p class="footnote">Order entry deliberately disabled. Do not put API private keys in GitHub Pages or browser storage. A secure server-side signing service, account authorization and explicit risk limits are prerequisites.</p></section>
-<section class="section" id="analysis"><p class="eyebrow">04 / TRADE ANALYSIS</p><h2>What to measure before judging a strategy</h2><div class="cards"><article><span class="num">A</span><h3>Outcomes &amp; costs</h3><p>Group completed trades by topic, strategy tag, YES/NO side and entry price. Calculate realized returns only from actual fills, resolution payouts and fees.</p></article><article><span class="num">B</span><h3>Risk &amp; execution</h3><p>Compare intended versus filled price, slippage, spread, depth at requested size, concentration, and worst-case loss. Preserve timestamps and source records.</p></article><article><span class="num">C</span><h3>Evidence quality</h3><p>Separate open positions from resolved outcomes. Report sample size, missing records and uncertainty; avoid claiming predictive edge from a small sample.</p></article></div></section>
-<section class="section" id="suggestions"><p class="eyebrow">05 / SUGGESTION REVIEW</p><h2>Proposed improvements</h2><p class="sub">Suggestions are review items, not automatically applied changes. Choose a status to record a local review preference; it does not publish or change the application.</p><div class="table-wrap"><table><thead><tr><th>Suggestion</th><th>Why it helps</th><th>Decision needed</th><th>Official reference</th><th>Review</th></tr></thead><tbody id="suggestion-rows"></tbody></table></div></section>
-<section class="section" id="review"><p class="eyebrow">06 / TRANSPARENCY</p><h2>Questions &amp; flagged for review</h2><p class="sub">A reasonable trading or deployment decision cannot be made until these unknowns are resolved. Blank means not verified from available official information.</p><div class="table-wrap"><table><thead><tr><th>Question / unknown</th><th>Known from official source</th><th>Missing evidence / next step</th><th>Source</th></tr></thead><tbody id="question-rows"></tbody></table></div><div class="note"><b>Irregularities flagged:</b> The requested “highest dollar amount” metric is not established by contract volume alone. Dollars at risk and liquidity-at-price need an agreed calculation and live order-book/portfolio data. User-supplied demo URLs are retained as configured; authenticated trading and deployment credentials were not supplied. No orders are placed.</div></section>
-<footer><span>Kalshi Demo Monitor · Research prototype</span><span>Data refreshes from the demo API when available · <a href="https://docs.kalshi.com/" target="_blank" rel="noreferrer">Official API documentation ↗</a></span></footer></main><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Monitor — live market &amp; portfolio dashboard</title>
+<meta name="description" content="Live monitoring dashboard for the Kalshi demo environment: highest-dollar markets in gas prices, elections, culture, crypto and golf; price charts, liquidity depth, event resolution tracking, portfolio performance and trade analysis.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://karagemop466-tech.github.io/Demo1/">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314674a'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='19' font-weight='bold' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+</head>
+<body data-page="home" data-root="true">
+<div id="site-header"></div>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Kalshi demo environment · mock funds only</p>
+      <h1>Track the biggest dollar markets on Kalshi — <span class="accent">and follow them to resolution.</span></h1>
+      <p class="lede">
+        A live dashboard for the Kalshi <strong>demo</strong> environment, scoped to five topics:
+        gas prices, elections, culture, crypto and golf. It ranks markets by explicit dollar
+        metrics, charts contract prices over time, shows how many contracts rest at each price,
+        tracks live events until they settle YES or NO, and reports demo-account performance.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="markets/">Open the market dashboard →</a>
+        <a class="btn" href="summary/">Read the executive summary</a>
+        <a class="btn" href="flagged/">See what is still unverified</a>
+      </div>
+      <p class="small" style="margin-top:18px">
+        Every figure on this site is pulled from the official demo Trade API. When a value cannot be
+        confirmed from an official source, the cell is left blank and the item is listed on
+        <a href="flagged/">Flagged for review</a>.
+      </p>
+    </div>
+
+    <aside class="panel">
+      <span class="label">Data status</span>
+      <div class="value" id="home-status">Checking…</div>
+      <p class="small" id="home-status-note">Connecting to the demo environment.</p>
+      <dl style="margin-top:14px">
+        <div class="kv"><dt>REST base</dt><dd>external-api.demo.kalshi.co</dd></div>
+        <div class="kv"><dt>WebSocket</dt><dd>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</dd></div>
+        <div class="kv"><dt>Snapshot captured</dt><dd id="home-captured">—</dd></div>
+        <div class="kv"><dt>Live transport</dt><dd id="home-transport">—</dd></div>
+        <div class="kv"><dt>Trading</dt><dd>manual ticket only</dd></div>
+      </dl>
+      <p class="small" style="margin-top:14px">
+        Sources: <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noreferrer">API environments ↗</a> ·
+        <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">demo environment ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="stats" id="home-stats">
+    <article>
+      <span class="k">Markets tracked</span>
+      <span class="v" id="s-markets">—</span>
+      <span class="d" id="s-markets-note">Across the five focus topics</span>
+    </article>
+    <article>
+      <span class="k">Highest open-interest notional</span>
+      <span class="v" id="s-topnotional">—</span>
+      <span class="d" id="s-topnotional-note">Contracts × contract notional</span>
+    </article>
+    <article>
+      <span class="k">Highest 24h traded notional</span>
+      <span class="v" id="s-topvol">—</span>
+      <span class="d" id="s-topvol-note">Contracts × contract notional</span>
+    </article>
+    <article>
+      <span class="k">Events resolved</span>
+      <span class="v" id="s-resolved">—</span>
+      <span class="d" id="s-resolved-note">YES / NO outcomes recorded</span>
+    </article>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">01 / Largest dollar exposure right now</p>
+        <h2>Top markets by dollar amount</h2>
+        <p class="sub">
+          Ranked by <strong>open interest notional</strong> = open contracts × contract notional.
+          Kalshi does not publish a single “highest dollar amount” figure, so the metric is named
+          and the formula is shown for every row. Alternative definitions are listed on the
+          <a href="questions/">Questions &amp; gaps</a> page.
+        </p>
+      </div>
+      <a class="btn" href="markets/">All markets →</a>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead>
+          <tr>
+            <th>Market</th><th>Topic</th>
+            <th class="num">Open interest (contracts)</th>
+            <th class="num">Open interest notional</th>
+            <th class="num">24h traded notional</th>
+            <th>YES bid / ask</th><th>Status</th><th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="home-top">
+          <tr><td colspan="8" class="empty">Loading market data…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">02 / Where to go next</p>
+        <h2>Organised by what you are trying to decide</h2>
+      </div>
+    </div>
+    <div class="grid c3">
+      <article class="card">
+        <span class="idx">Market data</span>
+        <h3>Markets</h3>
+        <p>All markets in the five focus topics, filtered live, ranked by dollar amount with the full price and size snapshot for each ticker.</p>
+        <p style="margin-top:12px"><a class="btn small" href="markets/">Open markets</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Market data</span>
+        <h3>Price chart</h3>
+        <p>Contract price against time. Choose seconds, minutes, hours or days for the x-axis and the window length. Uses official candlesticks plus live ticks.</p>
+        <p style="margin-top:12px"><a class="btn small" href="chart/">Open price chart</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Market data</span>
+        <h3>Liquidity</h3>
+        <p>How many contracts rest at each price, the dollar value at each level, and the implied spread from the public order book.</p>
+        <p style="margin-top:12px"><a class="btn small" href="liquidity/">Open liquidity</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Market data</span>
+        <h3>Events &amp; resolution</h3>
+        <p>Every event in scope with its lifecycle status, and the ledger that records how each market settled — YES or NO.</p>
+        <p style="margin-top:12px"><a class="btn small" href="events/">Open events</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Demo account</span>
+        <h3>Portfolio</h3>
+        <p>Balance, positions, realised P&amp;L, fees and fills for the Kalshi demo account, with the exact endpoint behind each number.</p>
+        <p style="margin-top:12px"><a class="btn small" href="portfolio/">Open portfolio</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Demo account</span>
+        <h3>Trading</h3>
+        <p>A signed order ticket for the demo environment, with hard risk limits, a durable trade journal, and no credential storage on any server.</p>
+        <p style="margin-top:12px"><a class="btn small" href="trading/">Open trading</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Demo account</span>
+        <h3>Trade analysis</h3>
+        <p>Trades grouped by topic, strategy, side and price bucket, with win rate and realised P&amp;L computed only from actual fills.</p>
+        <p style="margin-top:12px"><a class="btn small" href="analysis/">Open trade analysis</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Review</span>
+        <h3>Suggestions</h3>
+        <p>Proposed improvements to the site, each with the decision it needs and the official reference behind it. Reviewable before anything changes.</p>
+        <p style="margin-top:12px"><a class="btn small" href="suggestions/">Open suggestions</a></p>
+      </article>
+      <article class="card">
+        <span class="idx">Review</span>
+        <h3>Questions &amp; gaps</h3>
+        <p>Every open question, what is already known from an official source, what is missing, and how to find the answer.</p>
+        <p style="margin-top:12px"><a class="btn small" href="questions/">Open questions</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">03 / Scope and honesty</p>
+        <h2>What this site does — and what it refuses to do</h2>
+      </div>
+    </div>
+    <div class="grid c2">
+      <article class="card">
+        <h3>What it does</h3>
+        <ul style="margin:8px 0 0;padding-left:20px;font-size:13.5px;color:var(--ink-soft)">
+          <li>Reads live public demo data: markets, events, order books, candlesticks.</li>
+          <li>Ranks markets by named dollar metrics with the formula shown.</li>
+          <li>Charts contract price over time at seconds / minutes / hours / days granularity.</li>
+          <li>Shows contracts and dollar value resting at each price level.</li>
+          <li>Tracks each market's lifecycle and records how it resolved (YES / NO).</li>
+          <li>Reports demo-account balance, positions, fills and realised P&amp;L when a key is connected.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>What it will not do</h3>
+        <ul style="margin:8px 0 0;padding-left:20px;font-size:13.5px;color:var(--ink-soft)">
+          <li>Invent, interpolate or carry forward a value it did not receive from the API.</li>
+          <li>Present contract volume as “dollars” without naming the metric used.</li>
+          <li>Publish, store or transmit a Kalshi private key.</li>
+          <li>Place an order without an explicit, signed confirmation from the operator.</li>
+          <li>Claim a result before the exchange reports one.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/pages/home.js"></script>
+</body>
+</html>

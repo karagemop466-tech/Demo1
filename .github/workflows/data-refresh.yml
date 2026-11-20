@@ -1,0 +1,99 @@
+name: Refresh Kalshi demo data
+
+# Captures a fresh snapshot of the Kalshi DEMO environment into data/ and keeps a
+# persistent resolution ledger so events can be tracked until they settle.
+#
+# The ledger is persisted with the Actions cache (no repository write permission
+# required). The optional "commit back" step is best-effort and is skipped
+# automatically when the token is not allowed to push.
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      execute_demo_trades:
+        description: 'Place demo orders against the Kalshi demo environment (requires repository secrets)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore persistent resolution ledger
+        uses: actions/cache/restore@v4
+        id: restore-ledger
+        with:
+          path: .cache/kalshi
+          key: kalshi-ledger-${{ github.run_id }}
+          restore-keys: kalshi-ledger-
+
+      - name: Seed working copy from the cached ledger
+        run: |
+          mkdir -p .cache/kalshi data
+          if [ -f .cache/kalshi/resolutions.json ]; then
+            cp .cache/kalshi/resolutions.json data/resolutions.json
+            echo "ledger restored"
+          else
+            echo "no cached ledger yet"
+          fi
+
+      - name: Capture live Kalshi demo data
+        continue-on-error: true
+        run: node scripts/fetch-demo-data.mjs
+
+      - name: Capture demo account snapshot
+        continue-on-error: true
+        env:
+          KALSHI_API_KEY_ID: ${{ secrets.KALSHI_API_KEY_ID }}
+          KALSHI_PRIVATE_KEY: ${{ secrets.KALSHI_PRIVATE_KEY }}
+        run: node scripts/fetch-account.mjs
+
+      - name: Execute demo trades (opt-in)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.execute_demo_trades }}
+        continue-on-error: true
+        env:
+          KALSHI_ENABLE_TRADING: '1'
+          KALSHI_API_KEY_ID: ${{ secrets.KALSHI_API_KEY_ID }}
+          KALSHI_PRIVATE_KEY: ${{ secrets.KALSHI_PRIVATE_KEY }}
+        run: node scripts/run-demo-trade.mjs
+
+      - name: Persist ledger to the cache
+        if: always()
+        run: |
+          mkdir -p .cache/kalshi
+          if [ -f data/resolutions.json ]; then
+            cp data/resolutions.json .cache/kalshi/resolutions.json
+          fi
+
+      - name: Save ledger cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/kalshi
+          key: kalshi-ledger-${{ github.run_id }}
+
+      - name: Commit refreshed snapshot back to main (best effort)
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data || true
+          if git diff --staged --quiet; then
+            echo "no data changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(data): refresh Kalshi demo snapshot [skip ci]"
+          git push origin HEAD:main

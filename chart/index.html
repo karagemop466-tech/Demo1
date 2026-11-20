@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price chart · Kalshi Demo Monitor</title>
+<meta name="description" content="Interactive contract price chart for Kalshi demo markets. X axis is time with seconds, minutes, hours or days granularity; y axis is the current contract price.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="chart">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Market data / price history</p>
+      <h1>Contract price over time</h1>
+      <p class="lede">
+        The x-axis is time and the y-axis is the current contract price in dollars. Choose the
+        granularity and how much history to show; the chart only draws points the API actually
+        returned.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">About the x-axis options</span>
+      <p class="small">
+        The official candlestick endpoint accepts <code class="mono">period_interval</code> of
+        <strong>1, 60 or 1440 minutes only</strong> — one minute, one hour, one day. There is no
+        sub-minute server-side candle.
+      </p>
+      <p class="small" style="margin-top:8px">
+        <strong>Seconds</strong> is therefore produced by sampling the live public quote in your
+        browser at the chosen cadence and plotting those client-side ticks. It is real API data,
+        but it is sampled by this page rather than served as an official candle series.
+      </p>
+      <p class="small" style="margin-top:8px">
+        Source: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="controls">
+      <label class="field"><span>Market</span><select id="c-market"><option value="">Loading…</option></select></label>
+      <label class="field"><span>X-axis granularity</span>
+        <select id="c-gran">
+          <option value="second">Seconds (live sampled ticks)</option>
+          <option value="minute" selected>Minutes (1-minute candles)</option>
+          <option value="hour">Hours (1-hour candles)</option>
+          <option value="day">Days (1-day candles)</option>
+        </select>
+      </label>
+      <label class="field"><span>Chart length</span>
+        <select id="c-window">
+          <option value="300">Last 5 minutes</option>
+          <option value="900">Last 15 minutes</option>
+          <option value="3600" selected>Last 1 hour</option>
+          <option value="21600">Last 6 hours</option>
+          <option value="86400">Last 24 hours</option>
+          <option value="604800">Last 7 days</option>
+          <option value="2592000">Last 30 days</option>
+        </select>
+      </label>
+      <label class="field" id="c-poll-wrap"><span>Live sample every</span>
+        <select id="c-poll">
+          <option value="2">2 seconds</option>
+          <option value="5" selected>5 seconds</option>
+          <option value="10">10 seconds</option>
+          <option value="30">30 seconds</option>
+        </select>
+      </label>
+      <button class="btn" id="c-refresh">↻ Reload series</button>
+      <button class="btn" id="c-live">▶ Start live sampling</button>
+    </div>
+
+    <div class="chartbox">
+      <canvas id="c-canvas" aria-label="Contract price over time"></canvas>
+      <div class="chartmsg" id="c-msg">Choose a market to load its price series.</div>
+    </div>
+
+    <div class="chart-legend" id="c-legend"></div>
+
+    <div class="grid c4" style="margin-top:18px">
+      <article class="card"><span class="idx">Last price</span><div class="value" id="c-last">—</div><p class="small" id="c-last-time">—</p></article>
+      <article class="card"><span class="idx">Best YES bid</span><div class="value" id="c-bid">—</div><p class="small">From the public quote fields</p></article>
+      <article class="card"><span class="idx">Implied YES ask</span><div class="value" id="c-ask">—</div><p class="small">$1.00 − best NO bid</p></article>
+      <article class="card"><span class="idx">Points plotted</span><div class="value" id="c-points">—</div><p class="small" id="c-source">—</p></article>
+    </div>
+
+    <div class="callout info" style="margin-top:18px">
+      <strong>How to read this.</strong> Y is the contract price in dollars (a binary contract
+      settles at $1 or $0). X is the timestamp of each observation. Candle points use the official
+      candle close; live points use the most recent trade price reported by the API.
+      <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Candlestick reference ↗</a>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/chart.js"></script>
+</body>
+</html>

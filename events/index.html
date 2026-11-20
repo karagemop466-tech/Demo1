@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events &amp; resolution · Kalshi Demo Monitor</title>
+<meta name="description" content="Live Kalshi demo events in gas prices, elections, culture, crypto and golf, tracked through the market lifecycle until each one resolves YES or NO.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="events">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Market data / lifecycle</p>
+      <h1>Events, tracked until they resolve</h1>
+      <p class="lede">
+        Each market follows a documented lifecycle — <code class="mono">initialized</code>,
+        <code class="mono">active</code>, <code class="mono">closed</code>,
+        <code class="mono">determined</code>, <code class="mono">finalized</code> — and the result is
+        set to <strong>yes</strong>, <strong>no</strong> or <strong>scalar</strong>. This page
+        follows the events in scope and records how each one ended.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Lifecycle reference</span>
+      <dl class="kvlist">
+        <div><dt>initialized</dt><dd>created, not yet open</dd></div>
+        <div><dt>active</dt><dd>open for trading</dd></div>
+        <div><dt>inactive</dt><dd>paused by the exchange</dd></div>
+        <div><dt>closed</dt><dd>past close_time, awaiting determination</dd></div>
+        <div><dt>determined</dt><dd>result known, settlement timer running</dd></div>
+        <div><dt>finalized</dt><dd>settled, positions paid out</dd></div>
+      </dl>
+      <p class="small" style="margin-top:12px">
+        Source: <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noreferrer">Market Lifecycle ↗</a> ·
+        <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">Market Settlement ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="stats" style="margin-bottom:22px">
+    <article><span class="k">Events in scope</span><span class="v" id="e-count">—</span><span class="d">Across the five focus topics</span></article>
+    <article><span class="k">Still open</span><span class="v" id="e-open">—</span><span class="d">status = active</span></article>
+    <article><span class="k">Resolved YES</span><span class="v" id="e-yes">—</span><span class="d">result = yes</span></article>
+    <article><span class="k">Resolved NO</span><span class="v" id="e-no">—</span><span class="d">result = no</span></article>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="controls">
+      <div class="pill-row" id="e-topics" style="margin:0"></div>
+      <label class="field"><span>Resolution state</span>
+        <select id="e-state">
+          <option value="all">All</option>
+          <option value="open">Not yet resolved</option>
+          <option value="yes">Resolved YES</option>
+          <option value="no">Resolved NO</option>
+          <option value="scalar">Resolved scalar</option>
+        </select>
+      </label>
+      <label class="field"><span>Search</span><input type="search" id="e-search" placeholder="Event title or ticker"></label>
+    </div>
+
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead>
+          <tr>
+            <th>Event</th><th>Topic</th><th>Series / event ticker</th>
+            <th class="num">Markets</th><th>Close time</th><th>Status</th>
+            <th>Resolution</th><th>Settled at</th><th>Settlement value</th><th>Sources</th>
+          </tr>
+        </thead>
+        <tbody id="e-rows"><tr><td colspan="10" class="empty">Loading event data…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="small" style="margin-top:12px">
+      Event rows come from <code class="mono">GET /events?with_nested_markets=true</code>. The
+      status filter on that endpoint matches on <em>child market</em> statuses, so an event can
+      appear as both open and settled.
+      <span id="e-freshness" class="mono"></span>
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Resolution ledger</p>
+        <h2>How each market was resolved</h2>
+        <p class="sub">
+          An append-only record built by the refresh job. Each row shows the status and result the
+          API reported, the moment it was first observed, and the transition between captures. It
+          is an observation history created by this project, not an official Kalshi event log.
+        </p>
+      </div>
+      <button class="btn" id="e-reload">↻ Reload ledger</button>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead>
+          <tr><th>Market</th><th>Topic</th><th>Status</th><th>Result</th><th>First observed</th><th>Transition since last capture</th><th>Observed at</th><th>Source</th></tr>
+        </thead>
+        <tbody id="e-ledger"><tr><td colspan="8" class="empty">No ledger yet — it is created by the refresh workflow.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/events.js"></script>
+</body>
+</html>

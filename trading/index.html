@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading · Kalshi Demo Monitor</title>
+<meta name="description" content="Signed demo order ticket for Kalshi with hard risk limits, a durable trade journal, and the strategy rules used by the automated demo runner.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="trading">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Demo account / execution</p>
+      <h1>Place a demo order, and keep the record</h1>
+      <p class="lede">
+        Orders are signed in your browser with your own Kalshi demo key and sent straight to the
+        demo environment. The legacy write endpoint is gone, so this page uses
+        <code class="mono">POST /portfolio/events/orders</code> — the current V2 shape, where the
+        side is quoted on the YES leg only.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Guardrails in this ticket</span>
+      <dl class="kvlist">
+        <div><dt>Max contracts per order</dt><dd id="g-max">—</dd></div>
+        <div><dt>Allowed price band</dt><dd id="g-band">—</dd></div>
+        <div><dt>Max orders per session</dt><dd id="g-maxorders">—</dd></div>
+        <div><dt>Confirmation</dt><dd>explicit, per order</dd></div>
+      </dl>
+      <p class="small" style="margin-top:12px">
+        Source: <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a> ·
+        <a href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noreferrer">Order errors ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <div class="callout warn" style="margin-bottom:20px">
+    <strong>Demo environment only.</strong> The demo environment uses mock funds and its prices do
+    not reflect real markets
+    (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">official demo-environment notice ↗</a>).
+    Demo credentials are not shared with production, so a demo key cannot move real money.
+  </div>
+
+  <section class="section" style="padding-top:0">
+    <div class="grid c2" style="align-items:start">
+      <div>
+        <h3 style="margin-bottom:12px">Order ticket</h3>
+        <div class="card">
+          <div class="controls" style="margin-bottom:14px">
+            <label class="field" style="flex:1"><span>Market</span><select id="t-market"><option value="">Loading…</option></select></label>
+            <label class="field"><span>Side (YES leg)</span>
+              <select id="t-side">
+                <option value="bid">Buy YES (bid)</option>
+                <option value="ask">Sell YES (ask)</option>
+              </select>
+            </label>
+          </div>
+          <div class="controls" style="margin-bottom:14px">
+            <label class="field"><span>Price (YES, USD)</span><input id="t-price" type="number" step="0.01" min="0.01" max="0.99" value="0.50"></label>
+            <label class="field"><span>Contracts</span><input id="t-count" type="number" step="1" min="1" value="1"></label>
+            <label class="field"><span>Time in force</span>
+              <select id="t-tif">
+                <option value="good_till_canceled">good_till_canceled</option>
+                <option value="immediate_or_cancel">immediate_or_cancel</option>
+                <option value="fill_or_kill">fill_or_kill</option>
+              </select>
+            </label>
+          </div>
+          <div class="controls" style="margin-bottom:14px">
+            <label class="field"><span>Self-trade prevention</span>
+              <select id="t-stp">
+                <option value="taker_at_cross">taker_at_cross</option>
+                <option value="maker">maker</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" id="t-post"> post_only</label>
+            <label class="check"><input type="checkbox" id="t-pause"> cancel_order_on_pause</label>
+          </div>
+          <div class="callout" id="t-preview" style="margin-bottom:14px">Choose a market to preview the order.</div>
+          <div class="controls">
+            <button class="btn primary" id="t-submit">Review &amp; place order</button>
+            <button class="btn" id="t-disconnect">Forget key</button>
+            <span class="mono" id="t-status" style="color:var(--muted)"></span>
+          </div>
+          <div id="t-result" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom:12px">Automated demo strategy</h3>
+        <div class="card">
+          <h4>spread-capture-lite</h4>
+          <p class="small">
+            Implemented in <code class="mono">scripts/run-demo-trade.mjs</code>. For each candidate
+            market it reads the public order book and only acts when the spread is wide enough:
+          </p>
+          <ul class="small" style="padding-left:18px">
+            <li>Require the implied YES ask (1 − best NO bid) to exceed the best YES bid by at least the configured edge.</li>
+            <li>Place a single passive bid for the YES leg at the best YES bid — it never crosses the spread.</li>
+            <li>Respect a price band and a maximum contracts-per-order cap.</li>
+            <li>Stop after the configured number of orders per run.</li>
+          </ul>
+          <p class="small" style="margin-top:10px">
+            The runner refuses to place anything unless <code class="mono">KALSHI_ENABLE_TRADING=1</code>
+            is set and a demo key is present, and it writes every attempt — accepted, rejected or
+            skipped — to the journal below.
+          </p>
+          <p class="small">
+            Sources: <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noreferrer">create an order ↗</a> ·
+            <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">order book ↗</a>
+          </p>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <h4>Order-side semantics</h4>
+          <p class="small">
+            The V2 endpoint quotes everything from the YES leg: <code class="mono">bid</code> means buy
+            YES and <code class="mono">ask</code> means sell YES. Selling YES is economically the same as
+            buying NO at <code class="mono">1 − price</code>. The ticket shows both numbers so the
+            direction is never ambiguous.
+          </p>
+          <p class="small">
+            Source: <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Trade journal</p>
+        <h2>Every order attempt, recorded</h2>
+        <p class="sub">
+          Orders placed from this browser are stored in this browser only. Orders placed by the
+          refresh workflow are published to the site as a JSON journal. Both are shown here so the
+          analysis page has a real record to work from.
+        </p>
+      </div>
+      <button class="btn" id="t-export">Export journal (JSON)</button>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>When</th><th>Market</th><th>Strategy</th><th>Side</th><th class="num">Price</th><th class="num">Contracts</th><th>Outcome</th><th>Order id</th><th>Source</th></tr></thead>
+        <tbody id="t-rows"><tr><td colspan="9" class="empty">No trades recorded yet.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/trading.js"></script>
+</body>
+</html>

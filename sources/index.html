@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources · Kalshi Demo Monitor</title>
+<meta name="description" content="Every official Kalshi documentation page and API endpoint used by this project, what each one was used for, and when it was verified.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="sources">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Review / source index</p>
+      <h1>Every source this project relies on</h1>
+      <p class="lede">
+        All documentation pages are hosted on Kalshi's official documentation site. Each row states
+        what the page was used for and when it was read. Nothing on this site is sourced from a
+        blog post, a forum or a secondary summary.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">Verification method</span>
+      <p class="small">
+        Each page listed below was retrieved directly and read line by line during this build. The
+        live demo API was queried and its responses recorded in <code class="mono">/data/</code>.
+      </p>
+      <dl class="kvlist" style="margin-top:12px">
+        <div><dt>Documentation host</dt><dd>docs.kalshi.com</dd></div>
+        <div><dt>API host used</dt><dd>external-api.demo.kalshi.co</dd></div>
+        <div><dt>Environment</dt><dd>demo (mock funds)</dd></div>
+        <div><dt>Reviewed</dt><dd>2026-11-20</dd></div>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">A / API endpoints</p>
+        <h2>Endpoints used</h2>
+        <p class="sub">Path, environment, authentication requirement and the official page that documents each one.</p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Method &amp; path</th><th>Purpose here</th><th>Auth</th><th>Official documentation</th></tr></thead>
+        <tbody>
+          <tr><td class="title mono">GET /markets</td><td>Market snapshot used for the scan, the dollar ranking and the event table.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noreferrer">Get Markets ↗</a></td></tr>
+          <tr><td class="title mono">GET /markets/{ticker}</td><td>Single-market quote used by the live price sampler.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noreferrer">Get Market ↗</a></td></tr>
+          <tr><td class="title mono">GET /markets/{ticker}/orderbook</td><td>Resting depth per price, and the derived ask side.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook ↗</a></td></tr>
+          <tr><td class="title mono">GET /markets/{ticker}/orderbook?depth=N</td><td>Limits the number of price levels returned per side (0–100).</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noreferrer">Get Market Orderbook ↗</a></td></tr>
+          <tr><td class="title mono">GET /events?with_nested_markets=true</td><td>Event records, lifecycle status, settlement sources and nested markets.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noreferrer">Get Events ↗</a></td></tr>
+          <tr><td class="title mono">GET /series/list</td><td>Series tickers and their categories, used to classify topics.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noreferrer">Get Series List ↗</a></td></tr>
+          <tr><td class="title mono">GET /series/{series_ticker}/markets/{ticker}/candlesticks</td><td>Official candle series. period_interval accepts 1, 60 or 1440 minutes only.</td><td><span class="badge ok">none</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noreferrer">Get Market Candlesticks ↗</a></td></tr>
+          <tr><td class="title mono">GET /portfolio/balance</td><td>Cash balance and portfolio value.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noreferrer">Get Balance ↗</a></td></tr>
+          <tr><td class="title mono">GET /portfolio/positions</td><td>Market and event positions, realised P&amp;L and fees paid.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noreferrer">Get Positions ↗</a></td></tr>
+          <tr><td class="title mono">GET /portfolio/fills</td><td>Every matched trade, with price, size, role and fee.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">Get Fills ↗</a></td></tr>
+          <tr><td class="title mono">GET /portfolio/orders</td><td>Resting, executed and cancelled orders.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/orders/get-orders" target="_blank" rel="noreferrer">Get Orders ↗</a></td></tr>
+          <tr><td class="title mono">POST /portfolio/events/orders</td><td>Order entry. The legacy /portfolio/orders write endpoints return 410 Gone.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noreferrer">Create Order (V2) ↗</a></td></tr>
+          <tr><td class="title mono">DELETE /portfolio/events/orders/{order_id}</td><td>Cancelling a resting order. Documented but not wired into the UI yet.</td><td><span class="badge warn">signed</span></td><td><a class="srclink" href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2" target="_blank" rel="noreferrer">Cancel Order (V2) ↗</a></td></tr>
+          <tr><td class="title mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</td><td>Live ticker, trade and lifecycle channels. Requires a signed handshake, which a browser cannot send.</td><td><span class="badge warn">signed handshake</span></td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noreferrer">Quick Start: WebSockets ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">B / Documentation pages</p>
+        <h2>Guidance pages read during the build</h2>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Page</th><th>What it established</th><th>Official documentation</th></tr></thead>
+        <tbody>
+          <tr><td class="title">API Environments and Endpoints</td><td>Demo REST base <span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span> (also supported: <span class="mono">https://demo-api.kalshi.co/trade-api/v2</span>); demo WebSocket <span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span>; the signed path excludes the query string.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noreferrer">api_environments ↗</a></td></tr>
+          <tr><td class="title">Test In The Demo Environment</td><td>The demo environment uses mock funds; credentials are not shared with production; demo prices and behaviour may not reflect real markets.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noreferrer">demo_env ↗</a></td></tr>
+          <tr><td class="title">API Keys</td><td>Key types (Ed25519 recommended, RSA-PSS SHA-256), the three signing headers, the pre-sign text, the 30-second timestamp tolerance, and the PKCS#1 PEM format Kalshi generates for RSA keys.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noreferrer">api_keys ↗</a></td></tr>
+          <tr><td class="title">Quick Start: Create your first order</td><td>Order body shape, client_order_id semantics, and the meaning of a 201 (accepted, not necessarily resting).</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noreferrer">quick_start_create_order ↗</a></td></tr>
+          <tr><td class="title">Market Lifecycle</td><td>The eight statuses, the status filter values, the time fields, the result values and the lifecycle WebSocket events.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noreferrer">market_lifecycle ↗</a></td></tr>
+          <tr><td class="title">Market Settlement</td><td>$1 payout per winning contract, net-position settlement, and the rounding and fee rules for settlement.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">market_settlement ↗</a></td></tr>
+          <tr><td class="title">Orderbook Responses</td><td>Bids-only order book, ascending level arrays, the last element is the best bid, and the reciprocal ask derivation.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noreferrer">orderbook_responses ↗</a></td></tr>
+          <tr><td class="title">Rate Limits and Tiers</td><td>Token-bucket reads and writes, the separate balance bucket, the 429 response shape and the rate-limit headers.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noreferrer">rate_limits ↗</a></td></tr>
+          <tr><td class="title">Order direction (outcome_side and book_side)</td><td>How direction is expressed on orders, fills and trades, and the deprecation of the legacy action/side fields.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noreferrer">order_direction ↗</a></td></tr>
+          <tr><td class="title">Historical Data</td><td>Why records older than the historical cutoff are only reachable through the /historical endpoints.</td><td><a class="srclink" href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noreferrer">historical_data ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">C / Non-Kalshi references</p>
+        <h2>Standards used for the parts Kalshi does not document</h2>
+        <p class="sub">
+          Two implementation details rely on public standards rather than Kalshi documentation.
+          They are listed here so the reasoning is auditable.
+        </p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Reference</th><th>Where it is used</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="title">RFC 8017 — PKCS #1 / PKCS #8 key encoding</td><td>The browser importer wraps the PKCS#1 RSA PEM that Kalshi generates into a PKCS#8 envelope so the Web Crypto API can import it. The key bytes themselves are never altered.</td><td><a class="srclink" href="https://www.rfc-editor.org/rfc/rfc8017" target="_blank" rel="noreferrer">RFC 8017 ↗</a></td></tr>
+          <tr><td class="title">W3C Web Cryptography API — RSA-PSS and Ed25519</td><td>Signing is performed in the browser so a private key never has to be sent to any server. Ed25519 support is detected at runtime; RSA-PSS is the portable path.</td><td><a class="srclink" href="https://www.w3.org/TR/WebCryptoAPI/" target="_blank" rel="noreferrer">Web Crypto API ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+</body>
+</html>

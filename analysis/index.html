@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade analysis · Kalshi Demo Monitor</title>
+<meta name="description" content="Categorises Kalshi demo trades by topic, strategy, side and price band, and computes realised outcomes only from real fills and reported resolutions.">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-page="analysis">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:26px">
+    <div>
+      <p class="eyebrow">Demo account / analysis</p>
+      <h1>What the trades actually did</h1>
+      <p class="lede">
+        Trades are grouped by topic, strategy, side and price band, and scored against the
+        resolution the exchange reported. A trade only counts as won or lost when its market has
+        settled; everything still open is reported separately as unresolved.
+      </p>
+    </div>
+    <aside class="panel">
+      <span class="label">How a trade is scored</span>
+      <p class="small">
+        Cost = contracts × fill price (the YES price for a YES fill, the NO price for a NO fill).
+        Payout = $1 per contract when the reported result matches the traded side, otherwise $0.
+        Realised P&amp;L = payout − cost − fees.
+      </p>
+      <p class="small" style="margin-top:8px">
+        Sources: <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noreferrer">market settlement ↗</a> ·
+        <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noreferrer">fills ↗</a>
+      </p>
+    </aside>
+  </section>
+
+  <section class="stats" style="margin-bottom:24px">
+    <article><span class="k">Trades scored</span><span class="v" id="a-total">—</span><span class="d">Filled contracts</span></article>
+    <article><span class="k">Resolved</span><span class="v" id="a-resolved">—</span><span class="d">Market has settled</span></article>
+    <article><span class="k">Win rate</span><span class="v" id="a-winrate">—</span><span class="d" id="a-winrate-note">On resolved trades only</span></article>
+    <article><span class="k">Realised P&amp;L</span><span class="v" id="a-pnl">—</span><span class="d" id="a-pnl-note">After fees</span></article>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">A / By topic</p>
+        <h2>Where the trades were placed</h2>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>Topic</th><th class="num">Trades</th><th class="num">Contracts</th><th class="num">Cost</th><th class="num">Payout</th><th class="num">Fees</th><th class="num">Realised P&amp;L</th><th class="num">Win rate (resolved)</th><th>Source</th></tr></thead>
+        <tbody id="a-by-topic"><tr><td colspan="9" class="empty">No account data loaded.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">B / By side and price band</p>
+        <h2>Which direction and which price</h2>
+        <p class="sub">Price bands are fixed buckets of the fill price so the groups stay comparable as prices move.</p>
+      </div>
+    </div>
+    <div class="grid c2" style="align-items:start">
+      <div class="tablewrap">
+        <table data-source="runtime">
+          <thead><tr><th>Side</th><th class="num">Trades</th><th class="num">Contracts</th><th class="num">Cost</th><th class="num">Realised P&amp;L</th><th>Source</th></tr></thead>
+          <tbody id="a-by-side"><tr><td colspan="6" class="empty">No account data loaded.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="tablewrap">
+        <table data-source="runtime">
+          <thead><tr><th>Price band</th><th class="num">Trades</th><th class="num">Contracts</th><th class="num">Cost</th><th class="num">Realised P&amp;L</th><th>Source</th></tr></thead>
+          <tbody id="a-by-band"><tr><td colspan="6" class="empty">No account data loaded.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">C / Trade ledger</p>
+        <h2>Every scored trade</h2>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>Filled at</th><th>Market</th><th>Topic</th><th>Side</th><th class="num">Contracts</th><th class="num">Price</th><th class="num">Cost</th><th class="num">Fee</th><th>Market result</th><th>Outcome</th><th class="num">P&amp;L</th><th>Source</th></tr></thead>
+        <tbody id="a-ledger"><tr><td colspan="12" class="empty">No account data loaded.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">D / Strategy library</p>
+        <h2>Strategies, and the state of each one</h2>
+        <p class="sub">
+          Each strategy states its entry rule, exit rule, limits and whether it is implemented.
+          A strategy is never switched on by the dashboard itself.
+        </p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table data-source="runtime">
+        <thead><tr><th>Strategy</th><th>Entry rule</th><th>Exit rule</th><th>Limits</th><th>State</th><th>Source</th></tr></thead>
+        <tbody id="a-strategies"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="../assets/js/pages/analysis.js"></script>
+</body>
+</html>
