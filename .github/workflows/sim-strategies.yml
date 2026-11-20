@@ -5,8 +5,8 @@ name: sim-desk strategy runner
 # Trade API (public endpoints, no credentials, no orders) and commits the
 # append-only ledger back so the static page always shows the latest state.
 #
-# Loop protection: this workflow's push trigger ignores sim-desk/data/** (the
-# directory the commit step writes), and scheduled runs land on main only.
+# Loop protection: the first step exits when the push only touched sim-desk/data/**
+# (the directory the commit step writes), so ledger commits cannot retrigger work.
 on:
   push:
     branches:
@@ -15,17 +15,6 @@ on:
     paths:
       - "sim-desk/**"
       - ".github/workflows/sim-strategies.yml"
-    paths-ignore:
-      - "sim-desk/data/**"
-  pull_request:
-    paths:
-      - "sim-desk/**"
-      - ".github/workflows/sim-strategies.yml"
-    paths-ignore:
-      - "sim-desk/data/**"
-  schedule:
-    # Offset from the repo's other data crons (*/15) to avoid Pages-build pileups.
-    - cron: "7,37 * * * *"
   workflow_dispatch:
     inputs:
       branch:
@@ -52,41 +41,56 @@ jobs:
         with:
           ref: ${{ inputs.branch || github.ref_name }}
 
+      - name: Skip data-only commits (loop protection)
+        if: ${{ github.event_name == 'push' }}
+        id: guard
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -v '^sim-desk/data/' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "only sim-desk/data changed — nothing to do"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-python@v5
+        if: ${{ steps.guard.outputs.skip != 'true' }}
         with:
           python-version: "3.12"
 
       - name: Offline engine tests (fixtures replay, fee/orderbook/settlement rules)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
         run: |
           python3 sim-desk/tests/make_fixtures.py
           python3 sim-desk/tests/test_engine.py
 
       - name: Run strategies against the official demo API (simulated fills only)
+        if: ${{ steps.guard.outputs.skip != 'true' }}
         run: python3 sim-desk/engine.py --out sim-desk/data
 
       - name: Validate committed outputs
+        if: ${{ steps.guard.outputs.skip != 'true' }}
         run: |
-          python3 - <<'PY'
-          import json, sys
-          ledger = json.load(open("sim-desk/data/ledger.json"))
-          perf = json.load(open("sim-desk/data/performance.json"))
-          runlog = json.load(open("sim-desk/data/run_log.json"))
-          assert ledger.get("schema") == 1, "ledger schema"
-          assert ledger["meta"]["simulated"] is True, "simulated flag"
-          assert perf.get("simulated") is True, "performance simulated flag"
-          assert runlog["summary"]["api_calls"] > 0, "engine made no API calls"
-          assert isinstance(ledger["cash"], (int, float)), "cash"
-          print("outputs OK:", runlog["summary"])
-          PY
+          python3 -c "
+          import json
+          ledger = json.load(open('sim-desk/data/ledger.json'))
+          perf = json.load(open('sim-desk/data/performance.json'))
+          runlog = json.load(open('sim-desk/data/run_log.json'))
+          assert ledger.get('schema') == 1, 'ledger schema'
+          assert ledger['meta']['simulated'] is True, 'simulated flag'
+          assert perf.get('simulated') is True, 'performance simulated flag'
+          assert runlog['summary']['api_calls'] > 0, 'engine made no API calls'
+          assert isinstance(ledger['cash'], (int, float)), 'cash'
+          print('outputs OK:', runlog['summary'])
+          "
 
       - name: Upload ledger artifact
+        if: ${{ steps.guard.outputs.skip != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: sim-desk-ledger
           path: sim-desk/data
 
-      - name: Commit refreshed ledger (push / schedule / dispatch with publish)
-        if: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.publish == 'true') }}
+      - name: Commit refreshed ledger (push / dispatch with publish)
+        if: ${{ steps.guard.outputs.skip != 'true' && github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.publish == 'true') }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
