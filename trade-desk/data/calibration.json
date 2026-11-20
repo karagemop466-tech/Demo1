@@ -1,0 +1,130 @@
+{
+ "generated_utc": "2026-11-20T19:33:22Z",
+ "inputs": {
+  "resolved": "snapshot/resolved.json",
+  "open": "snapshot/markets.json",
+  "provenance": "snapshot/metadata.json",
+  "source_base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "snapshot_generated_utc": "2026-11-20T11:43:59Z"
+ },
+ "base_rate": {
+  "settled_yes_or_no": 2117,
+  "yes": 222,
+  "no": 1895,
+  "yes_rate": 0.1049,
+  "scalar_results": 0
+ },
+ "by_topic": {
+  "crypto": {
+   "settled": 668,
+   "yes": 9,
+   "no": 659
+  },
+  "culture": {
+   "settled": 368,
+   "yes": 57,
+   "no": 311
+  },
+  "elections": {
+   "settled": 131,
+   "yes": 29,
+   "no": 102
+  },
+  "gas": {
+   "settled": 350,
+   "yes": 107,
+   "no": 243
+  },
+  "golf": {
+   "settled": 600,
+   "yes": 20,
+   "no": 580
+  }
+ },
+ "zero_last_price": {
+  "settled_markets_with_zero_last_price": 1471,
+  "of_which_resolved_yes": 141,
+  "settled_markets_with_zero_volume": 1471,
+  "note": "A last_price of $0.00 means no trade was recorded, not a fillable $0.00 price. Any backtest that uses last_price as an entry price silently buys at zero."
+ },
+ "fee_bands": [
+  {
+   "band": "$0.00-0.04",
+   "mid_price": 0.025,
+   "fee_per_1_contract": 0.01,
+   "net_roi_on_win_1_contract": 27.5714,
+   "fee_per_100_contracts": 0.18,
+   "net_roi_on_win_100_contracts": 36.3134,
+   "max_roi": 39.0,
+   "clears_screen_at_1_contract": true
+  },
+  {
+   "band": "$0.05-0.14",
+   "mid_price": 0.1,
+   "fee_per_1_contract": 0.01,
+   "net_roi_on_win_1_contract": 8.0909,
+   "fee_per_100_contracts": 0.63,
+   "net_roi_on_win_100_contracts": 8.4073,
+   "max_roi": 9.0,
+   "clears_screen_at_1_contract": true
+  },
+  {
+   "band": "$0.15-0.34",
+   "mid_price": 0.25,
+   "fee_per_1_contract": 0.02,
+   "net_roi_on_win_1_contract": 2.7037,
+   "fee_per_100_contracts": 1.32,
+   "net_roi_on_win_100_contracts": 2.7994,
+   "max_roi": 3.0,
+   "clears_screen_at_1_contract": true
+  },
+  {
+   "band": "$0.35-0.64",
+   "mid_price": 0.5,
+   "fee_per_1_contract": 0.02,
+   "net_roi_on_win_1_contract": 0.9231,
+   "fee_per_100_contracts": 1.75,
+   "net_roi_on_win_100_contracts": 0.9324,
+   "max_roi": 1.0,
+   "clears_screen_at_1_contract": true
+  },
+  {
+   "band": "$0.65-0.84",
+   "mid_price": 0.75,
+   "fee_per_1_contract": 0.02,
+   "net_roi_on_win_1_contract": 0.2987,
+   "fee_per_100_contracts": 1.32,
+   "net_roi_on_win_100_contracts": 0.3103,
+   "max_roi": 0.3333,
+   "clears_screen_at_1_contract": true
+  },
+  {
+   "band": "$0.85-1.00",
+   "mid_price": 0.925,
+   "fee_per_1_contract": 0.01,
+   "net_roi_on_win_1_contract": 0.0695,
+   "fee_per_100_contracts": 0.49,
+   "net_roi_on_win_100_contracts": 0.0754,
+   "max_roi": 0.0811,
+   "clears_screen_at_1_contract": false
+  }
+ ],
+ "break_even": {
+  "roi_bar": 0.25,
+  "max_price_clearing_bar": 0.785,
+  "note": "At the demo's cent tick, a single contract is charged at least 1 cent, so the 25% net-ROI bar runs out of room as the entry price approaches $1. Computed with the ledger's own fee function."
+ },
+ "open_markets": {
+  "with_a_tradable_ask": 326,
+  "with_a_two_sided_quote": 281,
+  "with_a_one_sided_quote": 45,
+  "clearing_price_and_roi_bar": 311,
+  "share_clearing": 0.954
+ },
+ "limits": [
+  "Demo venue only: test exchange, thin books, prices that need not match real markets.",
+  "The screen's ROI figures are the WIN case, not an expected value.",
+  "Base rate is measured on settled demo markets and is not a forecast of open ones.",
+  "No live order was placed, so no slippage evidence exists."
+ ]
+}

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution tracker — Kalshi demo trade desk</title>
+<meta name="description" content="Track open Kalshi demo markets in five topics until the official API reports a YES or NO result, with settlement fields and source links for each observation.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html" class="active" aria-current="page">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Resolution tracker — followed until the API says YES or NO</h1>
+  <p class="lede">
+    Every market you follow is polled until Kalshi returns a settlement result. The tracker shows the
+    exact field values the API returned (<span class="mono">status</span>, <span class="mono">result</span>,
+    <span class="mono">settlement_ts</span>, <span class="mono">settlement_value_dollars</span>) and links each
+    observation to the request that produced it. Some markets are
+    <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">scalar</a>,
+    which is why the YES/NO framing is shown as a column and never forced.
+  </p>
+
+  <div class="statusbar">
+    <span class="pill"><span class="dot" id="dot-api"></span><span id="api-state">loading…</span></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">tracked <b id="tracked-count">0</b></span>
+    <span class="pill">resolved <b id="resolved-count">0</b></span>
+    <span class="pill">watched locally <b id="watched-count">0</b></span>
+    <span class="pill" style="margin-left:auto">
+      <label class="inline"><input type="checkbox" id="autopoll" checked> auto-refresh</label>
+      <button id="refresh" class="primary" type="button">Refresh now</button>
+      <button id="watch-visible" class="ghost" type="button">Watch the markets on screen</button>
+    </span>
+  </div>
+
+  <div id="api-banner" class="callout warn" hidden></div>
+
+  <div class="callout">
+    <p><b>What "resolved YES or NO" means here.</b> The API sets <span class="mono">result</span> to
+      <span class="mono">yes</span>, <span class="mono">no</span> or <span class="mono">scalar</span>, and the
+      market only reaches <span class="mono">finalized</span> after its settlement timer completes.
+      A position pays $1 per contract on the winning side for a simple binary market; the tracker shows the
+      API's own <span class="mono">settlement_value_dollars</span> where it is present instead of assuming $1.</p>
+  </div>
+
+  <h2 class="section">Recently resolved in the five topics</h2>
+  <div class="panel">
+    <header>
+      <h3>Settled markets, newest settlement first</h3>
+      <span class="sub">asked with <span class="mono">status=settled&amp;min_settled_ts</span></span>
+    </header>
+    <div class="body tight">
+      <div class="table-scroll">
+        <table id="resolution-table">
+          <thead>
+            <tr>
+              <th>Topic</th><th>Market</th><th>Result</th><th class="num">Settlement value</th>
+              <th>Settled at</th><th>Status</th><th>Sources</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="7" class="blank">loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section">Markets you are watching</h2>
+  <div class="panel">
+    <header>
+      <h3>Watch list (this browser only)</h3>
+      <span class="sub">the list is local storage, not a server archive</span>
+      <div class="feed-tools"><button id="clear-watch" class="ghost" type="button">clear list</button></div>
+    </header>
+    <div class="body tight">
+      <div class="table-scroll short">
+        <table id="watch-table">
+          <thead>
+            <tr><th>Topic</th><th>Market</th><th class="num">Current</th><th>Status</th><th>Result</th><th>Closes</th><th>Sources</th></tr>
+          </thead>
+          <tbody><tr><td colspan="7" class="blank">nothing watched yet — open the dashboard and click a market, or use “Watch the markets on screen” above</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:14px">
+    Markets that closed but have no <span class="mono">result</span> yet are shown as
+    <i>awaiting determination</i>, never as a guess. Scalar markets show the value the API returned.
+    See <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">market settlement</a>
+    and <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">market lifecycle</a>.
+  </p>
+</main>
+
+<footer class="foot">
+  <p>Public demo endpoints only. No API key, no orders. Every row links the request that produced it.</p>
+</footer>
+
+<script src="assets/util.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/resolutions.js"></script>
+</body>
+</html>

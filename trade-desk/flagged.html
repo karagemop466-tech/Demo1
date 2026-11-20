@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review — Kalshi demo trade desk</title>
+<meta name="description" content="Irregularities, unverified items and known limits of the Kalshi demo trade desk, each with evidence and an official source. Nothing here blocks use; each is disclosed where it appears.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html" class="active" aria-current="page">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Flagged for review</h1>
+  <p class="lede">
+    This register covers the <b>trade desk</b> (<span class="mono">trade-desk/</span>). Other desks in this
+    repository keep their own registers, which are linked at the bottom; overlapping items are cross-referenced
+    rather than duplicated.
+    Nothing on this page blocks use. Each item says what was observed, how it was checked, and what the desk
+    does about it.
+  </p>
+
+  <div id="register" class="grid" style="gap:12px"></div>
+
+  <h2 class="section">Cross-references</h2>
+  <div class="panel"><div class="body">
+    <p class="small" style="margin-top:0">Findings owned by other desks that touch this one:</p>
+    <ul class="small" style="margin:0 0 0 18px;padding:0">
+      <li><a href="../alerts.html">alerts.html</a> (another session) implements two alert chats from candle closes over a committed snapshot. This desk implements two alert chats from the live trades tape. They use different data and different filters; neither supersedes the other. See item TD-11.</li>
+      <li><a href="../integration/flagged-review.html">Integration findings (SEC-01, AUTH-01, KEY-01, PAPER-01, FILL-01)</a> — the credential-handling and fill-modelling issues on the older desks. The trade desk never asks for a key and never leaves documented limits unstated; it does not reuse that code.</li>
+      <li><a href="../audit/flagged.html">Official-source audit</a> — the repository-wide check of Kalshi API claims. Item F-01 there (status strings) is the reason this desk compares <span class="mono">active</span>/<span class="mono">finalized</span> and never assumes <span class="mono">open</span>/<span class="mono">settled</span>.</li>
+    </ul>
+  </div></div>
+
+  <p class="small" style="margin-top:16px">
+    Generated from this page's own data below; no item is hidden or summarised away.
+    If an item here is wrong, the source link beside it is the place to check.
+  </p>
+</main>
+
+<footer class="foot"><p>Register last reviewed 2026-11-20. Items are appended, never deleted, so a later reader can see what changed.</p></footer>
+
+<script>
+/* The register is data, not prose, so it stays easy to audit and extend. */
+window.TD_FLAGGED = [
+  {
+    id: "TD-01", severity: "High", status: "open",
+    title: "Public WebSocket is not usable from a static page, so updates are polls",
+    observed: "The official quick start says WebSocket connections require a signed handshake with KALSHI-ACCESS-KEY, -SIGNATURE and -TIMESTAMP, even for channels described as public market data.",
+    evidence: "Dashboard status bar shows the real poll interval and last-poll time; api.js has no WebSocket code path.",
+    source: "https://docs.kalshi.com/getting_started/quick_start_websockets",
+    means: "Latency between a print and an alert is one poll (5–30 s, default 8 s), not milliseconds. A page that claimed instant alerts would be lying."
+  },
+  {
+    id: "TD-02", severity: "High", status: "open",
+    title: "Official 1-minute candlesticks returned empty on active demo markets",
+    observed: "GET /series/KXPGAR2LEAD/markets/KXPGAR2LEAD-THRC26-MGRE/candlesticks with period_interval=1 over a 6-hour range returned {\"candlesticks\":[]} while the same market had just printed trades.",
+    evidence: "The chart note on chart.html prints the exact candle request URL and its result for every market loaded.",
+    source: "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+    means: "Price history is built from the trades tape, which does have sub-minute timestamps. If candles later return data, the chart uses them too and says so."
+  },
+  {
+    id: "TD-03", severity: "Medium", status: "open",
+    title: "There is no seconds-resolution candle endpoint",
+    observed: "period_interval accepts only 1, 60 or 1440 minutes.",
+    evidence: "The seconds windows (30s, 2m) are labelled as trade prints, not candles, on the chart page.",
+    source: "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+    means: "The brief asked for a seconds view. It exists, but it is built from individual trades; no official seconds candle exists to show."
+  },
+  {
+    id: "TD-04", severity: "Medium", status: "open",
+    title: "No official USD-volume field exists, so the dollar ranking is computed",
+    observed: "The market object has volume_fp and volume_24h_fp (contracts) but no dollar notional field.",
+    evidence: "Every ranking column is labelled \"24h $ (est.)\" and the row links the market request so the inputs can be checked.",
+    source: "https://docs.kalshi.com/api-reference/market/get-markets",
+    means: "Ranking is contracts × last traded price. A market with no last trade shows a blank rather than a zero, and is ranked below priced markets."
+  },
+  {
+    id: "TD-05", severity: "High", status: "open",
+    title: "Demo venue: prices, liquidity and fills are not real",
+    observed: "Kalshi documents the demo environment as a separate test exchange with its own credentials.",
+    evidence: "Stated in the dashboard footer, the paper-trading warning and the model page.",
+    source: "https://docs.kalshi.com/getting_started/demo_env",
+    means: "Paper results measure the rules, not the market. A profitable rule here has not been shown to work with real money."
+  },
+  {
+    id: "TD-06", severity: "Medium", status: "open",
+    title: "Paper fills ignore queue position and slippage beyond the touch",
+    observed: "Model: fill price is the implied ask at the level reached by walking the ladder, with the official taker fee; nothing else.",
+    evidence: "strategies.html documents the unmodelled effects explicitly.",
+    source: "https://docs.kalshi.com/getting_started/orderbook_responses",
+    means: "Real fills would be equal or worse. Treat every paper P&L as an upper bound on what those rules would have made."
+  },
+  {
+    id: "TD-07", severity: "Medium", status: "open",
+    title: "A $0.00 last price means \"no trade recorded\", not a price",
+    observed: "In the committed snapshot, 1,471 of the settled markets carry last_price $0.00, and 141 of those still resolved YES.",
+    evidence: "Measured by trade-desk/tools/calibrate.py and shown on the model page.",
+    source: "https://docs.kalshi.com/api-reference/market/get-markets",
+    means: "No backtest on this site prices an entry or a jump off last_price; entries use the ask ladder or are left blank."
+  },
+  {
+    id: "TD-08", severity: "Medium", status: "open",
+    title: "Official result values include scalar, not just yes/no",
+    observed: "The market schema allows result = yes, no, scalar or empty; the lifecycle page confirms scalar.",
+    evidence: "Resolution rows render scalar with its settlement value instead of forcing it into YES/NO.",
+    source: "https://docs.kalshi.com/getting_started/market_lifecycle",
+    means: "The brief's YES/NO framing is not exhaustive. Forcing a scalar market into YES or NO would misprice the paper payout."
+  },
+  {
+    id: "TD-09", severity: "Low", status: "open",
+    title: "Topic assignment is a published rule over official metadata, not an official taxonomy",
+    observed: "Kalshi publishes categories and tags per series but no five-topic grouping matching this brief.",
+    evidence: "The classifier is in trade-desk/assets/util.js and its output, with the deciding category or tag, is in trade-desk/data/series-map.json.",
+    source: "https://docs.kalshi.com/api-reference/market/get-series",
+    means: "Edge cases exist and are documented: natural-gas and crude-oil series are excluded from gas prices; award-show markets like \"Best Golfer\" are culture, not golf. Rows that fall back to ticker patterns are marked \"fallback\" in the UI."
+  },
+  {
+    id: "TD-10", severity: "Low", status: "open",
+    title: "Demo response quirks that would break naive parsing",
+    observed: "An unknown ticker returns HTTP 200 with an empty order book rather than 404; an ask of 0.0000 means an empty opposite side, not a free contract; the demo files one natural-gas series under the official category Entertainment.",
+    evidence: "Handled in api.js and util.js; covered by the engine and page tests.",
+    source: "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+    means: "A page that treated a 0.00 ask as a price would show a free $1 contract. This one renders it as blank."
+  },
+  {
+    id: "TD-11", severity: "Info", status: "open",
+    title: "Two alert-chat implementations exist in this repository",
+    observed: "alerts.html (another session) renders two chats from candle closes over a committed snapshot. trade-desk/ renders two chats from the live trades tape with a fee-aware screen.",
+    evidence: "Both are linked from the root landing page; both state their data source.",
+    source: "https://docs.kalshi.com/api-reference/market/get-trades",
+    means: "They are not duplicates of the same data. The trade desk is additive; neither page overwrites the other, and the reader can compare them."
+  },
+  {
+    id: "TD-12", severity: "Medium", status: "open",
+    title: "The high-ROI feed is a screen, not a predictive model",
+    observed: "Five weighted terms over the last jump, the spread, the touch depth, the room to $1 and freshness. Weights are fixed and published.",
+    evidence: "model.html prints every term, both ROI definitions and the bar; the calibration page shows the demo base rate the screen has to beat (10.5% YES).",
+    source: "https://docs.kalshi.com/getting_started/market_settlement",
+    means: "A row in Feed B means the market is cheap to enter and recently moved, not that it is likely to win. No accuracy claim is made anywhere."
+  },
+  {
+    id: "TD-13", severity: "Low", status: "open",
+    title: "Fee formula verified against this PDF revision only",
+    observed: "Taker fee = ceil(M × 0.07 × C × P × (1−P)); the 21-row table in the schedule reproduces exactly in the browser and the tests.",
+    evidence: "model.html computes all 21 rows live; engine.test.mjs asserts them.",
+    source: "https://kalshi.com/docs/kalshi-fee-schedule.pdf",
+    means: "The schedule states it is effective from a specific date and can change. Per-series overrides exist for some products and are not modelled here."
+  },
+  {
+    id: "TD-14", severity: "Info", status: "open",
+    title: "Live API could not be exercised from every environment",
+    observed: "The build sandbox cannot open connections to *.kalshi.co, so live verification used an HTTP fetch tool; the browser path is covered by tests with recorded payload shapes.",
+    evidence: "Page tests replay payloads captured from the live API on 2026-11-20; they prove the code path, not live availability.",
+    source: "https://docs.kalshi.com/getting_started/api_environments",
+    means: "If the demo API is down when you load the page, it says so and keeps the last successful rows rather than inventing values."
+  }
+];
+
+(function () {
+  var host = document.getElementById("register");
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+  var cls = { High: "down", Medium: "warn", Low: "", Info: "" };
+  host.innerHTML = window.TD_FLAGGED.map(function (f) {
+    return '<div class="panel" id="' + esc(f.id.toLowerCase()) + '">' +
+      '<header><h3>' + esc(f.id) + " · " + esc(f.title) + "</h3>" +
+      '<span class="chip ' + (cls[f.severity] || "") + '" style="margin-left:auto">' + esc(f.severity) + "</span>" +
+      '<span class="chip">' + esc(f.status) + "</span></header>" +
+      '<div class="body"><dl class="defs">' +
+      "<dt>Observed</dt><dd>" + esc(f.observed) + "</dd>" +
+      "<dt>How to check</dt><dd>" + esc(f.evidence) + "</dd>" +
+      '<dt>Source</dt><dd><a href="' + esc(f.source) + '" target="_blank" rel="noopener">' + esc(f.source) + "</a></dd>" +
+      "<dt>What it means for you</dt><dd>" + esc(f.means) + "</dd>" +
+      "</dl></div></div>";
+  }).join("");
+  window.__flagged = { count: window.TD_FLAGGED.length };
+})();
+</script>
+</body>
+</html>

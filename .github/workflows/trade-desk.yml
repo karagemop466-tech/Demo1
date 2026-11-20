@@ -1,0 +1,59 @@
+name: trade-desk checks
+
+# Runs the trade desk's own test suites and rebuilds its generated data so a pull
+# request cannot merge if the desk's numbers stop matching the committed snapshot.
+# Read-only: this workflow never writes to the repository.
+
+on:
+  push:
+    branches: [main, "arena/**"]
+    paths:
+      - "trade-desk/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "trade-desk/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install jsdom for the page tests
+        run: npm install --no-audit --no-fund --silent jsdom@31
+
+      - name: Regenerate the series map from the official snapshot
+        run: |
+          node trade-desk/tools/build_series_map.mjs
+          git diff --stat -- trade-desk/data/series-map.json
+
+      - name: Regenerate the calibration from the official snapshot
+        run: python3 trade-desk/tools/calibrate.py
+
+      - name: Engine unit tests (fee table, jump threshold, ledger maths)
+        run: node trade-desk/tests/engine.test.mjs
+
+      - name: Page boot tests (every page in jsdom, mocked official payloads)
+        run: node trade-desk/tests/page_boot.test.mjs
+
+      - name: Link and integrity tests
+        run: node trade-desk/tests/links.test.mjs
+
+      - name: Repository link checker
+        run: node tools/check-links.mjs
+
+      - name: Syntax checks
+        run: |
+          for f in trade-desk/assets/*.js trade-desk/tests/*.mjs trade-desk/tools/*.mjs; do node --check "$f"; done
+          python3 -m py_compile trade-desk/tools/calibrate.py
+          echo "syntax OK"

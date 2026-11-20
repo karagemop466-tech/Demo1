@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources — Kalshi demo trade desk</title>
+<meta name="description" content="Every official document and API response this trade desk depends on, what it verified, and when it was read.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html" class="active" aria-current="page">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Sources</h1>
+  <p class="lede">
+    Everything on this desk is derived from the documents below or from responses returned by the official
+    Kalshi demo Trade API. Each entry records what it was used to verify. Where a claim could not be checked
+    against one of these, it is blank on the site and listed on <a href="flagged.html">Flagged</a>.
+  </p>
+
+  <h2 class="section">Official documentation</h2>
+  <div class="panel"><div class="body tight">
+    <table>
+      <thead><tr><th>Source</th><th>What it establishes here</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments and endpoints</a></td>
+          <td>Demo REST base <span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span> is the recommended demo host; demo WebSocket <span class="mono">wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</span>; signed path is host-independent.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a></td>
+          <td>Demo is a test exchange with separate credentials; the values here are not real-market prices.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td>Market fields used everywhere: <span class="mono">status</span>, <span class="mono">result</span>, <span class="mono">yes_bid_dollars</span>, <span class="mono">yes_ask_dollars</span>, <span class="mono">last_price_dollars</span>, <span class="mono">volume_24h_fp</span>, <span class="mono">close_time</span>, <span class="mono">settlement_value_dollars</span>; <span class="mono">status=</span> filter values; 1,000-row page limit.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td>
+          <td><span class="mono">series_ticker</span> (topic lookup) and <span class="mono">settlement_sources</span> (the venue's own determination sources, linked on each alert).</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a></td>
+          <td>The trades tape: the only public source with sub-minute trade timestamps, so every jump and every seconds-window chart point comes from here. <span class="mono">min_ts</span>/<span class="mono">max_ts</span> are in seconds.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook responses</a></td>
+          <td>Bids only; a YES ask at X is a NO bid at 1−X with the same size; levels are <span class="mono">[price_dollars, count_fp]</span>, ascending, best bid last.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a></td>
+          <td><span class="mono">depth</span> parameter bounds (0–100); an unknown ticker returns 200 with empty arrays, never 404.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+          <td>Only 1, 60 and 1440-minute periods exist; at most 5,000 periods per request; <span class="mono">start_ts</span>/<span class="mono">end_ts</span> in seconds. This is why the seconds chart uses trades.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market lifecycle</a></td>
+          <td>Real status values are <span class="mono">initialized / active / inactive / closed / determined / disputed / amended / finalized</span>; <span class="mono">result</span> can be <span class="mono">yes</span>, <span class="mono">no</span> or <span class="mono">scalar</span>.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market settlement</a></td>
+          <td>YES holders get $1 per contract on YES, NO holders $1 on NO; only net positions settle.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">Fee schedule (PDF)</a></td>
+          <td>Taker fee <span class="mono">ceil(M × 0.07 × C × P × (1−P))</span>, maker <span class="mono">0.0175</span>, no settlement fee, and the 21-row general fee table the implementation is asserted against.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits</a></td>
+          <td>Unauthenticated public requests have separate limits and clients must back off on <span class="mono">429</span>. api.js enforces a minimum gap, one in-flight request per URL, and exponential backoff.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start</a></td>
+          <td>WebSocket connections require a signed handshake bearing <span class="mono">KALSHI-ACCESS-KEY / -SIGNATURE / -TIMESTAMP</span>, even for public channels. A public static page cannot hold a key, so this desk polls REST instead.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td>
+          <td>Signed requests need an API key id and an RSA private key; no key exists in this repository or in the browser.</td><td>2026-11-20</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+
+  <h2 class="section">Official API responses reproduced during this build</h2>
+  <div class="panel"><div class="body tight">
+    <table>
+      <thead><tr><th>Request</th><th>What it showed</th><th>Checked</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">GET /exchange/status</a></td>
+          <td><span class="mono">trading_active: true</span> across four demo shards.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&amp;limit=2&amp;mve_filter=exclude" target="_blank" rel="noopener">GET /markets?status=open&amp;limit=2</a></td>
+          <td>Live open markets with the documented fields.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=4&amp;is_block_trade=false" target="_blank" rel="noopener">GET /markets/trades?limit=4</a></td>
+          <td>Sub-second trade timestamps across topics.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-MGRE/orderbook?depth=5" target="_blank" rel="noopener">GET /markets/{ticker}/orderbook?depth=5</a></td>
+          <td>Bid-only ladder in the documented shape.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGAR2LEAD/markets/KXPGAR2LEAD-THRC26-MGRE/candlesticks?start_ts=1763660000&amp;end_ts=1763680000&amp;period_interval=1" target="_blank" rel="noopener">GET …/candlesticks (1-minute)</a></td>
+          <td><b>Returned an empty array</b> on an active market that had just printed trades. Recorded as irregularity F-02 and disclosed on every chart.</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAR2LEAD-THRC26" target="_blank" rel="noopener">GET /events/{ticker}</a></td>
+          <td>Event, series and <span class="mono">settlement_sources</span> (for this golf event, the governing league's site).</td><td>2026-11-20</td></tr>
+        <tr><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=3" target="_blank" rel="noopener">GET /series?category=Crypto</a></td>
+          <td>Official series categories and tags, used for topic assignment instead of guessing.</td><td>2026-11-20</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+
+  <h2 class="section">Committed snapshots this desk reads</h2>
+  <div class="panel"><div class="body tight">
+    <table>
+      <thead><tr><th>File</th><th>Contents</th><th>Provenance</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../data/series.json">data/series.json</a></td><td>16,647 official series records (category, tags, title).</td><td>Fetched 2026-11-20T19:12:46Z from <span class="mono">/series</span>; the file carries its own base URL and source.</td></tr>
+        <tr><td><a href="../snapshot/resolved.json">snapshot/resolved.json</a></td><td>2,469 settled/closed market records.</td><td>Snapshot metadata: 2026-11-20T11:43:59Z, 494 requests, 0 failed.</td></tr>
+        <tr><td><a href="../snapshot/markets.json">snapshot/markets.json</a></td><td>1,399 open markets with quotes.</td><td>Same snapshot run.</td></tr>
+        <tr><td><a href="data/series-map.json">trade-desk/data/series-map.json</a></td><td>Built index: series → topic, with the official category and tags that decided it.</td><td>Generated by <span class="mono">trade-desk/tools/build_series_map.mjs</span> from <span class="mono">data/series.json</span>.</td></tr>
+        <tr><td><a href="data/calibration.json">trade-desk/data/calibration.json</a></td><td>Base rates, zero-price counts, fee bands and screen pass-rate.</td><td>Generated by <span class="mono">trade-desk/tools/calibrate.py</span> from the snapshot files above.</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+
+  <div class="callout warn">
+    <p><b>What is deliberately not cited.</b> No cause is ever attributed to a price move. The desk links the
+      venue's own settlement sources and a news <i>search</i>; a search result is a lead for a human to check,
+      not evidence of cause. Any such claim would be exactly the kind of inference this site refuses to make.</p>
+  </div>
+</main>
+
+<footer class="foot"><p>Last verified 2026-11-20. Every link on this page points to an official Kalshi or Kalshi documentation domain.</p></footer>
+</body>
+</html>

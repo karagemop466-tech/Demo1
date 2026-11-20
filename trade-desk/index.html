@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live trade desk — Kalshi demo</title>
+<meta name="description" content="Live Kalshi demo dashboard: two scrolling alert feeds for contract moves of $0.10 or more, a time-axis price chart, order-book liquidity, resolution tracking and automated paper trading. Public data only.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html" class="active" aria-current="page">Dashboard</a>
+      <a href="chart.html">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Live alerting desk — gas prices, elections, culture, crypto, golf</h1>
+  <p class="lede">
+    Every value on this page comes from the official Kalshi demo Trade API and keeps the request URL
+    that produced it. Two scrolling chats run side by side: <b>every</b> contract move of at least
+    <b>$0.10</b> in either direction, and the subset our published screen rates as high ROI.
+    No key is used, no order is ever sent, and nothing is inferred: blank means the API did not return it.
+  </p>
+
+  <div class="statusbar" id="statusbar" role="status" aria-live="polite">
+    <span class="pill"><span class="dot" id="dot-api"></span><span id="api-state">connecting to the official demo API…</span></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">last poll <b id="last-poll">—</b></span>
+    <span class="pill">next poll <b id="next-poll">—</b></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">requests <b id="api-calls">0</b></span>
+    <span class="pill">errors <b id="api-errors">0</b></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">markets watched <b id="watch-count">0</b></span>
+    <span class="pill">window <b id="window-label">15m</b></span>
+    <span class="pill" style="margin-left:auto">
+      <label class="inline"><input type="checkbox" id="autopoll" checked> auto-poll</label>
+      <select id="poll-interval" aria-label="Poll interval">
+        <option value="5000">5s</option>
+        <option value="8000" selected>8s</option>
+        <option value="15000">15s</option>
+        <option value="30000">30s</option>
+      </select>
+      <button id="poll-now" class="primary" type="button">Poll now</button>
+    </span>
+  </div>
+
+  <div id="api-banner" class="callout warn" hidden></div>
+
+  <!-- ============================ two alert feeds ============================ -->
+  <section class="grid feeds" aria-label="Live alert feeds">
+    <div class="panel">
+      <header>
+        <h2>Feed A — all moves ≥ $0.10</h2>
+        <span class="sub" id="feed-a-count">0 alerts</span>
+        <div class="feed-tools">
+          <select id="feed-a-topic" aria-label="Topic filter for all-moves feed">
+            <option value="all">All five topics</option>
+            <option value="gas">Gas prices</option>
+            <option value="elections">Elections</option>
+            <option value="culture">Culture</option>
+            <option value="crypto">Crypto</option>
+            <option value="golf">Golf</option>
+          </select>
+          <label class="inline"><input type="checkbox" id="feed-a-pause"> pause</label>
+        </div>
+      </header>
+      <div class="feed" id="feed-a" aria-live="polite" aria-relevant="additions">
+        <div class="feed-empty" id="feed-a-empty">waiting for the first poll…</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h2>Feed B — model says high ROI</h2>
+        <span class="sub" id="feed-b-count">0 selected</span>
+        <div class="feed-tools">
+          <span class="chip score" title="rows must clear both bars">bar: score ≥ 55 · net ROI ≥ 25%</span>
+          <label class="inline"><input type="checkbox" id="feed-b-pause"> pause</label>
+        </div>
+      </header>
+      <div class="feed" id="feed-b" aria-live="polite" aria-relevant="additions">
+        <div class="feed-empty" id="feed-b-empty">waiting for the first poll…</div>
+      </div>
+      <div class="body tight" style="border-top:1px solid var(--line)">
+        <p class="small" style="margin:8px 14px">
+          The screen is a published rule, not a prediction. Scores, both ROI figures and every term are on
+          <a href="model.html">the model page</a>; simulated orders it would place are on
+          <a href="strategies.html">paper trades</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ live tables ============================ -->
+  <h2 class="section">Largest events right now — ranked by traded dollars</h2>
+  <div class="grid cols-2">
+    <div class="panel">
+      <header>
+        <h3>Top events by 24h traded value</h3>
+        <span class="sub">estimate: contracts × price, because Kalshi has no official USD-volume field</span>
+      </header>
+      <div class="body tight">
+        <div class="table-scroll short">
+          <table id="top-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Topic</th><th>Event / market</th>
+                <th class="num">Last</th><th class="num">24h $ (est.)</th>
+                <th class="num">Spread</th><th>Closes</th><th>Sources</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="8" class="blank">loading open markets…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h3>Everything that moved ≥ $0.10 in the last 15 minutes</h3>
+        <span class="sub" id="movers-count">0 markets</span>
+      </header>
+      <div class="body tight">
+        <div class="table-scroll short">
+          <table id="movers-table">
+            <thead>
+              <tr>
+                <th>Topic</th><th>Market</th><th class="num">Move</th><th class="num">From → to</th>
+                <th class="num">Trades</th><th>Latest</th><th>Evidence</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="7" class="blank">loading trades…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ chart + depth ============================ -->
+  <h2 class="section">Price and liquidity</h2>
+  <div class="grid cols-2">
+    <div class="panel">
+      <header>
+        <h3 id="chart-title">Price chart</h3>
+        <div class="chart-controls" id="chart-controls" role="group" aria-label="Chart window"></div>
+      </header>
+      <div class="body">
+        <div class="chart-wrap">
+          <svg class="chart" id="live-chart" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="chart-readout" id="chart-readout">pick a market in the table below, then hover the chart</div>
+        <p class="small" id="chart-note">
+          x axis is time, y axis is the YES contract price. The seconds windows are drawn from individual
+          official trades; the 1/60/1440-minute candlestick endpoint is the only official candle
+          resolution and returns empty arrays on these demo markets (verified 2026-11-20).
+        </p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h3>Order book — contracts available at each price</h3>
+        <span class="sub" id="book-title">select a market</span>
+      </header>
+      <div class="body">
+        <p class="small" style="margin:0 0 8px">
+          Kalshi returns <b>bids only</b>; a YES ask at a price is implied by a NO bid at 1 − price with the
+          same size. Bars are contract counts at each level.
+          <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">official explanation ↗</a>
+        </p>
+        <div class="ladder" id="ladder">
+          <div class="side asks"><h4>YES asks (implied)</h4></div>
+          <div class="mid"><div class="spread" id="book-mid">—</div></div>
+          <div class="side bids"><h4>YES bids</h4></div>
+        </div>
+        <div id="book-meta" class="small" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ market picker ============================ -->
+  <h2 class="section">Markets in the watched set</h2>
+  <div class="panel">
+    <header>
+      <h3>Open markets by topic</h3>
+      <span class="sub">click a row to load it into the chart and the order book</span>
+      <div class="feed-tools">
+        <select id="topic-filter" aria-label="Topic filter">
+          <option value="all">All five topics</option>
+          <option value="gas">Gas prices</option>
+          <option value="elections">Elections</option>
+          <option value="culture">Culture</option>
+          <option value="crypto">Crypto</option>
+          <option value="golf">Golf</option>
+        </select>
+        <input type="text" id="search" placeholder="filter ticker or title" aria-label="Filter markets">
+      </div>
+    </header>
+    <div class="body tight">
+      <div class="table-scroll">
+        <table id="watch-table">
+          <thead>
+            <tr>
+              <th>Topic</th><th>Market</th><th class="num">YES bid</th><th class="num">YES ask</th>
+              <th class="num">Spread</th><th class="num">Last</th><th class="num">24h $ (est.)</th>
+              <th>Closes</th><th>API source</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="9" class="blank">loading open markets…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:14px">
+    Polling is REST only. The official documentation says WebSocket connections require a signed handshake
+    even for public channels, and a public page must never hold an API key, so live updates here are
+    polls and are labelled with their real latency.
+    <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start ↗</a>
+  </p>
+</main>
+
+<footer class="foot">
+  <p>
+    Data: official Kalshi demo Trade API <span class="mono">https://external-api.demo.kalshi.co/trade-api/v2</span>.
+    Demo is a test exchange; balances, liquidity and fills there are not real money.
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment notice ↗</a>
+  </p>
+  <p>No API key is used. No order is placed. Simulated trades are local to your browser (localStorage) and settle only from official API results.</p>
+</footer>
+
+<script src="assets/util.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/chart.js"></script>
+<script src="assets/dashboard.js"></script>
+</body>
+</html>

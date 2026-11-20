@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chart &amp; liquidity depth — Kalshi demo trade desk</title>
+<meta name="description" content="Interactive Kalshi demo contract-price chart with time on the x axis (seconds, minutes, hours), price on the y axis, jump markers and an order-book depth ladder showing contracts available at each price.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="dot" aria-hidden="true"></span>Kalshi Live Trade Desk</a>
+    <span class="env">demo · external-api.demo.kalshi.co</span>
+    <nav aria-label="Main">
+      <a href="index.html">Dashboard</a>
+      <a href="chart.html" class="active" aria-current="page">Chart &amp; depth</a>
+      <a href="resolutions.html">Resolutions</a>
+      <a href="strategies.html">Paper trades</a>
+      <a href="model.html">Model</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Price movement and liquidity, per market</h1>
+  <p class="lede">
+    x axis: time. y axis: the YES contract price in dollars. Choose a window measured in seconds, minutes or
+    hours. Jump markers appear where a move of at least $0.10 printed. The ladder on the right is the official
+    order book, so it answers the liquidity question directly: how many contracts rest at each price.
+  </p>
+
+  <div class="statusbar">
+    <span class="pill"><span class="dot" id="dot-api"></span><span id="api-state">loading…</span></span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="pill">market <b id="current-ticker">—</b></span>
+    <span class="pill">samples <b id="sample-count">0</b></span>
+    <span class="pill">requests <b id="calls">0</b></span>
+    <span class="pill" style="margin-left:auto">
+      <select id="market-picker" aria-label="Market"></select>
+      <button id="reload" class="primary" type="button">Reload</button>
+    </span>
+  </div>
+
+  <div id="banner" class="callout warn" hidden></div>
+
+  <div class="grid" style="grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)">
+    <div class="panel">
+      <header>
+        <h3 id="chart-title">Price</h3>
+        <div class="chart-controls" id="windows" role="group" aria-label="Chart window"></div>
+      </header>
+      <div class="body">
+        <svg class="chart" id="chart" viewBox="0 0 100 100" preserveAspectRatio="none" style="height:360px"></svg>
+        <div class="chart-readout" id="readout">hover the chart for the exact print and its source</div>
+        <div class="small" id="resolution-note" style="margin-top:6px">
+          Windows under a minute are built from individual trades, because the official candlestick endpoint
+          accepts only 1-minute, 1-hour and 1-day periods.
+          <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlestick docs ↗</a>
+          · <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Trades docs ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h3>Liquidity</h3>
+        <span class="sub">contracts available at each price</span>
+      </header>
+      <div class="body">
+        <div class="ladder" id="ladder">
+          <div class="side asks"><h4>YES asks (implied)</h4></div>
+          <div class="mid"><div class="spread">—</div></div>
+          <div class="side bids"><h4>YES bids</h4></div>
+        </div>
+        <div class="small" id="book-meta" style="margin-top:8px"></div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+        <h4 style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-3)">Cost to buy 10 contracts</h4>
+        <p class="small" style="margin:0 0 8px">Walking the actual ask ladder, with the official taker fee added.</p>
+        <table id="walk-table">
+          <thead><tr><th>Level</th><th class="num">Price</th><th class="num">Contracts</th><th class="num">Cumulative cost</th></tr></thead>
+          <tbody><tr><td colspan="4" class="blank">load a market</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section">Jump markers in this window</h2>
+  <div class="panel">
+    <header><h3>Every ≥ $0.10 move for the selected market</h3><span class="sub" id="jump-note">—</span></header>
+    <div class="body tight">
+      <div class="table-scroll short">
+        <table id="jump-table">
+          <thead><tr><th>Printed</th><th>Direction</th><th class="num">Move</th><th class="num">From → to</th><th class="num">Trades</th><th>Basis</th><th>Sources</th></tr></thead>
+          <tbody><tr><td colspan="7" class="blank">no qualifying jump for this market in the scanned window</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot"><p>Official demo API only. Prices are demo-market prints, not real-money quotes.</p></footer>
+
+<script src="assets/util.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/chart.js"></script>
+<script src="assets/chartpage.js"></script>
+</body>
+</html>
