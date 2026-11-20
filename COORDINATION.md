@@ -907,6 +907,19 @@ Claim log entry: 2026-11-20 — arena/358db039-demo1 claimed task 22 (final inte
 | 2026-11-20 | Session `1e09bd4a` claimed the verification + final-integration scope on `arena/1e09bd4a-demo1` at `f9fab19`. |
 | 2026-11-20 | Built `tools/verify_site.py`, wired `build_verification` + nav into `build_site.py`, generated `site/verification.html` + report, updated hub/README. All gates green. |
 
+### Publish record — session 1e09bd4a (final integration)
+
+| Item | Value |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/41 — "Add automated line-by-line verification of the Kalshi demo site" (`arena/1e09bd4a-demo1` → `main`) |
+| Merge result | **MERGED** via `gh pr merge 41 --merge` on 2026-11-20T13:08:01Z; merge commit `81e1685daae66bf22a13602f967b37517a0263e1` |
+| Merge conflict | One round: `origin/main` had advanced concurrently (PR #40, session 3c2c8403) before the merge. Conflicts on shared `COORDINATION.md` and `index.html`. Resolution: kept `origin/main`'s versions of both and re-applied only this session's additive content (appended board section; re-inserted the verification tile into main's rewritten Tools grid). No other session's work discarded. |
+| GitHub Pages | API `status: built`, source `{branch: main, path: /}`. Deploy after merge succeeded. |
+| Live verification | Fetched after deploy — `https://karagemop466-tech.github.io/Demo1/site/verification.html` renders **PASS** (250 markets / 250 resolved / 600 topic / 48 liquidity rows / 8 overview figures re-checked, 0 errors); `site/verification-report.json` served; root hub carries the "Line-by-line verification" tile. |
+| Tasks V1–V4 | All done. Sources, verification and irregularities recorded above. |
+
+---
+
 ---
 
 ---
