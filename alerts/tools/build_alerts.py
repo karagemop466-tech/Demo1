@@ -687,6 +687,18 @@ def main():
     }
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
+    # Keep the previous generation timestamp when nothing else changed, so a
+    # scheduled rebuild does not produce a commit that only moves a timestamp.
+    if os.path.exists(args.out):
+        try:
+            with open(args.out, "r", encoding="utf-8") as fh:
+                previous = json.load(fh)
+            before = {k: v for k, v in previous.items() if k != "generated_utc"}
+            after = {k: v for k, v in feed.items() if k != "generated_utc"}
+            if before == after and previous.get("generated_utc"):
+                feed["generated_utc"] = previous["generated_utc"]
+        except (ValueError, OSError):
+            pass
     with open(args.out, "w", encoding="utf-8") as fh:
         json.dump(feed, fh, indent=1, sort_keys=False)
         fh.write("\n")

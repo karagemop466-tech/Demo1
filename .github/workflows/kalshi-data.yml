@@ -71,6 +71,9 @@ jobs:
       - name: Commit refreshed data (main only)
         if: github.ref == 'refs/heads/main'
         run: |
+          set -euo pipefail
+          BR=main
+          # Commit the refresh on top of whatever tip this run started from.
           if [ -z "$(git status --porcelain docs/data)" ]; then
             echo "No data changes."; exit 0
           fi
@@ -78,5 +81,24 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add docs/data
           git commit -m "data: refresh Kalshi demo snapshot [skip ci]" --no-verify
-          git pull --rebase origin main
-          git push origin HEAD:main
+          DATA_COMMIT="$(git rev-parse HEAD)"
+          echo "data commit: $DATA_COMMIT"
+          for attempt in 1 2 3; do
+            echo "attempt $attempt: fetching and rebasing on $BR"
+            git fetch origin "$BR"
+            if git rebase "origin/$BR"; then
+              if git push origin "HEAD:$BR"; then
+                echo "PUBLISHED data refresh on attempt $attempt"; exit 0
+              fi
+              echo "push rejected on attempt $attempt - retrying"
+              continue
+            fi
+            echo "rebase conflict on attempt $attempt - rebuilding the data commit on the remote tip"
+            git rebase --abort || true
+            git reset --hard "origin/$BR"
+            git checkout "$DATA_COMMIT" -- docs/data
+            git add docs/data
+            git commit -m "data: refresh Kalshi demo snapshot [skip ci]" --no-verify
+            sleep 2
+          done
+          echo "could not publish data refresh after 3 attempts"; exit 1
