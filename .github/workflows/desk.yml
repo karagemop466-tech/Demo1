@@ -1,0 +1,114 @@
+name: Kalshi desk — collect, simulate, publish
+
+# Fully automated pipeline for desk/ (no manual step, no credentials):
+#   1. collect.py            live demo market data, order books, candles, 24 h traded notional
+#   2. track_resolutions.py  append-only YES/NO log
+#   3. desk_data.py          refresh the transcription used by the static pages
+#   4. paper_trader.py       open paper trades from the new collection, grade settled ones
+#   5. build_pages.py        render the site; the job fails on any broken internal link
+#   6. checks                jsdom DOM tests + fee-table assertions
+# The refreshed data and pages are committed back to main, which triggers the Pages deploy.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "desk/tools/**"
+      - "desk/assets/**"
+      - ".github/workflows/desk.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kalshi-desk
+  cancel-in-progress: false
+
+jobs:
+  desk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Syntax-check every script
+        run: |
+          python3 -m py_compile desk/tools/*.py
+          node --check desk/assets/core.js
+          node --check desk/assets/live.js
+
+      - name: Fee table must match the published schedule (21 rows)
+        run: python3 desk/tools/kalshi_fees.py
+
+      - name: Prove the official demo API is reachable from this runner
+        run: |
+          curl -sS -m 20 -o /dev/null -w "demo exchange/status: %{http_code}\n" \
+            https://external-api.demo.kalshi.co/trade-api/v2/exchange/status
+          curl -sS -m 20 -o /dev/null -w "docs.kalshi.com: %{http_code}\n" \
+            https://docs.kalshi.com/llms.txt
+
+      - name: Collect live demo data
+        run: python3 desk/tools/collect.py --pages 6 --books 12 --candles 6 --trades 6
+
+      - name: Transcription of the committed snapshot
+        run: python3 desk/tools/desk_data.py
+
+      - name: Track resolutions (append-only)
+        run: python3 desk/tools/track_resolutions.py
+
+      - name: Simulated trading run
+        run: python3 desk/tools/paper_trader.py --max-new 40 --note "scheduled run"
+
+      - name: Build the site and fail on a broken link
+        run: python3 desk/tools/build_pages.py
+
+      - name: Headless page and data checks
+        run: |
+          npm install --no-audit --no-fund --silent jsdom
+          node desk/tools/dom_test.mjs
+
+      - name: Commit refreshed data and pages
+        run: |
+          git config user.name "kalshi-desk-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add desk/data desk/*.html
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+            exit 0
+          fi
+          git commit -m "desk: refresh live data, paper trades and pages $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Kalshi desk run"
+            python3 - <<'PY'
+            import json, pathlib
+            for name in ("markets-live.json", "paper-trades.json", "resolutions-log.json"):
+                p = pathlib.Path("desk/data") / name
+                if not p.exists():
+                    print(f"- {name}: missing"); continue
+                d = json.loads(p.read_text())
+                if name == "markets-live.json":
+                    print(f"- markets-live: {d.get('request_count')} requests, "
+                          f"{len(d.get('errors') or [])} errors, collected {d.get('generated_utc')}")
+                elif name == "paper-trades.json":
+                    settled = sum(1 for t in d.get("trades", []) if t.get("status") == "SETTLED")
+                    print(f"- paper trades: {len(d.get('trades', []))} total, {settled} graded")
+                else:
+                    print(f"- resolutions: {d.get('totals')}")
+            PY
+          } >> "$GITHUB_STEP_SUMMARY"

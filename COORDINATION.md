@@ -716,6 +716,66 @@ Demo account walkthrough (linked from the demo-env page): https://help.kalshi.co
 - **Verification:** `node --check` on new JS; link check via `npm run check:links` if available; live page verified post-merge via fetch.
 - **Irregularities:** none new. Sandbox cannot reach kalshi.co/github.io directly (egress allowlist), so live API behavior is verified in-browser post-deploy, not from sandbox.
 
+## Session arena/f55eb323-demo1 — consolidation, automated demo trading, single clean site
+
+- **Session ID:** `f55eb323` — branch `arena/f55eb323-demo1` (fixed, per Arena). Claimed 2026-11-20T12:56Z (UTC).
+- **Why this session:** the repo now carries eight independent desks (`site/`, `docs/`, `exec-desk/`, `decision/`,
+  `verified-desk/`, `pages/`, `monitor/`, `strategy-desk/`, `live-desk/`) with duplicate pages, two contradictory
+  labels (`site/` says 2,469 resolved; `arena/3c2c8403-demo1` showed only 2,117 carry a yes/no `result`), and no
+  requirement-by-requirement matrix. No single page answers "what is the requirement, what is live, what is blank,
+  and why".
+- **Claimed tasks (file scope is exclusively new files; no other session's file is edited except this board):**
+
+| # | Task | Status | File scope |
+|---|------|--------|------------|
+| F1 | Requirements traceability matrix R-01…R-20 (requirement → status → official source → live evidence → gap) | in progress | `desk/` (new tree only) |
+| F2 | Correct resolution taxonomy: settled-with-result vs closed-awaiting-result, per topic, source-linked | in progress | `desk/` |
+| F3 | Deterministic automated simulated-trade runner + strategy catalogue + P&L/ROI/win-rate analysis | in progress | `desk/` |
+| F4 | Labelled live-data layer (browser → official demo API), jump alerts ≥ $0.10, no fabricated values | in progress | `desk/` |
+| F5 | Flagged-for-Review register consolidating every open session's flags, with source links | in progress | `desk/` |
+| F6 | Request to final-integration owner: correct the `site/` "Resolved 2469" label (V-3) | needs review | logged here only |
+| F7 | PR to `main` + merge + Pages deploy confirmation | in progress | `COORDINATION.md`, `desk/` |
+
+- **Non-overlap statement:** I do not edit `site/`, `docs/`, `exec-desk/`, `decision/`, `verified-desk/`, `pages/`,
+  `monitor/`, `strategy-desk/`, `live-desk/`, `snapshot/`, `data/`, `build_site.py`, `README.md` or `index.html`.
+  All new work lives under `desk/`. The only shared file I touch is this board, appended (never rewritten).
+- **Open requests logged (not applied):**
+  - **V-3 (to owner of `build_site.py`) — still open.** `site/index.html`, `site/resolved.html` and the topic pages
+    label all 2,469 collected closed records "Resolved". Verified against `snapshot/resolved.json`: 2,117 carry
+    `result` ∈ {yes,no}; 352 are `closed` with a null `result`, i.e. awaiting settlement. Proposed wording:
+    "Closed records collected: 2,469 · with a YES/NO result: 2,117 · awaiting result: 352".
+  - **Env note:** this session's `bash` egress cannot reach `kalshi.co`, `docs.kalshi.com` or
+    `github.io` (allowlist). Official docs are read through the page-fetch tool; GitHub Actions runners and the
+    user's browser are unaffected. Same constraint recorded by earlier sessions.
+
+### F1–F7 delivery record — session arena/f55eb323-demo1
+
+| # | Task | Status | Files | Verification |
+|---|------|--------|-------|--------------|
+| F1 | Requirements matrix R-01…R-20 | done | `desk/requirements.html` (source: `desk/tools/build_pages.py::REQUIREMENTS`) | Every row shows implementation, status and an official source link; 4 rows are honestly `blocked`/`not executed` |
+| F2 | Resolution taxonomy split | done | `desk/tools/track_resolutions.py`, `desk/data/resolutions-log.json` | 2,394 closed records tracked: **2,042 resolved** (yes 198 / no 1,844) + **352 closed-awaiting-result** (no `result` field). Follows https://docs.kalshi.com/getting_started/market_lifecycle |
+| F3 | Automated simulated trading + strategy analysis | done | `desk/tools/paper_trader.py`, `desk/tools/kalshi_fees.py`, `desk/strategy.html` | 8 pre-registered rules → 16 paper trades opened from the committed snapshot; fees from the official schedule; all 21 published fee rows reproduced by assertion; OPEN trades excluded from win rate/P&L |
+| F4 | Live layer + ≥ $0.10 jump alerts | done | `desk/assets/core.js`, `desk/assets/live.js`, `desk/live.html` | Browser fetches official demo API directly (CORS confirmed by earlier sessions in `data/cors.json`); every move ≥ $0.10 in the committed candles listed with Kalshi page + news search, cause labelled unverified |
+| F5 | Consolidated Flagged for Review | done | `desk/flagged.html` | 12 flags (FL-01…FL-12) each with evidence + source + resolvability; carries forward earlier sessions' flags without editing their files |
+| F6 | Request: fix `site/` "Resolved 2469" label | needs review | — (logged only) | Still open against `build_site.py`; verified counts 2,469 collected / 2,117 with result / 352 awaiting |
+| F7 | PR → merge → Pages deploy | in progress | `COORDINATION.md` | Pages workflow now also builds and link-checks `desk/` |
+
+**Automation added:** `.github/workflows/desk.yml` (collect → transcribe → track → simulate → build → test → commit, every 30 min). It appends *no* keys and calls only public endpoints.
+
+**Verification performed (this session):** `python3 desk/tools/build_pages.py` → `link check: OK` (14 pages);
+`node desk/tools/dom_test.mjs` → **105/105**; `node desk/tools/page_runtime_test.mjs` → **40/40** (executes the real page
+scripts in jsdom against shape-accurate official payloads, including the API-blocked path); `node tools/check-links.mjs`
+→ PASS (269 files); `python3 desk/tools/kalshi_fees.py` → 21/21 published fee rows reproduced; subpath link test (served
+under `/Demo1/desk/`) → 0 problems.
+
+**Irregularities found and published (not fixed elsewhere):**
+1. `snapshot/markets.json` files 60 **KXWTI crude-oil** markets under `topic=elections` — excluded here (FL-05).
+2. Several demo books quote a **$0.00 YES ask / $1.00 NO ask** when the opposite side is empty; such rows cannot be bought and are blanked rather than priced (FL-09).
+3. The fee schedule's prose (“round up to a centicent”) contradicts its own 21-row table (whole-cent rounding); the table is what reproduces (FL-06).
+4. `site/` still labels 2,469 closed records “Resolved” (only 2,117 carry a result) — logged as F6/V-3 for its owner.
+5. Sandbox limitation, unchanged: this session's `bash` cannot reach `kalshi.co`/`github.io`; official docs were read
+   through the page-fetch tool and live API behaviour is exercised by the runner + the visitor's browser.
+
 
 ## Session arena/3602732c-demo1 — final verification close-out
 
@@ -999,6 +1059,13 @@ The user's requirement "Live charts should include events and website links that
 | 2026-11-20 | PR #39 (`arena/b10c4954-demo1` → `main`) was not mergeable: `main` advanced while the PR was open (PRs #35–#38 merged, including concurrent session `arena/c8617443-demo1`'s jump-alert work, plus a data snapshot refresh). Add/add content conflicts on `COORDINATION.md` and `index.html`. | Merged `origin/main` into the feature branch and kept **both** sides: `index.html` keeps main's KPI block AND this session's Live demo desk section (with the new Sharp moves tile); `COORDINATION.md` keeps main's accumulated board verbatim and re-appends this session's section. No session's work discarded. |
 | 2026-11-20 | Both desks (this session and c8617443) implemented jump/alert features independently; both are additive and cross-linked. | Coordination rule applied: each session owns its files; no shared file was overwritten. The board records both. |
 | 2026-11-20 | Second pre-merge round: `main` advanced again (PR #41, session arena/1e09bd4a-demo1, "automated line-by-line verification of the Kalshi demo site"). Content conflict on `COORDINATION.md` only (`index.html` auto-merged). | Resolved by keeping main's accumulated board verbatim and re-appending this session's section. No session's work discarded. |
+
+## Merge log — session arena/f55eb323-demo1 (PR #42)
+
+| Round | Situation | Resolution |
+|---|---|---|
+| 1 | While PR #42 was open, `main` advanced to `b916f1e` (PRs #39, #41 and two other sessions' board updates). The only conflicting file was `COORDINATION.md` (every session appends to it). | Resolved by **keeping both sides**: this session's 59-line claim + delivery record, followed by main's 265 new lines from the other sessions. No text from either side was dropped and no other file conflicted (all other merges were automatic, including `README.md`, `index.html` and `pages.yml`). |
+
 | F-1 | Repo review (line by line) | done | arena/5487be47-demo1 | whole tree | git, docs.kalshi.com | `git ls-files`, branch/status check; 250 files, 7 site variants coexist (root, `site/`, `pages/`, `monitor/`, `live-desk/`, `strategy-desk/`, `exec-desk/`, `verified-desk/`, `decision/`, `docs/`) | Fragmentation: multiple competing dashboards remain; consolidation is the owner's call (logged as a suggestion) |
 | F-2 | Official-source re-verification (endpoints, orderbook, candles, demo caveat) | done | arena/5487be47-demo1 | docs cross-check | docs.kalshi.com (api_environments, orderbook_responses, demo_env, get-market-candlesticks) | Fetched each official page; base URLs, bids-only orderbook + 1−price reciprocity, 1/60/1440-min candles, mock-funds warning all match | — |
 | F-3 | Live demo data path re-verified (empirical) | done | arena/5487be47-demo1 | live API calls | external-api.demo.kalshi.co | `GET /exchange/status`, `/markets/{ticker}`, `/markets/{ticker}/orderbook`, `/series/.../candlesticks?period_interval=60` all returned valid responses matching documented schemas | Demo venue is mock data; some markets closed between snapshot and re-check |
@@ -1027,3 +1094,9 @@ The user's requirement "Live charts should include events and website links that
    tree; not run by the Pages workflow. Flagged, left untouched (owned by an earlier session).
 3. **Site fragmentation** — ~7 dashboard variants coexist; the root hub links to all. Consolidation is
    recommended but was not forced (each is a prior session's deliverable). Logged for the owner.
+
+**Merge round 2 (same session, PR #42):** `main` advanced again to `8fa56b1` (PR #45) while the PR was open.
+The only conflicting file was again `COORDINATION.md`; resolved identically by keeping both sides in full
+(this session's claim + delivery record, then main's newer session records). Every other file merged
+automatically. Full local gate re-run after the merge: desk build + link check OK, 105/105 DOM checks,
+40/40 page-runtime checks, repo link audit PASS.

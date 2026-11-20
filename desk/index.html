@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview · Kalshi Demo Desk</title>
+<meta name="description" content="Single, source-linked Kalshi demo dashboard for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="index.html"><span class="mark">K</span>Kalshi <b>Demo Desk</b></a>
+    <nav class="main"><a href="index.html" aria-current="page">Overview</a><a href="live.html">Live dashboard</a><a href="markets.html">Markets</a><a href="gas-prices.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="resolutions.html">Resolutions</a><a href="strategy.html">Strategies &amp; paper trades</a><a href="portfolio.html">Portfolio</a><a href="requirements.html">Requirements</a><a href="sources.html">Sources</a><a href="flagged.html">Flagged for review</a></nav>
+  </div>
+  <div class="wrap statusbar">
+    <span data-live-status><span class="dot"></span>checking the official demo API…</span>
+    <span class="fine">Public market data only · no keys · values are demo-venue values
+    (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official warning</a>)</span>
+  </div>
+</header>
+<main id="main" class="wrap">
+
+<section>
+  <p class="kicker">Executive view · built 2026-11-20 11:43:59 UTC</p>
+  <h1>Kalshi demo desk</h1>
+  <p class="lead">One source-linked dashboard for the five requested topics — gas prices, elections,
+  culture, crypto and golf. It ranks events by dollars traded, follows each market until the exchange
+  returns a YES or NO result, and runs a recorded simulation of eight trading strategies against the
+  official demo API. Nothing on this site is estimated: every figure links to the API request that
+  produced it, and every gap is listed on <a href="flagged.html">Flagged for review</a>.</p>
+
+  <div class="banner info"><b>Read this first.</b> The Kalshi demo environment is a test exchange with
+  mock funds, and Kalshi states that its prices and behaviour “may not be reflective of those in real
+  markets” (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official page</a>). Dollar figures
+  below are demo-venue numbers; they show that the dashboard works, not what a real account would earn.</div>
+</section>
+
+<div class="grid g4"><div class="kpi "><div class="n">1,399</div><div class="l">Open markets collected</div><div class="s">status=active · official demo API</div></div><div class="kpi "><div class="n">2,117</div><div class="l">Closed markets with a YES/NO result</div><div class="s">yes 222 · no 1,895</div></div><div class="kpi warn"><div class="n">352</div><div class="l">Closed, awaiting result</div><div class="s">no result field yet</div></div><div class="kpi "><div class="n">10</div><div class="l">Price series in the committed snapshot</div><div class="s">1m / 1h / 1d candlesticks</div></div></div>
+
+<h2>Start by topic</h2>
+<div class="tiles"><a class="tile" href="gas-prices.html"><b>Gas prices</b><span>AAA retail gasoline thresholds — weekly, monthly and state series</span><span class="cnt">116 open markets · 350 with a YES/NO result</span></a><a class="tile" href="elections.html"><b>Elections</b><span>Presidential nominees, governorships, mayoral races</span><span class="cnt">255 open markets · 131 with a YES/NO result</span></a><a class="tile" href="culture.html"><b>Culture</b><span>Film, TV, music, awards and streaming</span><span class="cnt">191 open markets · 368 with a YES/NO result</span></a><a class="tile" href="crypto.html"><b>Crypto</b><span>BTC, ETH and other coin price ranges</span><span class="cnt">474 open markets · 668 with a YES/NO result</span></a><a class="tile" href="golf.html"><b>Golf</b><span>PGA/LPGA Tour winners and finishing positions</span><span class="cnt">363 open markets · 600 with a YES/NO result</span></a></div>
+
+<h2>What this desk can and cannot show</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Requirement</th><th>Status</th><th>What is live here</th><th>Evidence / gap</th></tr></thead>
+<tbody>
+<tr><td>Highest dollar-amount live events, five topics only</td><td><span class="badge ok">live</span></td>
+<td>Ranked by <b>24 h traded notional</b>, computed as Σ (trade price × contracts) from the official
+public trades endpoint — Kalshi publishes no “dollar amount” field.</td>
+<td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-trades" title="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">↗ Get Trades</a> · method on <a href="live.html#method">Live dashboard</a></td></tr>
+<tr><td>Track each event until it resolves, YES or NO</td><td><span class="badge ok">live</span></td>
+<td>2,042 markets carry an exchange result; 352 are closed and
+still awaiting determination, tracked separately.</td>
+<td><a class="src" href="https://docs.kalshi.com/getting_started/market_lifecycle" title="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">↗ Market lifecycle</a> · <a href="resolutions.html">Resolutions</a></td></tr>
+<tr><td>Price chart: time on X, contract price on Y, seconds/minutes/hours/1-day windows</td>
+<td><span class="badge ok">live</span></td>
+<td>Official 1-minute, 1-hour and 1-day candles; sub-minute views use the 1-minute candle plus
+client polling, and are labelled as such.</td>
+<td><a class="src" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" title="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">↗ Candlesticks</a> · <a href="live.html#chart">chart</a></td></tr>
+<tr><td>Current liquidity: contracts available at a given price</td><td><span class="badge ok">live</span></td>
+<td>Bid ladder with contracts and dollars per level; implied asks computed as 1 − best opposite bid,
+exactly as documented.</td>
+<td><a class="src" href="https://docs.kalshi.com/getting_started/orderbook_responses" title="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">↗ Orderbook responses</a> · <a href="live.html#depth">depth</a></td></tr>
+<tr><td>Flag any price jump ≥ $0.10 and link a possible cause</td><td><span class="badge ok">live</span></td>
+<td>Every 1-minute close-to-close move ≥ $0.10 is listed with a link to the Kalshi market page and a
+news search. The <i>cause</i> is never asserted — the link is a starting point, not a finding.</td>
+<td><a href="live.html#jumps">jump scanner</a></td></tr>
+<tr><td>Automated simulated trades, categorised by strategy type</td><td><span class="badge ok">live</span></td>
+<td>16 paper trades from 8 published rules, fees charged from the official schedule,
+0 graded against the exchange's own result, 16 still open.</td>
+<td><a class="src" href="https://kalshi.com/docs/kalshi-fee-schedule.pdf" title="https://kalshi.com/docs/kalshi-fee-schedule.pdf" target="_blank" rel="noopener">↗ Fee schedule</a> · <a href="strategy.html">Strategies</a></td></tr>
+<tr><td>Portfolio performance on the demo account</td><td><span class="badge warn">blocked</span></td>
+<td>Blank on purpose: reading balances, positions and fills needs an Ed25519/RSA-signed request with a
+demo API key. No key exists in this repository and none can be safely embedded in a static site.</td>
+<td><a class="src" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" title="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">↗ Signing docs</a> · <a href="portfolio.html">Portfolio</a> ·
+<a href="flagged.html">FL-01</a></td></tr>
+<tr><td>Execute real trades on the demo exchange</td><td><span class="badge warn">not executed</span></td>
+<td>No order was submitted. The order endpoint is documented and the payload is published, but sending
+it requires credentials this repo must not hold.</td>
+<td><a class="src" href="https://docs.kalshi.com/api-reference/orders/create-order-v2" title="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">↗ Create order v2</a> · <a href="flagged.html">FL-02</a></td></tr>
+</tbody></table></div>
+
+<h2>Where everything lives</h2>
+<div class="tiles">
+  <a class="tile" href="live.html"><b>Live dashboard</b><span>Top events by traded dollars, price chart with
+    time-window controls, depth ladder and the ≥ $0.10 jump scanner. Values refresh from the API in your browser.</span></a>
+  <a class="tile" href="resolutions.html"><b>Resolutions</b><span>Every tracked market with its exchange result,
+    settlement value and timestamp, plus the ones still waiting.</span></a>
+  <a class="tile" href="strategy.html"><b>Strategies &amp; paper trades</b><span>Eight pre-registered rules, the
+    full trade ledger with fees, and win rate / P&amp;L / ROI by strategy and topic.</span></a>
+  <a class="tile" href="requirements.html"><b>Requirements matrix</b><span>The brief, item by item, with the
+    implementation, the official source and the honest status of each line.</span></a>
+  <a class="tile" href="sources.html"><b>Sources</b><span>Every official document and API endpoint used, with
+    what it verified.</span></a>
+  <a class="tile" href="flagged.html"><b>Flagged for review</b><span>Unverified values, data irregularities and
+    known limits — with the source link and the check that would resolve each one.</span></a>
+</div>
+
+<h2>Data pipeline status</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Stage</th><th>What runs</th><th>Schedule</th><th>Link</th></tr></thead>
+<tbody>
+<tr><td>Collect</td><td><code>desk/tools/collect.py</code> on a GitHub runner: markets by status, order books,
+candles, 24 h traded notional, watch list.</td><td>every 30 min</td>
+<td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/.github/workflows/desk.yml" target="_blank" rel="noopener">workflow</a></td></tr>
+<tr><td>Simulate</td><td><code>desk/tools/paper_trader.py</code>: opens paper trades from the new collection and
+grades them against results.</td><td>after each collection</td>
+<td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/desk/tools/paper_trader.py" target="_blank" rel="noopener">source</a></td></tr>
+<tr><td>Track</td><td><code>desk/tools/track_resolutions.py</code>: append-only YES/NO log.</td>
+<td>after each collection</td>
+<td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/desk/tools/track_resolutions.py" target="_blank" rel="noopener">source</a></td></tr>
+<tr><td>Publish</td><td><code>desk/tools/build_pages.py</code>: renders this site and fails the build on any
+broken internal link or table row without a source.</td><td>after each collection</td>
+<td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/desk/tools/build_pages.py" target="_blank" rel="noopener">source</a></td></tr>
+</tbody></table></div>
+
+<h2>Honest limits of this page</h2>
+<ul class="tight">
+<li><b>Demo venue.</b> All prices, depths and results are from Kalshi's demo exchange, not production.</li>
+<li><b>Dollar ranking is a computed proxy.</b> Kalshi has no “highest dollar amount” field; the desk ranks
+by measured 24 h traded notional where trades were measured and falls back to 24 h contract volume
+otherwise, labelling which basis each row used.</li>
+<li><b>Coverage is bounded.</b> The committed snapshot covers the top series by volume per topic, not the
+entire exchange: 1,399 open markets and 2,394 closed ones.</li>
+<li><b>Paper trading, not execution.</b> No order left this repository.</li>
+</ul>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p><b>Data:</b> official Kalshi demo Trade API
+      <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>
+      · endpoint documentation <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com</a>.
+      Values in the tables are the exchange's own numbers; anything the API does not return is
+      left blank and listed on the <a href="flagged.html">Flagged for review</a> page.</p>
+    <p class="fine">The demo environment uses mock funds and Kalshi states that its prices and behaviour
+      may not reflect real markets. Nothing here is investment advice. Page built 2026-11-20 11:43 UTC ·
+      sources and verification: <a href="sources.html">Sources</a> · <a href="flagged.html">Flagged</a>.</p>
+  </div>
+</footer>
+<script src="assets/core.js"></script>
+
+</body>
+</html>
