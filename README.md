@@ -22,6 +22,27 @@ A static GitHub Pages site (repository root, served from `main` at `/`) that tra
 | `data/markets.json` | The verified market table (source of truth for the site) |
 | `assets/` | Shared CSS, navigation, and dashboard script (no external dependencies) |
 
+## Data hub, CI pipeline & audit trail (session arena-6aa291e9-demo1)
+
+A second, CORS-proof data path plus the audit layer lives under `docs/`:
+
+| Path | Purpose |
+|---|---|
+| `docs/index.html` | Data hub landing — top-USD events across all topics, pipeline status |
+| `docs/pages/live.html` | Dashboard: est. USD ranking, price chart (15 min → 7-day windows, 1m/60m official candles), order-book depth with contracts at each price |
+| `docs/pages/resolutions.html` | Events tracked by CI until they resolve YES/NO (with `settlement_ts`, `settlement_value_dollars`) |
+| `docs/pages/portfolio.html` | Demo-account portfolio/trade analysis (credential-gated; `scripts/demo_trader.py`) |
+| `docs/pages/verification.html` | Line-by-line verification log — every claim linked to official sources |
+| `docs/pages/flagged.html` | Flagged for Review register (F1–F14) with evidence links |
+| `docs/pages/repo-review.html` | Line-by-line repository review |
+| `docs/pages/suggestions.html` | Suggestions queue + questions/information/answers matrix |
+| `docs/pages/sources.html` | Full source register (mirrors `SOURCES.md`) |
+| `docs/data/*.json` | Provenance-stamped pipeline output (`snapshot.json`, `history.json` — 1m/60m candles, `resolutions.json`, `series_map.json`, `run_log.json`) |
+| `scripts/fetch_kalshi_data.py` | CI pipeline (`.github/workflows/kalshi-data.yml`, every 15 min; commits data on `main`) |
+| `scripts/demo_trader.py` | Signed demo-account client (order V2); disabled strategies in `scripts/strategies.json` |
+| `tests/test_fetch_kalshi_data.py` | Offline unit tests using recorded live payloads |
+| `EXECUTIVE_SUMMARY.md`, `SOURCES.md`, `REVIEW.md` | Executive summary, verified sources register, repo review |
+
 ## Data sources
 
 All market values come from Kalshi's public REST API (no key needed for market data):
@@ -36,7 +57,7 @@ Documentation: <https://docs.kalshi.com/llms.txt>. Gas settlement input: <https:
 - The table is a sample (15 verified rows), not a full market list.
 - Culture has no verified open market; that row is blank and flagged.
 - Portfolio tracking and trading need a Kalshi API key, which is not stored in this repository.
-- Live browser requests to Kalshi were not verified from the build environment.
+- Live browser requests to Kalshi: **CORS verified working** on 2026-11-20 (`data/cors.json` — the official API reflects this site's origin).
 
 ## Local preview
 
