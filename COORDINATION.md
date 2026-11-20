@@ -1460,3 +1460,27 @@ All live values in the site are drawn from the committed snapshot collected from
 2. Fresh-sandbox test runs need `npm install jsdom` before `node tests/*.test.mjs` / `npm test` (documented in D-1; reproduced here).
 3. Unauthenticated rate limits are officially unpublished (rate_limits page says "authenticate where supported and back off on 429"); any page claiming "~10 req/s" without credentials is an estimate — the guide cites the official wording instead.
 4. `docs/data/` pipeline (kalshi-data.yml) commit-step failure on PR #51's merge remains red until A-4 (`2a5bb307`) lands; the API-fetch part of that run succeeded (run_log ok:true).
+# Session arena/0ad208bf-demo1 — two-chat alert system (`alert-desk/`) + final integration round
+
+## Session claim
+- **Session ID:** `0ad208bf` — branch `arena/0ad208bf-demo1` (platform-fixed name; `session-<id>/<task>` naming not possible, recorded as deviation like all prior sessions).
+- **Claimed at:** 2026-11-20T19:30Z (UTC), claim pushed before implementation work.
+- **Basis:** full repo + board review at `cb6f8b7` (= `origin/main`, includes PR #51). All prior session tasks are recorded done/merged; the live site (https://karagemop466-tech.github.io/Demo1/) is up, Pages `status: built`, snapshot refreshed on schedule at 19:12Z (run 44799888285). **Gap found against the brief:** the two scrolling chat feeds (one with all ≥ $0.10 swings, one filtered to events the model likes as high ROI) do not exist anywhere in the repo — grep for chat/scrolling/alert-feed surfaces no such page. This session claims that gap plus the final-integration round for its work.
+
+## Task board
+
+| # | Task | Status | Owner | File scope (exclusive) | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------------------|---------|--------------|----------------|
+| AL-1 | Two scrolling chat feeds for swings ≥ $0.10: **Chat 1 ALL EVENTS** (every ≥ $0.10 move) and **Chat 2 MODEL PICKS · HIGH ROI** (selective filter) | in progress | arena/0ad208bf-demo1 | `alert-desk/**` (new tree only) | data from committed `engine/jumps.json`, `engine/strategies.json`, `sim-desk/data/ledger.json`; endpoints per https://docs.kalshi.com/api-reference/market/get-trades and https://docs.kalshi.com/getting_started/demo_env | jsdom boot test (offline + live-tape paths); repo link checker; every bubble carries the request URL it came from | Model filter definition is this session's own (disclosed on page): P = sim-desk ledger position; B = fee-aware settlement-study band edge (official taker fee formula). Backtest aggregates show negative net ROI overall — honest numbers, no cherry-picking |
+| AL-2 | Live layer: browser polls official demo API (`/exchange/status` probe, `/markets/trades` tape) and emits live ≥ $0.10 swing bubbles in real time; degrades to committed snapshot when the API is unreachable | in progress | arena/0ad208bf-demo1 | `alert-desk/**` | https://docs.kalshi.com/api-reference/market/get-trades (path `/markets/trades`, params limit/min_ts); CORS pre-verified for this origin in `data/cors.json` | live-path jsdom case answers documented endpoints with official-shaped payloads; offline path tested separately | `/exchange/status` has no dedicated docs page fetch in this session — reuse is justified because `engine/app.js` polls it in production and its live CI run confirmed it; flagged as noted, not fabricated |
+| AL-3 | Tests + additive CI: `alert-desk/test_boot.mjs` (jsdom, offline + live) + new workflow file (paths-filtered to `alert-desk/**`) | in progress | arena/0ad208bf-demo1 | `alert-desk/**`, `.github/workflows/alert-desk-check.yml` (new file only) | docs.github.com Actions (paths filter) | `node --check`; jsdom run; `node tools/check-links.mjs` | none — additive only, no shared workflow edited |
+| AL-4 | Final integration round: root-landing card (one additive link), full gate suite, PR → main, merge, Pages deploy confirmation, board record | in progress | arena/0ad208bf-demo1 | root `index.html` (single additive card in the existing dashboards list), `COORDINATION.md` (this section + record) | docs.github.com Pages | full local gates before PR; post-merge `fetch` of live pages | Root landing touched only additively, consistent with prior final-integration sessions' recorded scope |
+
+## Integration requests / notes
+- No other session's files are edited. `engine/jumps.json`, `engine/strategies.json`, `sim-desk/data/ledger.json` are consumed **read-only** via relative fetch, so CI refreshes by other sessions flow into the chats automatically.
+- If another session is mid-merge when this session pushes, COORDINATION.md conflicts are resolved by keeping both sides in full (established convention, `tools/resolve_board.py`).
+
+## Log
+- 2026-11-20T19:30Z — session `0ad208bf` claimed AL-1..AL-4; claim pushed before implementation.
+
+
