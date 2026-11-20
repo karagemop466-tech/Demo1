@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-20T11:21:02Z",
+ "generated_utc": "2026-11-20T11:27:32Z",
  "environment": "demo",
  "rest_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "production_base": "https://external-api.kalshi.com/trade-api/v2",
@@ -9,106 +9,181 @@
  "topics": {
   "gas_prices": {
    "label": "Gas prices",
-   "words": [
-    "gas price",
-    "gas prices",
-    "gasoline",
-    "pump price",
-    "aaa",
-    "national average gas",
-    "retail gas",
-    "fuel price",
-    "kxaaagas"
+   "patterns": [
+    {
+     "pattern": "kxaaagas",
+     "why": "series ticker is a Kalshi AAA gas-price series"
+    },
+    {
+     "pattern": "gas\\s*prices?",
+     "why": "title/tags mention gas prices"
+    },
+    {
+     "pattern": "gasoline",
+     "why": "title/tags mention gasoline"
+    },
+    {
+     "pattern": "pump\\s*price",
+     "why": "title/tags mention pump price"
+    }
    ],
-   "categories": [
-    "Economics",
-    "Commodities",
-    "Financials"
-   ]
+   "categories": []
   },
   "elections": {
    "label": "Elections",
-   "words": [
-    "election",
-    "president",
-    "senate",
-    "governor",
-    "congress",
-    "primary",
-    "electoral",
-    "ballot",
-    "house",
-    "mayor",
-    "poll"
+   "patterns": [
+    {
+     "pattern": "election",
+     "why": "title/tags mention election"
+    },
+    {
+     "pattern": "\\bnominee\\b",
+     "why": "title/tags mention nominee"
+    },
+    {
+     "pattern": "\\bgovernorship\\b",
+     "why": "title/tags mention governorship"
+    },
+    {
+     "pattern": "\\bpresiden(t|cy|tial)\\b",
+     "why": "title/tags mention president/presidency"
+    },
+    {
+     "pattern": "\\bsenate\\b",
+     "why": "title/tags mention senate"
+    },
+    {
+     "pattern": "\\bhouse\\s+of\\s+representatives\\b",
+     "why": "title/tags mention House of Representatives"
+    },
+    {
+     "pattern": "\\bmayoral\\b",
+     "why": "title/tags mention mayoral"
+    },
+    {
+     "pattern": "kxpres|kxgov|kxsenate|kxhouse|kxmayor",
+     "why": "series ticker is an election series"
+    }
    ],
-   "categories": [
-    "Politics",
-    "Elections"
-   ]
+   "categories": []
   },
   "culture": {
    "label": "Culture",
-   "words": [
-    "album",
-    "movie",
-    "film",
-    "box office",
-    "grammy",
-    "oscar",
-    "emmy",
-    "celebrity",
-    "taylor swift",
-    "song",
-    "netflix",
-    "spotify",
-    "billboard",
-    "award",
-    "rotten tomatoes"
+   "patterns": [
+    {
+     "pattern": "\\boscar",
+     "why": "title/tags mention Oscar"
+    },
+    {
+     "pattern": "\\bgrammy",
+     "why": "title/tags mention Grammy"
+    },
+    {
+     "pattern": "\\bemmy",
+     "why": "title/tags mention Emmy"
+    },
+    {
+     "pattern": "box\\s*office",
+     "why": "title/tags mention box office"
+    },
+    {
+     "pattern": "rotten\\s*tomatoes|\\bmetacritic\\b",
+     "why": "title/tags mention a culture review score"
+    },
+    {
+     "pattern": "\\bbillboard\\b",
+     "why": "title/tags mention Billboard"
+    },
+    {
+     "pattern": "\\bspotify\\b",
+     "why": "title/tags mention Spotify"
+    },
+    {
+     "pattern": "\\bnetflix\\b",
+     "why": "title/tags mention Netflix"
+    },
+    {
+     "pattern": "\\bbest\\s+(picture|album|actor|actress|director)\\b",
+     "why": "title/tags mention a culture award category"
+    },
+    {
+     "pattern": "\\bsurvivor\\b|\\bbig\\s+brother\\b|\\bmet\\s+gala\\b",
+     "why": "title/tags mention a named culture event"
+    },
+    {
+     "pattern": "\\bmovie\\b|\\bfilm\\b|\\balbum\\b",
+     "why": "title/tags mention movie/film/album"
+    }
    ],
-   "categories": [
-    "Culture",
-    "Entertainment",
-    "Pop Culture",
-    "Awards"
-   ]
+   "categories": []
   },
   "crypto": {
    "label": "Crypto",
-   "words": [
-    "bitcoin",
-    "btc",
-    "ethereum",
-    "eth",
-    "solana",
-    "sol",
-    "dogecoin",
-    "doge",
-    "xrp",
-    "ripple",
-    "crypto"
+   "patterns": [
+    {
+     "pattern": "\\bbitcoin\\b|\\bbtc\\b|kxbtc",
+     "why": "title/tags mention Bitcoin"
+    },
+    {
+     "pattern": "\\bethereum\\b|\\beth\\b|kxeth",
+     "why": "title/tags mention Ethereum"
+    },
+    {
+     "pattern": "\\bsolana\\b",
+     "why": "title/tags mention Solana"
+    },
+    {
+     "pattern": "\\bdogecoin\\b|\\bdoge\\b",
+     "why": "title/tags mention Dogecoin"
+    },
+    {
+     "pattern": "\\bxrp\\b|\\bripple\\b",
+     "why": "title/tags mention XRP"
+    },
+    {
+     "pattern": "\\bcrypto",
+     "why": "title/tags mention crypto"
+    }
    ],
-   "categories": [
-    "Crypto",
-    "Financials"
-   ]
+   "categories": []
   },
   "golf": {
    "label": "Golf",
-   "words": [
-    "golf",
-    "pga",
-    "lpga",
-    "masters",
-    "ryder cup",
-    "open championship",
-    "tour championship",
-    "liv golf",
-    "kxpgatour"
+   "patterns": [
+    {
+     "pattern": "\\bgolf\\b",
+     "why": "title/tags mention golf"
+    },
+    {
+     "pattern": "\\bpga\\b",
+     "why": "title/tags mention the PGA"
+    },
+    {
+     "pattern": "\\blpga\\b",
+     "why": "title/tags mention the LPGA"
+    },
+    {
+     "pattern": "\\bmasters\\b",
+     "why": "title/tags mention the Masters"
+    },
+    {
+     "pattern": "ryder\\s*cup",
+     "why": "title/tags mention the Ryder Cup"
+    },
+    {
+     "pattern": "open\\s*championship",
+     "why": "title/tags mention the Open Championship"
+    },
+    {
+     "pattern": "tour\\s*championship",
+     "why": "title/tags mention the Tour Championship"
+    },
+    {
+     "pattern": "kxpgatour|kxpgatop20|kxdpworldtour|kxpgar",
+     "why": "series ticker is a Kalshi golf series"
+    }
    ],
-   "categories": [
-    "Sports",
-    "Golf"
-   ]
+   "categories": []
   }
  },
  "notes": [
@@ -179,21 +254,21 @@
   "Test": 8,
   "harrison-test": 6,
   "AI": 6,
-  "Finance": 2,
   "Culture": 2,
+  "Finance": 2,
+  "Other": 1,
   "test": 1,
-  "Business": 1,
   "Education": 1,
-  "Other": 1
+  "Business": 1
  },
  "request_stats": {
-  "requests": 593,
+  "requests": 487,
   "failed": 0
  },
- "duplicate_records_removed": 180,
+ "duplicate_records_removed": 0,
  "counts": {
-  "open_markets": 1369,
-  "resolved_markets": 2202,
+  "open_markets": 1399,
+  "resolved_markets": 2469,
   "chart_series": 10
  }
 }
