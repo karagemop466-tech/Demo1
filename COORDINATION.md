@@ -2236,3 +2236,23 @@ listed with file and line in `verification/index.html`.
 **Open sibling state at close-out:** PR #79 (`2db27b09`, alert-desk dual-feed reconciliation) remains open and its branch was last pushed at 20:55Z — its session is actively working (its own conflict resolution with `0ad208bf`'s merged `alert-desk/` is visible in its commit history), so it is left to its owner per the no-overlap rule; it was `CONFLICTING` at 20:57Z and no other PR was open. This session's tasks P-1..P-3 are **done**.
 
 **Final record addendum (session 1cbe8309):** the close-out PR above — https://github.com/karagemop466-tech/Demo1/pull/85 ("board: session 1cbe8309 close-out record") — **MERGED** 2026-11-20T21:00:55Z, merge commit `56ac3af7`; GitHub Pages then built `56ac3af7` successfully (`GET /pages` → `status: built`; latest build `56ac3af7` : `built`), and the deployed `COORDINATION.md` on https://karagemop466-tech.github.io/Demo1/COORDINATION.md serves this section. Session `1cbe8309` tasks P-1..P-3: **done**. Only open PR at close-out: #79 (`2db27b09`, owner active) — left to its owner per protocol.
+---
+
+# Session arena/2db27b09-demo1 — dual scrolling chat alert feeds (`alert-desk/`)
+
+## Session claim
+
+- **Session ID:** `arena/2db27b09-demo1` — branch `arena/2db27b09-demo1` (platform-fixed; `session-<id>/<task>` naming not possible, recorded as deviation like all prior sessions).
+- **Claimed at:** 2026-11-20 (UTC), before implementation. Claim committed and pushed first.
+- **Overlap check done:** reviewed the board, repo trees and all origin branches (only `origin/main` exists; every prior session's branch was merged and deleted). No session has implemented the brief's requirement: *"The alert system should work as a simplified scrolling chat… There should be two scrolling chats, one with all events and the other that is a selective filter based on events that our model likes as high ROI."* Search of the merged tree found jump/scanner tables (exec-desk, desk, pages, engine, dashboard) but **no dual scrolling chat feed**. This session takes that unclaimed requirement, fully namespaced in a new `alert-desk/` tree.
+- **Scope (exclusive):** new directory `alert-desk/**`, new test `alert-desk/test_alert_desk.mjs`, additive one-line claim record in this file, and (as final integration for this session) an additive nav/tile link from root `index.html` to `alert-desk/index.html`. No other session's files are edited.
+
+## Task board
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| AD-1 | Dual scrolling chat alert system: two real-time chat-style feeds (All events + High-ROI filter) alerting on ≥ $0.10 price swings in either direction across the five topics, with per-row official source links, topic grouping, and event/venue links | unclaimed→claimed (in progress) | arena/2db27b09-demo1 | `alert-desk/**` | docs.kalshi.com (Get Markets, Get Market Candlesticks, Market Lifecycle, API Environments); kalshi.com venue event pages | pending | pending |
+| AD-2 | jsdom boot test + link check + syntax gates for alert-desk; COORDINATION record; PR → main, merge, confirm Pages deploy | unclaimed→claimed (in progress) | arena/2db27b09-demo1 | `alert-desk/test_alert_desk.mjs`, `COORDINATION.md`, GitHub PR | docs.github.com (Pages) | pending | pending |
+
+Log:
+- 2026-11-20 — session `2db27b09` claimed AD-1..AD-2; claim pushed before implementation.
