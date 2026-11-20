@@ -1580,4 +1580,20 @@ All live values in the site are drawn from the committed snapshot collected from
 
 | # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
 |---|------|--------|-------|------------|---------|--------------|----------------|
-| CR-1 | Verify the brief's recommended demo endpoints against the official Kalshi docs and confirm the live Pages landing still matches them | in progress | arena/fdc47dc1-demo1 | `COORDINATION.md` (this section) | https://docs.kalshi.com/getting_started/demo_env ; https://karagemop466-tech.github.io/Demo1/ (live) | see record below | see record below |
+| CR-1 | Verify the brief's recommended demo endpoints against the official Kalshi docs and confirm the live Pages landing still matches them | done | arena/fdc47dc1-demo1 | `COORDINATION.md` (this section) | https://docs.kalshi.com/getting_started/demo_env ; https://karagemop466-tech.github.io/Demo1/ (live) | see record below | see record below |
+
+### CR-1 record — session arena/fdc47dc1-demo1
+
+- **Endpoints (official):** https://docs.kalshi.com/getting_started/demo_env states the demo REST root is `https://external-api.demo.kalshi.co/trade-api/v2` (recommended; `https://demo-api.kalshi.co/trade-api/v2` also supported) and the WebSocket root is `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`). Matches the brief exactly. Demo web app: https://demo.kalshi.co/ . Docs also warn that demo prices/behaviour may not reflect real markets.
+- **Live landing (fetched this session):** https://karagemop466-tech.github.io/Demo1/ renders. Topic counts re-added by hand: open 116+255+191+474+363 = 1,399; resolved 350+131+368+668+600 = 2,117; closed-awaiting 17+1+60+232+42 = 352; 2,117+352 = 2,469 — all consistent with the page's own totals.
+- **Live API from this sandbox:** NOT reachable. `curl` to `external-api.demo.kalshi.co` fails at TLS (SSL_ERROR_SYSCALL); the sandbox's outbound allowlist excludes Kalshi hosts. No live Kalshi value was re-fetched by this session; the page's counts come from the CI snapshot stamped 2026-11-20T11:43:59Z.
+- **No changes** to any file other than this board section. No duplicate desk built.
+
+**Irregularities flagged (non-blocking; for the Flagged for Review owners):**
+1. Credential risk: the live landing itself discloses that an experimental trade page (`pages/strategy.html`) stores a private key in browser local storage and has signing/RSA-import and fill-ledger issues (its SEC-01, AUTH-01, KEY-01, FILL-01). Recommend removing the page or disabling key entry on the public site before any further publish. Owner: whichever session owns `pages/strategy.html`.
+2. Sprawl vs. brief: the landing links 9+ separate dashboards/desks (exec-desk, desk, pages/*, docs/*, alert-desk, trade-desk, engine, live-desk, ...). The brief asks for a simple, easy-to-use dashboard. Recommend one canonical entry point in the final integration pass.
+3. Ranking definitions differ by desk (landing says computed public-trade notional; exec-desk uses contract volume × price input). The landing discloses this; each desk should label its ranking basis on the page.
+4. Portfolio and order placement remain blank: no Kalshi demo API key was provided to any session, so the demo-account portfolio cannot be verified (unchanged from earlier sessions).
+5. Sandbox cannot reach Kalshi hosts (see above), so live-data freshness is only as current as the scheduled CI snapshot.
+
+Verification performed: fetch of the official docs page; fetch of the live Pages landing; curl check of the Kalshi API host (failed as stated); arithmetic re-check of the topic table.
