@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 460,
+    "files_scanned": 461,
     "findings": 6,
     "errors": 0,
     "warnings": 4,
