@@ -40,6 +40,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 BASE = "https://external-api.demo.kalshi.co/trade-api/v2"
+SERIES_INDEX = "desk/data/series-index.json"   # committed, read-only, regenerated from the snapshot
 UA = "Demo1-engine/1.0 (GitHub Actions runner; public demo market data only)"
 MAX_LIMIT = 200          # documented cap for /markets and /events list calls
 CANDLE_WINDOWS = [("1m", 2, 1), ("1h", 24 * 7, 60), ("1d", 24 * 90, 1440)]
@@ -164,6 +165,9 @@ def main() -> int:
     ap.add_argument("--out", default="engine/data/live-snapshot.json")
     ap.add_argument("--markets-per-topic", type=int, default=5)
     ap.add_argument("--max-pages", type=int, default=12)
+    ap.add_argument("--series-index", default=SERIES_INDEX,
+                    help="committed per-topic series list (read-only); see desk/tools/build_series_index.py")
+    ap.add_argument("--series-per-topic", type=int, default=6)
     ap.add_argument("--events-probe-pages", type=int, default=1,
                     help="pages of GET /events to pull, to prove the documented limit works")
     args = ap.parse_args()
@@ -204,7 +208,7 @@ def main() -> int:
     cursor, m_pages = None, 0
     for _ in range(args.max_pages):
         payload, url, err = get_json("/markets", {"status": "open", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"markets page {m_pages} FAILED {err}")
             break
@@ -216,13 +220,66 @@ def main() -> int:
             break
     log(f"markets/open -> {len(markets)} across {m_pages} page(s)")
 
+    # 2b. The newest pages are dominated by multivariate combo markets even with
+    #     mve_filter=exclude (the demo venue creates weather/sports ladders faster than
+    #     it creates topic markets), so a newest-first scan alone found 0 five-topic
+    #     markets on 2026-11-21. Query the series the committed collection returned for
+    #     each topic instead — the documented `series_ticker` filter.
+    seen_tickers = {m.get("ticker") for m in markets}
+    series_added = 0
+    index_path = args.series_index
+    try:
+        with open(index_path, encoding="utf-8") as fh:
+            index = json.load(fh)
+    except Exception as exc:  # noqa: BLE001 - optional input, reported not guessed
+        index = None
+        log(f"series index {index_path} unavailable ({type(exc).__name__}: {exc}); "
+            f"falling back to the paged scan only")
+    if index:
+        for topic, block in (index.get("topics") or {}).items():
+            for entry in (block.get("series") or [])[:args.series_per_topic]:
+                series = entry.get("series_ticker")
+                if not series:
+                    continue
+                payload, url, err = get_json("/markets", {"series_ticker": series, "status": "open",
+                                                          "limit": MAX_LIMIT, "mve_filter": "exclude"},
+                                             args.base)
+                if err:
+                    log(f"  series {series} FAILED {err}")
+                    continue
+                for m in (payload or {}).get("markets", []) or []:
+                    if m.get("ticker") in seen_tickers:
+                        continue
+                    seen_tickers.add(m.get("ticker"))
+                    # GET /markets does NOT return series_ticker (it is an /events field;
+                    # confirmed against the live response on 2026-11-21 and against the
+                    # Get Markets schema). The series a row belongs to is known exactly
+                    # from the documented `series_ticker` filter that returned it, so it
+                    # is recorded as the request's value — not inferred from the ticker.
+                    m = dict(m)
+                    m["series_ticker"] = series
+                    m["series_from_request"] = url
+                    markets.append(m)
+                    series_added += 1
+        log(f"series fan-out -> {series_added} additional open markets from "
+            f"{sum(len((b.get('series') or [])[:args.series_per_topic]) for b in (index.get('topics') or {}).values())} series")
+
     # 3. pick the biggest dollar-amount live market per topic. Ranking input is the
     #    official volume_24h_fp x notional_value_dollars; both operands come from the
     #    API, the product is labelled computed.
     scored = []
+    skipped_no_series = 0   # counted below: rows whose series the event lookup did not supply
     for m in markets:
         topic, matched, field = classify(m)
         if not topic:
+            continue
+        # A market with no series_ticker cannot be charted: the candlestick path is
+        # /series/{series}/markets/{ticker}/candlesticks. GET /markets omits the field,
+        # so it is resolved from the official event (event_series(), step 4) for the
+        # selected rows only. Observed 2026-11-21: quote(None) raised
+        # "TypeError: quote_from_bytes() expected bytes" and kept run 44876739087 red.
+        if not m.get("ticker"):
+            skipped_no_series += 1
             continue
         vol24 = fnum(m.get("volume_24h_fp")) or fnum(m.get("volume_fp")) or 0.0
         notional = fnum(m.get("notional_value_dollars")) or 1.0
@@ -260,7 +317,7 @@ def main() -> int:
             bucket.append(row)
     chosen = [r for rows in ranked.values() for r in rows]
     log(f"topic picks -> " + ", ".join(f"{t}:{len(v)}" for t, v in ranked.items()) +
-         f" (of {len(scored)} topic-matched)")
+         f" (of {len(scored)} topic-matched; {skipped_no_series} skipped for a missing series_ticker)")
 
     # Keep the initial events probe separate from per-market event lookups.
     event_cache = dict(events)
@@ -268,7 +325,12 @@ def main() -> int:
     # 4. order book + candles for each chosen market
     for row in chosen:
         t = row["market_ticker"]
+        # Resolve the series from the official event (GET /events/{ticker}); never from a
+        # ticker prefix. A market with no resolvable series still gets its order book, and
+        # its candle slots are emitted empty with the reason, so nothing is invented.
         ser, ser_source, ser_err = event_series(row.get("event_ticker"), event_cache, args.base)
+        if not ser:
+            log(f"  {t}: no series_ticker ({ser_err}); candles left empty")
         row["series_ticker"] = ser
         row["series_source"] = ser_source
         row["series_error"] = ser_err
@@ -310,7 +372,7 @@ def main() -> int:
     seen_topics: dict[str, int] = {t: 0 for t in TOPICS}
     for _ in range(6):
         payload, url, err = get_json("/markets", {"status": "settled", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"settled page {s_pages} FAILED {err}")
             break
@@ -348,7 +410,7 @@ def main() -> int:
     seen_pending: dict[str, int] = {t: 0 for t in TOPICS}
     for _ in range(4):
         payload, url, err = get_json("/markets", {"status": "closed", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"closed page {p_pages} FAILED {err}")
             break
@@ -417,8 +479,28 @@ def main() -> int:
            f"pending={len(pending)} "
            f"events_probe={len(events)} (err={ev_err or 'none'}) "
            f"requests={len(requests_log)} failures={len(payload['failed_requests'])} bytes={size}")
-    return 0 if not payload["failed_requests"] else 0
+    if not chosen:
+        # Publishing an empty snapshot would silently blank the engine page. Fail loudly
+        # instead, with the reason in a check annotation that survives the log host.
+        first = payload["failed_requests"][0] if payload["failed_requests"] else None
+        print("::error::engine_refresh collected 0 topic markets"
+              + (f" — first failed request {first.get('url')}: {first.get('error')}" if first else ""),
+              flush=True)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except BaseException as exc:  # noqa: BLE001 - last-resort diagnostic for CI
+        import traceback
+
+        tb = traceback.format_exc()
+        print(tb, file=sys.stderr, flush=True)
+        last = tb.strip().splitlines()[-1] if tb.strip() else ""
+        print(f"::error::engine_refresh crashed: {type(exc).__name__}: {exc} "
+              f"| {last}", flush=True)
+        sys.exit(1)

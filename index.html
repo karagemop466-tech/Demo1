@@ -52,12 +52,14 @@
     <nav class="nav" aria-label="Primary navigation">
       <a href="index.html" class="on" aria-current="page">Home</a>
       <a href="trade-desk/index.html">Live desk</a>
+      <a href="desk/live.html">Live markets</a>
       <a href="#topics">Topics</a>
       <a href="trade-desk/chart.html">Chart &amp; depth</a>
       <a href="sim-desk/index.html">Paper strategies</a>
       <a href="trade-desk/resolutions.html">Resolutions</a>
       <a href="integration/page-directory.html">All pages</a>
       <a href="integration/flagged-review.html">Review &amp; sources</a>
+      <a href="archive/index.html">Archive</a>
     </nav>
   </div>
 </header>
@@ -228,6 +230,13 @@
   <section id="workbench" aria-labelledby="workbench-title">
     <h2 id="workbench-title">Trading workbench</h2>
     <p class="section-intro">Test trade rules in the simulator, and see what the account layer can and cannot show. Neither submits an exchange order.</p>
+    <p class="section-intro"><b>One canonical page per job.</b> Several sessions built the ≥ $0.10 two-chat alert tape in parallel; the
+    <a href="trade-desk/index.html">trade desk</a> is the canonical one because it labels the measured price basis on every bubble
+    (best ask, last print, candle close or book mid). The others stay online at their original URLs, with what each one adds, on
+    <a href="archive/index.html"><b>archive/index.html</b></a> — nothing was deleted to consolidate. For the five-topic market scan
+    itself, <a href="desk/live.html">desk/live.html</a> is canonical; it now applies the documented <code>mve_filter=exclude</code>
+    and one <code>series_ticker</code> request per topic series, because an unfiltered <code>limit=1000</code> page matched
+    <b>zero</b> topic markets on 2026-11-21 (the newest pages were all <code>KXMVECROSSCATEGORY</code> combos).</p>
     <div class="grid2">
       <article class="card home-card">
         <p class="kicker">Automated · Simulated</p>
@@ -333,6 +342,10 @@
         <p>Improvement ideas and unresolved decisions, including the alert-desk consolidation question.</p>
       </article>
       <article class="card home-card">
+        <h3><a href="archive/index.html">Archive &amp; overlap index</a></h3>
+        <p>Which page is canonical for each part of the brief, and which earlier page it supersedes — every superseded page still live and linked.</p>
+      </article>
+      <article class="card home-card">
         <h3><a href="tape-desk/consolidation-map.html">Other dashboards and implementation map</a></h3>
         <p>Earlier parallel implementations remain available for review; compare their different alert bases and data paths before relying on them.</p>
       </article>
@@ -354,6 +367,28 @@
       <p>These pages are retained for transparency, not recommended for live account access. The integration review flags key storage, signing, and fill-accounting issues. Use paper trading until those items are resolved.</p>
       <p><a href="exec-desk/index.html">Experimental exec desk</a> · <a href="pages/strategy.html">Earlier strategy/order page</a> · <a href="integration/flagged-review.html#sec-01">Security findings and sources</a></p>
     </details>
+  </section>
+
+  <section id="changed" aria-labelledby="changed-title">
+    <h2 id="changed-title">What changed in this consolidation round</h2>
+    <ul class="plain">
+      <li><b>The live scan was returning nothing; it now returns markets.</b> On 2026-11-21 the demo exchange's newest open page
+        was almost entirely <code>KXMVECROSSCATEGORY</code> combos, so <code>/markets?status=open&amp;limit=1000</code> matched
+        <b>0</b> of the five topics. <a href="desk/live.html">desk/live.html</a> now applies the documented
+        <a href="https://docs.kalshi.com/api-reference/market/get-markets"><code>mve_filter=exclude</code></a> plus one
+        <code>series_ticker</code> request per series, from the generated list
+        <a href="desk/data/series-index.json">desk/data/series-index.json</a>
+        (<code>desk/tools/build_series_index.py</code>, 28 series over 5 topics). Regression: <code>desk/tools/dom_test.mjs</code> §7.</li>
+      <li><b>The scheduled engine refresh was failing; the cause is fixed.</b> A market matched by title text can arrive with no
+        <code>series_ticker</code>, and the candle path is <code>/series/{series}/markets/{ticker}/candlesticks</code>, so
+        <code>quote(None)</code> raised <code>TypeError: quote_from_bytes() expected bytes</code>. The refresh now resolves the
+        series from the official <a href="https://docs.kalshi.com/api-reference/events/get-event">Get Event</a> response, leaves
+        candles empty with the reason when no series exists, excludes combos, and exits non-zero when it collects nothing.</li>
+      <li><b>The desk CI failure was a Node version mismatch.</b> <code>jsdom</code> 31 needs Node ≥ 22; <code>desk.yml</code>
+        pinned Node 20, so the DOM-test step failed and blocked the commit of refreshed desk data. Now Node 22.</li>
+      <li><b>The landing page names one canonical page per job</b> instead of asking the reader to choose a survivor; the
+        superseded pages are indexed on <a href="archive/index.html">archive/index.html</a> and remain online.</li>
+    </ul>
   </section>
 </main>
 

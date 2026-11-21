@@ -35,33 +35,112 @@
   }
 
   /* ---------------------------------------------------------------- live market table */
-  function renderLiveTable(markets, opts) {
+  /* The live scan. Two documented filters matter here, both from Get Markets
+   * (https://docs.kalshi.com/api-reference/market/get-markets):
+   *
+   *   mve_filter=exclude   removes multivariate combo markets. On 2026-11-21 the
+   *                        demo exchange's newest open markets were almost all
+   *                        `KXMVECROSSCATEGORY-…` combos, so an unfiltered
+   *                        `limit=1000` page produced ZERO five-topic matches
+   *                        (observed on the published page at 06:39Z).
+   *   series_ticker=<s>    returns one series. Even with combos excluded the
+   *                        newest page is dominated by one high-churn series, so
+   *                        topics are covered by querying the series the
+   *                        committed collection actually returned for them
+   *                        (`data/series-index.json`, built by
+   *                        `desk/tools/build_series_index.py`).
+   *
+   * Each row keeps the exact request URL that produced it. */
+  var SCAN = { index: null, rows: [], busy: false, errors: 0, seriesCalls: 0,
+    globalCalls: 0, at: null, timer: null };
+
+  function indexUrl() { return new URL("data/series-index.json", document.baseURI).toString(); }
+
+  function loadIndex() {
+    if (SCAN.index) return Promise.resolve(SCAN.index);
+    return fetch(indexUrl(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { SCAN.index = j; return j; })
+      .catch(function () { SCAN.index = null; return null; });
+  }
+
+  function seriesPlan(idx) {
+    var plan = [];
+    if (!idx || !idx.topics) return plan;
+    Object.keys(idx.topics).forEach(function (key) {
+      var topic = KD.topicById(key);
+      if (!topic) return;                       /* a series list for a topic this page does not show */
+      (idx.topics[key].series || []).forEach(function (s) {
+        if (!s || !s.series_ticker) return;
+        plan.push({ topicKey: key, topic: topic, series: s.series_ticker, url: s.source });
+      });
+    });
+    return plan;
+  }
+
+  function seriesScan(plan) {
+    var found = [];
+    var chain = Promise.resolve();
+    plan.forEach(function (item) {
+      chain = chain.then(function () {
+        return KD.logged(KD.get("/markets", { series_ticker: item.series, status: "open",
+          mve_filter: "exclude", limit: 100 }), "series " + item.series)
+          .then(function (res) {
+            SCAN.seriesCalls += 1;
+            ((res.data && res.data.markets) || []).forEach(function (m) {
+              found.push({ m: m, topic: item.topic, source: res.url });
+            });
+          })
+          .catch(function () { SCAN.errors += 1; })
+          .then(function () { return new Promise(function (r) { setTimeout(r, 120); }); });
+      });
+    });
+    return chain.then(function () { return found; });
+  }
+
+  /* Newest non-combo page: discovery for series the index does not know yet. */
+  function globalScan() {
+    return KD.logged(KD.get("/markets", { status: "open", limit: 1000, mve_filter: "exclude" }),
+      "open markets (combos excluded)")
+      .then(function (res) {
+        SCAN.globalCalls += 1;
+        return ((res.data && res.data.markets) || []).map(function (m) {
+          return { m: m, topic: KD.classify(m), source: res.url };
+        }).filter(function (r) { return !!r.topic; });
+      })
+      .catch(function () { SCAN.errors += 1; return []; });
+  }
+
+  var RANK = {
+    dollars: function (r) { return KD.dollarVolume(r.m); },
+    volume: function (r) { return KD.num(r.m.volume_24h_fp); },
+    oi: function (r) { return KD.num(r.m.open_interest_fp); }
+  };
+
+  function renderLiveTable(rows) {
     var el = $("live-table");
+    if (!el) return;
     var topicFilter = ($("topic-filter") || {}).value || "all";
     var rankBy = ($("rank-by") || {}).value || "dollars";
-    var rows = [];
-    markets.forEach(function (m) {
-      var topic = KD.classify(m);
-      if (!topic) return;
-      if (topicFilter !== "all" && topic.id !== topicFilter) return;
-      var dv = KD.dollarVolume(m);
-      rows.push({ m: m, topic: topic, dollars: dv, volume: KD.num(m.volume_24h_fp),
-        oi: KD.num(m.open_interest_fp) });
+    var key = RANK[rankBy] || RANK.dollars;
+    var shown = rows.filter(function (r) {
+      return topicFilter === "all" || (r.topic && r.topic.id === topicFilter);
     });
-    rows.sort(function (a, b) {
-      var ka = rankBy === "volume" ? a.volume : (rankBy === "oi" ? a.oi : a.dollars);
-      var kb = rankBy === "volume" ? b.volume : (rankBy === "oi" ? b.oi : b.dollars);
-      return (kb || -1) - (ka || -1);
+    shown.sort(function (a, b) {
+      var ka = key(a), kb = key(b);
+      return (kb === null ? -1 : kb) - (ka === null ? -1 : ka);
     });
-    var top = rows.slice(0, 40);
+    var top = shown.slice(0, 40);
     var cnt = $("live-count");
     if (cnt) {
-      cnt.textContent = rows.length.toLocaleString() + " open markets matched · showing top " +
-        top.length + " · fetched " + new Date().toISOString().slice(11, 19) + "Z";
+      cnt.textContent = shown.length.toLocaleString() + " open markets matched · showing top " +
+        top.length + " · fetched " + (SCAN.at || new Date()).toISOString().slice(11, 19) + "Z";
     }
     if (!top.length) {
-      el.innerHTML = '<p class="loading" style="padding:14px">No live markets matched this filter ' +
-        '(the API returned ' + markets.length + " open markets).</p>";
+      el.innerHTML = '<p class="loading" style="padding:14px">No open market of the five topics is ' +
+        "in the scanned set right now. The scan reads " + (SCAN.seriesCalls || 0) +
+        " per-series requests plus the newest non-combo page; a quiet result is still a result — " +
+        "the snapshot ranking further down shows the last committed collection.</p>";
       return;
     }
     var html = '<div class="tablewrap"><table><thead><tr>' +
@@ -69,7 +148,7 @@
       "<th class='num'>NO bid</th><th class='num'>24 h $ (proxy)</th><th class='num'>Open interest</th>" +
       "<th>Closes (UTC)</th><th>Source</th></tr></thead><tbody>";
     top.forEach(function (r) {
-      var m = r.m;
+      var m = r.m, dv = KD.dollarVolume(m), oi = KD.num(m.open_interest_fp);
       html += "<tr><td><a href='" + r.topic.slug + ".html'>" + KD.esc(r.topic.label) + "</a></td>" +
         "<td><a href='https://kalshi.com/markets/" + encodeURIComponent((m.series_ticker || "").toLowerCase()) +
         "' target='_blank' rel='noopener'>" + KD.esc((m.title || m.ticker || "").slice(0, 90)) + "</a>" +
@@ -77,30 +156,56 @@
         "<td class='num'>" + fmtPx(m.yes_bid_dollars) + "</td>" +
         "<td class='num'>" + fmtAsk(m.yes_ask_dollars) + "</td>" +
         "<td class='num'>" + fmtPx(m.no_bid_dollars) + "</td>" +
-        "<td class='num'>" + (r.dollars === null ? "—" : "$" + r.dollars.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
-        "<td class='num'>" + (r.oi === null ? "—" : r.oi.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
+        "<td class='num'>" + (dv === null ? "—" : "$" + dv.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
+        "<td class='num'>" + (oi === null ? "—" : oi.toLocaleString("en-US", { maximumFractionDigits: 0 })) + "</td>" +
         "<td class='nowrap'>" + KD.when(m.close_time) + "</td>" +
-        "<td><a class='src' href='" + KD.esc(KD.url("/markets", { status: "open", limit: 1000 })) +
-        "' target='_blank' rel='noopener'>↗ source</a></td></tr>";
+        "<td><a class='src' href='" + KD.esc(r.source) + "' target='_blank' rel='noopener'>↗ source</a></td></tr>";
     });
     el.innerHTML = html + "</tbody></table></div>";
   }
 
+  function mergeRows(primary, extra) {
+    var byTicker = {};
+    primary.concat(extra).forEach(function (r) {
+      if (!r.m || !r.m.ticker || !r.topic) return;
+      if (!byTicker[r.m.ticker]) byTicker[r.m.ticker] = r;   /* series row wins: it is the authoritative topic */
+    });
+    return Object.keys(byTicker).map(function (k) { return byTicker[k]; });
+  }
+
   function loadLive() {
     var el = $("live-table");
-    if (!el) return;
+    if (!el || SCAN.busy) return Promise.resolve();
+    SCAN.busy = true;
+    SCAN.errors = 0;
+    SCAN.seriesCalls = 0;
+    SCAN.globalCalls = 0;
     var banner = $("api-banner");
-    KD.logged(KD.get("/markets", { status: "open", limit: 1000 }), "open markets")
-      .then(function (res) {
-        var markets = (res.data && res.data.markets) || [];
-        if (banner) {
-          banner.className = "banner ok";
-          banner.innerHTML = "<b>Live.</b> " + markets.length +
-            " open markets returned by the official demo API just now. " +
-            "<span class='fine'>Rows are filtered to the five topics with the published keyword rules.</span>";
-        }
-        window.__lastMarkets = markets;
-        renderLiveTable(markets);
+    return loadIndex()
+      .then(function (idx) {
+        var plan = seriesPlan(idx);
+        return Promise.all([seriesScan(plan), globalScan()])
+          .then(function (out) {
+            SCAN.at = new Date();
+            SCAN.rows = mergeRows(out[0], out[1]);
+            window.__lastRows = SCAN.rows;
+            window.__lastMarkets = SCAN.rows.map(function (r) { return r.m; });
+            if (banner) {
+              banner.className = "banner ok";
+              banner.innerHTML = "<b>Live.</b> " + SCAN.rows.length.toLocaleString() +
+                " open markets of the five topics, fetched just now: " + SCAN.seriesCalls +
+                " documented per-series requests (<code>series_ticker</code> + <code>mve_filter=exclude</code>) " +
+                "and the newest " + SCAN.globalCalls * 1000 + "-market non-combo page" +
+                (plan.length ? "" : " (the committed series index was unavailable, so only the newest page was read)") +
+                (SCAN.errors ? " · " + SCAN.errors + " request(s) failed and are listed in the request log" : "") +
+                ". <span class='fine'>Multivariate combo markets are excluded with the documented " +
+                "<a href='" + "https://docs.kalshi.com/api-reference/market/get-markets" +
+                "' target='_blank' rel='noopener'>mve_filter</a> parameter; the series list is " +
+                "<a href='" + indexUrl() + "'>data/series-index.json</a>, built from the committed collection.</span>";
+            }
+            renderLiveTable(SCAN.rows);
+            return SCAN.rows;
+          });
       })
       .catch(function () {
         if (banner) {
@@ -112,7 +217,8 @@
         }
         el.innerHTML = '<p class="loading" style="padding:14px">Live view unavailable; use the snapshot ' +
           'ranking further down, or the <a href="markets.html">Markets</a> page.</p>';
-      });
+      })
+      .then(function () { SCAN.busy = false; });
   }
 
   /* ---------------------------------------------------------------- chart */
@@ -336,16 +442,22 @@
 
     var tf = $("topic-filter");
     if (tf) tf.addEventListener("change", function () {
-      var el = $("live-table");
-      if (el && window.__lastMarkets) renderLiveTable(window.__lastMarkets);
+      if (window.__lastRows) renderLiveTable(window.__lastRows);
     });
     var rb = $("rank-by");
     if (rb) rb.addEventListener("change", function () {
-      if (window.__lastMarkets) renderLiveTable(window.__lastMarkets);
+      if (window.__lastRows) renderLiveTable(window.__lastRows);
     });
 
+    /* Re-read the tape every 60 s: 28 series requests + 1 newest page per pass.
+     * A page left open in a background tab still costs this, so stop when hidden. */
+    SCAN.timer = setInterval(function () {
+      if (document.hidden) return;
+      loadLive();
+    }, 60000);
+
     setInterval(function () {
-      if (window.__lastMarkets) renderLiveTable(window.__lastMarkets);
+      if (window.__lastRows) renderLiveTable(window.__lastRows);
     }, 30000);
 
     /* Snapshot data powers the jump scanner and the cached tables. */

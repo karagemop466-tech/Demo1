@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive &amp; overlap index · Kalshi Demo Dashboard</title>
+<meta name="description" content="Which page is canonical for each part of the Kalshi demo brief, and which earlier page it supersedes. Nothing is deleted; every old page keeps its link.">
+<link rel="stylesheet" href="../site/assets/style.css">
+<style>
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+  .tile{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink)}
+  .tile:hover{border-color:var(--accent2);text-decoration:none}
+  .tile b{display:block;margin-bottom:4px}
+  .tile span{color:var(--muted);font-size:.88rem}
+  .small{color:var(--muted);font-size:.86rem}
+  td small{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
+    <nav class="nav">
+      <a href="../index.html">Home</a>
+      <a href="../desk/live.html">Live markets</a>
+      <a href="../trade-desk/index.html">Alert chats</a>
+      <a href="../desk/requirements.html">Requirements</a>
+      <a href="../site/flagged.html">Flagged for review</a>
+      <a href="index.html" class="on">Archive</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="pagehead">
+    <p class="kicker">Consolidation record · no page deleted</p>
+    <h1>Which page is canonical, and what it replaced</h1>
+    <p class="lede">Sessions worked on this brief in parallel and several of them built the same feature. The landing page
+    now names one canonical page per job; everything older stays online and is listed here, so nothing that was built is
+    lost and nothing has to be guessed. <b>No file in this repository was removed to produce this page.</b></p>
+  </div>
+
+  <div class="callout warn">
+    <b>This is an index, not a data page.</b> It carries no market figures, so it needs no per-row API source link. Every
+    number lives on the canonical page it points to, where each row links the official request that produced it.
+  </div>
+
+  <h2>Canonical pages</h2>
+  <div class="tiles">
+    <a class="tile" href="../desk/live.html"><b>Live market scan — five topics</b><span>The newest non-combo page plus one request per series, using the documented <code>mve_filter=exclude</code> and <code>series_ticker</code> filters. Replaced the unfiltered scan that matched zero markets on 2026-11-21.</span></a>
+    <a class="tile" href="../trade-desk/index.html"><b>Two scrolling alert chats (≥ $0.10)</b><span>Chat 1 every swing of $0.10 or more either direction; Chat 2 only the swings a published, fee-aware rule rates as worth a look. Each bubble links its API request.</span></a>
+    <a class="tile" href="../desk/requirements.html"><b>Requirements matrix</b><span>The brief, item by item, with where each item is implemented and what is blocked.</span></a>
+    <a class="tile" href="../site/flagged.html"><b>Flagged for review</b><span>Unverified and unconfirmable items, each with its source link. Unverified values are left blank, never filled in.</span></a>
+    <a class="tile" href="../integration/executive-summary.html"><b>Executive summary</b><span>What the demo data supports, what it does not, and the credential-dependent parts.</span></a>
+    <a class="tile" href="../engine/index.html"><b>Strategy engine &amp; simulated results</b><span>Jump scan, fee-aware backtests, settlement study and liquidity profile computed from captured data.</span></a>
+  </div>
+
+  <h2>Superseded pages, kept online</h2>
+  <p class="small">Each row is a working page that is still served. “Superseded by” means the canonical page above does the
+  same job with a published rule and a source link per row — not that the older work was wrong.</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Page</th><th>What it does</th><th>Superseded by</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><a href="../alerts-live.html">alerts-live.html</a></td><td>Browser-polled two-chat alert tape with a five-gate ROI screen</td><td><a href="../trade-desk/index.html">trade-desk/</a></td><td>kept — same $0.10 rule, different price basis</td></tr>
+      <tr><td><a href="../alerts.html">alerts.html</a></td><td>Candle-close jump feed with news-search leads</td><td><a href="../trade-desk/index.html">trade-desk/</a></td><td>kept — measures moves between official candle closes</td></tr>
+      <tr><td><a href="../alert-desk/index.html">alert-desk/index.html</a></td><td>Two-chat feed with snapshot fallback when the API is unreachable</td><td><a href="../trade-desk/index.html">trade-desk/</a></td><td>kept — the fallback behaviour is its own contribution</td></tr>
+      <tr><td><a href="../tape-desk/index.html">tape-desk/index.html</a></td><td>Chat + chart + order-book ladder, with a consolidation map</td><td><a href="../trade-desk/index.html">trade-desk/</a></td><td>kept — the desk-by-desk map is still the best overview</td></tr>
+      <tr><td><a href="../alerts/index.html">alerts/index.html</a></td><td>Generated alert feed with its own QLM score</td><td><a href="../trade-desk/index.html">trade-desk/</a></td><td>kept — pre-generated, so it works with no JavaScript</td></tr>
+      <tr><td><a href="../desk/index.html">desk/index.html</a></td><td>Earlier five-topic desk index</td><td><a href="../desk/live.html">desk/live.html</a></td><td>kept — its requirements matrix moved to <a href="../desk/requirements.html">desk/requirements.html</a></td></tr>
+      <tr><td><a href="../exec-desk/dashboard.html">exec-desk/dashboard.html</a></td><td>Five-topic scan, history views, book liquidity</td><td><a href="../desk/live.html">desk/live.html</a></td><td>kept</td></tr>
+      <tr><td><a href="../pages/live.html">pages/live.html</a></td><td>Live event scan and candle chart with an evidence log</td><td><a href="../desk/live.html">desk/live.html</a></td><td>kept — regression suite is mocked (TEST-01)</td></tr>
+      <tr><td><a href="../monitor/index.html">monitor/index.html</a></td><td>Single-page monitor</td><td><a href="../exec-desk/dashboard.html">exec-desk/dashboard.html</a></td><td>kept</td></tr>
+      <tr><td><a href="../archive/monitor.html">archive/monitor.html</a></td><td>First monitor layout, kept for the record</td><td><a href="../monitor/index.html">monitor/index.html</a></td><td>archived — already inside this folder</td></tr>
+      <tr><td><a href="../markets.html">markets.html</a></td><td>Earlier markets table</td><td><a href="../site/markets.html">site/markets.html</a></td><td>kept</td></tr>
+      <tr><td><a href="../portfolio.html">portfolio.html</a></td><td>Earlier portfolio view</td><td><a href="../exec-desk/portfolio.html">exec-desk/portfolio.html</a></td><td>kept — both show blanks without credentials</td></tr>
+      <tr><td><a href="../analysis.html">analysis.html</a></td><td>Earlier analysis write-up</td><td><a href="../site/strategies.html">site/strategies.html</a></td><td>kept</td></tr>
+      <tr><td><a href="../dashboard.html">dashboard.html</a></td><td>Chart dashboard</td><td><a href="../site/liquidity.html">site/liquidity.html</a></td><td>kept</td></tr>
+      <tr><td><a href="../pages/strategy.html">pages/strategy.html</a></td><td>Trade ledger with a browser-local signing path</td><td>—</td><td><b>do not use</b> — SEC-01 / AUTH-01 / KEY-01 / FILL-01 in <a href="../integration/flagged-review.html#sec-01">the review</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Why two pages can disagree</h2>
+  <p class="small">The six ≥ $0.10 implementations share the threshold but not the measured price: one compares best asks, one
+  last prints, one candle closes, one book mid-points. A flag on one page therefore need not appear on another in the same
+  minute, and that is a property of the inputs, not an error. The canonical trade desk labels the basis on every bubble so
+  the reader can tell which one they are looking at.</p>
+
+  <h2>Rules this page follows</h2>
+  <ul class="plain">
+    <li><b>Nothing deleted.</b> Superseded pages stay at their published URLs; this index only points at them.</li>
+    <li><b>No invented data.</b> The table above holds page names and one-line descriptions taken from each page’s own text,
+      no market values.</li>
+    <li><b>One owner per figure.</b> Where two pages show the same market, the canonical page is the one whose row links the
+      API request; anything unconfirmable is blank and listed on <a href="../site/flagged.html">Flagged for review</a>.</li>
+    <li><b>Shared files.</b> Per <a href="../COORDINATION.md">COORDINATION.md</a>, the landing page, the navigation and the
+      shared table data are changed only by the integration session, which is the session that built this index.</li>
+  </ul>
+
+  <h2>Official references behind the canonical pages</h2>
+  <ul class="plain">
+    <li><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">GET /markets ↗</a>: <code>series_ticker</code> and <code>mve_filter</code> (<code>only</code> / <code>exclude</code>), the two filters the live scan uses.</li>
+    <li><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">GET /markets/{ticker}/orderbook ↗</a>: contracts resting at each price.</li>
+    <li><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">GET candlesticks ↗</a>: <code>period_interval</code> 1, 60 or 1440 minutes — there is no seconds resolution, which is why seconds charts are built from the tape a page observes itself.</li>
+    <li><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment ↗</a>: mock funds, prices may not reflect real markets.</li>
+  </ul>
+</main>
+<footer class="wrap small">
+  Not investment advice. Kalshi demo funds; prices may not reflect real markets. Values that cannot be confirmed from an
+  official source are blank and listed on <a href="../site/flagged.html">Flagged for review</a>.
+</footer>
+</body>
+</html>

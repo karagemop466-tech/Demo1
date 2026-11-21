@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 470,
+    "files_scanned": 473,
     "findings": 9,
     "errors": 0,
     "warnings": 4,
@@ -769,13 +769,14 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/events/get-event",
-      "uses": 3,
+      "uses": 4,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
         "decision/js/kalshi.js",
-        "flagged.html"
+        "flagged.html",
+        "index.html"
       ]
     },
     {
@@ -1397,7 +1398,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
-      "uses": 91,
+      "uses": 92,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1430,7 +1431,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
-      "uses": 60,
+      "uses": 61,
       "status": "documented-broken",
       "note": "recorded on the Flagged for review page as a repaired path, not a live link",
       "files": [
@@ -1464,7 +1465,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 97,
+      "uses": 101,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2489,7 +2490,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 117,
+      "uses": 118,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
