@@ -565,10 +565,11 @@ def build_liquidity(meta, markets, charts):
         prices = sorted({*ys.keys(), *ns.keys()}, key=lambda p: -float(p))
         for p in prices:
             rows.append([f"{float(p)*100:.1f}¢" if float(p) <= 1 else esc(p),
-                         esc(ys.get(p, "")), esc(ns.get(p, ""))])
+                         esc(ys.get(p, "")), esc(ns.get(p, "")),
+                         src(ob.get("source"), "book request")])
         ladders += (f"<h3>{esc(m.get('title') or m['market_ticker'])} "
                     f"<span class='fine'>({esc(m['market_ticker'])})</span></h3>"
-                    + table(["Price", "YES bid contracts", "NO bid contracts"], rows)
+                    + table(["Price", "YES bid contracts", "NO bid contracts", "Official request"], rows)
                     + f"<p class='fine'>Implied YES ask {dash(ob.get('implied_yes_ask'))} · "
                       f"implied NO ask {dash(ob.get('implied_no_ask'))} · "
                       f"{src(ob.get('source'), 'order book request')}</p>")
@@ -992,7 +993,8 @@ def build_flagged(meta, markets, resolved=None):
                 esc(g.get("field")),
                 esc(g["reason"]),
                 dash(g["n"]),
-                f"<a href='explore.html?q={esc(g['series'])}'>browse records</a>"]
+                f"<a href='explore.html?q={esc(g['series'])}'>browse records</a> · "
+                + src((g.get("example", {}).get("sources") or {}).get("markets"), "official API request")]
                for g in sorted(groups.values(), key=lambda x: -x["n"])]
     empties = [m for m in markets if not (m.get("quotes", {}).get("yes", {}).get("bid_is_live"))]
     empty_rows = [[market_link(m), f"<code>{esc(m['market_ticker'])}</code>",
@@ -1012,7 +1014,7 @@ def build_flagged(meta, markets, resolved=None):
 from the series ticker or its tags. They are usually correct (e.g. a series titled “US gas price up” whose tags say
 “gas prices”), but the classification rests on metadata rather than the title, so they are listed for review.
 {len(ticker_only)} of {len(markets)} open-market records come from {len(to_rows)} such series.</p>
-{table(["Series ticker", "Topic", "Matched on", "Why it matched", "Records affected", "Records"], to_rows, "wide")}
+{table(["Series ticker", "Topic", "Matched on", "Why it matched", "Records affected", "Records / official API source"], to_rows, "wide")}
 
 <h2>Documentation links that were broken and have been repaired</h2>
 <p class="fine">Found by checking every <code>docs.kalshi.com</code> link in the repository against the official
