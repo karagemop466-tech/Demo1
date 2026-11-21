@@ -1,0 +1,58 @@
+name: Unified demo dashboard
+
+on:
+  pull_request:
+    paths:
+      - 'dashboard-shell/**'
+      - 'tape-desk/core.js'
+      - 'tape-desk/data/watchlist.json'
+      - 'trade-desk/assets/util.js'
+      - 'trade-desk/assets/chart.js'
+      - 'alert-desk/data/seed.json'
+      - 'sim-desk/data/performance.json'
+      - 'snapshot/charts.json'
+      - 'docs/data/snapshot.json'
+      - 'tools/check-links.mjs'
+      - 'package*.json'
+      - '.github/workflows/dashboard-shell.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard-shell/**'
+      - 'tape-desk/core.js'
+      - 'tape-desk/data/watchlist.json'
+      - 'trade-desk/assets/util.js'
+      - 'trade-desk/assets/chart.js'
+      - 'alert-desk/data/seed.json'
+      - 'sim-desk/data/performance.json'
+      - 'snapshot/charts.json'
+      - 'docs/data/snapshot.json'
+      - 'tools/check-links.mjs'
+      - 'package*.json'
+      - '.github/workflows/dashboard-shell.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Syntax, behavior, and source-linked rows
+        run: |
+          node --check dashboard-shell/app.js
+          node --check dashboard-shell/test_dashboard.mjs
+          node dashboard-shell/test_dashboard.mjs
+          python3 -m py_compile dashboard-shell/audit_rows.py
+      - name: Informational repository row-source triage
+        run: python3 dashboard-shell/audit_rows.py
+      - name: Local link integrity
+        run: node tools/check-links.mjs dashboard-shell

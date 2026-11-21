@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="A source-linked Kalshi demo dashboard for market movements, liquidity, alerts and simulated strategies.">
+  <title>Market overview · Kalshi Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="app-layout">
+  <aside class="sidebar" aria-label="Dashboard navigation">
+    <a class="brand" href="index.html" aria-label="Kalshi Demo dashboard home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 30 30" fill="none"><path d="M7 20.5 12.1 15l3.4 2.6L23 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.2 9H23v3.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span><strong>Kalshi Demo</strong><small>MARKET DASHBOARD</small></span>
+    </a>
+    <p class="nav-label">WORKSPACE</p>
+    <nav class="main-nav" aria-label="Workspace">
+      <a class="nav-item active" href="#main" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span> Overview</a>
+      <a class="nav-item" href="#alerts"><span class="nav-icon" aria-hidden="true">◉</span> Live alerts</a>
+      <a class="nav-item" href="#markets"><span class="nav-icon" aria-hidden="true">▤</span> Market watch</a>
+      <a class="nav-item" href="../sim-desk/index.html"><span class="nav-icon" aria-hidden="true">◇</span> Paper strategies <span class="mini-tag">SIM</span></a>
+      <a class="nav-item" href="../site/portfolio.html"><span class="nav-icon" aria-hidden="true">◫</span> Portfolio</a>
+      <a class="nav-item mobile-extra" href="summary.html">Summary</a>
+      <a class="nav-item mobile-extra" href="review.html">Review</a>
+    </nav>
+    <p class="nav-label topics-label">TOPICS <span>05</span></p>
+    <nav class="topic-nav" aria-label="Topic pages">
+      <a href="../site/gas-prices.html"><span class="topic-dot gas"></span>Gas prices <span>↗</span></a>
+      <a href="../site/elections.html"><span class="topic-dot elections"></span>Elections <span>↗</span></a>
+      <a href="../site/culture.html"><span class="topic-dot culture"></span>Culture <span>↗</span></a>
+      <a href="../site/crypto.html"><span class="topic-dot crypto"></span>Crypto <span>↗</span></a>
+      <a href="../site/golf.html"><span class="topic-dot golf"></span>Golf <span>↗</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a class="nav-item" href="summary.html"><span class="nav-icon" aria-hidden="true">▧</span> Executive summary</a>
+      <a class="nav-item" href="review.html"><span class="nav-icon" aria-hidden="true">⚑</span> Flagged for review</a>
+      <div class="demo-note"><span class="demo-note-icon" aria-hidden="true">◎</span><div><strong>Demo environment</strong><p>Mock funds. Not real-money market data. <a href="https://docs.kalshi.com/getting_started/demo_env">Learn more ↗</a></p></div></div>
+    </div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar">
+      <div class="breadcrumbs"><span>Workspace</span><span class="crumb-sep">/</span><strong>Overview</strong></div>
+      <div class="top-actions"><span class="environment"><span class="env-dot"></span> DEMO EXCHANGE</span><a class="icon-link" href="summary.html">How it works <span aria-hidden="true">↗</span></a></div>
+    </header>
+    <main id="main" class="main-content">
+      <div class="intro">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR TRADING WORKSPACE</div><h1>Market overview<span class="title-dot">.</span></h1><p>A clearer view of the markets you follow, all in one place.</p></div>
+        <div class="intro-actions"><span id="connection" class="status-badge connecting" role="status"><i></i> Connecting</span><button type="button" class="button secondary" id="refresh" title="Retry now">↻ <span>Refresh</span></button></div>
+      </div>
+      <div class="context-line"><span>Public demo market data</span><span class="context-dot">·</span><span id="last-updated">Checking for live updates…</span><span class="context-dot">·</span><a href="https://docs.kalshi.com/getting_started/demo_env">About demo data ↗</a></div>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <noscript><div class="notice">JavaScript is needed to show the dashboard. The <a href="../site/index.html">source-linked snapshot</a> is available without it.</div></noscript>
+
+      <section class="metrics" aria-label="Dashboard at a glance">
+        <article class="metric"><div class="metric-top"><span>WATCHLIST CONTRACTS</span><span class="metric-icon mint" aria-hidden="true">▤</span></div><div class="metric-value" id="stat-watch">—</div><p><span class="metric-emphasis">5 topics</span> · selected snapshot watchlist</p></article>
+        <article class="metric"><div class="metric-top"><span>LIVE SWING ALERTS</span><span class="metric-icon peach" aria-hidden="true">↗</span></div><div class="metric-value" id="stat-alerts">—</div><p><span class="metric-emphasis">≥ $0.10</span> · observed this session</p></article>
+        <article class="metric"><div class="metric-top"><span>MODEL SIGNALS</span><span class="metric-icon lavender" aria-hidden="true">✦</span></div><div class="metric-value" id="stat-model">—</div><p>Screened alerts · <a href="#model-details">not a forecast</a></p></article>
+        <article class="metric"><div class="metric-top"><span>DEMO ACCOUNT</span><span class="metric-icon blue" aria-hidden="true">◫</span></div><div class="metric-value muted-value">—</div><p><span class="offline-dot"></span> Not connected · <a href="../site/portfolio.html">Details ↗</a></p></article>
+      </section>
+
+      <div class="section-heading focus-head"><div><div class="eyebrow small-eyebrow">YOUR FOCUS</div><h2>Explore by topic</h2></div><p>Filter the watchlist and alert feeds</p></div>
+      <div class="topic-filters" id="topic-filters" role="group" aria-label="Filter the dashboard by topic"></div>
+      <details class="mobile-topic-pages"><summary>Open topic pages</summary><nav aria-label="Topic pages"><a href="../site/gas-prices.html">Gas prices ↗</a><a href="../site/elections.html">Elections ↗</a><a href="../site/culture.html">Culture ↗</a><a href="../site/crypto.html">Crypto ↗</a><a href="../site/golf.html">Golf ↗</a></nav></details>
+
+      <section class="leading-section" aria-labelledby="leading-heading">
+        <div class="section-heading"><div><div class="eyebrow small-eyebrow">HIGHEST ACTIVITY CANDIDATES</div><h2 id="leading-heading">Leading events by topic</h2><p>One candidate per topic from the latest bounded collection, not a complete live ranking.</p></div><a class="text-link" href="summary.html#ranking">Ranking methodology ↗</a></div>
+        <div class="card markets-card"><div class="table-caption"><strong id="ranking-asof">Loading collected event rankings…</strong><a href="../docs/data/snapshot.json">View collected inputs ↗</a></div><div class="table-scroll"><table class="ranking-table"><thead><tr><th>TOPIC / EVENT</th><th>24H EST. YES NOTIONAL</th><th>INPUT COVERAGE</th><th>OFFICIAL SOURCE</th></tr></thead><tbody id="ranking-body"><tr><td colspan="4">Loading candidates… <a href="https://docs.kalshi.com/api-reference/events/get-event">Event reference ↗</a></td></tr></tbody></table></div><div class="table-foot">Estimate = Σ (24h contract volume × last YES price), not actual dollars traded. Values are blank when inputs are missing or the saved market list is truncated. <a href="review.html#ranking-limit">Ranking limitations ↗</a></div></div>
+      </section>
+
+      <section class="chart-layout" aria-label="Price chart and market liquidity">
+        <article class="card chart-card" id="price-chart">
+          <div class="card-header chart-header"><div><div class="eyebrow small-eyebrow">MARKET DETAIL</div><h2>Price movement</h2><p id="chart-subtitle">Select a contract to inspect its YES price.</p></div><span class="card-icon" aria-hidden="true">⌁</span></div>
+          <div class="chart-toolbar"><label class="visually-hidden" for="market-select">Selected contract</label><select id="market-select" aria-label="Selected contract"><option>Loading watchlist…</option></select><div id="window-buttons" class="window-buttons" role="group" aria-label="Chart time window"><button type="button" data-window="30s">30s</button><button type="button" data-window="15m">15m</button><button type="button" data-window="1h">1h</button><button type="button" class="selected" data-window="6h">6h</button><button type="button" data-window="24h">24h</button></div></div>
+          <div class="chart-meta"><div><span class="chart-price-label">LAST OBSERVED YES PRICE</span><div class="chart-current" id="chart-current">— <small>USD</small></div><p class="current-price-source" id="current-price-source">Waiting for source…</p></div><span class="data-chip" id="chart-basis">Waiting for data</span></div>
+          <div class="chart-stage"><svg id="chart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="YES contract price over time"></svg></div>
+          <div class="chart-foot"><span id="chart-note">X axis: time (UTC) · Y axis: YES price in dollars</span><span id="chart-source"></span></div>
+          <div class="chart-readout" id="chart-readout" aria-live="polite"></div>
+          <div id="chart-jump" class="chart-jump" hidden></div>
+        </article>
+        <article class="card book-card"><div class="card-header"><div><div class="eyebrow small-eyebrow">ORDER BOOK</div><h2>Liquidity at a glance</h2><p>Contracts available by YES price</p></div><span class="card-icon" aria-hidden="true">≋</span></div><div id="book-status" class="book-status">Waiting for order book…</div><div class="book-table-wrap"><table class="book-table"><thead><tr><th>PRICE</th><th>CONTRACTS</th><th>SIDE / SOURCE</th></tr></thead><tbody id="book-body"><tr><td colspan="3">No order-book data loaded. <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Order-book reference ↗</a></td></tr></tbody></table></div><p class="book-explain">YES asks are implied by NO bids. Resting orders are not guaranteed fills. <a href="https://docs.kalshi.com/getting_started/orderbook_responses">How the book works ↗</a></p></article>
+      </section>
+
+      <section id="alerts" class="section-block">
+        <div class="section-heading"><div><div class="eyebrow small-eyebrow">STAY INFORMED</div><h2>Movement alerts <span class="heading-tag">≥ $0.10</span></h2><p>Two feeds. One signal threshold. Context when it matters.</p></div><div class="feed-actions"><button type="button" id="pause" class="button secondary">Pause updates</button><a class="text-link" href="../alert-desk/chat.html">Full alert desk ↗</a></div></div>
+        <div class="feed-grid">
+          <article class="card feed-card"><div class="feed-header"><div><span class="feed-icon all-icon" aria-hidden="true">↗</span><div><h3>All observed moves</h3><p>Up or down by at least $0.10</p></div></div><span class="count-pill" id="all-count">0</span></div><div id="all-feed" class="feed" role="log" aria-live="polite"><p class="empty">Loading alerts…</p></div></article>
+          <article class="card feed-card"><div class="feed-header"><div><span class="feed-icon model-icon" aria-hidden="true">✦</span><div><h3>High-upside screen</h3><p>Qualifying moves that pass our rules</p></div></div><span class="count-pill green" id="model-count">0</span></div><div id="model-feed" class="feed" role="log" aria-live="polite"><p class="empty">Loading model screen…</p></div></article>
+        </div>
+        <p class="section-fine" id="feed-disclosure">Live alerts cover observed trades and poll-to-poll prices in the selected watchlist only. Historical day changes are labeled snapshot, not sudden moves.</p>
+        <details id="model-details" class="details"><summary>How the model screen works</summary><p>For a qualifying move, the screen requires a two-sided YES quote, a spread of at most $0.05, at least 100 contracts of 24-hour volume, and a YES ask at or below $0.80. The last condition represents at least 25% <em>gross return if YES wins</em>, before fees, based on the $1 binary payout. It does not estimate probability, account for order size or fees, or predict realized ROI. Snapshot examples use the same screen and are not current signals. <a href="https://docs.kalshi.com/api-reference/market/get-market">Market fields ↗</a> · <a href="https://docs.kalshi.com/getting_started/market_settlement">Settlement ↗</a> · <a href="review.html#model-limit">Limitations ↗</a></p></details>
+      </section>
+
+      <section id="markets" class="section-block">
+        <div class="section-heading"><div><div class="eyebrow small-eyebrow">THE WATCHLIST</div><h2>Markets by topic</h2><p>Selected contracts stay grouped under their events. Choose a row to inspect it.</p></div><button class="button secondary" id="show-all" type="button" aria-expanded="false">Show all watchlist events</button></div>
+        <div class="card markets-card"><div class="table-caption"><span><span class="tiny-dot"></span> <strong id="market-summary">Loading watchlist</strong></span><a href="../site/explore.html">Browse collected markets ↗</a></div><div class="table-scroll"><table class="market-table"><thead><tr><th>EVENT / CONTRACT</th><th>YES LAST</th><th>24H YES NOTIONAL <span class="muted">(snapshot)</span></th><th>YES BID / ASK</th><th>AS OF</th><th>SOURCE</th></tr></thead><tbody id="market-body"><tr><td colspan="6">Loading watchlist… <a href="https://docs.kalshi.com/api-reference/market/get-markets">Markets reference ↗</a></td></tr></tbody></table></div><div class="table-foot">Notional is calculated from the captured public YES-side trades for selected contracts only; blank means not collected. The ordering is from an older bounded snapshot, not a live global ranking. <a href="summary.html#ranking">Methodology ↗</a></div></div>
+      </section>
+
+      <section class="lower-grid section-block" aria-label="Simulations and resolutions">
+        <article class="card paper-card"><div class="card-header"><div><div class="eyebrow small-eyebrow">PAPER, NOT REAL MONEY</div><h2>Strategy lab</h2><p>Automated simulated strategies with a persistent ledger.</p></div><span class="card-icon purple-icon" aria-hidden="true">◇</span></div><div class="paper-inner"><div><span class="chart-price-label">SIMULATED EQUITY</span><div class="paper-value" id="paper-equity">—</div><p id="paper-asof">Loading paper ledger…</p></div><div class="paper-badge">SIMULATED</div></div><p class="paper-warning">A recorded entry-source mismatch needs review; performance is a simulation, not verified account P&amp;L. <a href="review.html#sim-lineage">Review finding ↗</a></p><div class="card-bottom"><a class="button primary" href="../sim-desk/index.html">View paper strategies <span>↗</span></a><a class="text-link" href="../sim-desk/data/ledger.json">Inspect ledger ↗</a></div></article>
+        <article class="card resolution-card"><div class="card-header"><div><div class="eyebrow small-eyebrow">UNTIL RESOLUTION</div><h2>Recent outcomes</h2><p>Reported results, never assumed.</p></div><span class="card-icon" aria-hidden="true">✓</span></div><div class="table-scroll"><table class="outcomes-table"><thead><tr><th>CONTRACT</th><th>RESULT</th><th>SOURCE</th></tr></thead><tbody id="outcomes"><tr><td colspan="3">Loading outcomes… <a href="https://docs.kalshi.com/getting_started/market_lifecycle">Lifecycle reference ↗</a></td></tr></tbody></table></div><div class="card-bottom"><a class="text-link" href="../site/resolved.html">View resolved snapshot ↗</a><a class="text-link" href="https://docs.kalshi.com/getting_started/market_lifecycle">Market lifecycle ↗</a></div></article>
+      </section>
+      <footer class="footer"><p>Kalshi demo environment · Public data only · Not investment advice</p><div><a href="summary.html">Executive summary</a><a href="review.html">Flagged for review</a><a href="../site/sources.html">Sources</a><a href="../tape-desk/consolidation-map.html">Other tools</a></div></footer>
+    </main>
+  </div>
+</div>
+<script src="../tape-desk/core.js"></script>
+<script src="../trade-desk/assets/util.js"></script>
+<script src="../trade-desk/assets/chart.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
