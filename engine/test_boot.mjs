@@ -122,6 +122,9 @@ console.log("case 1 — offline (snapshot path, what a reviewer without network 
      JSON.stringify(E.S.sel && E.S.sel.market_ticker));
   ok("chart drew a path", /<path/.test(doc.getElementById("chart").innerHTML),
      doc.getElementById("chart").innerHTML.slice(0, 60));
+  ok("offline chart uses captured candle time, not the browser wall clock",
+     E.seriesFor().pts.length > 0 && /snapshot as of/.test(doc.getElementById("legend").textContent),
+     doc.getElementById("legend").textContent);
   ok("y axis labels are contract prices", /\$\d\.\d\d/.test(doc.getElementById("chart").textContent));
   ok("x axis has unit-aware ticks", doc.getElementById("axisDesc").textContent.includes("minutes"));
   ok("depth ladder rendered", doc.querySelectorAll("#depthTable .lv").length > 1,
@@ -194,7 +197,8 @@ console.log("case 1 — offline (snapshot path, what a reviewer without network 
 
 console.log("\ncase 2 — live (browser can reach the documented endpoints)");
 {
-  const { doc, errors } = await boot({ live: true });
+  const { doc, win, errors } = await boot({ live: true });
+  const E = win.__engine;
   ok("no script errors", errors.length === 0, errors.slice(0, 2).join(" | "));
   const badge = doc.getElementById("badge").textContent;
   ok("badge reports LIVE once the API answers", /LIVE/.test(badge), badge);
@@ -208,6 +212,15 @@ console.log("\ncase 2 — live (browser can reach the documented endpoints)");
      /live tick/.test(doc.getElementById("legend").textContent) ||
      /merged/.test(doc.getElementById("legend").textContent),
      doc.getElementById("legend").textContent);
+  ok("live samples are tagged with the selected market",
+     E.S.ticks.length > 0 && E.S.ticks.every((t) => t.market_ticker === E.S.sel.market_ticker),
+     JSON.stringify(E.S.ticks));
+  const liveTicks = E.S.ticks;
+  E.S.ticks = [{ t: Math.floor(Date.now() / 1000), market_ticker: "NOT-SELECTED",
+                 price: 0.1234, bid: 0.11, ask: 0.13 }];
+  ok("a live sample from another market is not plotted on the selected chart",
+     !E.seriesFor().pts.some((p) => p.traded === 0.1234), JSON.stringify(E.seriesFor().pts));
+  E.S.ticks = liveTicks;
   clearInterval(doc.defaultView.__engine.S.pollTimer);
 }
 

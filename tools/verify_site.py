@@ -29,6 +29,7 @@ import re
 import sys
 from decimal import Decimal
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAP = ROOT / "snapshot"
@@ -157,12 +158,21 @@ def official_links_in(row):
     return re.findall(r"href=['\"]([^'\"]+)['\"]", row)
 
 
+def is_official_kalshi_url(link):
+    """True only for an absolute URL on a Kalshi-controlled official host."""
+    try:
+        parsed = urlsplit(html.unescape(link))
+        host = (parsed.hostname or "").lower()
+        return parsed.scheme in ("http", "https") and any(
+            host == allowed or host.endswith("." + allowed)
+            for allowed in OFFICIAL_HOSTS
+        )
+    except ValueError:
+        return False
+
+
 def has_official_link(row):
-    return any(
-        ("//" + host) in link or link.startswith("//" + host) or host in link
-        for link in official_links_in(row)
-        for host in OFFICIAL_HOSTS
-    )
+    return any(is_official_kalshi_url(link) for link in official_links_in(row))
 
 
 def is_settlement_host(host):
@@ -289,15 +299,59 @@ def check_topic_pages(html_pages, market_by_ticker, resolved_by_ticker, errors, 
 def check_liquidity_page(html_text, market_by_ticker, errors, warnings, stats):
     checked = 0
     ladder_rows = 0
+    ladder_actuals = {}
+    ladder_expected = {}
+
+    def cell_text(raw):
+        return html.unescape(re.sub(r"<[^>]+>", "", raw)).strip()
+
     for row in rows_of(html_text):
         if "<td" not in row:
             continue
         m = re.search(r"explore\.html\?q=([A-Za-z0-9.\-]+)", row)
         if not m:
-            # "Full bid ladder" rows are derived from the same order book and
-            # carry a section-level source link; counted, not per-row sourced.
-            if not re.search(r"<th", row):
-                ladder_rows += 1
+            if re.search(r"<th", row):
+                continue
+            ladder_rows += 1
+            urls = official_links_in(row)
+            source_url = next((u for u in urls if "/markets/" in u and "/orderbook" in u
+                               and any(host in u for host in OFFICIAL_HOSTS)), None)
+            if not source_url:
+                errors.append(f"liquidity.html full-ladder row {ladder_rows}: no official order-book source")
+                continue
+            source_match = re.search(r"/markets/([^/?#]+)/orderbook(?:[?#]|$)", source_url)
+            if not source_match:
+                errors.append(f"liquidity.html full-ladder row {ladder_rows}: cannot identify market from source")
+                continue
+            tk = html.unescape(source_match.group(1))
+            rec = market_by_ticker.get(tk)
+            if not rec:
+                errors.append(f"liquidity.html full-ladder row {tk}: market is absent from snapshot")
+                continue
+            ob = rec.get("orderbook") or {}
+            expected_source = ob.get("source")
+            if not expected_source or source_url != expected_source:
+                errors.append(f"liquidity.html full-ladder row {tk}: source URL differs from snapshot")
+            ys = {b["price"]: b["contracts"] for b in ob.get("yes_bids") or []}
+            ns = {b["price"]: b["contracts"] for b in ob.get("no_bids") or []}
+            prices = sorted({*ys.keys(), *ns.keys()}, key=lambda p: -float(p))
+            expected_levels = []
+            for price in prices:
+                display_price = f"{float(price) * 100:.1f}¢" if float(price) <= 1 else str(price)
+                expected_levels.append([
+                    display_price,
+                    "" if ys.get(price, "") is None else str(ys.get(price, "")),
+                    "" if ns.get(price, "") is None else str(ns.get(price, "")),
+                ])
+            cells = re.findall(r"<td[^>]*>(.*?)</td>", row, re.S)
+            actual = tuple(cell_text(c) for c in cells[:3])
+            if len(cells) != 4 or list(actual) not in expected_levels:
+                errors.append(f"liquidity.html full-ladder row {tk}: price/contract values differ from snapshot")
+            ladder_actuals.setdefault(tk, []).append(actual)
+            ladder_expected[tk] = [tuple(level) for level in expected_levels]
+            if not has_official_link(row):
+                errors.append(f"liquidity.html full-ladder row {tk}: no official source link")
+            checked += 1
             continue
         tk = m.group(1)
         rec = market_by_ticker.get(tk)
@@ -308,11 +362,89 @@ def check_liquidity_page(html_text, market_by_ticker, errors, warnings, stats):
         src = ob.get("source")
         if rec and src and src not in row:
             errors.append(f"liquidity.html row {tk}: order-book source URL not rendered")
-    if ladder_rows:
-        warnings.append(
-            f"liquidity.html: {ladder_rows} full-ladder rows carry a section-level "
-            "order-book source link rather than a per-row link")
+    for tk, rendered in ladder_actuals.items():
+        if sorted(rendered) != sorted(ladder_expected[tk]):
+            errors.append(f"liquidity.html full ladder {tk}: rendered levels do not exactly match the snapshot")
     stats["liquidity_rows_checked"] = checked
+    stats["liquidity_ladder_rows_checked"] = ladder_rows
+
+
+def check_flagged_page(html_text, markets, market_by_ticker, errors, stats):
+    """Require an official source on every data row in the snapshot Flagged page."""
+    checked = 0
+    if html_text is None:
+        errors.append("flagged.html: page missing")
+        stats["flagged_rows_checked"] = checked
+        stats["flagged_topic_rows_checked"] = 0
+        return
+
+    for row in rows_of(html_text):
+        if "<td" not in row or re.search(r"class=['\"]empty['\"]", row):
+            continue
+        checked += 1
+        if not has_official_link(row):
+            errors.append(f"flagged.html data row {checked}: no official Kalshi source link")
+
+        # For rows keyed by a market ticker, require the exact market request
+        # captured with that record, not just any link on a Kalshi domain.
+        for tk in tickers_in(row):
+            rec = market_by_ticker.get(html.unescape(tk))
+            if not rec:
+                continue
+            expected = (rec.get("sources") or {}).get("market")
+            rendered = {html.unescape(link) for link in official_links_in(row)}
+            if not expected or expected not in rendered:
+                errors.append(f"flagged.html market row {tk}: exact snapshot market source is missing")
+
+    # The grouped weak-match rows identify a series. Verify each group appears
+    # exactly once and links to the exact /markets?series_ticker=… request from
+    # the representative snapshot record.
+    topic_section = re.search(
+        r"<h2>Topic matches that rest on a ticker or tag[^<]*</h2>(.*?)(?=<h2>|</main>)",
+        html_text, re.S)
+    if not topic_section:
+        errors.append("flagged.html: topic-classification review section is missing")
+        stats["flagged_rows_checked"] = checked
+        stats["flagged_topic_rows_checked"] = 0
+        return
+
+    expected_groups = {}
+    for rec in markets:
+        if not rec.get("topic_matched_weakly"):
+            continue
+        series = rec.get("series_ticker")
+        if series:
+            expected_groups.setdefault(series, rec)
+
+    section_rows = [row for row in rows_of(topic_section.group(1)) if "<td" in row]
+    if len(section_rows) != len(expected_groups):
+        errors.append(
+            f"flagged.html topic-classification table: expected {len(expected_groups)} rows, "
+            f"found {len(section_rows)}")
+    rendered_groups = {}
+    for row in section_rows:
+        match = re.search(r"explore\.html\?q=([A-Za-z0-9.\-]+)", row)
+        if match:
+            series = html.unescape(match.group(1))
+            rendered_groups.setdefault(series, []).append(row)
+
+    for series, rec in expected_groups.items():
+        matched = rendered_groups.get(series, [])
+        if len(matched) != 1:
+            errors.append(
+                f"flagged.html topic series {series}: expected one row, found {len(matched)}")
+            continue
+        source = (rec.get("sources") or {}).get("markets")
+        links = {html.unescape(link) for link in official_links_in(matched[0])}
+        if not source or source not in links:
+            errors.append(
+                f"flagged.html topic series {series}: exact snapshot markets request is missing")
+
+    for series in rendered_groups.keys() - expected_groups.keys():
+        errors.append(f"flagged.html topic series {series}: not present as a weak match in snapshot")
+
+    stats["flagged_rows_checked"] = checked
+    stats["flagged_topic_rows_checked"] = len(section_rows)
 
 
 def check_index_figures(html_text, meta, errors, warnings, stats, resolved=None):
@@ -379,7 +511,7 @@ def run_verification(root=ROOT):
         return p.read_text(encoding="utf-8") if p.exists() else None
 
     pages = {name: read_page(name) for name in [
-        "index.html", "markets.html", "resolved.html", "liquidity.html",
+        "index.html", "markets.html", "resolved.html", "liquidity.html", "flagged.html",
         "gas-prices.html", "elections.html", "culture.html", "crypto.html", "golf.html"]}
 
     for name, text in pages.items():
@@ -393,6 +525,7 @@ def run_verification(root=ROOT):
     check_topic_pages(pages, market_by_ticker, resolved_by_ticker, errors, warnings, stats)
     if pages.get("liquidity.html"):
         check_liquidity_page(pages["liquidity.html"], market_by_ticker, errors, warnings, stats)
+    check_flagged_page(pages.get("flagged.html"), markets, market_by_ticker, errors, stats)
     if pages.get("index.html"):
         check_index_figures(pages["index.html"], meta, errors, warnings, stats, resolved)
 
@@ -482,6 +615,8 @@ def render_report_html(report):
     ["resolved.html (YES/NO + source links)", str(stats.get('resolved_rows_checked', 0))],
     ["topic pages (gas/elections/culture/crypto/golf)", str(sum(stats.get(f'topic_{k}_rows_checked', 0) for k in TOPIC_PAGES))],
     ["liquidity.html (depth + source links)", str(stats.get('liquidity_rows_checked', 0))],
+    ["flagged.html (data rows + official source links)", str(stats.get('flagged_rows_checked', 0))],
+    ["flagged topic-classification rows (exact snapshot request)", str(stats.get('flagged_topic_rows_checked', 0))],
     ["index.html (snapshot-health figures)", str(stats.get('index_figures_checked', 0))],
 ])}
 <h2>Hard failures ({len(errs)})</h2>
@@ -521,6 +656,8 @@ def main():
           f"resolved={s.get('resolved_rows_checked',0)} "
           f"topics={sum(s.get(f'topic_{k}_rows_checked',0) for k in TOPIC_PAGES)} "
           f"liquidity={s.get('liquidity_rows_checked',0)} "
+          f"flagged={s.get('flagged_rows_checked',0)} "
+          f"flagged-topic={s.get('flagged_topic_rows_checked',0)} "
           f"index-figures={s.get('index_figures_checked',0)}")
     print(f"  errors={len(report['errors'])} warnings={len(report['warnings'])}")
     for e in report["errors"]:
