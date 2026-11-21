@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 460,
+    "files_scanned": 462,
     "findings": 6,
     "errors": 0,
     "warnings": 4,
@@ -1393,7 +1393,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 94,
+      "uses": 97,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
