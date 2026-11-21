@@ -1,0 +1,462 @@
+{
+ "generated_utc": "2026-11-21T07:10:16Z",
+ "status_label": "SIMULATED \u2014 no orders were placed; no demo API key exists in this repo",
+ "inputs": {
+  "charts": "engine/data/live-snapshot.json",
+  "markets": "snapshot/markets.json",
+  "resolved": "snapshot/resolved.json",
+  "charts_generated_utc": "2026-11-21T07:10:05Z",
+  "markets_generated_utc": "2026-11-20T11:43:59Z",
+  "resolved_generated_utc": "2026-11-20T11:43:59Z",
+  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2"
+ },
+ "assumptions": {
+  "contracts_per_trade": 100,
+  "entry_fill": "recorded ask of the entry candle (YES) or 1 - recorded YES bid (NO)",
+  "exit_fill": "recorded bid of the exit candle (YES) or 1 - recorded ask (NO)",
+  "position_rule": "one open position per market at a time; no pyramiding, no leverage",
+  "jump_threshold_dollars": 0.1,
+  "hold_candles": 30,
+  "fees": {
+   "taker_formula": "round up(M \u00d7 0.07 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
+   "maker_formula": "round up(M \u00d7 0.0175 \u00d7 C \u00d7 P \u00d7 (1 \u2212 P))",
+   "settlement_fee": 0,
+   "membership_fee": 0,
+   "source": "https://kalshi.com/docs/kalshi-fee-schedule.pdf",
+   "effective": "Last updated and effective: July 7, 2026",
+   "per_series_multipliers_used": {
+    "KXAAAGASM": {
+     "maker": 1,
+     "taker": 1,
+     "series_title": "US gas price"
+    },
+    "KXBTCY": {
+     "maker": 0,
+     "taker": 0,
+     "series_title": "BTC price range EOY"
+    },
+    "KXETHY": {
+     "maker": 0,
+     "taker": 0,
+     "series_title": "ETH price EOY"
+    }
+   },
+   "note": "Only KXAAAGASM (1/1), KXBTCY (0/0) and KXETHY (0/0) were copied from the schedule for this repo's series; all other series use the schedule's defaults (taker M=1, maker M=0)."
+  }
+ },
+ "endpoints_used": [
+  "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+  "https://docs.kalshi.com/api-reference/market/get-markets",
+  "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+  "https://docs.kalshi.com/getting_started/orderbook_responses",
+  "https://docs.kalshi.com/getting_started/market_lifecycle"
+ ],
+ "caveats": [
+  "Demo venue: mock funds, and Kalshi states demo prices/behavior may not reflect real markets (https://docs.kalshi.com/getting_started/demo_env).",
+  "Candle coverage is only the markets the collector captured; results are not a market-wide statistic and the sample is small.",
+  "Entry/exit use candle close-level quotes, which is the finest detail the public REST API offers; intrabar fills and queue priority are not modelled.",
+  "The settlement study treats a market's last traded price as the entry. On thin books that trade may be far from the close, so bucket ROI is an upper bound on realism, not a fill you could have got.",
+  "Fees follow the published schedule for takers; the simulation crosses the spread, so taker is the right side. Maker fills (and their fee) are not modelled."
+ ],
+ "settlement_study": {
+  "definition": "for each settled market: entry = last_price_dollars, payout = settlement_value_dollars (or 1.00 when result=yes / 0.00 when result=no), one taker fee at entry; buckets are price bands, not model outputs",
+  "buckets": [
+   {
+    "bucket": "$0.60-$0.69",
+    "markets": 4,
+    "resolved_yes": 1,
+    "resolved_no": 3,
+    "resolved_scalar": 0,
+    "yes_rate_pct": 25.0,
+    "avg_entry_price": 0.65,
+    "contracts_per_trade": 100,
+    "cost_usd": 260.0,
+    "payout_usd": 100.0,
+    "gross_usd": -160.0,
+    "fees_usd": 6.4,
+    "net_usd": -166.4,
+    "net_roi_pct": -64.0,
+    "avg_net_per_market_usd": -41.6,
+    "topics": {
+     "crypto": 4
+    },
+    "source_urls": [
+     "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200",
+     "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxpWE2AYQmI-c_AESJEtYRVNPQ0NFUkdBTUUtMjZOT1YyMTAwMThPTElWTUlBLU1JQQ"
+    ]
+   }
+  ],
+  "rows_skipped": {
+   "no_last_price": 0,
+   "no_result": 0,
+   "bad_settlement": 0,
+   "price_not_fillable": 8,
+   "below_volume_floor": 0
+  },
+  "markets_examined": 12,
+  "liquid_only": {
+   "definition": "same rule, restricted to markets that traded at least 100 contracts (volume_contracts), so a stray single-lot print cannot pose as an entry price",
+   "min_volume_contracts": 100.0,
+   "buckets": [
+    {
+     "bucket": "$0.60-$0.69",
+     "markets": 4,
+     "resolved_yes": 1,
+     "resolved_no": 3,
+     "resolved_scalar": 0,
+     "yes_rate_pct": 25.0,
+     "avg_entry_price": 0.65,
+     "contracts_per_trade": 100,
+     "cost_usd": 260.0,
+     "payout_usd": 100.0,
+     "gross_usd": -160.0,
+     "fees_usd": 6.4,
+     "net_usd": -166.4,
+     "net_roi_pct": -64.0,
+     "avg_net_per_market_usd": -41.6,
+     "topics": {
+      "crypto": 4
+     },
+     "source_urls": [
+      "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200",
+      "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxpWE2AYQmI-c_AESJEtYRVNPQ0NFUkdBTUUtMjZOT1YyMTAwMThPTElWTUlBLU1JQQ"
+     ]
+    }
+   ],
+   "rows_skipped": {
+    "no_last_price": 0,
+    "no_result": 0,
+    "bad_settlement": 0,
+    "price_not_fillable": 0,
+    "below_volume_floor": 8
+   }
+  }
+ },
+ "strategies": {
+  "rules": {
+   "J1 jump-momentum": "after a traded up-move >= threshold, buy YES at the recorded ask of that candle; sell at the bid `hold` candles later",
+   "J2 jump-fade": "after the same move, buy NO at (1 - recorded YES bid); sell NO at (1 - recorded YES ask) `hold` candles later",
+   "J3 stale-quote-book-move": "enter YES when the candle traded zero volume but the best bid moved >= threshold; exit at the next candle that traded"
+  },
+  "summary": {
+   "overall": null,
+   "by_strategy": {},
+   "by_topic": {},
+   "by_side": {},
+   "by_trade_type": {}
+  },
+  "trades": []
+ },
+ "resolutions": [
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H07-UP",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H07",
+   "series_ticker": null,
+   "title": "Demo BTC at or above 55704.83 USD",
+   "status": "finalized",
+   "result": "yes",
+   "last_price": 0.65,
+   "settlement_value_dollars": 1.0,
+   "settlement_ts": "2026-11-21T07:01:17.910474Z",
+   "close_time": "2026-11-21T07:00:00Z",
+   "contracts": 8140.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2349999",
+   "event_ticker": "KXDOGED-26NOV2102",
+   "series_ticker": null,
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "close_time": "2026-11-21T07:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2299999",
+   "event_ticker": "KXDOGED-26NOV2102",
+   "series_ticker": null,
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "close_time": "2026-11-21T07:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2249999",
+   "event_ticker": "KXDOGED-26NOV2102",
+   "series_ticker": null,
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "close_time": "2026-11-21T07:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2199999",
+   "event_ticker": "KXDOGED-26NOV2102",
+   "series_ticker": null,
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "close_time": "2026-11-21T07:00:00Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H06-UP",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H06",
+   "series_ticker": null,
+   "title": "Demo BTC at or above 56220.85 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.65,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T06:01:22.910452Z",
+   "close_time": "2026-11-21T06:00:00Z",
+   "contracts": 8186.63,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXLIGAMXFIRSTGOAL-26NOV20JUAATL-JUAOESTUP19",
+   "event_ticker": "KXLIGAMXFIRSTGOAL-26NOV20JUAATL",
+   "series_ticker": null,
+   "title": "Oscar Estupinan: First Goalscorer",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T05:38:22.915878Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-2",
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "series_ticker": null,
+   "title": "Oscar Estupinan: 2+ goals",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T05:38:22.908596Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-3",
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "series_ticker": null,
+   "title": "Oscar Estupinan: 3+ goals",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.0,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T05:38:22.908565Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "topic_label": "Culture",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-1",
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "series_ticker": null,
+   "title": "Oscar Estupinan: 1+ goals",
+   "status": "finalized",
+   "result": "yes",
+   "last_price": 0.0,
+   "settlement_value_dollars": 1.0,
+   "settlement_ts": "2026-11-21T05:38:22.907758Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "contracts": 0.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H05-UP",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H05",
+   "series_ticker": null,
+   "title": "Demo BTC at or above 56641.65 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.65,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T05:01:17.90942Z",
+   "close_time": "2026-11-21T05:00:00Z",
+   "contracts": 5980.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H04-UP",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H04",
+   "series_ticker": null,
+   "title": "Demo BTC at or above 58492.07 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price": 0.65,
+   "settlement_value_dollars": 0.0,
+   "settlement_ts": "2026-11-21T04:01:27.906398Z",
+   "close_time": "2026-11-21T04:00:00Z",
+   "contracts": 8200.0,
+   "notional_value_dollars": 1.0,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxpWE2AYQmI-c_AESJEtYRVNPQ0NFUkdBTUUtMjZOT1YyMTAwMThPTElWTUlBLU1JQQ"
+  }
+ ],
+ "board": [
+  {
+   "topic": "crypto",
+   "topic_label": "Crypto",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "series_ticker": "KXDEMOFUTHOURLY",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H08",
+   "event_title": null,
+   "title": "Demo BTC at or above 57962.02 USD",
+   "status": "active",
+   "result": "",
+   "last_price": null,
+   "previous_price": null,
+   "yes_bid": null,
+   "yes_ask": null,
+   "implied_yes_ask": 0.99,
+   "best_yes_bid_contracts": 11.0,
+   "best_no_bid_contracts": 1.0,
+   "yes_bid_levels": 1,
+   "no_bid_levels": 1,
+   "book": {
+    "yes": [
+     [
+      0.01,
+      11.0
+     ]
+    ],
+    "no": [
+     [
+      0.01,
+      1.0
+     ]
+    ],
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook"
+   },
+   "contracts_24h": null,
+   "open_interest_contracts": null,
+   "notional_value_dollars": 1.0,
+   "dollar_notional_24h": null,
+   "dollar_formula": null,
+   "open_time": null,
+   "close_time": "2026-11-21T08:00:00Z",
+   "expected_expiration_time": "2026-11-21T08:05:00Z",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "topic_match_reason": null,
+   "topic_matched_weakly": null,
+   "has_candles": true,
+   "sources": {
+    "markets": null,
+    "market": null,
+    "notional": null,
+    "orderbook": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook"
+   }
+  }
+ ],
+ "liquidity": {
+  "definition": "per-topic spread and resting depth from the order book response; the implied ask is the documented identity 1.00 - highest NO bid",
+  "by_topic": [
+   {
+    "topic": "Crypto",
+    "topic_key": "crypto",
+    "open_markets": 1,
+    "books_captured_for": 1,
+    "pct_of_topic_captured": 100.0,
+    "median_spread": 0.98,
+    "spread_le_1c_pct": 0.0,
+    "total_bid_levels_captured": 2,
+    "contracts_resting_yes_side_avg": 11.0,
+    "contracts_resting_no_side_avg": 1.0
+   }
+  ],
+  "coverage_note": "only markets this collector actually requested a book for are counted; a topic showing a low count means the collector sampled few of its markets, not that its books are empty",
+  "deepest_markets": [
+   {
+    "topic": "crypto",
+    "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+    "title": "Demo BTC at or above 57962.02 USD",
+    "best_yes_bid": 0.01,
+    "implied_yes_ask": 0.99,
+    "spread": 0.98,
+    "yes_bid_levels": 1,
+    "no_bid_levels": 1,
+    "book": {
+     "yes": [
+      [
+       0.01,
+       11.0
+      ]
+     ],
+     "no": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook",
+     "captured_utc": null
+    },
+    "contracts_at_best_yes_bid": 11.0,
+    "contracts_at_best_no_bid": 1.0,
+    "dollar_notional_24h": null,
+    "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook"
+   }
+  ]
+ }
+}
