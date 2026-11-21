@@ -40,7 +40,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Engine arithmetic tests (fee schedule, jump rule, fills, provenance)
-        run: python3 engine/test_engine.py
+        run: |
+          python3 engine/test_engine.py
+          python3 -m unittest discover -s tests -p test_engine_refresh.py
       - name: Fetch demo market data for the engine
         run: |
           set -o pipefail
