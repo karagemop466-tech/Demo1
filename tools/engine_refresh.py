@@ -40,6 +40,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 BASE = "https://external-api.demo.kalshi.co/trade-api/v2"
+SERIES_INDEX = "desk/data/series-index.json"   # committed, read-only, regenerated from the snapshot
 UA = "Demo1-engine/1.0 (GitHub Actions runner; public demo market data only)"
 MAX_LIMIT = 200          # documented cap for /markets and /events list calls
 CANDLE_WINDOWS = [("1m", 2, 1), ("1h", 24 * 7, 60), ("1d", 24 * 90, 1440)]
@@ -128,6 +129,9 @@ def main() -> int:
     ap.add_argument("--out", default="engine/data/live-snapshot.json")
     ap.add_argument("--markets-per-topic", type=int, default=5)
     ap.add_argument("--max-pages", type=int, default=12)
+    ap.add_argument("--series-index", default=SERIES_INDEX,
+                    help="committed per-topic series list (read-only); see desk/tools/build_series_index.py")
+    ap.add_argument("--series-per-topic", type=int, default=6)
     ap.add_argument("--events-probe-pages", type=int, default=1,
                     help="pages of GET /events to pull, to prove the documented limit works")
     args = ap.parse_args()
@@ -168,7 +172,7 @@ def main() -> int:
     cursor, m_pages = None, 0
     for _ in range(args.max_pages):
         payload, url, err = get_json("/markets", {"status": "open", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"markets page {m_pages} FAILED {err}")
             break
@@ -179,6 +183,42 @@ def main() -> int:
         if not batch or not cursor:
             break
     log(f"markets/open -> {len(markets)} across {m_pages} page(s)")
+
+    # 2b. The newest pages are dominated by multivariate combo markets even with
+    #     mve_filter=exclude (the demo venue creates weather/sports ladders faster than
+    #     it creates topic markets), so a newest-first scan alone found 0 five-topic
+    #     markets on 2026-11-21. Query the series the committed collection returned for
+    #     each topic instead — the documented `series_ticker` filter.
+    seen_tickers = {m.get("ticker") for m in markets}
+    series_added = 0
+    index_path = args.series_index
+    try:
+        with open(index_path, encoding="utf-8") as fh:
+            index = json.load(fh)
+    except Exception as exc:  # noqa: BLE001 - optional input, reported not guessed
+        index = None
+        log(f"series index {index_path} unavailable ({type(exc).__name__}: {exc}); "
+            f"falling back to the paged scan only")
+    if index:
+        for topic, block in (index.get("topics") or {}).items():
+            for entry in (block.get("series") or [])[:args.series_per_topic]:
+                series = entry.get("series_ticker")
+                if not series:
+                    continue
+                payload, url, err = get_json("/markets", {"series_ticker": series, "status": "open",
+                                                          "limit": MAX_LIMIT, "mve_filter": "exclude"},
+                                             args.base)
+                if err:
+                    log(f"  series {series} FAILED {err}")
+                    continue
+                for m in (payload or {}).get("markets", []) or []:
+                    if m.get("ticker") in seen_tickers:
+                        continue
+                    seen_tickers.add(m.get("ticker"))
+                    markets.append(m)
+                    series_added += 1
+        log(f"series fan-out -> {series_added} additional open markets from "
+            f"{sum(len((b.get('series') or [])[:args.series_per_topic]) for b in (index.get('topics') or {}).values())} series")
 
     # 3. pick the biggest dollar-amount live market per topic. Ranking input is the
     #    official volume_24h_fp x notional_value_dollars; both operands come from the
@@ -287,7 +327,7 @@ def main() -> int:
     seen_topics: dict[str, int] = {t: 0 for t in TOPICS}
     for _ in range(6):
         payload, url, err = get_json("/markets", {"status": "settled", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"settled page {s_pages} FAILED {err}")
             break
@@ -325,7 +365,7 @@ def main() -> int:
     seen_pending: dict[str, int] = {t: 0 for t in TOPICS}
     for _ in range(4):
         payload, url, err = get_json("/markets", {"status": "closed", "limit": MAX_LIMIT,
-                                                  "cursor": cursor}, args.base)
+                                                  "mve_filter": "exclude", "cursor": cursor}, args.base)
         if err:
             log(f"closed page {p_pages} FAILED {err}")
             break
