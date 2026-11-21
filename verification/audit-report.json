@@ -72,10 +72,10 @@
   },
   "counts": {
     "files_scanned": 461,
-    "findings": 6,
+    "findings": 9,
     "errors": 0,
     "warnings": 4,
-    "mismatches": 0,
+    "mismatches": 3,
     "explained": 2,
     "doc_links_used": 351,
     "doc_links_in_index": 337,
@@ -84,9 +84,32 @@
     "doc_links_unverified": 0,
     "tables_checked": 25,
     "cross_desk_quantities": 69,
-    "cross_desk_differences": 3
+    "cross_desk_differences": 9
   },
   "findings": [
+    {
+      "check": "C3",
+      "file": "desk/resolutions.html",
+      "line": 43,
+      "topic": "gas_prices",
+      "field": "topic summary row",
+      "claimed": [
+        350,
+        107,
+        243,
+        34
+      ],
+      "canonical": [
+        17,
+        107,
+        116,
+        243,
+        350,
+        367,
+        483
+      ],
+      "status": "MISMATCH"
+    },
     {
       "check": "C3",
       "file": "desk/resolutions.html",
@@ -110,6 +133,52 @@
       ],
       "status": "EXPLAINED",
       "detail": "The page matches its own data source, desk/data/resolutions-log.json (tracked 57, resolved 56, awaiting 1). The snapshot holds 132 records for this topic; the difference of 75 is the series-prefix exclusion declared in desk/tools/track_resolutions.py (see C8). The row itself does not state the exclusion, so a reader comparing desks sees two different numbers."
+    },
+    {
+      "check": "C3",
+      "file": "desk/resolutions.html",
+      "line": 43,
+      "topic": "crypto",
+      "field": "topic summary row",
+      "claimed": [
+        705,
+        28,
+        677,
+        2090
+      ],
+      "canonical": [
+        9,
+        232,
+        474,
+        659,
+        668,
+        900,
+        1374
+      ],
+      "status": "MISMATCH"
+    },
+    {
+      "check": "C3",
+      "file": "desk/resolutions.html",
+      "line": 43,
+      "topic": "golf",
+      "field": "topic summary row",
+      "claimed": [
+        600,
+        20,
+        580,
+        102
+      ],
+      "canonical": [
+        20,
+        42,
+        363,
+        580,
+        600,
+        642,
+        1005
+      ],
+      "status": "MISMATCH"
     },
     {
       "check": "C5",
@@ -1328,7 +1397,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
-      "uses": 87,
+      "uses": 88,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1395,7 +1464,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 94,
+      "uses": 95,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -1485,7 +1554,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-trades",
-      "uses": 49,
+      "uses": 50,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2363,7 +2432,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_environments",
-      "uses": 77,
+      "uses": 78,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2420,7 +2489,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 110,
+      "uses": 111,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2552,7 +2621,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
-      "uses": 58,
+      "uses": 59,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2659,7 +2728,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
-      "uses": 67,
+      "uses": 68,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -3740,13 +3809,14 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 232,
-        "desk/resolutions.html": 232,
+        "desk/resolutions.html": 2090,
         "verification/index.html": 232
       },
       "distinct_values": [
-        232
+        232,
+        2090
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "awaiting",
@@ -3779,25 +3849,27 @@
       "topic": "gas_prices",
       "values": {
         "desk/markets.html": 17,
-        "desk/resolutions.html": 17
+        "desk/resolutions.html": 34
       },
       "distinct_values": [
-        17
+        17,
+        34
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "awaiting",
       "topic": "golf",
       "values": {
         "desk/markets.html": 42,
-        "desk/resolutions.html": 42,
+        "desk/resolutions.html": 102,
         "verification/index.html": 42
       },
       "distinct_values": [
-        42
+        42,
+        102
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "awaiting result",
@@ -3969,13 +4041,14 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 659,
-        "desk/resolutions.html": 659,
+        "desk/resolutions.html": 677,
         "verification/index.html": 659
       },
       "distinct_values": [
-        659
+        659,
+        677
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "no",
@@ -4252,12 +4325,13 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 668,
-        "desk/resolutions.html": 668
+        "desk/resolutions.html": 705
       },
       "distinct_values": [
-        668
+        668,
+        705
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "resolved",
@@ -4482,13 +4556,14 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 9,
-        "desk/resolutions.html": 9,
+        "desk/resolutions.html": 28,
         "verification/index.html": 9
       },
       "distinct_values": [
-        9
+        9,
+        28
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "yes",
