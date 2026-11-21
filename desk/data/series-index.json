@@ -1,0 +1,208 @@
+{
+ "generated_utc": "2026-11-21T06:40:12Z",
+ "basis": {
+  "snapshot": "snapshot/markets.json",
+  "snapshot_collected_utc": "2026-11-20T11:43:59Z",
+  "rule": "series tickers that the committed collection returned inside markets the desk's published topic rules matched; ranked by open markets",
+  "docs": "https://docs.kalshi.com/api-reference/market/get-markets",
+  "why_mve_filter": "official Get Markets parameter mve_filter=exclude removes multivariate combo markets, which otherwise fill the newest open-market pages"
+ },
+ "max_series_per_topic": 6,
+ "excluded_series": {
+  "KXWTI": "Crude-oil price series — not an election market."
+ },
+ "topics": {
+  "gas_prices": {
+   "label": "Gas prices",
+   "open_markets_in_snapshot": 116,
+   "series_count_in_snapshot": 9,
+   "series": [
+    {
+     "series_ticker": "KXAAAGASM",
+     "open_markets_in_snapshot": 31,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXAAAGASW",
+     "open_markets_in_snapshot": 21,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASW&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXAAAGASWNJ",
+     "open_markets_in_snapshot": 21,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASWNJ&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXAAAGASMTX",
+     "open_markets_in_snapshot": 15,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMTX&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXAAAGASMAXCA",
+     "open_markets_in_snapshot": 8,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASMAXCA&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXNGASMAX",
+     "open_markets_in_snapshot": 7,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXNGASMAX&status=open&mve_filter=exclude&limit=100"
+    }
+   ],
+   "omitted_series": [
+    "KXAAAGASMINTX",
+    "KXAAAGASMINCA",
+    "KXAAAGASD"
+   ]
+  },
+  "elections": {
+   "label": "Elections",
+   "open_markets_in_snapshot": 195,
+   "series_count_in_snapshot": 5,
+   "series": [
+    {
+     "series_ticker": "KXPRESNOMD",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMD&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPRESNOMR",
+     "open_markets_in_snapshot": 56,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESNOMR&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPRESPERSON",
+     "open_markets_in_snapshot": 53,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPRESPERSON&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXMAYORLA",
+     "open_markets_in_snapshot": 18,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXMAYORLA&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXGOVAK",
+     "open_markets_in_snapshot": 8,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXGOVAK&status=open&mve_filter=exclude&limit=100"
+    }
+   ],
+   "omitted_series": []
+  },
+  "culture": {
+   "label": "Culture",
+   "open_markets_in_snapshot": 191,
+   "series_count_in_snapshot": 5,
+   "series": [
+    {
+     "series_ticker": "KXRT",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXRT&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXOSCARNOMPIC",
+     "open_markets_in_snapshot": 53,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARNOMPIC&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXOSCARPIC",
+     "open_markets_in_snapshot": 41,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARPIC&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXOSCARACTO",
+     "open_markets_in_snapshot": 25,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXOSCARACTO&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXNETFLIXRANKSHOW",
+     "open_markets_in_snapshot": 12,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXNETFLIXRANKSHOW&status=open&mve_filter=exclude&limit=100"
+    }
+   ],
+   "omitted_series": []
+  },
+  "crypto": {
+   "label": "Crypto",
+   "open_markets_in_snapshot": 474,
+   "series_count_in_snapshot": 10,
+   "series": [
+    {
+     "series_ticker": "KXBTC",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTC&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXBTCD",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCD&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXDOGE",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXDOGE&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXETH",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETH&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXETHD",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXETHD&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXXRP",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXXRP&status=open&mve_filter=exclude&limit=100"
+    }
+   ],
+   "omitted_series": [
+    "KXXRPD",
+    "KXBTCY",
+    "KXETHY",
+    "KXBTCMAXMON"
+   ]
+  },
+  "golf": {
+   "label": "Golf",
+   "open_markets_in_snapshot": 363,
+   "series_count_in_snapshot": 7,
+   "series": [
+    {
+     "series_ticker": "KXLPGATOUR",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXLPGATOUR&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPGAR2LEAD",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGAR2LEAD&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPGATOP10",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOP10&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPGATOP20",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOP20&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPGATOP5",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOP5&status=open&mve_filter=exclude&limit=100"
+    },
+    {
+     "series_ticker": "KXPGATOUR",
+     "open_markets_in_snapshot": 60,
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOUR&status=open&mve_filter=exclude&limit=100"
+    }
+   ],
+   "omitted_series": [
+    "KXPGAR1LEAD"
+   ]
+  }
+ },
+ "requests_per_refresh": 28
+}

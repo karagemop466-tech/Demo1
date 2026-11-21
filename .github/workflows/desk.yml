@@ -39,6 +39,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
+          # jsdom 31 pulls undici 8, which requires node:zstd (Node >= 22). Under
+          # Node 20 `require("jsdom")` throws and the DOM-test step fails, which
+          # then blocks the "Commit refreshed data and pages" step — that is why
+          # run 44857400562 (2026-11-21T02:43Z) failed after collection succeeded.
+          # Same fix already applied in alert-desk-check.yml and tape-desk-check.yml
+          # (sessions 0ad208bf / 2db27b09). Session 559f93df reached the same
+          # conclusion independently on main (run 44876980889 passes).
           node-version: "22"
 
       - name: Syntax-check every script
