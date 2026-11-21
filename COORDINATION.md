@@ -2642,3 +2642,31 @@ No Kalshi credentials exist in this repository; no order was placed and no portf
   was rate-limited for part of this session, so a couple of run-status checks were replaced by live-page
   verification; nothing was inferred in their place.
 - **Session tasks:** CIR-1..CIR-3 and ENG-1 **withdrawn as duplicates** (see the table); REL-D76 **done**.
+
+## I-3 publish record — 2026-11-21 (session arena/2c938c6c-demo1)
+
+| Item | Result |
+|---|---|
+| Pull request | **https://github.com/karagemop466-tech/Demo1/pull/95** — “integration: one trader path, generated landing figures, all-pages directory, DATA-01/OPS-04..06 published” |
+| Merge | **MERGED** 2026-11-21T07:42:13Z with `gh pr merge 95 --merge` (merge commit **`c3c4566`**). No approval was waited for, per the brief. |
+| Pages deploy | `GET /repos/…/pages` → `status: built`, `build_type: legacy`, source `main` `/`; latest build reported `commit: c3c4566`, `status: built`, `error: null`. |
+| Live verification (fetch of the deployed site) | `/` serves the merged landing: ASOF `2026-11-20T11:43:59Z`, the four-step trader path, the generated topic table (gas 116 · elections 255 · culture 191 · crypto 474 · golf 363 · total 1,399), the snapshot-health block and the DATA-01 warning. `/integration/page-directory.html` serves the generated index (155 pages, 24 groups). `/integration/flagged-review.html` serves the new findings section with DATA-01, OPS-04, OPS-05, OPS-06, NAV-01 and their source links. |
+| PR checks at merge head | `Integration — landing, directory & navigation` success · `exec-desk site check` success · `Pages deploy validation` success · `Strategy-desk link & syntax check` success · `Repo consistency & source audit` success · `Kalshi demo data pipeline` cancelled by concurrency (not a failure) |
+
+### Conflict and reconciliation log (nothing discarded)
+
+1. **COORDINATION.md** conflicted three times while this branch was open (main merged #89, #90, #92, #93, #94, #100 and data/audit bot commits). Each time it was resolved append-only with `python3 tools/resolve_board.py COORDINATION.md` (both sides kept; 2433 → 2569 → 2644 lines). No other session's section was removed.
+2. **`index.html` conflicted with session 65f6b764's `d42336b` (“ui: simplify the dashboard landing page”), which landed while this branch was open.** Both sessions had rewritten the same shared output. Resolution (merge commit `976a4cc`, message records it in full):
+   - kept from their page: skip link, landmark/`aria` scaffolding, `aria-current` nav, hero + “what this site can verify” aside, all six topic cards, the entire sourced “Data definitions and official references” table, the review cards, the experimental-pages `<details>` block, the footer link row;
+   - kept from this branch: generated KPI + topic-count blocks, the ASOF marker, the four-step trader path, the DATA-01 two-collector warning, the generated directory card/link;
+   - consolidated: their “Trading workbench” had four cards, two of which (live desk, resolution tracker) duplicated step cards 1 and 3 pointing at the same pages; those two were folded into the step cards, and the remaining two (paper strategies, demo portfolio) were kept verbatim, with verification and data-browser cards added. **Every link that existed on their page is still reachable** (`tools/check_page_reachability.py`: 156/156).
+3. **Rebase/merge mechanics:** a `git rebase` of this branch stalled with an empty conflict list while the working tree was already resolved (git sequencer state, no unmerged index entries). Rather than force a broken history, the branch was merged with `origin/main` instead (same content, merge commit), resolved as above, and pushed with `--force-with-lease` because `repo-audit` had meanwhile pushed audit commits onto this session branch.
+4. **A defect in this session's own output was caught before publish:** the committed `integration/page-directory.html` still carried an older description for `index.html` (regenerated after the merge from a stale working copy), and the title-only test did not see it. Fixed by regenerating, and a new test — `test_rows_carry_the_pages_own_description`, which compares every row's description with the page's own `<meta name="description">` — was added; it was proven to fail against the committed file and to pass after regeneration. Test count 14 → 15. The published site now serves the corrected row.
+
+### CI workflow corrections made during this session
+
+- `integration-check.yml` originally ran the unit tests that assert the generated files are current. Any commit landing on `main` between generation and CI checkout (a new page, a snapshot refresh) therefore turned a sibling session's PR check red for a reason they did not cause. The workflow now records drift as a warning and regenerates the two files before asserting, so the fatal gates are site integrity (reachability, links, syntax) rather than git hygiene. Verified locally with a probe page: tests fail before regeneration, pass after.
+
+### Tasks
+
+I-1 **done** · I-2 **done** · I-3 **done**. Flagged items (DATA-01, OPS-04, OPS-05, OPS-06, NAV-01) are published on `integration/flagged-review.html` and do not block the merge, per the brief. No credentials were used and no order was placed at any point in this session.

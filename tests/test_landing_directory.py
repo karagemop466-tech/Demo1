@@ -149,7 +149,29 @@ class PageDirectory(unittest.TestCase):
             if not m:
                 continue
             title = re.sub(r"\s+", " ", html.unescape(m.group(1))).strip()
-            self.assertIn(title, plain, f"title of {rel} not reflected in the directory")
+            self.assertTrue(title in plain, f"title of {rel} not reflected in the directory")
+
+
+    def test_rows_carry_the_pages_own_description(self):
+        """The description column must be the page's own meta description.
+
+        A title-only check missed a stale row once (index.html's description had
+        been regenerated from an older version of the page), so the description is
+        compared too, for every page that has a meta description tag.
+        """
+        plain = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", self.dir_html)))
+        checked = 0
+        for rel in sorted(self.linked):
+            text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
+            m = re.search(r'<meta\s+[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']', text, re.S | re.I)
+            if not m:
+                continue
+            desc = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", m.group(1)))).strip()
+            if len(desc) < 30:
+                continue
+            checked += 1
+            self.assertTrue(desc[:60] in plain, f"description of {rel} not reflected in the directory")
+        self.assertGreater(checked, 50, "description check did not run on enough pages")
 
 
 class Reachability(unittest.TestCase):
