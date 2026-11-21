@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 464,
+    "files_scanned": 470,
     "findings": 9,
     "errors": 0,
     "warnings": 4,
@@ -83,7 +83,7 @@
     "doc_links_documented_broken": 8,
     "doc_links_unverified": 0,
     "tables_checked": 25,
-    "cross_desk_quantities": 54,
+    "cross_desk_quantities": 69,
     "cross_desk_differences": 9
   },
   "findings": [
@@ -1464,7 +1464,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 96,
+      "uses": 97,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2432,7 +2432,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/api_environments",
-      "uses": 78,
+      "uses": 80,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2489,14 +2489,14 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 114,
+      "uses": 117,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
         "COORDINATION.md",
+        "README.md",
         "alert-desk/README.md",
-        "alert-desk/assets/alert.js",
-        "alert-desk/chat.html"
+        "alert-desk/assets/alert.js"
       ]
     },
     {
@@ -2621,7 +2621,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_lifecycle",
-      "uses": 60,
+      "uses": 61,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2642,7 +2642,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/market_settlement",
-      "uses": 56,
+      "uses": 57,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2728,7 +2728,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/orderbook_responses",
-      "uses": 71,
+      "uses": 72,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2856,7 +2856,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
-      "uses": 38,
+      "uses": 39,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -3927,6 +3927,61 @@
       "status": "agree"
     },
     {
+      "quantity": "closed, awaiting",
+      "topic": "crypto",
+      "values": {
+        "index.html": 232
+      },
+      "distinct_values": [
+        232
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting",
+      "topic": "culture",
+      "values": {
+        "index.html": 60
+      },
+      "distinct_values": [
+        60
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting",
+      "topic": "elections",
+      "values": {
+        "index.html": 1
+      },
+      "distinct_values": [
+        1
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 17
+      },
+      "distinct_values": [
+        17
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "closed, awaiting",
+      "topic": "golf",
+      "values": {
+        "index.html": 42
+      },
+      "distinct_values": [
+        42
+      ],
+      "status": "agree"
+    },
+    {
       "quantity": "closed, no result",
       "topic": "crypto",
       "values": {
@@ -4105,6 +4160,61 @@
         "desk/markets.html": 363,
         "docs/verification-3c2c8403.html": 363,
         "verification/index.html": 363
+      },
+      "distinct_values": [
+        363
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "crypto",
+      "values": {
+        "index.html": 474
+      },
+      "distinct_values": [
+        474
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "culture",
+      "values": {
+        "index.html": 191
+      },
+      "distinct_values": [
+        191
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "elections",
+      "values": {
+        "index.html": 255
+      },
+      "distinct_values": [
+        255
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 116
+      },
+      "distinct_values": [
+        116
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "open markets",
+      "topic": "golf",
+      "values": {
+        "index.html": 363
       },
       "distinct_values": [
         363
@@ -4325,6 +4435,61 @@
       "values": {
         "docs/verification-3c2c8403.html": 600,
         "verification/index.html": 600
+      },
+      "distinct_values": [
+        600
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved yes/no",
+      "topic": "crypto",
+      "values": {
+        "index.html": 668
+      },
+      "distinct_values": [
+        668
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved yes/no",
+      "topic": "culture",
+      "values": {
+        "index.html": 368
+      },
+      "distinct_values": [
+        368
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved yes/no",
+      "topic": "elections",
+      "values": {
+        "index.html": 131
+      },
+      "distinct_values": [
+        131
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved yes/no",
+      "topic": "gas_prices",
+      "values": {
+        "index.html": 350
+      },
+      "distinct_values": [
+        350
+      ],
+      "status": "agree"
+    },
+    {
+      "quantity": "resolved yes/no",
+      "topic": "golf",
+      "values": {
+        "index.html": 600
       },
       "distinct_values": [
         600
