@@ -2307,3 +2307,92 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 - PR [#89](https://github.com/karagemop466-tech/Demo1/pull/89) merged without waiting for approval on 2026-11-21T06:37:54Z. Merge commit: `90f8f26d5b84bba91faad2c49d5ac2202a292259` (GitHub PR API). All five PR check jobs passed before merge (audit, build, two checks, links).
 - GitHub Pages built **that exact merge commit**, `status: built`, no error (`updated_at: 2026-11-21T06:38:16Z`); built-in [Pages deployment run 44876453258](https://github.com/karagemop466-tech/Demo1/actions/runs/44876453258) succeeded including build, report-build-status, and deploy. The [published chat page](https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html) was fetched and rendered the two source-linked feeds. Source: GitHub Pages builds API and live page. GitHub Actions emitted an upstream Node 20 deprecation warning for `actions/upload-artifact@v4`; deployment succeeded; review as a maintenance item, not a blocker.
 - This append-only board record is being shipped as a follow-up PR because a PR cannot record its own eventual merge result before merging. RW-2 **done**. No claims of authenticated demo fills, live browser API access or guaranteed post-tab resolution.
+---
+
+# Session arena/559f93df-demo1 — final close-out verification + PR/merge/Pages confirmation
+
+## Session claim
+
+- **Session ID:** `arena/559f93df-demo1` — branch `arena/559f93df-demo1` (platform-fixed name; recorded as a documented deviation, branch not renamed).
+- **Claimed at:** 2026-11-21 (UTC), before any implementation commit.
+- **Basis:** board read end-to-end; `gh pr list --state all` shows one OPEN pull request owned by another session (#88, `arena/b71d695c-demo1`, "Document operational audit and outstanding dashboard risks") — this session does **not** touch it or any of its files (`operational-audit/`, `verification/`). Every brief content area already has a merged, published counterpart from earlier sessions: executive summary, five topic pages (gas/elections/culture/crypto/golf), dashboards with live price graph (time axis, seconds/minutes/hours windows), order-book depth & liquidity-at-price, the dual scrolling-chat ≥ $0.10 alert system (all-events feed + selective high-ROI model-feed), resolution tracking to YES/NO, automated simulated-trading/strategy engines, demo-account portfolio gating (credential-gated, blank by design), suggestions, questions, Flagged-for-Review registers, sources, and a trader guide. The site is live at https://karagemop466-tech.github.io/Demo1/ with Pages `status: built`, source `{branch: main, path: /}`.
+- **Role:** final close-out / integration session for this branch — re-verify the combined tree line by line, run the full local gate suite, then PR → `main`, merge without waiting for approval, confirm GitHub Pages deploys, and record the PR link + merge result here.
+- **File scope (exclusive):** `COORDINATION.md` (this section only, appended per board convention). No other session's file is edited, and no other session's in-progress task is taken over.
+
+## Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| C-1 | Close-out verification of the combined tree (build, line-by-line verification, link/secret/source audit) | done | arena/559f93df-demo1 | `COORDINATION.md` (this section) | `build_site.py`, `tools/verify_site.py`, `tools/check-links.mjs` | `python3 build_site.py` → `built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10 pruned=0; link check: OK`. `python3 tools/verify_site.py` → `verification status: PASS`, rows checked markets=250 resolved=250 topics=600 liquidity=48 index-figures=10, errors=0 warnings=2 (informational: section-level liquidity source link; external official settlement sources listed). `node tools/check-links.mjs` → PASS, 444 files scanned, html links checked, source-link audit on 11 pages, no broken links, no secret material | none new |
+| C-2 | PR → `main`, merge without waiting for approval, confirm GitHub Pages deploys | in progress | arena/559f93df-demo1 | GitHub PR/merge + Pages API | https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages | See publish record below | — |
+| C-3 | Record sources, verification, irregularities and links for manual review | in progress | arena/559f93df-demo1 | `COORDINATION.md` (this section) | official docs listed below | See record below | — |
+
+## Official sources re-confirmed this session (docs.kalshi.com, the host named in the brief)
+
+- Demo REST (recommended): `https://external-api.demo.kalshi.co/trade-api/v2` (also supported: `https://demo-api.kalshi.co/trade-api/v2`)
+- Demo WebSocket: `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`)
+- https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/demo_env (demo = mock funds; prices/behavior may not reflect real markets)
+- https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (`period_interval` ∈ {1, 60, 1440} minutes)
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/getting_started/orderbook_responses (bids only; YES bid x ⇔ NO ask 1.00 − x)
+- https://docs.kalshi.com/getting_started/market_lifecycle
+- https://docs.kalshi.com/getting_started/market_settlement ($1 per winning contract; YES/NO result)
+- https://docs.kalshi.com/getting_started/api_keys (signed requests: KALSHI-ACCESS-KEY/SIGNATURE/TIMESTAMP)
+- https://docs.kalshi.com/api-reference/orders/create-order-v2 (POST /portfolio/events/orders; legacy /portfolio/orders → 410 Gone)
+- https://docs.kalshi.com/api-reference/portfolio/get-balance · /get-positions · /get-fills
+- https://docs.kalshi.com/getting_started/quick_start_websockets (WS handshake requires authentication → public static site polls REST)
+- https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+
+## Verification performed this session (all green)
+
+| Gate | Command | Result |
+|---|---|---|
+| Site build + link gate | `python3 build_site.py` | built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10; link check: OK |
+| Line-by-line verification | `python3 tools/verify_site.py` | PASS; 0 errors; 2 informational warnings (never inferred values) |
+| Link / secret / source audit | `node tools/check-links.mjs` | PASS; 444 files; no broken links; no secret material |
+
+## Irregularities (non-blocking; already published on the site's Flagged-for-Review pages — no new code change, none block merge)
+
+1. **No demo API key in the repo or environment.** Portfolio balance/positions/fills and order placement require authenticated signed requests; those cells are blank and flagged, never inferred. A static GitHub Pages site must never hold a private key.
+2. **Demo venue only.** Values are mock-funds demo-book values, not production liquidity (official demo_env warning).
+3. **"Highest dollar amount" is not an official field.** Ranking uses computed 24 h traded notional / est. USD activity, disclosed per row, never presented as an official dollar-volume figure.
+4. **Topic matching is heuristic** (published keyword rules over series tickers/tags), not an official Kalshi taxonomy.
+5. **Site fragmentation** — several dashboard variants coexist (root, `site/`, `exec-desk/`, `desk/`, `engine/`, `sim-desk/`, `tape-desk/`, `alert-desk/`, `alerts/`, `trade-desk/`, `live-desk/`, `monitor/`, `verified-desk/`, `strategy-desk/`, `docs/`); the root landing links all of them. Consolidation is the repo owner's call, logged as a suggestion, not forced here.
+6. **Sandbox egress** is restricted to github.com / npm / pypi; `*.kalshi.co` is not reachable from bash. Live Kalshi values were not re-fetched from the shell this session; every rendered value carries its source request URL from the committed, logged official snapshot. Browser→API CORS was evidenced by earlier sessions via `data/cors.json` and deployed desks.
+
+## Links provided for manual review
+
+- Live site (landing): https://karagemop466-tech.github.io/Demo1/
+- Executive summary (root): https://karagemop466-tech.github.io/Demo1/executive-summary.html
+- Executive summary (integration): https://karagemop466-tech.github.io/Demo1/integration/executive-summary.html
+- Five topic pages: `site/gas-prices.html`, `site/elections.html`, `site/culture.html`, `site/crypto.html`, `site/golf.html`
+- Live desk + price graph (time axis, s/m/h windows) + liquidity: `site/liquidity.html`, `exec-desk/dashboard.html`
+- Dual scrolling-chat alert feeds (≥ $0.10, all events + high-ROI filter): https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html
+- Price jumps (≥ $0.10 with event + venue links): `exec-desk/jumps.html`, `pages/price-jumps.html`
+- Resolved events (YES/NO): `site/resolved.html`
+- Simulated trades / strategies: `sim-desk/index.html`, `engine/strategy.html`
+- Portfolio (demo account, credential-gated): `site/portfolio.html`
+- Suggestions: `site/suggestions.html`; Questions: `site/questions.html`
+- Flagged for Review: https://karagemop466-tech.github.io/Demo1/integration/flagged-review.html
+- Line-by-line verification: https://karagemop466-tech.github.io/Demo1/site/verification.html
+- Sources: https://karagemop466-tech.github.io/Demo1/site/sources.html
+- Trader's guide: https://karagemop466-tech.github.io/Demo1/trader-guide/index.html
+- Open PR owned by another session (not touched here): https://github.com/karagemop466-tech/Demo1/pull/88
+
+## Publish record — session arena/559f93df-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | pending (created after this claim commit) |
+| Merge result | pending |
+| GitHub Pages deploy | pending |
+| Live verification | pending |
+
+### Claim log
+
+| Date/time (UTC) | Session ID | Action |
+|---|---|---|
+| 2026-11-21 | arena/559f93df-demo1 | Claimed close-out scope C-1..C-3; claim committed and pushed before implementation (this section). |
