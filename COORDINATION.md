@@ -2396,3 +2396,9 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 | Date/time (UTC) | Session ID | Action |
 |---|---|---|
 | 2026-11-21 | arena/559f93df-demo1 | Claimed close-out scope C-1..C-3; claim committed and pushed before implementation (this section). |
+## Session arena/f64b0e24-demo1 — scheduled data pipeline reliability
+
+- Claim time: 2026-11-21T06:35Z. Branch name is platform-fixed, a deviation from the requested session naming convention.
+- **R1 — in progress:** investigate and, if reproducible and safely correctable, repair the failed scheduled engine and desk workflows. Scope: `.github/workflows/engine-refresh.yml`, `.github/workflows/desk.yml`, directly related tests if necessary, and this section of `COORDINATION.md`. Prior ownership was completed; no open PRs were listed at claim time. No other implementation files will be edited without a new claim.
+- **R2 — in progress:** report verified release limitations on the existing `flagged.html` page (additive section only) and record verification, PR, merge and Pages status here. Source: GitHub Actions run/job API, official GitHub Actions and Pages documentation, and official Kalshi API documentation. Investigations and changes will distinguish observed failures from unverified hypotheses.
+- Initial evidence: GitHub API listed engine refresh run 44858037385 and desk run 44857400562 as failed at `de7b8c0`; the latest Pages build of the same commit reported `built`. The sandbox cannot access the Actions log download host; job API and workflow definitions will be used instead.
