@@ -152,7 +152,7 @@ async function pollSelected() {
     ]);
     const mk = (m && m.market) || {};
     const px = firstNum(mk.last_price, mk.last_price_dollars);
-    S.ticks.push({ t: Math.floor(Date.now() / 1000), price: px,
+    S.ticks.push({ t: Math.floor(Date.now() / 1000), market_ticker: t, price: px,
                    bid: firstNum(mk.yes_bid, mk.yes_bid_dollars),
                    ask: firstNum(mk.yes_ask, mk.yes_ask_dollars) });
     if (S.ticks.length > 4000) S.ticks.splice(0, S.ticks.length - 4000);
@@ -545,37 +545,60 @@ function bucketPoints(pts, unitSec) {
   return out.map((o) => ({ t: o.k, traded: o.traded, mid: (o.bid != null && o.ask != null) ? (o.bid + o.ask) / 2 : null }));
 }
 function pickWindow(spanSec) {
-  // choose the finest captured window that covers the span; fall back to the widest
-  const cand = spanSec <= 6 * 3600 ? ["1m/6h"] : spanSec <= 24 * 3600 ? ["1m/6h", "1h/24h", "1h/7d"]
-    : spanSec <= 7 * 86400 ? ["1h/7d", "1m/6h"] : ["1d/90d", "1h/7d"];
-  return cand;
+  // Do not claim a 6-hour capture covers a 24-hour selection; prefer a captured
+  // window broad enough for the requested interval, then fall back below.
+  if (spanSec <= 6 * 3600) return ["1m/6h", "1h/7d", "1d/90d"];
+  if (spanSec <= 24 * 3600) return ["1h/24h", "1h/7d", "1d/90d"];
+  if (spanSec <= 7 * 86400) return ["1h/7d", "1d/90d"];
+  return ["1d/90d"];
+}
+function hasPrice(p) {
+  return [p.traded, p.bid, p.ask].some((v) => v != null && isFinite(+v));
 }
 function seriesFor() {
   const r = S.sel;
   if (!r) return { pts: [], label: "", src: null, note: "" };
   const cw = candlesFor(r.market_ticker);
   const keys = Object.keys(cw);
-  let chosen = null;
-  for (const k of pickWindow(S.span)) if (cw[k]) { chosen = k; break; }
-  if (!chosen && keys.length) chosen = keys.sort()[0];
+  const snapshotTimes = Object.values(cw).flatMap((w) => (w.rows || [])
+    .filter(hasPrice).map((p) => +p.t).filter(Number.isFinite));
+  const snapshotAsOf = snapshotTimes.length ? Math.max(...snapshotTimes) : null;
+  const relevantTicks = (S.ticks || []).filter((t) => t.market_ticker === r.market_ticker
+    && t.price != null && isFinite(+t.t));
+  const latestLiveTick = relevantTicks.length ? Math.max(...relevantTicks.map((t) => +t.t)) : null;
+  // A static snapshot is a point-in-time record. Anchor its chart at the latest
+  // captured candle instead of wall-clock time, otherwise it disappears after a
+  // day. Once this market has a live sample, anchor at that sample / the live clock.
+  const liveAsOf = latestLiveTick == null ? null
+    : (S.net === "live" ? Math.floor(Date.now() / 1000) : latestLiveTick);
+  const endTime = liveAsOf == null ? (snapshotAsOf == null ? Math.floor(Date.now() / 1000) : snapshotAsOf)
+    : Math.max(snapshotAsOf == null ? 0 : snapshotAsOf, liveAsOf);
+  const cutoff = endTime - S.span;
+  const inWindow = (w) => (w.rows || []).some((p) => p.t >= cutoff && p.t <= endTime && hasPrice(p));
+  const candidates = pickWindow(S.span);
+  let chosen = candidates.find((k) => cw[k] && inWindow(cw[k]));
+  if (!chosen) chosen = candidates.find((k) => cw[k]) || keys.sort()[0] || null;
   const unitSec = S.xunit === "seconds" ? 1 : S.xunit === "minutes" ? 60 : S.xunit === "hours" ? 3600 : 86400;
-  const now = Math.floor(Date.now() / 1000);
-  const cutoff = now - S.span;
   let pts = [];
   let note = "";
   let src = null;
   if (chosen) {
     const w = cw[chosen];
     src = w.source;
-    pts = w.rows.filter((p) => p.t >= cutoff).map((p) => ({ t: p.t, traded: p.traded,
+    const capturedInWindow = inWindow(w);
+    pts = w.rows.filter((p) => p.t >= cutoff && p.t <= endTime && hasPrice(p)).map((p) => ({ t: p.t, traded: p.traded,
       mid: (p.bid != null && p.ask != null) ? +((p.bid + p.ask) / 2).toFixed(4) : null }));
-    note = `captured ${chosen} candles, bucketed to ${S.xunit}`;
+    note = capturedInWindow ? `captured ${chosen} candles, bucketed to ${S.xunit}`
+      : `no captured ${chosen} candles in this selected window`;
+    if (latestLiveTick == null && snapshotAsOf != null && capturedInWindow) {
+      note += ` · snapshot as of ${new Date(snapshotAsOf * 1000).toISOString().slice(0, 16)}Z`;
+    }
     if (S.xunit === "seconds" && pts.length) {
       note = "1-minute candles cannot resolve seconds — seconds mode shows the client-sampled ticks below";
       pts = [];
     }
   }
-  const liveTicks = S.ticks.filter((t) => t.t >= cutoff && t.price != null)
+  const liveTicks = relevantTicks.filter((t) => t.t >= cutoff && t.t <= endTime)
     .map((t) => ({ t: t.t, traded: t.price, mid: (t.bid != null && t.ask != null) ? (t.bid + t.ask) / 2 : null }));
   pts = pts.concat(liveTicks).sort((a, b) => a.t - b.t);
   pts = bucketPoints(pts, unitSec);
@@ -616,7 +639,8 @@ function drawChart() {
   const pad = Math.max(0.02, (y1 - y0) * 0.12);
   y0 = Math.max(0, y0 - pad); y1 = Math.min(1, y1 + pad);
   if (y1 - y0 < 0.04) { y0 = Math.max(0, y0 - 0.02); y1 = Math.min(1, y1 + 0.02); }
-  const x0 = Math.min(...xs), x1 = Math.max(...xs, x0 + S.xunit === "seconds" ? 60 : 1);
+  const chartUnitSec = S.xunit === "seconds" ? 1 : S.xunit === "minutes" ? 60 : S.xunit === "hours" ? 3600 : 86400;
+  const x0 = Math.min(...xs), x1 = Math.max(...xs, x0 + chartUnitSec);
   const X = (t) => P.l + (W - P.l - P.r) * ((t - x0) / Math.max(1, x1 - x0));
   const Y = (v) => P.t + (H - P.t - P.b) * (1 - (v - y0) / Math.max(1e-9, y1 - y0));
   let g = `<rect width="${W}" height="${H}" fill="#fff"/>`;

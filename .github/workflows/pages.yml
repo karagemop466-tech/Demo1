@@ -26,10 +26,13 @@ on:
 permissions:
   contents: read
 concurrency:
-  # Keyed per event so a push validation cannot cancel a pull-request validation
-  # (and vice versa) when many sessions merge in quick succession; superseded
-  # same-event runs still cancel, which is the wanted newest-commit behavior.
-  group: pages-validation-${{ github.event_name }}
+  # Keyed per event AND per ref, so one branch's validation cannot cancel another's.
+  # Previously the pull_request group was shared by every PR: on 2026-11-21 an
+  # unrelated session's push cancelled this PR's validation and the cancelled run was
+  # reported as a failed `build` check ("Canceling since a higher priority waiting
+  # request for pages-validation-pull_request exists"). Superseded runs of the SAME ref
+  # still cancel, which is the wanted newest-commit behaviour.
+  group: pages-validation-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   build:

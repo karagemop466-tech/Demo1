@@ -2506,3 +2506,139 @@ Claim log: 2026-11-21T06:40Z — session `arena/2c938c6c-demo1` claimed I-1..I-3
 | DATA-01 | task 20 (`snapshot/`) + `scripts/fetch_demo_data.py` (`data/`) | Reconcile discovery + topic rules, or publish the intended scope of each dataset so counts are comparable. |
 | OPS-05/OPS-06 | workflow owners | Reduce competing committing workflows on `main`, or make the desk/engine commit step `if: always()` so a failed check cannot discard a refresh. |
 | Six parallel ≥$0.10 desks | each desk's session | No action requested: designated primary + directory keeps them all reachable. Any future deletion is an owner decision. |
+
+# Session arena/65f6b764-demo1 — final integration: simplify the landing page and close out current verification
+
+## Session claim
+- **Session ID / fixed branch:** `arena/65f6b764-demo1` (platform-provided; branch will not be renamed).
+- **Claimed:** 2026-11-21 UTC, before implementation.
+- **Basis:** reviewed the existing coordination board; the current branch starts at `origin/main` (`de7b8c0`), and `gh pr list --state open` is empty. Existing feature sessions are recorded as complete. The root landing currently presents six overlapping alert desks and several duplicate navigation links, despite a separate consolidation map; this conflicts with the brief's request for a simple, trader-oriented front door.
+- **Scope (exclusive for this session):** `index.html` and this append-only section of `COORDINATION.md`. This final integration may update the shared landing/navigation now that prior implementation tasks are complete. No market data, strategy engine, account/authentication, or trade-execution code will be changed.
+
+## Task board
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| FI-1 | Simplify root landing and navigation to one primary live desk, five topic pages, simulation, resolutions, portfolio limits, sources and review; retain alternate implementations under a clearly secondary link | **done** | arena/65f6b764-demo1 | `index.html` | Existing official-source register in `SOURCES.md`; source URLs already shown on the linked pages | Landing-page audit: all six methodology rows link to official Kalshi docs; repository build and link checks pass | Existing duplicate desks are retained, not deleted; account trading remains unavailable without user-managed credentials |
+| FI-2 | Re-run repository build, link/source audits and relevant dashboard/simulator tests; publish a final integration PR and confirm merge/Pages status | in progress | arena/65f6b764-demo1 | `COORDINATION.md` and release operations | Kalshi official docs listed in `SOURCES.md`; GitHub Pages API/docs | Local verification gates recorded below; PR creation/merge and post-merge Pages check pending | This sandbox cannot independently access Kalshi endpoints from shell under its network allowlist; no live API values will be claimed as re-verified here |
+
+Claim log: 2026-11-21 — `arena/65f6b764-demo1` claimed FI-1 and FI-2 on the platform-fixed current branch. Claim is pushed before implementation. This session is the final integration owner; no other branch will be created.
+
+### Scope extension — reproduced offline chart defect (claimed before edit)
+
+The closing test gate reproduced two failures in the optional `engine/` desk's offline path: `node engine/test_boot.mjs` reports that the chart has no path and no price-axis labels when the committed candle snapshot is older than the browser's default 6-hour wall-clock window. Its live mocked path passes. The original engine owner (`05e53528`) marked E1–E7 done; there is no open PR or active owner. To complete the requested resilient chart/fallback experience, this final integration session claims the following narrow fix rather than leaving the regression undocumented.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-3 | Make the engine chart render its latest captured history in snapshot mode using the candle timestamps (not current wall time), keep live ticks scoped to the selected ticker, and add regression coverage | **done** | arena/65f6b764-demo1 | `engine/app.js`, `engine/test_boot.mjs`, this board record | Official candlestick reference in `engine/README.md` and `SOURCES.md` | `node engine/test_boot.mjs`: 40/40; `python3 engine/test_engine.py`: 11/11; captured snapshot chart and selected-market tick filter pass | No candle data is retimestamped or presented as live; snapshot badge and source URLs remain authoritative |
+
+Scope extension logged and pushed 2026-11-21 before changing `engine/app.js` or its test.
+
+### Scope extension — row-level order-book source links (claimed before edit)
+
+`python3 tools/verify_site.py` found that the generated `site/liquidity.html` full-ladder table has 36 price-level rows whose official order-book URL appears only below the table, not on each row. That does not meet the brief's row-by-row source-link rule. The earlier `build_site.py` / verifier work is complete, and the two currently open PRs do not edit these files. This final integration session claims a targeted generator + verifier correction.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-4 | Add the exact official order-book request link to every generated full-ladder price row; make the line-by-line verifier check these links and count these rows | **done** | arena/65f6b764-demo1 | `build_site.py`, `tools/verify_site.py`, generated `site/liquidity.html`, `site/verification.html`, `site/verification-report.json`, this board record | `https://docs.kalshi.com/api-reference/market/get-market-orderbook`; committed `snapshot/markets.json` order-book source URLs | Build and verifier pass; 36 full-ladder rows each link to the exact snapshot order-book URL and match its price/contract levels; latest report has 0 errors | One warning: external settlement-reference hosts; no source value is invented |
+
+FI-4 was claimed on 2026-11-21 before editing the generator or verifier; no active PR claims these files.
+
+### Scope extension — add official provenance to flagged classification rows (claimed before verifier edit)
+
+A row-level check of generated `site/flagged.html` showed that the “Topic matches that rest on a ticker or tag” rows exposed only local browse links. Because these are market-series classification records, each row should also link to the official markets request that supplied its series. This is distinct from open PR #88's root `flagged.html` and `verification/**` files; those files will remain untouched.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-5 | Add the exact official markets request to each generated topic-classification row and include all data rows on the snapshot Flagged page in the source-link verifier | **done** | arena/65f6b764-demo1 | `build_site.py`, `tools/verify_site.py`, generated `site/flagged.html`, `site/verification.html`, `site/verification-report.json`, this board record | `https://docs.kalshi.com/api-reference/market/get-markets`; per-market `sources.markets` URLs in `snapshot/markets.json` | Build/verifier pass; all 73 data rows have official sources, all 20 topic rows match their exact source request; mutation test rejects missing/spoofed URLs | One separate warning remains for external official settlement-reference hosts; no event/series membership is inferred beyond the stored topic rule |
+
+FI-5 was claimed on 2026-11-21 before editing the verifier or regenerating `site/flagged.html`. The open PR #88 does not claim these generated `site/` files.
+
+### FI-1–FI-5 implementation and verification closeout (2026-11-21 UTC)
+
+- **Landing page (FI-1):** replaced the crowded root navigation with a primary live desk, topic cards, paper-strategy/resolution entry points, an account/automation status panel, an accessible skip link, and a six-row methodology/source table. Each methodology row links to official Kalshi documentation. Existing alternate desks remain available under a clearly secondary disclosure; they were not deleted or modified.
+- **Chart and source-row fixes (FI-3/FI-4/FI-5):** offline chart history is anchored to captured candle timestamps and labeled with its snapshot time; live samples are tagged and scoped to the selected market. Every full order-book ladder row links to the exact order-book request. Every row on the snapshot Flagged page now has an official Kalshi link; the 20 weak-topic classification rows also link to the exact `/markets?series_ticker=...` request. The verifier enforces row sources, exact snapshot URLs, and full ladder value equality. A deliberate tampering test replaced a source with a spoofed Kalshi-looking hostname; the verifier rejected both the missing official host and the missing exact snapshot URL.
+- **Build and row audit:** `python3 build_site.py` built 17 pages (1,399/1,399 open markets, 2,469/2,469 closed records, 10 chart series, no pruned records) with link check OK. `python3 tools/verify_site.py` PASS: 0 errors, 1 warning; 250 market rows, 250 closed rows, 600 topic rows, 84 depth rows, 73 flagged-page rows, 20 flagged classification rows, and 10 index figures checked. All 36 full-ladder rows match their snapshot prices/contract counts and source URLs.
+- **Regression gates:** `npm test` PASS; Python discovery `python3 -m unittest discover -s tests` 37/37; engine 11/11 and browser boot 40/40; sim desk engine 26/26, schedule 3/3, DOM PASS; consolidated desk DOM 105/105 and runtime 40/40; alerts Python 23/23 and DOM PASS, alert-feed 81/81, dashboard alert tests 23/23; alert-desk 52/52 and boot 35/35; trade desk 45/45, page boot 24/24, links 13/13; tape desk 71/71; ops desk 14/14; verified-desk browser 14/14 and core 34/34; `tests.test_engine_refresh` 4/4. Dashboard DOM and jump suites pass 46/46 and 9/9. `node tools/check-links.mjs` scanned 445 files and passed; `python3 exec-desk/scripts/check_links.py` passed 123 internal links; `python3 -m compileall -q .` and `git diff --check` pass. Existing Python fixtures emit non-failing ResourceWarnings for unclosed temp files.
+- **Sources and scope:** no new live Kalshi API request was made from this sandbox; current site values remain the dated `snapshot/` capture, not a new live verification. Source/link checks use the official Kalshi API references already in `SOURCES.md` and `site/sources.html`, including Get Markets, Get Market Order Book, candlesticks, API environments, lifecycle and order-book response documentation; row-level exact URLs come from `snapshot/markets.json`. Live UI tests use documented, official-shaped mocked payloads. Authenticated portfolio/order activity remains unavailable without user-managed credentials; no credentials were added and no orders were placed.
+- **Irregularities:** 1 informational warning remains for externally hosted settlement references, which are kept separate from Kalshi market-data provenance. The open PR #88 (`arena/b71d695c-demo1`) edits its own root `flagged.html`, `verification/**`, and `COORDINATION.md` work; no files in its implementation scope were changed or merged by this session. PR #95 (`arena/2c938c6c-demo1`) was opened after FI-1 was claimed and its landing-page edits had begun; it also claims canonical navigation/landing and edits `index.html` plus `COORDINATION.md`. Our landing implementation was already in progress before #95 appeared; no code from its branch was copied, and its `assets/common.js`, generators, page directory, reachability guard, tests and workflow were left untouched. At discovery, #95 was `DIRTY` and had no reported checks. Both overlaps are disclosed for careful follow-up; the original integration PR and post-merge Pages check remain pending.
+- **Rebase/preservation:** before publishing, rebased onto `origin/main` at `66ae385`. The append-only `COORDINATION.md` merge conflicted; `tools/resolve_board.py` retained both sections and the rebase completed. The remote branch also had generated audit commit `3332906`; its two generated report files are byte-identical to commit `41a15d9` already in `origin/main` (checksums confirmed), so Git reported an empty cherry-pick and it was skipped without losing unique work.
+
+---
+
+# Session arena/d76440d6-demo1 — CI diagnostics, duplicate-claim corrections, D76 findings
+
+**Branch:** `arena/d76440d6-demo1` (platform-fixed; the `session-<id>/<task>` convention is unavailable —
+recorded as a deviation, as every prior session did). **Base at claim:** `de7b8c0` then `main`.
+
+## Task table
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| CIR-1..CIR-3 | Repair the two red scheduled pipelines (`desk.yml` Node/jsdom mismatch; `engine-refresh.yml` `quote(None)` crash) | **withdrawn — duplicate** | arena/d76440d6-demo1 → handed to arena/f64b0e24-demo1 (PR #92) | none edited | npm registry `jsdom@31.0.1` engines; [Get Event](https://docs.kalshi.com/api-reference/events/get-event); [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks) | Root causes reproduced by annotation: [desk 44876338282](https://github.com/karagemop466-tech/Demo1/actions/runs/44876338282) step 13 green with Node 22; [engine 44876337944](https://github.com/karagemop466-tech/Demo1/actions/runs/44876337944) annotation `TypeError: quote_from_bytes() expected bytes` | Claimed ~06:41Z after `f64b0e24` had claimed the same files at 06:35Z/06:37Z on an **unmerged** branch; its claim was not on `main` and no PR was open yet. My implementation was withdrawn unmerged. |
+| ENG-1 | Engine page chart blank once the committed capture aged past the default span | **withdrawn — duplicate** | arena/d76440d6-demo1 → handed to arena/65f6b764-demo1 (PR #96) | none edited | [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks) | Local repro on `de7b8c0`: `node engine/test_boot.mjs` = 35 passed / 2 failed; capture end 1795153980 (2026-11-20T05:53Z) vs `now` 1795244111, default span 21600 s. On current `main`: **40/40** with the merged fix | Second duplicate of the same session-day: `65f6b764` merged a more thorough fix (snapshot-anchored time, per-market ticks) via #96 while mine was in review. Mine was withdrawn; theirs verified. |
+| REL-D76 | Publish this session's findings on the Flagged for Review page and run the release | done (release confirmation follows) | arena/d76440d6-demo1 | `flagged.html` (additive section), `.github/workflows/pages.yml` (concurrency), this section, PR | GitHub Actions docs (concurrency, scheduled workflows); the run ids below | `node tools/check-links.mjs` PASS; `python3 build_site.py` 17 pages + link check OK; `node engine/test_boot.mjs` 40/40; `python3 engine/test_engine.py` 11/11; `node desk/tools/dom_test.mjs` 105/105; `python3 -m unittest discover -s tests` OK; `npm test` PASS | Checks were repeatedly cancelled by cross-PR concurrency (D76-02) and runner queues were congested by concurrent sessions; both recorded rather than hidden |
+
+## Shipped in this session's PR
+
+- **`.github/workflows/pages.yml`** — validation `concurrency.group` is now keyed per pull request / ref. Before: every PR shared
+  `pages-validation-pull_request`, so a concurrent session's push cancelled this PR's deploy validation and the cancelled run was
+  reported as a failed `build` check ([run 44878053686](https://github.com/karagemop466-tech/Demo1/actions/runs/44878053686)).
+- **`flagged.html`** — new additive section *CI diagnostics — session d76440d6* with D76-01..D76-05, each row carrying its source link.
+- **This board record.**
+
+## Verification evidence (all re-run on the rebased head)
+
+| Check | Result |
+|---|---|
+| `node engine/test_boot.mjs` | 40/40 (0 failed) — `main`'s merged chart fix |
+| `python3 engine/test_engine.py` | 11/11 |
+| `node desk/tools/dom_test.mjs` | 105/105 |
+| `python3 -m unittest discover -s tests -p 'test_*.py'` | OK (37 tests) |
+| `npm test` | ALL ASSERTIONS PASSED |
+| `python3 build_site.py` | 17 pages, link check OK |
+| `node tools/check-links.mjs` | PASS (444 files) |
+| `python3 tools/verify_site.py` | 0 errors, 2 pre-existing informational warnings |
+| `python3 exec-desk/scripts/check_links.py` | 123 internal links OK |
+| YAML parse (`yaml.safe_load`) on modified workflow | OK |
+| Live site (`fetch_page`) | `engine/` renders 60 markets across 5 topics with per-row API sources; `flagged.html`/`index.html` reachable |
+
+## Data-shape verification worth keeping
+
+The captured official response in `verified-desk/data/snapshot.json` proves candlesticks are **nested**
+(`candlesticks[].end_period_ts`, `price.close_dollars`, `yes_bid.close_dollars`, `yes_ask.close_dollars`, `volume_fp`).
+Before PR #92, `tools/engine_refresh.py` read flat `price_close_dollars`/`time`, so every live candle point it wrote was empty.
+Every other candle reader in the repo already used the nested shape (`app.js`, `assets/dashboard.js`, `assets/js/kalshi-core.js`,
+`assets/js/price-jumps.js`, `alerts/assets/alerts.js`, `assets/alerts-app.js`, `assets/js/demo-live.js`,
+`assets/js/paper-trading.js`); `scripts/fetch_kalshi_data.py` reads `close_dollars` with a flat fallback.
+
+## Process corrections recorded (not just fixed in passing)
+
+1. **Overlap check must read unmerged branches.** Claims are pushed to `arena/*` branches; reading only `main`'s board and the
+   open-PR list missed two earlier claims on the same day. Future sessions: `git fetch` and grep `COORDINATION.md` on every
+   non-merged `arena/*` branch before claiming.
+2. **Cancelled ≠ failed.** A cancelled workflow run is displayed as a failed check by the PR checks API; D76-02 makes that state
+   much less likely, but reviewers should read the annotation before treating a red `build` as a code failure.
+3. **Board conflicts** (3 occurrences) were resolved by keeping both sides in full; no sibling work was discarded.
+
+No Kalshi credentials exist in this repository; no order was placed and no portfolio figure is asserted.
+
+## Release confirmation — session arena/d76440d6-demo1
+
+- **PR:** [#97](https://github.com/karagemop466-tech/Demo1/pull/97) — "ci(pages): scope validation concurrency per ref;
+  publish D76 findings; record session handoffs".
+- **Checks before merge:** `build` (Pages deploy validation) **pass**, `audit` **pass**, `check` **pass**,
+  `links` **pass**; `fetch` (data pipeline, not a site gate) was still queued on the runner backlog. Local
+  equivalents were re-run on the merge base and are listed in the task table above.
+- **Merge:** **MERGED** `--merge` at **2026-11-21T07:29:09Z**, merge commit
+  **`0d177a2d8afdaf2dbde1d1c4291107016a4acc5f`**.
+- **Pages:** confirmed by fetching the deployed page with a cache-busting query —
+  <https://karagemop466-tech.github.io/Demo1/flagged.html?release=0d177a2> serves the new
+  *CI diagnostics — session d76440d6* section with D76-01..D76-05 and their source links, which can only come
+  from this merge. The engine page
+  <https://karagemop466-tech.github.io/Demo1/engine/> renders 60 markets across the five topics with per-row
+  official API sources and the merged "snapshot as of …" chart.
+- **Not verified, stated plainly:** the cron *trigger* for `engine-refresh` had not fired again after the
+  pipeline repair (the pipeline's main path itself is proven, including its publish step). The GitHub REST API
+  was rate-limited for part of this session, so a couple of run-status checks were replaced by live-page
+  verification; nothing was inferred in their place.
+- **Session tasks:** CIR-1..CIR-3 and ENG-1 **withdrawn as duplicates** (see the table); REL-D76 **done**.

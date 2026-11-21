@@ -18,12 +18,14 @@
     "topic_culture_rows_checked": 120,
     "topic_crypto_rows_checked": 120,
     "topic_golf_rows_checked": 120,
-    "liquidity_rows_checked": 48,
+    "liquidity_rows_checked": 84,
+    "liquidity_ladder_rows_checked": 36,
+    "flagged_rows_checked": 73,
+    "flagged_topic_rows_checked": 20,
     "index_figures_checked": 10
   },
   "errors": [],
   "warnings": [
-    "liquidity.html: 36 full-ladder rows carry a section-level order-book source link rather than a per-row link",
     "external OFFICIAL settlement sources referenced (from the markets' settlement_sources): gasprices.aaa.com, www.cfbenchmarks.com, www.espn.com, www.foxsports.com, www.netflix.com, www.oscars.org, www.pgatour.com, www.rottentomatoes.com, www.theice.com"
   ],
   "settlement_source_hosts": [
