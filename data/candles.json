@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-21T00:48:29Z",
+ "fetched_at": "2026-11-21T07:57:21Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/{series}/markets/{ticker}/candlesticks",
  "series": []
 }

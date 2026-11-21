@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-21T00:48:29Z",
+ "fetched_at": "2026-11-21T07:57:21Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}/orderbook",
  "orderbooks": {
   "KXMVECROSSCATEGORY-S2026NL5E4C3RWIJXOI2Y-QYBZGJYIF": {
@@ -11,7 +11,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:10Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026NL5E4C3RWIJXOI2Y-QYBZGJYIF/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -19,53 +19,11 @@
    "ticker": "KXAAAGASD-26NOV21-3.6600",
    "title": "Will average **gas prices** be above $3.6600?",
    "topic": "gas",
-   "yes_bids": [
-    [
-     "0.0100",
-     "20.00"
-    ],
-    [
-     "0.1500",
-     "25.00"
-    ],
-    [
-     "0.1600",
-     "25.00"
-    ],
-    [
-     "0.1700",
-     "6.00"
-    ],
-    [
-     "0.1900",
-     "877.19"
-    ],
-    [
-     "0.2000",
-     "833.33"
-    ],
-    [
-     "0.2100",
-     "781.65"
-    ]
-   ],
-   "no_bids": [
-    [
-     "0.7400",
-     "641.02"
-    ],
-    [
-     "0.7500",
-     "666.66"
-    ],
-    [
-     "0.7600",
-     "694.44"
-    ]
-   ],
-   "yes_bid_depth_usd": 506.4486,
-   "no_bid_depth_usd": 1502.1242,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "yes_bids": [],
+   "no_bids": [],
+   "yes_bid_depth_usd": 0,
+   "no_bid_depth_usd": 0,
+   "fetched_at": "2026-11-21T07:57:10Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -74,100 +32,95 @@
    "title": "Will Diesel Price on November 21, 2026 be above $5.860?",
    "topic": "gas",
    "yes_bids": [],
-   "no_bids": [
-    [
-     "0.0200",
-     "1.00"
-    ]
-   ],
+   "no_bids": [],
    "yes_bid_depth_usd": 0,
-   "no_bid_depth_usd": 0.02,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "no_bid_depth_usd": 0,
+   "fetched_at": "2026-11-21T07:57:10Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV21-T5.860/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T85.49": {
-   "ticker": "KXWTI-26NOV2014-T85.49",
-   "title": "Will the WTI crude oil settlement price be above 85.49 USD/Bbl on Nov 20, 2026?",
+  "KXAAAGASD-26NOV21-3.6550": {
+   "ticker": "KXAAAGASD-26NOV21-3.6550",
+   "title": "Will average **gas prices** be above $3.6550?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T85.49/orderbook",
+   "fetched_at": "2026-11-21T07:57:10Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6550/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T74.49": {
-   "ticker": "KXWTI-26NOV2014-T74.49",
-   "title": "Will the WTI crude oil settlement price be above 74.49 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T89.99": {
+   "ticker": "KXWTI-26NOV2414-T89.99",
+   "title": "Will the WTI crude oil settlement price be above 89.99 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T74.49/orderbook",
+   "fetched_at": "2026-11-21T07:57:10Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T89.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T85.99": {
-   "ticker": "KXWTI-26NOV2014-T85.99",
-   "title": "Will the WTI crude oil settlement price be above 85.99 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T89.49": {
+   "ticker": "KXWTI-26NOV2414-T89.49",
+   "title": "Will the WTI crude oil settlement price be above 89.49 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T85.99/orderbook",
+   "fetched_at": "2026-11-21T07:57:11Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T89.49/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T75.49": {
-   "ticker": "KXWTI-26NOV2014-T75.49",
-   "title": "Will the WTI crude oil settlement price be above 75.49 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T88.99": {
+   "ticker": "KXWTI-26NOV2414-T88.99",
+   "title": "Will the WTI crude oil settlement price be above 88.99 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T75.49/orderbook",
+   "fetched_at": "2026-11-21T07:57:11Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T88.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T86.49": {
-   "ticker": "KXWTI-26NOV2014-T86.49",
-   "title": "Will the WTI crude oil settlement price be above 86.49 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T88.49": {
+   "ticker": "KXWTI-26NOV2414-T88.49",
+   "title": "Will the WTI crude oil settlement price be above 88.49 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T86.49/orderbook",
+   "fetched_at": "2026-11-21T07:57:11Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T88.49/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T83.49": {
-   "ticker": "KXWTI-26NOV2014-T83.49",
-   "title": "Will the WTI crude oil settlement price be above 83.49 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T87.99": {
+   "ticker": "KXWTI-26NOV2414-T87.99",
+   "title": "Will the WTI crude oil settlement price be above 87.99 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T83.49/orderbook",
+   "fetched_at": "2026-11-21T07:57:11Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T87.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXWTI-26NOV2014-T75.99": {
-   "ticker": "KXWTI-26NOV2014-T75.99",
-   "title": "Will the WTI crude oil settlement price be above 75.99 USD/Bbl on Nov 20, 2026?",
+  "KXWTI-26NOV2414-T87.49": {
+   "ticker": "KXWTI-26NOV2414-T87.49",
+   "title": "Will the WTI crude oil settlement price be above 87.49 USD/Bbl on Nov 24, 2026?",
    "topic": "gas",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2014-T75.99/orderbook",
+   "fetched_at": "2026-11-21T07:57:12Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T87.49/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
   "KXSENATECHILE-25-UNIDAD": {
@@ -178,7 +131,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:12Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATECHILE-25-UNIDAD/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -190,7 +143,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:12Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATECHILE-25-VAMOS/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -202,7 +155,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:12Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-UNIDAD/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -214,7 +167,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:12Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-VAMOS/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -226,7 +179,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:25Z",
+   "fetched_at": "2026-11-21T07:57:13Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JKAS/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -238,7 +191,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:13Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-MOMI/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -250,7 +203,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:13Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEPUTIESCHILE-25-CPC/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -262,7 +215,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:13Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JKAI/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -274,7 +227,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:14Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-JJAR/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -286,20 +239,8 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:14Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESCHILER1-25NOV16-HNIC/orderbook",
-   "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
-  },
-  "KXMVECROSSCATEGORY-S2026UUIVIRZ57JEMMY6K-NIWSN5DQ7": {
-   "ticker": "KXMVECROSSCATEGORY-S2026UUIVIRZ57JEMMY6K-NIWSN5DQ7",
-   "title": "yes Indiana St.,yes East Carolina",
-   "topic": "culture",
-   "yes_bids": [],
-   "no_bids": [],
-   "yes_bid_depth_usd": 0,
-   "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026UUIVIRZ57JEMMY6K-NIWSN5DQ7/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
   "KXGRAMMYNOMROTY-QA7CECC5-QA": {
@@ -319,7 +260,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 5.8,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:14Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMMYNOMROTY-QA7CECC5-QA/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -331,7 +272,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:14Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-TRE/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -343,7 +284,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:14Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-TIE/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -355,7 +296,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:15Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-NOP/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -367,7 +308,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:15Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-HEA/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -379,7 +320,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:15Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-FRO/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -391,7 +332,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:15Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGRAMBRG-68-BLX/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -403,54 +344,49 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
+   "fetched_at": "2026-11-21T07:57:16Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLRETURN-27JANNYGMNABERS1-10/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXFEATURE-26GTA6SCORE-TAY": {
-   "ticker": "KXFEATURE-26GTA6SCORE-TAY",
-   "title": "Will Taylor Swift be featured on Grand Theft Auto VI: The Original Score?",
+  "KXARTISTSTREAMSY-SWIFT26DEC31-32.5B": {
+   "ticker": "KXARTISTSTREAMSY-SWIFT26DEC31-32.5B",
+   "title": "Will Taylor Swift have 32500000000 Streams on Luminate during January 01 - December 31, 2026?",
    "topic": "culture",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:26Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXFEATURE-26GTA6SCORE-TAY/orderbook",
+   "fetched_at": "2026-11-21T07:57:16Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXARTISTSTREAMSY-SWIFT26DEC31-32.5B/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXDEMOFUTHOURLY-26NOV21H01-UP": {
-   "ticker": "KXDEMOFUTHOURLY-26NOV21H01-UP",
-   "title": "Demo BTC at or above 58814.99 USD",
-   "topic": "crypto",
-   "yes_bids": [
-    [
-     "0.0100",
-     "11.00"
-    ]
-   ],
-   "no_bids": [
-    [
-     "0.0100",
-     "1.00"
-    ]
-   ],
-   "yes_bid_depth_usd": 0.11,
-   "no_bid_depth_usd": 0.01,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H01-UP/orderbook",
-   "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
-  },
-  "KXBTC15M-26NOV201845-45": {
-   "ticker": "KXBTC15M-26NOV201845-45",
-   "title": "BTC price up in next 15 mins?",
-   "topic": "crypto",
+  "KXARTISTSTREAMSY-SWIFT26DEC31-32.0B": {
+   "ticker": "KXARTISTSTREAMSY-SWIFT26DEC31-32.0B",
+   "title": "Will Taylor Swift have 32000000000 Streams on Luminate during January 01 - December 31, 2026?",
+   "topic": "culture",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV201845-45/orderbook",
+   "fetched_at": "2026-11-21T07:57:16Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXARTISTSTREAMSY-SWIFT26DEC31-32.0B/orderbook",
+   "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
+  },
+  "KXDEMOFUTHOURLY-26NOV21H08-UP": {
+   "ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "title": "Demo BTC at or above 57962.02 USD",
+   "topic": "crypto",
+   "yes_bids": [
+    [
+     "0.0100",
+     "10.00"
+    ]
+   ],
+   "no_bids": [],
+   "yes_bid_depth_usd": 0.1,
+   "no_bid_depth_usd": 0,
+   "fetched_at": "2026-11-21T07:57:16Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
   "KXNFLTD-26NOV15KCATL-KCKWALKER9-2": {
@@ -461,7 +397,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:16Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-2/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -473,7 +409,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:17Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-1/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -485,68 +421,468 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:17Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXNFLTD-26NOV15KCATL-KCKWALKER9-3/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXMVECROSSCATEGORY-S2026WAYK6Z3VPUJ262RG-GQVNOGHEQ": {
-   "ticker": "KXMVECROSSCATEGORY-S2026WAYK6Z3VPUJ262RG-GQVNOGHEQ",
-   "title": "yes Bethune-Cookman,yes Coastal Carolina",
+  "KXBTC15M-26NOV210300-00": {
+   "ticker": "KXBTC15M-26NOV210300-00",
+   "title": "BTC price up in next 15 mins?",
    "topic": "crypto",
-   "yes_bids": [],
-   "no_bids": [],
-   "yes_bid_depth_usd": 0,
-   "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026WAYK6Z3VPUJ262RG-GQVNOGHEQ/orderbook",
+   "yes_bids": [
+    [
+     "0.0100",
+     "114.00"
+    ],
+    [
+     "0.0200",
+     "60.00"
+    ],
+    [
+     "0.0300",
+     "50.00"
+    ],
+    [
+     "0.0400",
+     "50.00"
+    ],
+    [
+     "0.0500",
+     "103.00"
+    ],
+    [
+     "0.0600",
+     "50.00"
+    ],
+    [
+     "0.0700",
+     "25.00"
+    ],
+    [
+     "0.1200",
+     "30.00"
+    ],
+    [
+     "0.1300",
+     "30.00"
+    ]
+   ],
+   "no_bids": [
+    [
+     "0.0100",
+     "50.00"
+    ],
+    [
+     "0.0200",
+     "60.00"
+    ],
+    [
+     "0.0300",
+     "50.00"
+    ],
+    [
+     "0.0400",
+     "50.00"
+    ],
+    [
+     "0.0500",
+     "50.00"
+    ],
+    [
+     "0.0600",
+     "50.00"
+    ],
+    [
+     "0.0700",
+     "50.00"
+    ],
+    [
+     "0.0800",
+     "50.00"
+    ],
+    [
+     "0.0900",
+     "50.00"
+    ],
+    [
+     "0.1000",
+     "50.00"
+    ],
+    [
+     "0.1100",
+     "50.00"
+    ],
+    [
+     "0.1200",
+     "50.00"
+    ],
+    [
+     "0.1300",
+     "50.00"
+    ],
+    [
+     "0.1400",
+     "50.00"
+    ],
+    [
+     "0.1500",
+     "50.00"
+    ],
+    [
+     "0.1600",
+     "50.00"
+    ],
+    [
+     "0.1700",
+     "50.00"
+    ],
+    [
+     "0.1800",
+     "50.00"
+    ],
+    [
+     "0.1900",
+     "50.00"
+    ],
+    [
+     "0.2000",
+     "50.00"
+    ],
+    [
+     "0.2100",
+     "50.00"
+    ],
+    [
+     "0.2200",
+     "50.00"
+    ],
+    [
+     "0.2300",
+     "50.00"
+    ],
+    [
+     "0.2400",
+     "50.00"
+    ],
+    [
+     "0.2500",
+     "50.00"
+    ],
+    [
+     "0.2600",
+     "50.00"
+    ],
+    [
+     "0.2700",
+     "50.00"
+    ],
+    [
+     "0.2800",
+     "50.00"
+    ],
+    [
+     "0.2900",
+     "50.00"
+    ],
+    [
+     "0.3000",
+     "50.00"
+    ],
+    [
+     "0.3100",
+     "50.00"
+    ],
+    [
+     "0.3200",
+     "50.00"
+    ],
+    [
+     "0.3300",
+     "50.00"
+    ],
+    [
+     "0.3400",
+     "50.00"
+    ],
+    [
+     "0.3500",
+     "50.00"
+    ],
+    [
+     "0.3600",
+     "50.00"
+    ],
+    [
+     "0.3700",
+     "50.00"
+    ],
+    [
+     "0.3800",
+     "50.00"
+    ],
+    [
+     "0.3900",
+     "50.00"
+    ],
+    [
+     "0.4000",
+     "50.00"
+    ],
+    [
+     "0.4100",
+     "50.00"
+    ],
+    [
+     "0.4200",
+     "50.00"
+    ],
+    [
+     "0.4300",
+     "50.00"
+    ],
+    [
+     "0.4400",
+     "50.00"
+    ],
+    [
+     "0.4500",
+     "50.00"
+    ],
+    [
+     "0.4600",
+     "50.00"
+    ],
+    [
+     "0.4700",
+     "50.00"
+    ],
+    [
+     "0.4800",
+     "50.00"
+    ],
+    [
+     "0.4900",
+     "50.00"
+    ],
+    [
+     "0.5000",
+     "50.00"
+    ],
+    [
+     "0.5100",
+     "50.00"
+    ],
+    [
+     "0.5200",
+     "50.94"
+    ],
+    [
+     "0.5300",
+     "50.00"
+    ],
+    [
+     "0.5400",
+     "50.00"
+    ],
+    [
+     "0.5500",
+     "50.00"
+    ],
+    [
+     "0.5600",
+     "93.88"
+    ],
+    [
+     "0.5700",
+     "50.00"
+    ],
+    [
+     "0.5800",
+     "50.00"
+    ],
+    [
+     "0.5900",
+     "50.00"
+    ],
+    [
+     "0.6000",
+     "50.00"
+    ],
+    [
+     "0.6100",
+     "50.00"
+    ],
+    [
+     "0.6200",
+     "50.00"
+    ],
+    [
+     "0.6300",
+     "50.00"
+    ],
+    [
+     "0.6400",
+     "50.00"
+    ],
+    [
+     "0.6500",
+     "50.00"
+    ],
+    [
+     "0.6600",
+     "50.00"
+    ],
+    [
+     "0.6700",
+     "50.00"
+    ],
+    [
+     "0.6800",
+     "50.00"
+    ],
+    [
+     "0.6900",
+     "50.00"
+    ],
+    [
+     "0.7000",
+     "52.00"
+    ],
+    [
+     "0.7100",
+     "50.00"
+    ],
+    [
+     "0.7200",
+     "50.00"
+    ],
+    [
+     "0.7300",
+     "50.00"
+    ],
+    [
+     "0.7400",
+     "50.00"
+    ],
+    [
+     "0.7500",
+     "50.00"
+    ],
+    [
+     "0.7600",
+     "50.00"
+    ],
+    [
+     "0.7700",
+     "50.00"
+    ],
+    [
+     "0.7800",
+     "50.00"
+    ],
+    [
+     "0.7900",
+     "50.00"
+    ],
+    [
+     "0.8000",
+     "50.00"
+    ],
+    [
+     "0.8100",
+     "50.00"
+    ],
+    [
+     "0.8200",
+     "50.00"
+    ],
+    [
+     "0.8300",
+     "50.00"
+    ],
+    [
+     "0.8400",
+     "80.00"
+    ],
+    [
+     "0.8500",
+     "80.00"
+    ]
+   ],
+   "yes_bid_depth_usd": 23.24,
+   "no_bid_depth_usd": 1904.8616,
+   "fetched_at": "2026-11-21T07:57:17Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV210300-00/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXMVECROSSCATEGORY-S2026YFAMA2RFNVKMJVRB-YUFCM5GC7": {
-   "ticker": "KXMVECROSSCATEGORY-S2026YFAMA2RFNVKMJVRB-YUFCM5GC7",
-   "title": "yes Bethune-Cookman,yes Penn St.",
+  "KXBTCD-26NOV2103-T58299.99": {
+   "ticker": "KXBTCD-26NOV2103-T58299.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
    "topic": "crypto",
-   "yes_bids": [],
+   "yes_bids": [
+    [
+     "0.1400",
+     "6.00"
+    ]
+   ],
    "no_bids": [],
-   "yes_bid_depth_usd": 0,
+   "yes_bid_depth_usd": 0.84,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026YFAMA2RFNVKMJVRB-YUFCM5GC7/orderbook",
+   "fetched_at": "2026-11-21T07:57:17Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2103-T58299.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXMVECROSSCATEGORY-S2026RITCLYV5DNZHVCPX-TJ6SZF2RO": {
-   "ticker": "KXMVECROSSCATEGORY-S2026RITCLYV5DNZHVCPX-TJ6SZF2RO",
-   "title": "yes Soles de Mexicali,yes Boston College",
+  "KXBTCD-26NOV2117-T56999.99": {
+   "ticker": "KXBTCD-26NOV2117-T56999.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
    "topic": "crypto",
-   "yes_bids": [],
+   "yes_bids": [
+    [
+     "0.1800",
+     "5.00"
+    ]
+   ],
    "no_bids": [],
-   "yes_bid_depth_usd": 0,
+   "yes_bid_depth_usd": 0.9,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026RITCLYV5DNZHVCPX-TJ6SZF2RO/orderbook",
+   "fetched_at": "2026-11-21T07:57:17Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2117-T56999.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXMVECROSSCATEGORY-S2026FDDU64QG2ZEHJIMF-HTS4C3ZPW": {
-   "ticker": "KXMVECROSSCATEGORY-S2026FDDU64QG2ZEHJIMF-HTS4C3ZPW",
-   "title": "yes Sacred Heart,yes Bethune-Cookman",
+  "KXBTCD-26NOV2117-T57999.99": {
+   "ticker": "KXBTCD-26NOV2117-T57999.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
    "topic": "crypto",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S2026FDDU64QG2ZEHJIMF-HTS4C3ZPW/orderbook",
+   "fetched_at": "2026-11-21T07:57:18Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2117-T57999.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
-  "KXMVECROSSCATEGORY-S20262BZ2F6AS2VX7NDKK-XEWGQVMYK": {
-   "ticker": "KXMVECROSSCATEGORY-S20262BZ2F6AS2VX7NDKK-XEWGQVMYK",
-   "title": "yes Bethune-Cookman,yes Southern Illinois",
+  "KXBTCD-26NOV2117-T57749.99": {
+   "ticker": "KXBTCD-26NOV2117-T57749.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
    "topic": "crypto",
    "yes_bids": [],
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXMVECROSSCATEGORY-S20262BZ2F6AS2VX7NDKK-XEWGQVMYK/orderbook",
+   "fetched_at": "2026-11-21T07:57:18Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2117-T57749.99/orderbook",
+   "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
+  },
+  "KXBTCD-26NOV2117-T58249.99": {
+   "ticker": "KXBTCD-26NOV2117-T58249.99",
+   "title": "Bitcoin price on Nov 21, 2026?",
+   "topic": "crypto",
+   "yes_bids": [],
+   "no_bids": [],
+   "yes_bid_depth_usd": 0,
+   "no_bid_depth_usd": 0,
+   "fetched_at": "2026-11-21T07:57:18Z",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCD-26NOV2117-T58249.99/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
   "KXPGAR2LEAD-THRC26-MTHO": {
@@ -557,7 +893,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:18Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-MTHO/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -569,7 +905,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:19Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-KMIT/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -581,7 +917,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:19Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-MMCN/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -593,7 +929,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:19Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-CKIR/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -605,7 +941,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:27Z",
+   "fetched_at": "2026-11-21T07:57:19Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-MGRE/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -617,7 +953,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:28Z",
+   "fetched_at": "2026-11-21T07:57:19Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-SSTR/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -629,7 +965,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:28Z",
+   "fetched_at": "2026-11-21T07:57:20Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-EGRI/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -641,7 +977,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:28Z",
+   "fetched_at": "2026-11-21T07:57:20Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-JSVE/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -653,7 +989,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:28Z",
+   "fetched_at": "2026-11-21T07:57:20Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-GHIG/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   },
@@ -665,7 +1001,7 @@
    "no_bids": [],
    "yes_bid_depth_usd": 0,
    "no_bid_depth_usd": 0,
-   "fetched_at": "2026-11-21T00:48:28Z",
+   "fetched_at": "2026-11-21T07:57:20Z",
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR2LEAD-THRC26-HLEB/orderbook",
    "note": "Order book returns bids only; the implied ask is 1 - best opposite bid."
   }

@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-21T00:48:28Z",
+ "fetched_at": "2026-11-21T07:57:20Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/series",
  "series": [
   {
@@ -481999,6 +481999,25 @@
     {
      "name": "CBC",
      "url": "https://www.cbc.ca/"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXWINDSPEEDNYC",
+   "title": "Windspeed in NYC",
+   "category": "Climate and Weather",
+   "categories": [
+    "Climate and Weather"
+   ],
+   "tags": [
+    "Wind"
+   ],
+   "frequency": "custom",
+   "settlement_sources": [
+    {
+     "name": "National Weather Service",
+     "url": "https://www.weather.gov"
     }
    ],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"

@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-21T00:48:29Z",
+ "fetched_at": "2026-11-21T07:57:21Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/events",
  "events": [
   {
@@ -6100,18 +6100,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXCALHOME-27JAN15",
-   "series_ticker": "KXCALHOME",
-   "title": "Calgary home price below $550K this year?",
-   "category": "Economics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXCALTECHAPPS-2027",
    "series_ticker": "KXCALTECHAPPS",
    "title": "Caltech First-Year Applicant Count in Fall 2027",
@@ -7339,6 +7327,18 @@
    "event_ticker": "KXCHIHUAHUAGOV-27JUN06",
    "series_ticker": "KXCHIHUAHUAGOV",
    "title": "Chihuahua Governor winner?",
+   "category": "Elections",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXCHIJOHNSONBALLOT-27FEB23",
+   "series_ticker": "KXCHIJOHNSONBALLOT",
+   "title": "Will Brandon Johnson qualify for Chicago's mayoral ballot?",
    "category": "Elections",
    "status": "",
    "volume_fp": null,
@@ -55228,6 +55228,18 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
+   "event_ticker": "KXNFLNEXTTEAM-27PNACUA12",
+   "series_ticker": "KXNFLNEXTTEAM",
+   "title": "Puka Nacua Next Team",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
    "event_ticker": "KXNFLNEXTTEAM-27SLAPORTA87",
    "series_ticker": "KXNFLNEXTTEAM",
    "title": "Sam LaPorta Next Team",
@@ -58903,18 +58915,6 @@
    "event_ticker": "KXOSCARNOMCIN-27",
    "series_ticker": "KXOSCARNOMCIN",
    "title": "Oscar nominations for Best Cinematography?",
-   "category": "Entertainment",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXOSCARNOMDOCU-27",
-   "series_ticker": "KXOSCARNOMDOCU",
-   "title": "Oscar nominations for Best Documentary Feature Film?",
    "category": "Entertainment",
    "status": "",
    "volume_fp": null,
