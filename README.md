@@ -5,6 +5,29 @@ A static GitHub Pages site (repository root, served from `main` at `/`) that tra
 - **Live site:** GitHub Pages for this repository, served from the `main` branch, root folder (`/`).
 - **Coordination:** see [COORDINATION.md](COORDINATION.md) for task status, sources, verification, and irregularities.
 
+## Start here (final integration pass, 2026-11-21)
+
+The site was built by many parallel sessions against one brief, so several desks solve the same
+requirement. Use this path and ignore the rest unless you want to compare implementations:
+
+| Step | Page | What it is |
+|---|---|---|
+| 1 | [`trade-desk/index.html`](trade-desk/index.html) | **Trader desk.** Two scrolling ≥ $0.10 chats (all moves / fee-aware high-ROI screen), ranked event board, 15-minute movers, embedded chart and order book, resolution watch. Polls the official demo API from your browser; no key, no orders. |
+| 2 | [`trade-desk/chart.html`](trade-desk/chart.html) | Price on the y axis, time on the x axis (seconds / minutes / hours), plus contracts available at each price. |
+| 3 | [`trade-desk/resolutions.html`](trade-desk/resolutions.html) | Events followed until Kalshi returns a result — YES or NO — with settlement fields and the result source. |
+| 4 | [`trade-desk/strategies.html`](trade-desk/strategies.html) | Paper trades with the official taker fee, $1-per-contract settlement, and results grouped by topic / side / price band / strategy. |
+| — | [`site/index.html`](site/index.html) · [`integration/page-directory.html`](integration/page-directory.html) | Topic tables built from the committed snapshot; and the generated index of **all 156 pages**. |
+| — | [`integration/executive-summary.html`](integration/executive-summary.html) · [`integration/flagged-review.html`](integration/flagged-review.html) | Executive summary; and every unverified value, blocked credential-dependent feature and open finding, with sources. |
+
+The trader desk is covered by 82 automated checks (`node trade-desk/tests/*.test.mjs`). The landing page's
+figures are generated from `snapshot/*.json` by `tools/build_landing.py`, the page index by
+`tools/build_directory.py`, and `tools/check_page_reachability.py` fails if any page becomes unreachable
+from `index.html`. All three run in `.github/workflows/integration-check.yml`.
+
+> **Demo exchange only.** Kalshi's demo environment uses mock funds and its prices may not reflect real
+> markets ([official notice](https://docs.kalshi.com/getting_started/demo_env)). No credentials are
+> committed or requested; authenticated account figures are blank by design.
+
 ## Verified dashboard (this session)
 
 `site/` is a separate, fully source-linked dashboard built from a single, logged collection run against the
@@ -13,7 +36,7 @@ A static GitHub Pages site (repository root, served from `main` at `/`) that tra
 | Path | Purpose |
 |---|---|
 | `tools/collect_kalshi.py` | Collector: series, markets (`open`/`settled`/`closed`), events, order books, candlesticks, public trades |
-| `snapshot/*.json`, `snapshot/collect-log.txt` | The verified snapshot + request-by-request log (485 requests, 0 failures) |
+| `snapshot/*.json`, `snapshot/collect-log.txt` | The verified snapshot + request-by-request log (494 requests, 0 failures in `snapshot/metadata.json`) |
 | `build_site.py` | Renders `site/` from `snapshot/` only; fails on any broken internal link |
 | `tools/account_worker.py` | Optional **read-only** signed client for demo portfolio data (no write path, no orders) |
 | `tools/verify_site.py` | Automated line-by-line verifier: re-derives every rendered value from `snapshot/*.json` and audits every data row's official source link; writes `site/verification-report.json` |
