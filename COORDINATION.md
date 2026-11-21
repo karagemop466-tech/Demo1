@@ -2449,3 +2449,13 @@ Scope extension logged and pushed 2026-11-21 before changing `engine/app.js` or 
 | FI-4 | Add the exact official order-book request link to every generated full-ladder price row; make the line-by-line verifier check these links and count these rows | in progress | arena/65f6b764-demo1 | `build_site.py`, `tools/verify_site.py`, generated `site/liquidity.html`, `site/verification.html`, `site/verification-report.json`, this board record | `https://docs.kalshi.com/api-reference/market/get-market-orderbook`; committed `snapshot/markets.json` order-book source URLs | Reproduced before edit: verifier PASS with 0 errors / 2 warnings; warning states 36 ladder rows have only a section-level source | External settlement sources remain a separate informational warning; no source value will be invented |
 
 FI-4 was claimed on 2026-11-21 before editing the generator or verifier; no active PR claims these files.
+
+### Scope extension — add official provenance to flagged classification rows (claimed before verifier edit)
+
+A row-level check of generated `site/flagged.html` showed that the “Topic matches that rest on a ticker or tag” rows exposed only local browse links. Because these are market-series classification records, each row should also link to the official markets request that supplied its series. This is distinct from open PR #88's root `flagged.html` and `verification/**` files; those files will remain untouched.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-5 | Add the exact official markets request to each generated topic-classification row and include all data rows on the snapshot Flagged page in the source-link verifier | in progress | arena/65f6b764-demo1 | `build_site.py`, `tools/verify_site.py`, generated `site/flagged.html`, `site/verification.html`, `site/verification-report.json`, this board record | `https://docs.kalshi.com/api-reference/market/get-markets`; per-market `sources.markets` URLs in `snapshot/markets.json` | Reproduced before edit: affected rows had only internal topic/explore links; post-change build and row audit pending | External settlement-reference hosts remain disclosed separately; no event/series membership is inferred beyond the stored topic rule |
+
+FI-5 was claimed on 2026-11-21 before editing the verifier or regenerating `site/flagged.html`. The open PR #88 does not claim these generated `site/` files.
