@@ -3,8 +3,8 @@
  "meta": {
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "started_cash_dollars": 1000.0,
-  "updated_ts": "2026-11-21T01:42:33Z",
-  "runs": 12,
+  "updated_ts": "2026-11-21T09:31:12Z",
+  "runs": 13,
   "simulated": true,
   "notes": [
    "All fills are SIMULATED \u2014 no orders were placed and no Kalshi account was touched.",
@@ -45,7 +45,7 @@
    "volume_24h_at_entry": 4451.64,
    "band": "0.00-0.20",
    "mark_price": 0.03,
-   "mark_ts": "2026-11-21T01:42:33Z",
+   "mark_ts": "2026-11-21T09:31:12Z",
    "mark_basis": "official last_price_dollars (held side)",
    "notional_dollars": 1.4,
    "signal_reason": "NO implied ask $0.14 <= $0.20 with 24h volume 4452 contracts",
@@ -73,7 +73,7 @@
    "volume_24h_at_entry": 61123.63,
    "band": "0.80-1.01",
    "mark_price": 0.003,
-   "mark_ts": "2026-11-21T01:42:33Z",
+   "mark_ts": "2026-11-21T09:31:12Z",
    "mark_basis": "official last_price_dollars (held side)",
    "notional_dollars": 8.03,
    "signal_reason": "tape trend over last 6 trades +0.80 >= +0.05; YES implied ask $0.80 in band",
@@ -1506,6 +1506,161 @@
      "topic": "golf",
      "notional_24h": 642.85,
      "volume_24h": 80356.09,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    }
+   ],
+   "new_trades": 0,
+   "settled": 0,
+   "api_calls": 70,
+   "errors": 0,
+   "cash": 990.36,
+   "equity": 990.69,
+   "open_positions": 2
+  },
+  {
+   "ts": "2026-11-21T09:31:12Z",
+   "run_id": "20261121T093037Z",
+   "universe_markets": 11568,
+   "candidates": 20,
+   "candidate_list": [
+    {
+     "ticker": "KXPRESNOMD-28-BOBA",
+     "topic": "elections",
+     "notional_24h": 57183.19,
+     "volume_24h": 64250.77,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JP",
+     "topic": "elections",
+     "notional_24h": 8477.67,
+     "volume_24h": 8923.86,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESPERSON-28-GABB",
+     "topic": "elections",
+     "notional_24h": 7233.43,
+     "volume_24h": 8985.63,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXAAAGASW-26NOV23-3.6200",
+     "topic": "gas",
+     "notional_24h": 4266.76,
+     "volume_24h": 4398.72,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXPRESNOMR-28-JDV",
+     "topic": "elections",
+     "notional_24h": 3857.88,
+     "volume_24h": 12055.86,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESPERSON-28-GWHI",
+     "topic": "elections",
+     "notional_24h": 3481.25,
+     "volume_24h": 3588.92,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPRESNOMD-28-JOSS",
+     "topic": "elections",
+     "notional_24h": 2548.83,
+     "volume_24h": 9803.2,
+     "matched_by": "ticker:KXPRES|KXSENATE|KXHOUSE|KXGOV|KXMAYOR|KXELECT|KXPRIME|KXPOLI|KXNOM|KXNEXTNATO|KXNEWPOPE"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-ADUM",
+     "topic": "golf",
+     "notional_24h": 2057.31,
+     "volume_24h": 64291.08,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MTHO",
+     "topic": "golf",
+     "notional_24h": 1676.53,
+     "volume_24h": 9861.93,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-ASMO",
+     "topic": "golf",
+     "notional_24h": 1534.37,
+     "volume_24h": 46496.04,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXTIME-26-MARK",
+     "topic": "culture",
+     "notional_24h": 1513.1,
+     "volume_24h": 18913.79,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-ZOH",
+     "topic": "culture",
+     "notional_24h": 1070.48,
+     "volume_24h": 4460.33,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-CHR",
+     "topic": "culture",
+     "notional_24h": 1020.11,
+     "volume_24h": 34003.62,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MMEI",
+     "topic": "golf",
+     "notional_24h": 1011.13,
+     "volume_24h": 337042.98,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXTIME-26-JAME",
+     "topic": "culture",
+     "notional_24h": 852.51,
+     "volume_24h": 28416.9,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-PET",
+     "topic": "culture",
+     "notional_24h": 852.47,
+     "volume_24h": 28415.67,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXTIME-26-CHRR",
+     "topic": "culture",
+     "notional_24h": 835.86,
+     "volume_24h": 27861.98,
+     "matched_by": "title:oscar|emmy|grammy|golden globe|box office|rotten tomatoes|time person|met gala|cannes|bafta"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-MPEN",
+     "topic": "golf",
+     "notional_24h": 831.76,
+     "volume_24h": 9451.79,
+     "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
+    },
+    {
+     "ticker": "KXAAAGASW-26NOV23-3.6400",
+     "topic": "gas",
+     "notional_24h": 716.44,
+     "volume_24h": 23881.27,
+     "matched_by": "ticker:KXAAAGAS|KXGAS"
+    },
+    {
+     "ticker": "KXPGATOUR-THRC26-CPHI",
+     "topic": "golf",
+     "notional_24h": 646.83,
+     "volume_24h": 80853.63,
      "matched_by": "ticker:KXPGA|KXGOLF|KXRYDER|KXMASTERS|KXTHEOPEN|KXLTR|KXPGATOUR|KXDPWT"
     }
    ],

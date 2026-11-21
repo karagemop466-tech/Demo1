@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_ts": "2026-11-21T01:42:33Z",
+ "updated_ts": "2026-11-21T09:31:12Z",
  "simulated": true,
  "started_cash_dollars": 1000.0,
  "cash": 990.36,
@@ -57,6 +57,10 @@
   },
   {
    "ts": "2026-11-21T01:42:33Z",
+   "equity": 990.69
+  },
+  {
+   "ts": "2026-11-21T09:31:12Z",
    "equity": 990.69
   }
  ],
