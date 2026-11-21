@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 460,
+    "files_scanned": 461,
     "findings": 6,
     "errors": 0,
     "warnings": 4,
@@ -700,11 +700,13 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/events/get-event",
-      "uses": 1,
+      "uses": 3,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
-        "decision/js/kalshi.js"
+        "COORDINATION.md",
+        "decision/js/kalshi.js",
+        "flagged.html"
       ]
     },
     {
@@ -1897,7 +1899,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
-      "uses": 26,
+      "uses": 27,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [

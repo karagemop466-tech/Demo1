@@ -39,7 +39,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Syntax-check every script
         run: |
@@ -74,10 +74,11 @@ jobs:
 
       - name: Headless page and data checks
         run: |
-          npm install --no-audit --no-fund --silent jsdom
+          npm ci --no-audit --no-fund
           node desk/tools/dom_test.mjs
 
       - name: Commit refreshed data and pages
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           git config user.name "kalshi-desk-bot"
           git config user.email "actions@users.noreply.github.com"
@@ -96,19 +97,19 @@ jobs:
           {
             echo "### Kalshi desk run"
             python3 - <<'PY'
-            import json, pathlib
-            for name in ("markets-live.json", "paper-trades.json", "resolutions-log.json"):
-                p = pathlib.Path("desk/data") / name
-                if not p.exists():
-                    print(f"- {name}: missing"); continue
-                d = json.loads(p.read_text())
-                if name == "markets-live.json":
-                    print(f"- markets-live: {d.get('request_count')} requests, "
-                          f"{len(d.get('errors') or [])} errors, collected {d.get('generated_utc')}")
-                elif name == "paper-trades.json":
-                    settled = sum(1 for t in d.get("trades", []) if t.get("status") == "SETTLED")
-                    print(f"- paper trades: {len(d.get('trades', []))} total, {settled} graded")
-                else:
-                    print(f"- resolutions: {d.get('totals')}")
-            PY
+          import json, pathlib
+          for name in ("markets-live.json", "paper-trades.json", "resolutions-log.json"):
+              p = pathlib.Path("desk/data") / name
+              if not p.exists():
+                  print(f"- {name}: missing"); continue
+              d = json.loads(p.read_text())
+              if name == "markets-live.json":
+                  print(f"- markets-live: {d.get('request_count')} requests, "
+                        f"{len(d.get('errors') or [])} errors, collected {d.get('generated_utc')}")
+              elif name == "paper-trades.json":
+                  settled = sum(1 for t in d.get("trades", []) if t.get("status") == "SETTLED")
+                  print(f"- paper trades: {len(d.get('trades', []))} total, {settled} graded")
+              else:
+                  print(f"- resolutions: {d.get('totals')}")
+          PY
           } >> "$GITHUB_STEP_SUMMARY"
