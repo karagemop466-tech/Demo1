@@ -1,0 +1,663 @@
+{
+ "generated_utc": "2026-11-21T07:10:05Z",
+ "completed_utc": "2026-11-21T07:10:16Z",
+ "environment": "demo",
+ "base": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "note": "Kalshi demo venue: mock funds; official docs warn prices and behavior may not reflect real markets (https://docs.kalshi.com/getting_started/demo_env).",
+ "exchange_status": {
+  "value": {
+   "exchange_active": true,
+   "exchange_index_statuses": [
+    {
+     "description": "Default",
+     "exchange_active": true,
+     "exchange_index": 0,
+     "intra_exchange_transfers_active": true,
+     "trading_active": true
+    },
+    {
+     "description": "Demo shard 1",
+     "exchange_active": true,
+     "exchange_index": 1,
+     "intra_exchange_transfers_active": true,
+     "trading_active": true
+    },
+    {
+     "description": "Demo shard 2",
+     "exchange_active": true,
+     "exchange_index": 2,
+     "intra_exchange_transfers_active": true,
+     "trading_active": true
+    },
+    {
+     "description": "",
+     "exchange_active": true,
+     "exchange_index": 3,
+     "intra_exchange_transfers_active": true,
+     "trading_active": true
+    }
+   ],
+   "intra_exchange_transfers_active": true,
+   "trading_active": true
+  },
+  "source": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+  "error": null
+ },
+ "events_probe": {
+  "count": 200,
+  "pages": 1,
+  "limit": 200,
+  "error": null,
+  "sample": [
+   {
+    "event_ticker": "AITURING",
+    "series_ticker": "AITURING",
+    "title": "AI passes Turing test before 2030?",
+    "strike_date": null,
+    "category": "Science and Technology",
+    "mutually_exclusive": false,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+   },
+   {
+    "event_ticker": "BUGBASHNEW-30JUN19",
+    "series_ticker": "BUGBASHNEW",
+    "title": "How many bugs will occur in the bash?",
+    "strike_date": null,
+    "category": "Climate and Weather",
+    "mutually_exclusive": false,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+   },
+   {
+    "event_ticker": "EUCLIMATE",
+    "series_ticker": "EUCLIMATE",
+    "title": "EU meets its 2030 climate goals?",
+    "strike_date": null,
+    "category": "Climate and Weather",
+    "mutually_exclusive": false,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+   },
+   {
+    "event_ticker": "INDIACLIMATE-30",
+    "series_ticker": "INDIACLIMATE",
+    "title": "India meets its 2030 climate goals?",
+    "strike_date": null,
+    "category": "Climate and Weather",
+    "mutually_exclusive": false,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+   },
+   {
+    "event_ticker": "JOBLESS-21AUG28",
+    "series_ticker": "KXJOBLESS",
+    "title": "Initial jobless claims from Aug 22-28, 2021?",
+    "strike_date": null,
+    "category": "Economics",
+    "mutually_exclusive": false,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+   }
+  ],
+  "source": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200"
+ },
+ "ranking": {
+  "basis": "volume_24h_fp x notional_value_dollars, labelled computed",
+  "why": "no official USD-volume field exists on GET /markets; the two operands are official, their product is arithmetic",
+  "topic_matched_rows": 1,
+  "markets_pages_read": 12
+ },
+ "topics": {
+  "gas_prices": {
+   "label": "gas_prices",
+   "picked": 0
+  },
+  "elections": {
+   "label": "elections",
+   "picked": 0
+  },
+  "culture": {
+   "label": "culture",
+   "picked": 0
+  },
+  "crypto": {
+   "label": "crypto",
+   "picked": 1
+  },
+  "golf": {
+   "label": "golf",
+   "picked": 0
+  }
+ },
+ "markets": [
+  {
+   "topic": "crypto",
+   "match_text": "btc",
+   "match_field": "title",
+   "series_ticker": "KXDEMOFUTHOURLY",
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H08",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "title": "Demo BTC at or above 57962.02 USD",
+   "subtitle": "At or above reference",
+   "status": "active",
+   "yes_bid_dollars": "0.0100",
+   "yes_ask_dollars": "0.9900",
+   "no_bid_dollars": "0.0100",
+   "last_price_dollars": "0.5500",
+   "previous_price_dollars": "0.0000",
+   "volume_24h_fp": "735.00",
+   "open_interest_fp": "70.00",
+   "notional_value_dollars": "1.0000",
+   "close_time": "2026-11-21T08:00:00Z",
+   "expected_expiration_time": "2026-11-21T08:05:00Z",
+   "rules_primary": "Demo only. YES if the Coinbase Exchange BTC-USD one-minute candle ending at 2026-11-21T08:00:00+00:00 closes at or above 57962.02 USD; otherwise NO. The reference is the close of the one-minute candle ending at 2026-11-21T07:00:00+00:00. Missing data delays determination.",
+   "dollar_notional_24h_computed": 735.0,
+   "result": "",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDEMOFUTHOURLY-26NOV21H08",
+   "series_error": null,
+   "orderbook": {
+    "yes_bids": [
+     {
+      "price": "0.0100",
+      "contracts": "11.00"
+     }
+    ],
+    "no_bids": [
+     {
+      "price": "0.0100",
+      "contracts": "1.00"
+     }
+    ],
+    "best_yes_bid": "0.0100",
+    "implied_yes_ask": 0.99,
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook",
+    "error": null
+   },
+   "candles": {
+    "1m": {
+     "period_minutes": 1,
+     "points": [
+      {
+       "t": 1795244460,
+       "price_close": 0.65,
+       "price_open": 0.65,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 1.0,
+       "volume": 120.0
+      },
+      {
+       "t": 1795244520,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 1.0,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244580,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 1.0,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244640,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 1.0,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244700,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 1.0,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244760,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.99,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244820,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.99,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244880,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.99,
+       "volume": 150.0
+      },
+      {
+       "t": 1795244940,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.99,
+       "volume": 150.0
+      },
+      {
+       "t": 1795245000,
+       "price_close": 0.65,
+       "price_open": 0.35,
+       "price_high": 0.65,
+       "price_low": 0.35,
+       "yes_bid_close": 0.01,
+       "yes_ask_close": 0.99,
+       "volume": 150.0
+      }
+     ],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1795237811&end_ts=1795245011&period_interval=1",
+     "error": null
+    },
+    "1h": {
+     "period_minutes": 60,
+     "points": [],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1794640211&end_ts=1795245011&period_interval=60",
+     "error": null
+    },
+    "1d": {
+     "period_minutes": 1440,
+     "points": [],
+     "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1787469011&end_ts=1795245011&period_interval=1440",
+     "error": null
+    }
+   }
+  }
+ ],
+ "settled": [
+  {
+   "topic": "crypto",
+   "match_text": "btc",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H07",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H07-UP",
+   "title": "Demo BTC at or above 55704.83 USD",
+   "status": "finalized",
+   "result": "yes",
+   "last_price_dollars": "0.6500",
+   "settlement_value_dollars": "1.0000",
+   "settlement_ts": "2026-11-21T07:01:17.910474Z",
+   "close_time": "2026-11-21T07:00:00Z",
+   "volume_fp": "8140.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "btc",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H06",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H06-UP",
+   "title": "Demo BTC at or above 56220.85 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.6500",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T06:01:22.910452Z",
+   "close_time": "2026-11-21T06:00:00Z",
+   "volume_fp": "8186.63",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "btc",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H05",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H05-UP",
+   "title": "Demo BTC at or above 56641.65 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.6500",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T05:01:17.90942Z",
+   "close_time": "2026-11-21T05:00:00Z",
+   "volume_fp": "5980.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200"
+  },
+  {
+   "topic": "culture",
+   "match_text": "oscar",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXLIGAMXFIRSTGOAL-26NOV20JUAATL",
+   "market_ticker": "KXLIGAMXFIRSTGOAL-26NOV20JUAATL-JUAOESTUP19",
+   "title": "Oscar Estupinan: First Goalscorer",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T05:38:22.915878Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "match_text": "oscar",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-3",
+   "title": "Oscar Estupinan: 3+ goals",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T05:38:22.908565Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "match_text": "oscar",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-2",
+   "title": "Oscar Estupinan: 2+ goals",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T05:38:22.908596Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "culture",
+   "match_text": "oscar",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXLIGAMXGOAL-26NOV20JUAATL",
+   "market_ticker": "KXLIGAMXGOAL-26NOV20JUAATL-JUAOESTUP19-1",
+   "title": "Oscar Estupinan: 1+ goals",
+   "status": "finalized",
+   "result": "yes",
+   "last_price_dollars": "0.0000",
+   "settlement_value_dollars": "1.0000",
+   "settlement_ts": "2026-11-21T05:38:22.907758Z",
+   "close_time": "2026-11-21T05:30:19Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "btc",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDEMOFUTHOURLY-26NOV21H04",
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H04-UP",
+   "title": "Demo BTC at or above 58492.07 USD",
+   "status": "finalized",
+   "result": "no",
+   "last_price_dollars": "0.6500",
+   "settlement_value_dollars": "0.0000",
+   "settlement_ts": "2026-11-21T04:01:27.906398Z",
+   "close_time": "2026-11-21T04:00:00Z",
+   "volume_fp": "8200.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxpWE2AYQmI-c_AESJEtYRVNPQ0NFUkdBTUUtMjZOT1YyMTAwMThPTElWTUlBLU1JQQ"
+  }
+ ],
+ "awaiting_determination": [
+  {
+   "topic": "crypto",
+   "match_text": "doge",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDOGED-26NOV2102",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2349999",
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "close_time": "2026-11-21T07:00:00Z",
+   "expected_expiration_time": "2026-11-28T07:00:00Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "doge",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDOGED-26NOV2102",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2299999",
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "close_time": "2026-11-21T07:00:00Z",
+   "expected_expiration_time": "2026-11-28T07:00:00Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "doge",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDOGED-26NOV2102",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2249999",
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "close_time": "2026-11-21T07:00:00Z",
+   "expected_expiration_time": "2026-11-28T07:00:00Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  },
+  {
+   "topic": "crypto",
+   "match_text": "doge",
+   "match_field": "title",
+   "series_ticker": null,
+   "event_ticker": "KXDOGED-26NOV2102",
+   "market_ticker": "KXDOGED-26NOV2102-T0.2199999",
+   "title": "Dogecoin price on Nov 21, 2026?",
+   "status": "determined",
+   "result": "no",
+   "last_price_dollars": "0.0000",
+   "close_time": "2026-11-21T07:00:00Z",
+   "expected_expiration_time": "2026-11-28T07:00:00Z",
+   "volume_fp": "0.00",
+   "notional_value_dollars": "1.0000",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+   "status": 200,
+   "bytes": 632
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?limit=200",
+   "status": 200,
+   "bytes": 149620
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200",
+   "status": 200,
+   "bytes": 432431
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgsIzuyE2AYQ4KeoTBIyS1hNVkVDUk9TU0NBVEVHT1JZLVMyMDI2UlQ3Tk5UQlBNR0EyN0ZQVC1PVkxKV0syN1o",
+   "status": 200,
+   "bytes": 439397
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI8umE2AYQ6If40gESJEtYTkJBM1BULTI2Tk9WMjFNSUxQSEktTUlMVEhFUlJPMTEtNQ",
+   "status": 200,
+   "bytes": 482726
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI8OmE2AYQkI6eiAESHEtYSVRGTUFUQ0gtMjZOT1YyMUFMVUFMVi1BTFU",
+   "status": 200,
+   "bytes": 370154
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI7-mE2AYQqPfNzQESHUtYTkJBM1FUT1RBTC0yNk5PVjIxUE9STllLLTU0",
+   "status": 200,
+   "bytes": 378881
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI7umE2AYQ8N6PxgESHUtYTkJBMVFUT1RBTC0yNk5PVjIxTUVNTUlOLTY0",
+   "status": 200,
+   "bytes": 365051
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI7emE2AYQoL_jigMSIUtYTkJBNFFTUFJFQUQtMjZOT1YyMUxBQ0RBTC1EQUwxMg",
+   "status": 200,
+   "bytes": 450520
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwIneSE2AYQgJSunQMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNk4yM05OWFpXTFdKVTZJWTItV0dUS1NSWjdW",
+   "status": 200,
+   "bytes": 432969
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI6MeE2AYQyJ3rhQMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNlFXTVZMUEhKVUVGV0RXVUstMjdINFFFWEVT",
+   "status": 200,
+   "bytes": 418667
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI2r-E2AYQ0Me_wAISHktYTkJBMUhUT1RBTC0yNk5PVjIxTUlMUEhJLTExMA",
+   "status": 200,
+   "bytes": 381969
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI2b-E2AYQ2NzqigISIEtYTkNBQU1CVE9UQUwtMjZOT1YyMU1UVUlOU1QtMTcz",
+   "status": 200,
+   "bytes": 417102
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=200&cursor=CgwI1r-E2AYQ8KPWpAISH0tYTkNBQVdCVE9UQUwtMjZOT1YyMUNIU1NFQS0xMzA",
+   "status": 200,
+   "bytes": 420102
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDEMOFUTHOURLY-26NOV21H08",
+   "status": 200,
+   "bytes": 1848
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/orderbook",
+   "status": 200,
+   "bytes": 86
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1795237811&end_ts=1795245011&period_interval=1",
+   "status": 200,
+   "bytes": 4541
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1794640211&end_ts=1795245011&period_interval=60",
+   "status": 200,
+   "bytes": 60
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1787469011&end_ts=1795245011&period_interval=1440",
+   "status": 200,
+   "bytes": 60
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200",
+   "status": 200,
+   "bytes": 453355
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIz6CE2AYQuMyrxAMSMktYTVZFQ1JPU1NDQVRFR09SWS1TMjAyNllTNVpTRzZaVE5GRkxUR0wtNU1TR0dWSUtV",
+   "status": 200,
+   "bytes": 459344
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIyJWE2AYQgISBlQISKEtYTElHQU1YR09BTC0yNk5PVjIwSlVBQVRMLUpVQUpUT1JSRTEwLTI",
+   "status": 200,
+   "bytes": 524098
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxpWE2AYQmI-c_AESJEtYRVNPQ0NFUkdBTUUtMjZOT1YyMTAwMThPTElWTUlBLU1JQQ",
+   "status": 200,
+   "bytes": 432125
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIyOuD2AYQ4K2azQESJktYTkJBQVNULTI2Tk9WMjBJTkRDTEUtSU5EQU5FU01JVEgyMy04",
+   "status": 200,
+   "bytes": 500299
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=200&cursor=CgwIxuuD2AYQyNiEhQMSJktYRVNPQ0NFUkdBTUUtMjZOT1YyMDIxNTlST09ORURFUi1ST09O",
+   "status": 200,
+   "bytes": 430829
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200",
+   "status": 200,
+   "bytes": 422215
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSHEtYVEVNUExBWEhTLTI2Tk9WMjEwMi1UNjAuOTk",
+   "status": 200,
+   "bytes": 478317
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI8IKF2AYSF0tYRE9HRS0yNk5PVjIxMDItQjAuMTUy",
+   "status": 200,
+   "bytes": 395163
+  },
+  {
+   "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=closed&limit=200&cursor=CgYI4OaE2AYSGEtYUkFJTlNIQVJEMi0yNk5PVjIwLUNISQ",
+   "status": 200,
+   "bytes": 480696
+  }
+ ],
+ "request_count": 29,
+ "failed_requests": []
+}

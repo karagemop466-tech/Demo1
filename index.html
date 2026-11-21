@@ -3,184 +3,268 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kalshi Demo Dashboard · Gas prices, elections, culture, crypto, golf</title>
-<meta name="description" content="One dashboard for Kalshi demo markets on five topics: live market scan, two ≥ $0.10 alert chats, price chart and order-book depth, resolution tracking and simulated trading. Every figure links to the official Trade API request that produced it.">
+<title>Kalshi Demo Dashboard</title>
+<meta name="description" content="A clear entry point to live Kalshi demo-market monitoring, five topic pages, source-linked analysis, resolution tracking and automated paper strategies.">
 <link rel="stylesheet" href="site/assets/style.css">
 <style>
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:18px 0}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-  .kpi .n{font-size:1.7rem;font-weight:650;letter-spacing:-.02em}
-  .kpi .l{color:var(--muted);font-size:.86rem}
-  .kpi a{font-size:.8rem}
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
-  .tile{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink)}
-  .tile:hover{border-color:var(--accent2);text-decoration:none}
-  .tile b{display:block;margin-bottom:4px}
-  .tile span{color:var(--muted);font-size:.88rem}
-  .tile i{display:block;margin-top:8px;font-style:normal;font-size:.78rem;color:var(--accent2)}
-  .small{color:var(--muted);font-size:.86rem}
-  ul.plain{padding-left:20px}
-  td small{color:var(--muted)}
+  .skip-link{position:absolute;left:-9999px;top:auto}
+  .skip-link:focus{left:12px;top:12px;z-index:50;padding:9px 12px;background:var(--panel);border:1px solid var(--accent2);border-radius:8px}
+  .hero{margin-top:.7rem}
+  .hero .pagehead{padding-top:1.3rem}
+  .home-card h3{margin:.2rem 0 .45rem}
+  .home-card p{color:var(--muted)}
+  .home-card .card-link{display:inline-block;margin-top:.45rem;font-weight:650}
+  .topic-grid{grid-template-columns:repeat(auto-fit,minmax(205px,1fr))}
+  .method-table{min-width:760px}
+  .method-table td:first-child{font-weight:650;color:var(--ink);white-space:nowrap}
+  .section-intro{color:var(--muted);max-width:82ch}
+  .secondary-links{margin-top:1rem}
+  .secondary-links summary{cursor:pointer;font-weight:650;color:var(--ink)}
+  .secondary-links[open] summary{margin-bottom:.65rem}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:.7rem}
+  @media(max-width:650px){.method-table{min-width:650px}.hero .pagehead{padding-top:.8rem}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="index.html"><span class="mark">K</span> Kalshi <b>Demo</b> Dashboard</a>
-    <nav class="nav">
-      <a href="index.html" class="on">Home</a>
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true">K</span> Kalshi <b>Demo</b> Dashboard</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="index.html" class="on" aria-current="page">Home</a>
+      <a href="trade-desk/index.html">Live desk</a>
       <a href="desk/live.html">Live markets</a>
-      <a href="trade-desk/index.html">Alert chats</a>
-      <a href="desk/requirements.html">Requirements</a>
-      <a href="sim-desk/index.html">Simulated trading</a>
-      <a href="site/gas-prices.html">Gas prices</a>
-      <a href="site/elections.html">Elections</a>
-      <a href="site/culture.html">Culture</a>
-      <a href="site/crypto.html">Crypto</a>
-      <a href="site/golf.html">Golf</a>
-      <a href="site/flagged.html">Flagged for review</a>
+      <a href="#topics">Topics</a>
+      <a href="sim-desk/index.html">Paper strategies</a>
+      <a href="trade-desk/resolutions.html">Resolutions</a>
+      <a href="integration/flagged-review.html">Review &amp; sources</a>
       <a href="archive/index.html">Archive</a>
     </nav>
   </div>
 </header>
-<main class="wrap">
-  <div class="pagehead">
-    <p class="kicker">Official Kalshi demo Trade API · snapshot 2026-11-20 11:43:59 UTC · live pages poll the API from your browser</p>
-    <h1>Kalshi Demo Dashboard</h1>
-    <p class="lede">Five topics on the Kalshi demo exchange: gas prices, elections, culture, crypto and golf. One canonical
-    page per job, five topic pages, and every figure linked to the official request it came from.</p>
+
+<main class="wrap" id="main">
+  <section class="hero" aria-labelledby="page-title">
+    <div class="pagehead">
+      <p class="kicker">Public market data · Kalshi demo environment</p>
+      <h1 id="page-title">One clear place to monitor demo markets and test ideas</h1>
+      <p class="lede">Follow gas prices, elections, culture, crypto and golf. Start at the live desk for alerts, charts and order-book depth; use the category pages for source-linked market tables, and the paper-trading desk to compare simulated strategies.</p>
+      <div class="btnrow">
+        <a class="btn" href="trade-desk/index.html">Open the live market desk</a>
+        <a class="btn ghost" href="sim-desk/index.html">Review paper strategies</a>
+      </div>
+    </div>
+    <aside class="card" aria-label="Data and account status">
+      <p class="kicker">What this site can verify</p>
+      <ul class="kv">
+        <li><span>Live markets</span><b>Public demo API</b></li>
+        <li><span>Topic pages</span><b>5 categories</b></li>
+        <li><span>Account data</span><b>Credential-gated</b></li>
+        <li><span>Automated trading</span><b>Paper only</b></li>
+      </ul>
+      <p class="fine" style="margin-top:.8rem">Live desk data is polled from the demo API. Category and research pages use dated snapshots; check each page's timestamp before relying on a value.</p>
+    </aside>
+  </section>
+
+  <div class="callout warn" role="note">
+    <b>Account and order execution are not connected.</b> No Kalshi demo credentials were provided, so account balance, positions and fills cannot be verified here, and this integration has placed no exchange orders. The automated strategies below are simulated only. Do not enter a private API key on a public GitHub Pages site. See the <a href="site/portfolio.html">credential-gated portfolio page</a> and <a href="integration/flagged-review.html#sec-01">security findings</a>.
   </div>
 
-  <div class="callout warn">
-    <b>No credentials were provided or used.</b> Authenticated account figures (balance, positions, fills) are blank and no
-    order is ever sent from this site. Some older pages contain an experimental local-key flow — do not enter a private key
-    into a public page. Details: <a href="integration/flagged-review.html#sec-01">SEC-01</a>,
-    <a href="site/flagged.html">Flagged for review</a>.
-  </div>
+  <section id="topics" aria-labelledby="topics-title">
+    <h2 id="topics-title">Explore markets by topic</h2>
+    <p class="section-intro">Each category page organizes the collected markets and their evidence. Rows with unavailable or unconfirmed values are left blank and flagged instead of being filled by inference.</p>
+    <div class="grid2 topic-grid">
+      <article class="card home-card">
+        <p class="kicker">Topic 01</p>
+        <h3>Gas prices</h3>
+        <p>Gas-price contracts and the source-linked snapshot for this topic.</p>
+        <a class="card-link" href="site/gas-prices.html">Browse gas markets →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Topic 02</p>
+        <h3>Elections</h3>
+        <p>Election-related contracts, grouped separately from other topics.</p>
+        <a class="card-link" href="site/elections.html">Browse election markets →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Topic 03</p>
+        <h3>Culture</h3>
+        <p>Culture and entertainment markets in their own source-linked table.</p>
+        <a class="card-link" href="site/culture.html">Browse culture markets →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Topic 04</p>
+        <h3>Crypto</h3>
+        <p>Crypto-related event contracts and the evidence behind each row.</p>
+        <a class="card-link" href="site/crypto.html">Browse crypto markets →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Topic 05</p>
+        <h3>Golf</h3>
+        <p>Golf event contracts, organized separately from the other categories.</p>
+        <a class="card-link" href="site/golf.html">Browse golf markets →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">All topics</p>
+        <h3>All collected markets</h3>
+        <p>Search the broader source-linked market table and browse the snapshot.</p>
+        <a class="card-link" href="site/markets.html">Open all markets →</a>
+      </article>
+    </div>
+  </section>
 
-  <div class="kpis">
-    <div class="kpi"><div class="n">1,399</div><div class="l">Open markets collected (five topics)</div><a href="snapshot/markets.json">snapshot/markets.json ↗</a></div>
-    <div class="kpi"><div class="n">2,117</div><div class="l">Resolved markets (yes / no result). Another 352 are closed and awaiting a result.</div><a href="snapshot/resolved.json">snapshot/resolved.json ↗</a></div>
-    <div class="kpi"><div class="n">5</div><div class="l">Topics tracked</div><a href="site/index.html">Overview ↗</a></div>
-    <div class="kpi"><div class="n">494 / 0</div><div class="l">API requests / failed requests in the snapshot</div><a href="snapshot/collect-log.txt">collection log ↗</a></div>
-  </div>
+  <section id="workbench" aria-labelledby="workbench-title">
+    <h2 id="workbench-title">Trading workbench</h2>
+    <p class="section-intro">Use the live public-data desk to monitor price movement and liquidity. Test trade rules in the simulator; it does not submit exchange orders.</p>
+    <p class="section-intro"><b>One canonical page per job.</b> Several sessions built the ≥ $0.10 two-chat alert tape in parallel; the
+    <a href="trade-desk/index.html">trade desk</a> is the canonical one because it labels the measured price basis on every bubble
+    (best ask, last print, candle close or book mid). The others stay online at their original URLs, with what each one adds, on
+    <a href="archive/index.html"><b>archive/index.html</b></a> — nothing was deleted to consolidate. For the five-topic market scan
+    itself, <a href="desk/live.html">desk/live.html</a> is canonical; it now applies the documented <code>mve_filter=exclude</code>
+    and one <code>series_ticker</code> request per topic series, because an unfiltered <code>limit=1000</code> page matched
+    <b>zero</b> topic markets on 2026-11-21 (the newest pages were all <code>KXMVECROSSCATEGORY</code> combos).</p>
+    <div class="grid2">
+      <article class="card home-card">
+        <p class="kicker">Live · Public data</p>
+        <h3><a href="trade-desk/index.html">Live alerts, charts and liquidity</a></h3>
+        <p>Two scrolling feeds for moves of at least $0.10 in either direction, a price-over-time chart, the contracts available at each price, and events ranked by estimated 24-hour traded value. The high-ROI feed is a disclosed screen, not a prediction; dollar volume is an estimate, not an official API field.</p>
+        <a class="card-link" href="trade-desk/model.html">Read the model rules →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Automated · Simulated</p>
+        <h3><a href="sim-desk/index.html">Paper strategies and performance</a></h3>
+        <p>Compare simulated strategy results and trade categories without sending an order to Kalshi. Scheduled runs are best-effort and may be delayed or missed.</p>
+        <a class="card-link" href="sim-desk/index.html">Open the strategy ledger →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Outcomes</p>
+        <h3><a href="trade-desk/resolutions.html">Resolution tracker</a></h3>
+        <p>Follow markets through the API's reported terminal state and result; unresolved contracts remain unresolved here.</p>
+        <a class="card-link" href="site/resolved.html">Browse resolved snapshot →</a>
+      </article>
+      <article class="card home-card">
+        <p class="kicker">Account · Limited</p>
+        <h3><a href="site/portfolio.html">Demo portfolio status</a></h3>
+        <p>Authenticated balance, positions and account trades are blank unless verified account data is available. No credentials are stored in this static site.</p>
+        <a class="card-link" href="integration/flagged-review.html#auth-01">Review the access limitation →</a>
+      </article>
+    </div>
+  </section>
 
-  <h2>Start here — four pages, in the order a trader uses them</h2>
-  <div class="tiles">
-    <a class="tile" href="desk/live.html"><b>1 · Live market scan</b><span>The highest-dollar open market per topic, from the newest non-combo page plus one request per series, with contracts and liquidity. Live, refreshed while the tab is open.</span><i>Built on <code>mve_filter=exclude</code> + <code>series_ticker</code></i></a>
-    <a class="tile" href="trade-desk/index.html"><b>2 · Two scrolling alert chats (≥ $0.10)</b><span>Chat 1: every swing of $0.10 or more, either direction, on the five topics. Chat 2: only the swings a published, fee-aware rule rates as worth a look, with the band sample size printed next to each pick.</span><i>Each bubble links its API request — and a news search as a lead, not a cause</i></a>
-    <a class="tile" href="desk/live.html#chart"><b>3 · Chart &amp; book depth</b><span>Price over time on a seconds / minutes / hours axis, and how many contracts rest at each price. Candles are official 1 / 60 / 1440-minute points; the seconds axis is built from the tape the page observes itself.</span><i>No sub-minute history is invented</i></a>
-    <a class="tile" href="exec-desk/markets.html"><b>4 · Track to resolution</b><span>Follow a market until Kalshi returns a result, and record how it resolved: <code>yes</code>, <code>no</code> — or <code>scalar</code>, which the API also allows and which is shown as such, never rounded to yes/no.</span><i>Result appears at <code>determined</code>; payout at <code>finalized</code></i></a>
-  </div>
-  <p class="small">The ≥ $0.10 two-chat requirement was built by several sessions in parallel. The
-  <a href="trade-desk/index.html">trade desk</a> is the canonical one — it labels the price basis on every bubble — and the
-  others stay online at their original URLs, listed with what each one adds on
-  <a href="archive/index.html">archive/index.html</a>. Nothing was deleted to consolidate.</p>
+  <section id="evidence" aria-labelledby="evidence-title">
+    <h2 id="evidence-title">Data definitions and official references</h2>
+    <p class="section-intro">The links below are Kalshi's official references for the API concepts used by the dashboard. Each linked market row on the category pages also carries its specific source request.</p>
+    <div class="tablewrap">
+      <table class="method-table">
+        <thead>
+          <tr><th>What you are viewing</th><th>How to read it</th><th>Official reference</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Market listings</td>
+            <td>Market rows come from the selected API request; the page shows its source and snapshot time.</td>
+            <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets API reference ↗</a></td>
+          </tr>
+          <tr>
+            <td>Dollar ranking</td>
+            <td>The live desk computes estimated 24-hour notional from available volume and price inputs; this is not an official Kalshi USD-volume field. See <a href="integration/flagged-review.html#rank-01">RANK-01</a> for the limitation.</td>
+            <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades API reference ↗</a> · <a href="trade-desk/model.html">Desk methodology</a></td>
+          </tr>
+          <tr>
+            <td>Price changes</td>
+            <td>Alert methods and sampling windows differ by desk. A price jump alone does not establish its cause.</td>
+            <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades API reference ↗</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks ↗</a></td>
+          </tr>
+          <tr>
+            <td>Order-book depth</td>
+            <td>Displayed quantities are contract counts at reported book levels; an empty level is not a confirmed fill.</td>
+            <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Order-book responses ↗</a></td>
+          </tr>
+          <tr>
+            <td>Market outcomes</td>
+            <td>Only the API-reported result is displayed; closed markets with no result are not treated as resolved.</td>
+            <td><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market lifecycle ↗</a></td>
+          </tr>
+          <tr>
+            <td>Demo environment</td>
+            <td>Demo prices, liquidity and simulated fills are test-environment data and may not reflect production markets.</td>
+            <td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment notice ↗</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-  <h2>Topics</h2>
-  <p class="small">Counts come from the generated topic pages, which are built from the snapshot. Topic membership uses
-  published keyword rules, not an official Kalshi taxonomy; each topic page shows the rule that matched each series.</p>
-  <div class="tablewrap">
-  <table>
-    <thead>
-      <tr><th>Topic</th><th class="num">Open</th><th class="num">Resolved (yes / no)</th><th class="num">Closed, awaiting result</th><th>Topic page</th><th>Official source</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><b>Gas prices</b></td><td class="num">116</td><td class="num">350</td><td class="num">17</td><td><a href="site/gas-prices.html">Gas prices ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-      <tr><td><b>Elections</b></td><td class="num">255</td><td class="num">131</td><td class="num">1</td><td><a href="site/elections.html">Elections ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-      <tr><td><b>Culture</b></td><td class="num">191</td><td class="num">368</td><td class="num">60</td><td><a href="site/culture.html">Culture ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-      <tr><td><b>Crypto</b></td><td class="num">474</td><td class="num">668</td><td class="num">232</td><td><a href="site/crypto.html">Crypto ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-      <tr><td><b>Golf</b></td><td class="num">363</td><td class="num">600</td><td class="num">42</td><td><a href="site/golf.html">Golf ↗</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-      <tr><td><b>Total</b></td><td class="num">1,399</td><td class="num">2,117</td><td class="num">352</td><td><a href="site/markets.html">All open markets ↗</a></td><td><a href="snapshot/collect-log.txt">collection log ↗</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a></td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="small">Source of every count: <code>snapshot/markets.json</code> and <code>snapshot/resolved.json</code>,
-  collected 2026-11-20T11:43:59Z from <code>https://external-api.demo.kalshi.co/trade-api/v2</code>. Resolved = status
-  finalized, determined or disputed with <code>result</code> yes or no (1,914 + 182 + 21 = 2,117). Closed = status closed with
-  no result yet (352). Together they make the 2,469 records in <code>resolved.json</code>. Dollars are never published by
-  Kalshi — it reports contract counts — so any “$” figure on this site is a computed price × contracts and is labelled that
-  way where it appears.</p>
+  <section id="review" aria-labelledby="review-title">
+    <h2 id="review-title">Executive summary, verification and review</h2>
+    <div class="grid2">
+      <article class="card home-card">
+        <h3><a href="integration/executive-summary.html">Executive summary</a></h3>
+        <p>What the dashboard measures, how to interpret the estimates, and which account-dependent features are blocked.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="verification/index.html">Verification report</a></h3>
+        <p>Combined-site consistency checks, row/source audits and outstanding verification notes.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="integration/flagged-review.html">Flagged for Review</a></h3>
+        <p>Unverified values, implementation caveats and security issues, with evidence and follow-up links.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="site/sources.html">Source register</a></h3>
+        <p>Official Kalshi API documentation, demo endpoints, and the verification purpose recorded for each source.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="suggestions.html">Suggestions and open questions</a></h3>
+        <p>Improvement ideas and unresolved decisions, including the alert-desk consolidation question.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="archive/index.html">Archive &amp; overlap index</a></h3>
+        <p>Which page is canonical for each part of the brief, and which earlier page it supersedes — every superseded page still live and linked.</p>
+      </article>
+      <article class="card home-card">
+        <h3><a href="tape-desk/consolidation-map.html">Other dashboards and implementation map</a></h3>
+        <p>Earlier parallel implementations remain available for review; compare their different alert bases and data paths before relying on them.</p>
+      </article>
+    </div>
+    <details class="card secondary-links">
+      <summary>Experimental account/order pages — review before use</summary>
+      <p>These pages are retained for transparency, not recommended for live account access. The integration review flags key storage, signing, and fill-accounting issues. Use paper trading until those items are resolved.</p>
+      <p><a href="exec-desk/index.html">Experimental exec desk</a> · <a href="pages/strategy.html">Earlier strategy/order page</a> · <a href="integration/flagged-review.html#sec-01">Security findings and sources</a></p>
+    </details>
+  </section>
 
-  <h2>Simulated trading, strategies and portfolio</h2>
-  <div class="tiles">
-    <a class="tile" href="sim-desk/index.html"><b>sim-desk — automated simulated strategies</b><span>Three rule-based strategies run by CI on the official trades tape every 30 minutes, with a persistent ledger, fee-aware fills and automatic settlement at $1 when a market resolves.</span></a>
-    <a class="tile" href="engine/index.html"><b>Strategy engine</b><span>Jump scan, fee-aware backtests, a settlement study over settled demo markets and a liquidity profile, all computed from captured data.</span></a>
-    <a class="tile" href="site/strategies.html"><b>Trade categories &amp; strategy analysis</b><span>The categories, the logic of each and the inputs each needs — plus the sample-size caveat that applies to every result.</span></a>
-    <a class="tile" href="exec-desk/portfolio.html"><b>Portfolio — blocked, and said so</b><span>Demo-account balance, positions and fills need an authenticated key. Nothing is estimated: those cells are blank and marked not connected.</span></a>
-  </div>
-
-  <h2>Verification and review</h2>
-  <div class="tiles">
-    <a class="tile" href="verification/index.html"><b>Line-by-line verification</b><span>Every rendered value re-derived from the snapshot, every row’s source link audited, on each build.</span></a>
-    <a class="tile" href="site/verification.html"><b>Verification status</b><span>What passed, what is unverified, and where the blank cells are.</span></a>
-    <a class="tile" href="site/flagged.html"><b>Flagged for review</b><span>Unverified items and irregularities, each with its source link — published, not hidden.</span></a>
-    <a class="tile" href="desk/requirements.html"><b>Requirements matrix</b><span>The brief item by item: where it is implemented, and what is blocked and why.</span></a>
-    <a class="tile" href="integration/executive-summary.html"><b>Executive summary</b><span>Capabilities, coverage limits, source method and the credential-dependent parts, in one read.</span></a>
-    <a class="tile" href="COORDINATION.md"><b>Session board</b><span>Who claimed what, what each session verified, and the sources used — the audit trail behind this page.</span></a>
-  </div>
-
-  <h2>What changed in this consolidation</h2>
-  <ul class="plain">
-    <li><b>The live market scan was returning nothing, and now returns markets.</b> On 2026-11-21 the demo exchange’s newest
-      open page was almost entirely <code>KXMVECROSSCATEGORY</code> combo markets, so <code>/markets?status=open&amp;limit=1000</code>
-      matched <b>0</b> of the five topics. The scan now applies the documented
-      <a href="https://docs.kalshi.com/api-reference/market/get-markets"><code>mve_filter=exclude</code></a> and then one
-      request per topic series (<code>series_ticker=…</code>), with the series list generated from the committed collection —
-      <a href="desk/data/series-index.json">desk/data/series-index.json</a>, built by <code>desk/tools/build_series_index.py</code>.
-      Two of those series were re-fetched to confirm they return real topic markets; the regression check is
-      <code>desk/tools/dom_test.mjs</code> section 7.</li>
-    <li><b>The nightly engine refresh was failing, and the cause is fixed.</b> A market matched by title text can arrive with
-      no <code>series_ticker</code>, and the candle path is <code>/series/{series}/markets/{ticker}/candlesticks</code> — the
-      missing key raised <code>TypeError: quote_from_bytes() expected bytes</code>. Such markets are now skipped and logged,
-      the refresh excludes combo markets, it fans out over the same series list, and it exits non-zero when it genuinely
-      collects nothing instead of pretending to succeed.</li>
-    <li><b>The desk CI failure was a Node version mismatch.</b> <code>jsdom</code> 31 needs Node ≥ 22; <code>desk.yml</code>
-      pinned Node 20, so the DOM-test step failed and blocked the commit of refreshed desk data. Both desk workflows now
-      use Node 22.</li>
-    <li><b>The landing page names one canonical page per job.</b> The six parallel ≥ $0.10 builds are no longer presented as a
-      choice for the reader: the trade desk is canonical and the rest are indexed on
-      <a href="archive/index.html">archive/index.html</a>, still live, nothing deleted. Marked as a consolidation decision in
-      <a href="COORDINATION.md">COORDINATION.md</a>.</li>
-  </ul>
-
-  <h2>Every other page</h2>
-  <p class="small">The full index — canonical and superseded, with what each one adds — is
-  <a href="archive/index.html">archive/index.html</a>. Data and category tables: <a href="site/markets.html">markets</a>,
-  <a href="site/resolved.html">resolved</a>, <a href="site/liquidity.html">liquidity &amp; chart</a>,
-  <a href="site/explore.html">data browser</a>. Alerts: <a href="alerts-live.html">alerts-live</a>,
-  <a href="alerts.html">alerts</a>, <a href="alert-desk/index.html">alert-desk</a>,
-  <a href="tape-desk/index.html">tape-desk</a>, <a href="pages/price-jumps.html">jump detector</a>,
-  <a href="exec-desk/jumps.html">jump scanner with news leads</a>. Desks: <a href="desk/index.html">desk</a>,
-  <a href="exec-desk/dashboard.html">exec-desk</a>, <a href="decision/index.html">decision</a>,
-  <a href="verified-desk/index.html">verified</a>, <a href="live-desk/index.html">live</a>,
-  <a href="ops-desk/index.html">ops</a>, <a href="strategy-desk/index.html">strategy</a>,
-  <a href="monitor/index.html">monitor</a>. Reference: <a href="EXECUTIVE_SUMMARY.md">executive summary</a>,
-  <a href="sources.html">sources</a>, <a href="questions.html">questions</a>, <a href="suggestions.html">suggestions</a>,
-  <a href="flagged.html">flagged (root)</a>, <a href="integration/flagged-review.html">integration findings</a>,
-  <a href="docs/api-verification.md">API verification log</a>.</p>
-
-  <div class="callout">
-    <b>Ranking definitions differ by desk.</b> Snapshot pages rank on computed public-trade notional; the exec-desk default
-    “24h $ volume” multiplies contract volume by a price input and can fall back to quote-derived prices when no last trade
-    exists. It is an estimate, not an official dollar-volume field. See
-    <a href="integration/flagged-review.html#rank-01">RANK-01</a>.
-  </div>
-
-  <h2>Official sources</h2>
-  <ul class="plain">
-    <li><a href="https://docs.kalshi.com/getting_started/api_environments">API environments ↗</a>: demo REST base <code>https://external-api.demo.kalshi.co/trade-api/v2</code>; alternate demo host <code>https://demo-api.kalshi.co/trade-api/v2</code></li>
-    <li><a href="https://docs.kalshi.com/getting_started/demo_env">Test in the demo environment ↗</a>: mock funds; <i>prices and behaviour may not reflect real markets</i></li>
-    <li><a href="https://docs.kalshi.com/api-reference/market/get-markets">GET /markets ↗</a>: status filter, <code>series_ticker</code>, <code>mve_filter</code>, and the <code>*_fp</code> count fields</li>
-    <li><a href="https://docs.kalshi.com/getting_started/market_lifecycle">Market lifecycle ↗</a>: <code>open</code> maps to <code>active</code>; <code>result</code> is <code>yes</code>, <code>no</code> or <code>scalar</code></li>
-    <li><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start ↗</a>: connections need a signed handshake, which is why every live page here polls REST instead of pretending to stream</li>
-    <li><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">GET /exchange/status (demo, live) ↗</a>: <code>exchange_active</code>, <code>trading_active</code></li>
-  </ul>
+  <section id="changed" aria-labelledby="changed-title">
+    <h2 id="changed-title">What changed in this consolidation round</h2>
+    <ul class="plain">
+      <li><b>The live scan was returning nothing; it now returns markets.</b> On 2026-11-21 the demo exchange's newest open page
+        was almost entirely <code>KXMVECROSSCATEGORY</code> combos, so <code>/markets?status=open&amp;limit=1000</code> matched
+        <b>0</b> of the five topics. <a href="desk/live.html">desk/live.html</a> now applies the documented
+        <a href="https://docs.kalshi.com/api-reference/market/get-markets"><code>mve_filter=exclude</code></a> plus one
+        <code>series_ticker</code> request per series, from the generated list
+        <a href="desk/data/series-index.json">desk/data/series-index.json</a>
+        (<code>desk/tools/build_series_index.py</code>, 28 series over 5 topics). Regression: <code>desk/tools/dom_test.mjs</code> §7.</li>
+      <li><b>The scheduled engine refresh was failing; the cause is fixed.</b> A market matched by title text can arrive with no
+        <code>series_ticker</code>, and the candle path is <code>/series/{series}/markets/{ticker}/candlesticks</code>, so
+        <code>quote(None)</code> raised <code>TypeError: quote_from_bytes() expected bytes</code>. The refresh now resolves the
+        series from the official <a href="https://docs.kalshi.com/api-reference/events/get-event">Get Event</a> response, leaves
+        candles empty with the reason when no series exists, excludes combos, and exits non-zero when it collects nothing.</li>
+      <li><b>The desk CI failure was a Node version mismatch.</b> <code>jsdom</code> 31 needs Node ≥ 22; <code>desk.yml</code>
+        pinned Node 20, so the DOM-test step failed and blocked the commit of refreshed desk data. Now Node 22.</li>
+      <li><b>The landing page names one canonical page per job</b> instead of asking the reader to choose a survivor; the
+        superseded pages are indexed on <a href="archive/index.html">archive/index.html</a> and remain online.</li>
+    </ul>
+  </section>
 </main>
-<footer class="wrap small">
-  Not investment advice. The Kalshi demo exchange uses mock funds and its prices may not reflect real markets. Topic
-  membership uses published keyword rules, not an official taxonomy. Values not confirmed from an official source are left
-  blank and listed on <a href="site/flagged.html">Flagged for review</a>.
+
+<footer class="wrap foot">
+  <p><b>Scope:</b> this dashboard uses the Kalshi demo Trade API for public market data and keeps dated snapshots for review. It is not a recommendation to trade. No authenticated account was connected and no exchange order was placed by this integration.</p>
+  <div class="footer-links">
+    <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments ↗</a>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment ↗</a>
+    <a href="site/sources.html">Source pages</a>
+    <a href="integration/flagged-review.html">Flagged items</a>
+  </div>
 </footer>
 </body>
 </html>

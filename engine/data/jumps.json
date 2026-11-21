@@ -1,0 +1,60 @@
+{
+ "generated_utc": "2026-11-21T07:10:16Z",
+ "inputs": {
+  "charts": "engine/data/live-snapshot.json",
+  "charts_generated_utc": "2026-11-21T07:10:05Z",
+  "charts_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "markets": "engine/data/live-snapshot.json",
+  "resolved": "engine/data/live-snapshot.json"
+ },
+ "threshold_dollars": 0.1,
+ "method": "adjacent candles in the official candlestick response whose recorded close differs by >= threshold; price_close (traded) and yes/mid (book) scanned separately; null closes skipped, never filled",
+ "endpoints_used": [
+  "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+  "https://docs.kalshi.com/getting_started/orderbook_responses"
+ ],
+ "coverage": {
+  "markets_with_candles": 0,
+  "windows": 3,
+  "candles_scanned": 10,
+  "jumps_found": 0
+ },
+ "windows": [
+  {
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "window": "1m",
+   "points": 10,
+   "first_t": 1795244460,
+   "last_t": 1795245000,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1795237811&end_ts=1795245011&period_interval=1",
+   "jumps_traded": 0,
+   "jumps_book_mid": 0
+  },
+  {
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "window": "1h",
+   "points": 0,
+   "first_t": null,
+   "last_t": null,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1794640211&end_ts=1795245011&period_interval=60",
+   "jumps_traded": 0,
+   "jumps_book_mid": 0
+  },
+  {
+   "market_ticker": "KXDEMOFUTHOURLY-26NOV21H08-UP",
+   "window": "1d",
+   "points": 0,
+   "first_t": null,
+   "last_t": null,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV21H08-UP/candlesticks?start_ts=1787469011&end_ts=1795245011&period_interval=1440",
+   "jumps_traded": 0,
+   "jumps_book_mid": 0
+  }
+ ],
+ "jumps": [],
+ "caveats": [
+  "Demo venue: Kalshi states demo prices and behavior may not reflect real markets (https://docs.kalshi.com/getting_started/demo_env).",
+  "A jump is a price move, not a cause. news_search_url is a search query, not a source.",
+  "Only markets that tools/collect_kalshi.py captured candles for are scanned; uncovered markets are not evidence of no movement."
+ ]
+}
