@@ -2429,3 +2429,13 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 | FI-2 | Re-run repository build, link/source audits and relevant dashboard/simulator tests; publish a final integration PR and confirm merge/Pages status | in progress | arena/65f6b764-demo1 | `COORDINATION.md` and release operations | Kalshi official docs listed in `SOURCES.md`; GitHub Pages API/docs | Pending | This sandbox cannot independently access Kalshi endpoints from shell under its network allowlist; no live API values will be claimed as re-verified here |
 
 Claim log: 2026-11-21 — `arena/65f6b764-demo1` claimed FI-1 and FI-2 on the platform-fixed current branch. Claim is pushed before implementation. This session is the final integration owner; no other branch will be created.
+
+### Scope extension — reproduced offline chart defect (claimed before edit)
+
+The closing test gate reproduced two failures in the optional `engine/` desk's offline path: `node engine/test_boot.mjs` reports that the chart has no path and no price-axis labels when the committed candle snapshot is older than the browser's default 6-hour wall-clock window. Its live mocked path passes. The original engine owner (`05e53528`) marked E1–E7 done; there is no open PR or active owner. To complete the requested resilient chart/fallback experience, this final integration session claims the following narrow fix rather than leaving the regression undocumented.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-3 | Make the engine chart render its latest captured history in snapshot mode using the candle timestamps (not current wall time), keep live ticks scoped to the selected ticker, and add regression coverage | in progress | arena/65f6b764-demo1 | `engine/app.js`, `engine/test_boot.mjs`, this board record | Official candlestick reference in `engine/README.md` and `SOURCES.md` | Reproduced before edit: 35 pass, 2 fail offline; live mock passes | No candle data will be retimestamped or presented as live; snapshot badge and source URLs remain authoritative |
+
+Scope extension logged and pushed 2026-11-21 before changing `engine/app.js` or its test.
