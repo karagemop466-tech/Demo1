@@ -2439,3 +2439,13 @@ The closing test gate reproduced two failures in the optional `engine/` desk's o
 | FI-3 | Make the engine chart render its latest captured history in snapshot mode using the candle timestamps (not current wall time), keep live ticks scoped to the selected ticker, and add regression coverage | in progress | arena/65f6b764-demo1 | `engine/app.js`, `engine/test_boot.mjs`, this board record | Official candlestick reference in `engine/README.md` and `SOURCES.md` | Reproduced before edit: 35 pass, 2 fail offline; live mock passes | No candle data will be retimestamped or presented as live; snapshot badge and source URLs remain authoritative |
 
 Scope extension logged and pushed 2026-11-21 before changing `engine/app.js` or its test.
+
+### Scope extension — row-level order-book source links (claimed before edit)
+
+`python3 tools/verify_site.py` found that the generated `site/liquidity.html` full-ladder table has 36 price-level rows whose official order-book URL appears only below the table, not on each row. That does not meet the brief's row-by-row source-link rule. The earlier `build_site.py` / verifier work is complete, and the two currently open PRs do not edit these files. This final integration session claims a targeted generator + verifier correction.
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| FI-4 | Add the exact official order-book request link to every generated full-ladder price row; make the line-by-line verifier check these links and count these rows | in progress | arena/65f6b764-demo1 | `build_site.py`, `tools/verify_site.py`, generated `site/liquidity.html`, `site/verification.html`, `site/verification-report.json`, this board record | `https://docs.kalshi.com/api-reference/market/get-market-orderbook`; committed `snapshot/markets.json` order-book source URLs | Reproduced before edit: verifier PASS with 0 errors / 2 warnings; warning states 36 ladder rows have only a section-level source | External settlement sources remain a separate informational warning; no source value will be invented |
+
+FI-4 was claimed on 2026-11-21 before editing the generator or verifier; no active PR claims these files.
