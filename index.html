@@ -121,6 +121,17 @@
   <p class="small">Topic membership uses the published keyword rules stored in the snapshot
     (<code>snapshot/metadata.json → topics</code>), not an official Kalshi taxonomy; each topic page shows
     which rule matched each series. Counts are generated from the same snapshot as the block above.</p>
+  <div class="callout warn">
+    <b>Two collectors, two counts — do not compare them directly.</b> The five topic counts below and on
+    <code>site/*.html</code> come from <code>snapshot/</code>, a <i>bounded</i> series scan (494 API
+    requests, generated 2026-11-20T11:43:59Z). The repository's other pipeline, <code>data/</code>, uses a
+    broad <code>/markets</code> scan; at 2026-11-21T00:48:28Z it held 22,334 <b>active</b> topic-matched
+    markets (gas 465 · elections 57 · culture 92 · crypto 21,624 · golf 96) out of 25,097 topic-matched
+    records, from 80,000 markets returned — see <a href="data/meta.json">data/meta.json</a>. The topic
+    keyword rules and the discovery method differ, so the two totals are not interchangeable and neither
+    is a complete census of the exchange. Published as finding
+    <a href="integration/flagged-review.html#data-01">DATA-01</a>.
+  </div>
   <div class="tablewrap">
   <!-- TOPICS:START -->
   <table>

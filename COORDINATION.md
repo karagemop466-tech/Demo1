@@ -2431,3 +2431,78 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 | I-3 | PR → main, merge, GitHub Pages deploy confirmation, PR/merge result recorded here | in progress | arena/2c938c6c-demo1 | this section only | docs.github.com Pages | `gh api .../pages` + live fetch of deployed pages | Pages builds cancelled by push-rate supersession are re-checked, not assumed |
 
 Claim log: 2026-11-21T06:40Z — session `arena/2c938c6c-demo1` claimed I-1..I-3; claim committed and pushed before implementation.
+
+## I-1 / I-2 done record — 2026-11-21 (session arena/2c938c6c-demo1)
+
+**Status:** I-1 **done**, I-2 **done**, I-3 in progress (PR/merge/Pages confirmation follows in the I-3 record).
+
+### What changed
+
+| File | Change |
+|---|---|
+| `index.html` | Rebuilt as a trader-first landing page: 4 primary cards (trader desk, chart & depth, resolutions, paper trades), then generated snapshot health, the five generated topic tables, 6 secondary tiles, and one “All pages” entry. The previous 31 tiles / 5 long link lists / changelog section were replaced; every page they linked to remains reachable through the generated directory. |
+| `assets/common.js` | Shared navigation reduced from 36 entries to 10 primary entries (Home, Trader desk, Chart & depth, Resolutions, Paper trades, Topics, All pages, Executive summary, Flagged for review, Sources). Injected on 18 pages; mechanism unchanged. |
+| `integration/page-directory.html` | **New**, generated: 155 rows in 24 groups, each row’s title/description read from the page file itself. |
+| `tools/build_landing.py` | **New**: rewrites the landing KPI/topic blocks from `snapshot/{metadata,markets,resolved}.json` with `tools/verify_site.py`’s own definitions; `--check` detects drift. |
+| `tools/build_directory.py` | **New**: generates the page directory; `--check` detects drift; refuses to run if a listed primary page is missing. |
+| `tools/check_page_reachability.py` | **New**: walks the real link graph from `index.html`. Baseline before this change: **6 orphan pages** (`docs/verification-b62e8188.html`, `integration/page-directory.html`, `ops-desk/index.html`, `strategy-desk/executive-summary.html`, `trader-guide/index.html`, `verified-desk/api-reference.html`). Now: **0**. |
+| `tests/test_landing_directory.py` | **New**, 14 offline tests: figures recomputed independently from the JSON (not by calling the generator), per-topic counts reconciled to the total, nav targets exist, directory lists every shipped page and no dead file, every page reachable, both generators report current. |
+| `.github/workflows/integration-check.yml` | **New**: runs the tests, the reachability gate and the repo link check on every push/PR. Generator drift is reported as a warning rather than failing a sibling session’s data-refresh push. |
+| `integration/flagged-review.html` | **Appended** (existing findings untouched): new section “Findings added by the final integration pass (2026-11-21)” with DATA-01, OPS-04, OPS-05, OPS-06, NAV-01. |
+
+### Verification performed at the post-rebase head (2026-11-21, after PRs #90/#92/#93 landed)
+
+| Gate | Result |
+|---|---|
+| `python3 -m unittest discover -s tests -p 'test_*.py'` | **51 tests OK** (33 pre-existing + 14 new + 4 added by another session) |
+| `python3 build_site.py` | `built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10 pruned=0` · `link check: OK` |
+| `python3 tools/verify_site.py` | `status: PASS`, errors=0, warnings=2 (pre-existing: 36 liquidity rows use a section-level order-book source; official external settlement hosts listed) |
+| `python3 tools/build_landing.py --check` | current — open=1,399, settled=2,117, awaiting=352, snapshot=2026-11-20T11:43:59Z |
+| `python3 tools/build_directory.py --check` | current — 155 pages |
+| `python3 tools/check_page_reachability.py` | 156 shipped · 156 reachable · **0 orphans** |
+| `node tools/check-links.mjs` | **PASS** — 448 files, no broken internal links, no key material |
+| `npm test` (exec-desk DOM) | ALL ASSERTIONS PASSED |
+| `npm run check:links` | 123 internal links OK, 86 sourced external links (python) + node checker PASS |
+| `node trade-desk/tests/{engine,links,page_boot}.test.mjs` | 45/45 · 13/13 · 24/24 = **82 checks** |
+| `node desk/tools/dom_test.mjs` | 105 passed, 0 failed |
+| `node alert-desk/test_boot.mjs` · `node alert-desk/test_alert_desk.mjs` | 35/35 · 52/52 |
+| `node sim-desk/tests/dom_test.mjs` · `python3 sim-desk/tests/test_engine.py` · `test_schedule.py` | all assertions passed · 26/26 · 3/3 |
+| `python3 engine/test_engine.py` | 11/11 |
+| `node verified-desk/tests/*.test.mjs` (`--test`) | 48 pass, 0 fail |
+| `node tests/dashboard.test.mjs` · `dashboard-jumps.test.mjs` · `alerts-live.test.mjs` | 46/46 · 9/9 · 81/81 |
+| `python3 live-desk/scripts/check_site.py` | OK — 11 pages, 56 sourced research rows |
+| `node --check` on every repo `.js`/`.mjs` (excluding `node_modules`, `site/`) | 0 syntax failures |
+| `python3 -m py_compile` on every repo `.py` | OK |
+| jsdom render of the new `index.html` | 1 h1, 5 h2, 6 KPI cards, 4 primary cards, 6 tiles, 10 nav links, 6 topic rows, no `NaN`/`undefined` text |
+| jsdom render of `integration/page-directory.html` | 155 rows, 26 headings, every `td.path` file exists |
+
+**Data freshness measured at the same moment (so the integration claim is bounded):** `snapshot/` generated 2026-11-20T11:43:59Z; `data/` generated 2026-11-21T00:48:28Z (errors `[]`); `kalshi-data` workflow last success 2026-11-21T06:40:26Z (5,000 events scanned, 0 errors); `sim-desk` ledger updated 2026-11-21T01:42:33Z, 12 runs; `engine/jumps.json` 2026-11-20T13:29:35Z. The live path a trader uses is the browser-polling desk, not these archives.
+
+### Official sources used for the claims kept on the page
+
+- `https://docs.kalshi.com/getting_started/api_environments` — demo REST base `https://external-api.demo.kalshi.co/trade-api/v2`.
+- `https://docs.kalshi.com/getting_started/demo_env` — demo uses mock funds; prices may not reflect real markets.
+- `https://docs.kalshi.com/api-reference/market/get-markets` — market list, status filter, pagination.
+- `https://docs.kalshi.com/getting_started/market_lifecycle` — `result` is `yes`/`no` (or scalar); closed ≠ resolved.
+- `https://docs.kalshi.com/getting_started/orderbook_responses` — bids only; opposite side implied at 1 − price.
+- `https://docs.kalshi.com/getting_started/market_settlement` — $1 per contract, YES/NO payout.
+- `https://docs.kalshi.com/getting_started/quick_start_websockets` — signed handshake required, hence REST polling on a public page.
+- `https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages` — Pages serves static repository files.
+- `https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule` — scheduled workflows are best-effort.
+
+### Irregularities found by this session (published on integration/flagged-review.html)
+
+1. **DATA-01 — the two collectors disagree on open-market counts for the same topics.** `snapshot/`: 1,399 open (gas 116 · elections 255 · culture 191 · crypto 474 · golf 363), generated 2026-11-20T11:43:59Z. `data/`: 22,334 **active** topic matches (gas 465 · elections 57 · culture 92 · crypto 21,624 · golf 96) at 2026-11-21T00:48:28Z, from 25,097 topic-matched records out of 80,000 returned markets. Both counted from the committed JSON with the same `active` filter. Cause not established (discovery method and topic keyword rules differ); neither total is a census. Landing page and topic section now warn against comparing across pages.
+2. **OPS-04 — `snapshot/` has no schedule.** `live-data.yml` triggers on pushes to `arena/4df8be5b-demo1` plus dispatch only, so `site/*` tables refresh only when dispatched. **Request to the data owner (task 20 / session 4df8be5b):** add a `schedule` trigger on the default branch, or move the collector onto `main`.
+3. **OPS-05 — declared crons run far less often than declared.** `fetch-data.yml` (`*/15`) last succeeded at 00:48Z and before that ~11 h earlier; `data/` was 6 h old at verification time. Documented limitation, not fixed here.
+4. **OPS-06 — a failing scheduled desk run published nothing.** Run `44857400562` failed after the build and before the commit step, discarding the refresh. Desk is green again on `main` (run `44876980889`, post-#92). Engine refresh last failed pre-#92 (`44858037385`); next scheduled run is the check. Step-level detail came from the jobs API because run logs are not downloadable from this sandbox (`results-receiver.actions.githubusercontent.com` is outside the egress allowlist) — the failing line inside the step is unverified here, and is labelled as such on the page.
+5. **Sandbox egress limits (not an outage).** `*.kalshi.co` and `github.io` are unreachable from bash here (TLS error / no response), so live API behaviour and the deployed site were verified through the request/browser path only, exactly as prior sessions recorded. Demo values remain demo-book values; no credentials, no orders.
+
+### Cross-session requests (logged, not applied)
+
+| Finding | Owner / scope | Request |
+|---|---|---|
+| OPS-04 | task 20, `tools/collect_kalshi.py`, `.github/workflows/live-data.yml` (session 4df8be5b) | Add a schedule (or default-branch trigger) so `snapshot/` and `site/*` refresh without a manual dispatch. |
+| DATA-01 | task 20 (`snapshot/`) + `scripts/fetch_demo_data.py` (`data/`) | Reconcile discovery + topic rules, or publish the intended scope of each dataset so counts are comparable. |
+| OPS-05/OPS-06 | workflow owners | Reduce competing committing workflows on `main`, or make the desk/engine commit step `if: always()` so a failed check cannot discard a refresh. |
+| Six parallel ≥$0.10 desks | each desk's session | No action requested: designated primary + directory keeps them all reachable. Any future deletion is an owner decision. |
