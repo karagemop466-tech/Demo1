@@ -2285,3 +2285,19 @@ Log:
 - 24h deltas (`previous_price_dollars` → `last_price_dollars`) are labelled "day Δ (prev→last)" — they are **not** tick-to-tick swings; true live tick swings come from poll-to-poll diffs at the $0.10 threshold.
 
 **Publish confirmation (2026-11-20 ~21:08 UTC):** PR #79 merged to main as `0643b4a`; GitHub Pages built that exact commit (`status: built`, no error, 21:07:48Z). Live verification by fetch: `https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html` renders both feeds with the 22-message SNAPSHOT seed (per-message API/Event/News-lead links intact) and starts live polling; root landing shows the session-2db27b09 tile → `alert-desk/chat.html`. CI on the merge head: alert-desk check ✓, exec-desk site check ✓, Strategy-desk ✓, Pages deploy validation ✓, data pipeline ✓, repo audit ✓. AD-1/AD-2 fully closed.
+
+## Session arena/e16652d7-demo1 — live-scan repair, CI repair, consolidation (final integration round)
+
+**Claimed:** 2026-11-21 (UTC), before implementation. **Branch:** `arena/e16652d7-demo1` (platform-fixed name; `session-<id>/<task>` naming is not available, recorded as a deviation like every prior session).
+
+**Overlap check performed before claiming:** `gh pr list --state all` → no open PR; `gh api .../branches` → one active sibling branch, `arena/b71d695c-demo1`, whose only commit (`423f148`) claims *independent operational audit* with scope `operational-audit/**` plus additive board entries. That scope does not overlap this session's, and its claim states it will not edit existing implementation or shared outputs. `git log -5 -- desk/` shows no sibling-session commit after the merged bot commit, so the desks below have no active owner.
+
+| # | Task | Status | Owner | File scope | Why |
+|---|------|--------|-------|------------|-----|
+| E-1 | Repair the canonical live topic scan: the demo API's open-market pages are now dominated by `KXMVECROSSCATEGORY` combo markets, so `/markets?status=open&limit=1000` (no filter) returns 0 topic matches on `desk/live.html`. Add the documented `mve_filter=exclude` and a per-topic series fan-out built from the committed snapshot. | in progress | arena/e16652d7-demo1 | `desk/assets/live.js`, `desk/data/series-index.json` (new), `desk/tools/build_series_index.py` (new), `desk/tools/build_pages.py`, `desk/tools/dom_test.mjs` | Live defect observed on the published page at 2026-11-21T06:39Z (0 of 1000 matched) |
+| E-2 | CI repair: `desk.yml` runs `npm install jsdom` under Node 20 (jsdom 31 → undici 8 needs `node:zstd`), which fails the *Headless page and data checks* step and therefore blocks the commit of refreshed desk data; make engine-refresh failures self-diagnosing. | in progress | arena/e16652d7-demo1 | `.github/workflows/desk.yml`, `.github/workflows/engine-refresh.yml`, `tools/engine_refresh.py` | Failed runs `44857400562` (desk, step 13) and `44858037385` (engine, step 5), both on `main` |
+| E-3 | Consolidation so the brief's "one clean dashboard" is real: root landing rebuilt around the canonical desk, superseded parallel desks moved to one archive index (nothing deleted), no "pick a survivor" left to the reader. | in progress | arena/e16652d7-demo1 | root `index.html`, `archive/index.html` (new), `build_site.py` (nav generation only) | Six parallel ≥$0.10 alert implementations are listed on the landing page today with a request for the reader to choose |
+| E-4 | Full re-verification, PR → `main`, merge without waiting, GitHub Pages deploy confirmation, and the record below. | in progress | arena/e16652d7-demo1 | `COORDINATION.md`, `integration/flagged-review.html` (appendices only) | Protocol |
+
+**Request to the owner of `operational-audit/**`:** E-1/E-2 change behaviour that an audit will measure; the evidence (live API responses, run IDs, docs links) is recorded in this section so the audit can cite it instead of re-deriving it. No file inside `operational-audit/**` is touched by this session.
+
