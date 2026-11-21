@@ -169,6 +169,34 @@
     </tbody>
   </table></div>
 
+  <h2>CI diagnostics — session d76440d6, 21 November 2026</h2>
+  <p class="note">Reproducible findings from this session, each with the run or file it came from. "Fixed" means the change is merged and the listed check was re-run; it does not prove data completeness.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Item</th><th>Finding</th><th>Status</th><th>Official sources</th></tr></thead>
+    <tbody>
+      <tr><td>D76-01: engine chart vanished once the capture aged</td>
+        <td>The engine page filtered candles to the selected span using the browser wall clock. The committed capture ended 2026-11-20T05:53Z, so after about six hours the published chart rendered an empty canvas reading "No captured candles", and <code>engine/test_boot.mjs</code> failed two assertions on <code>main</code>. Session <code aria-label="session">65f6b764</code> fixed this by anchoring the chart to the capture's own latest candle ("snapshot as of …"). This session verified that fix on <code>main</code> (40/40 page checks) and withdrew its own equivalent patch rather than merging a duplicate.</td>
+        <td>Fixed by PR #96; verified 40/40 on main</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/pull/96">PR #96</a> · <a href="https://github.com/karagemop466-tech/Demo1/blob/main/engine/app.js">engine/app.js</a> · <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks</a></td></tr>
+      <tr><td>D76-02: one pull request could cancel another's validation</td>
+        <td>The Pages deploy-validation workflow used a single <code>pull_request</code> concurrency group for every PR. A concurrent session's push cancelled this PR's validation, and the cancelled run surfaced as a failed <code>build</code> check ("Canceling since a higher priority waiting request for pages-validation-pull_request exists"). The group is now scoped per PR/ref; superseded runs of the same ref still cancel.</td>
+        <td>Fixed in this PR (.github/workflows/pages.yml)</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44878053686">Cancelled run</a> · <a href="https://docs.github.com/en/actions/using-jobs/using-concurrency">GitHub Actions concurrency</a></td></tr>
+      <tr><td>D76-03: deploy validation has no pinned Node runtime</td>
+        <td>The deploy-validation job installs jsdom 31 for the desk suite without pinning Node. It passes today only because the runner image defaults to Node 22.x; jsdom 31 declares <code>engines.node</code> of <code>^22.22.2 || ^24.15.0 || &gt;=26.0.0</code>, and the desk pipeline itself was red for exactly this reason until it was pinned. Deliberately not changed here (shared deploy gate, currently green, mid-merge-storm).</td>
+        <td>Open, low risk — flagged for review</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/.github/workflows/pages.yml">pages.yml</a> · <a href="https://www.npmjs.com/package/jsdom">jsdom package metadata</a></td></tr>
+      <tr><td>D76-04: two sessions claimed the same repair — twice</td>
+        <td>This session twice started work another session had already claimed on an unmerged branch: the two red scheduled pipelines (earlier claim PR #92) and the engine chart (earlier claim PR #96). Both duplicates were withdrawn unmerged, ownership stayed with the earlier claim, and no work was discarded — board conflicts were resolved by keeping both sides. Root cause: the overlap check read <code>main</code>'s board, but claims are pushed to session branches. The check itself is now recorded on the board.</td>
+        <td>Resolved — process correction recorded</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/blob/main/COORDINATION.md">COORDINATION.md</a> · <a href="https://github.com/karagemop466-tech/Demo1/pull/92">PR #92</a> · <a href="https://github.com/karagemop466-tech/Demo1/pull/96">PR #96</a></td></tr>
+      <tr><td>D76-05: pipeline recovery state</td>
+        <td>Both scheduled pipelines were red on <code>main</code> before PR #92. After it merged: the desk pipeline ran green on <code>main</code> and published (run 44876980889), and a main-branch engine run passed and published a fresh snapshot (commit <code>71f277f</code>). The <em>cron trigger</em> itself had not fired again since the merge at the time of writing, so schedule timing is unobserved — recovery of the pipelines' work path is verified, cron reliability is not.</td>
+        <td>Verified for both main paths; cron trigger unobserved</td>
+        <td><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44876980889">Desk run on main</a> · <a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44878084352">Engine run on main</a> · <a href="https://github.com/karagemop466-tech/Demo1/commit/71f277f">Published snapshot</a> · <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule">Scheduled workflow behaviour</a></td></tr>
+    </tbody>
+  </table></div>
+
   <h2>D. Decisions that can change this site</h2>
   <div class="card"><ul class="tight">
     <li>Which environment is "live" (production, demo, or both).</li>
