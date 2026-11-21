@@ -563,6 +563,24 @@
       renderStatus(); if (!state.paused) scheduleNow();
     });
   }
+  function validWatchlist(data) {
+    if (!data || !data.meta || !Number.isFinite(Date.parse(data.meta.snapshot_generated_utc || '')) ||
+        !data.watchlist || typeof data.watchlist !== 'object' || Array.isArray(data.watchlist) ||
+        (data.resolutions != null && (!Array.isArray(data.resolutions) || !data.resolutions.every(function (r) { return r && typeof r.market_ticker === 'string' && r.market_ticker; })))) return false;
+    return Object.keys(data.watchlist).every(function (key) {
+      var group = data.watchlist[key];
+      return group && Array.isArray(group.events) && group.events.every(function (event) {
+        return event && typeof event.event_ticker === 'string' && event.event_ticker && Array.isArray(event.markets) && event.markets.every(function (market) {
+          return market && typeof market.market_ticker === 'string' && market.market_ticker && (market.title == null || typeof market.title === 'string') && market.snapshot && typeof market.snapshot === 'object' && !Array.isArray(market.snapshot);
+        });
+      });
+    });
+  }
+  function bootUnavailable() {
+    state.mode = 'unavailable'; state.booting = false; state.data = null; state.engine = null;
+    $('paper-asof').textContent = 'Paper data unavailable'; render();
+    if (Core && Chart) state.timer = setTimeout(boot, 30000);
+  }
   async function boot() {
     if (state.booting) return;
     state.booting = true;
@@ -573,19 +591,17 @@
       localJson('../alert-desk/data/seed.json'), localJson('../sim-desk/data/performance.json'),
       localJson('../docs/data/snapshot.json')
     ]);
-    if (loaded[0].status !== 'fulfilled' || !loaded[0].value || !loaded[0].value.meta || !loaded[0].value.watchlist || !Core || !Chart) {
-      state.mode = 'unavailable'; state.booting = false;
-      $('paper-asof').textContent = 'Paper data unavailable'; render();
-      if (Core && Chart) state.timer = setTimeout(boot, 30000);
-      return;
+    if (loaded[0].status !== 'fulfilled' || !validWatchlist(loaded[0].value) || !Core || !Chart) {
+      bootUnavailable(); return;
     }
     state.data = loaded[0].value;
-    state.charts = loaded[1].status === 'fulfilled' ? loaded[1].value : null;
-    state.seed = loaded[2].status === 'fulfilled' ? loaded[2].value : null;
+    state.charts = loaded[1].status === 'fulfilled' && loaded[1].value && Array.isArray(loaded[1].value.series) ? loaded[1].value : null;
+    state.seed = loaded[2].status === 'fulfilled' && loaded[2].value && Array.isArray(loaded[2].value.swings) && loaded[2].value.swings.every(function (s) { return s && typeof s === 'object'; }) ? loaded[2].value : null;
     state.ranking = loaded[4].status === 'fulfilled' ? loaded[4].value : null;
     state.rankChecked = Date.now(); state.rankError = loaded[4].status !== 'fulfilled';
     var meta = Object.assign({}, state.data.meta, { watchlist: state.data.watchlist });
-    state.engine = Core.createEngine({ meta: meta, threshold: 0.10, hooks: { onBubble: onBubble } });
+    try { state.engine = Core.createEngine({ meta: meta, threshold: 0.10, hooks: { onBubble: onBubble } }); }
+    catch (e) { recordError(e); bootUnavailable(); return; }
     state.selected = Object.keys(state.engine.watch)[0] || null;
     if (loaded[3].status === 'fulfilled' && loaded[3].value.simulated === true && num(loaded[3].value.equity) !== null) {
       $('paper-equity').textContent = money(loaded[3].value.equity);

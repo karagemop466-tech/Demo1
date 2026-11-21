@@ -48,10 +48,11 @@ function build(mode) {
         url = String(url); calls.push({ url, options });
         if (Object.hasOwn(dataFiles, url)) {
           if (mode === 'missing-local' && phase === 0 && url.includes('watchlist')) return { ok: false, status: 500 };
+          if (mode === 'malformed-local' && phase === 0 && url.includes('watchlist')) return ok({ meta: { snapshot_generated_utc: '2026-11-20T11:43:59Z' }, watchlist: { gas_prices: { events: 'invalid' } } });
           return ok(dataFiles[url]);
         }
         if (!url.startsWith('https://external-api.demo.kalshi.co/trade-api/v2')) throw Error('Unexpected request: ' + url);
-        if (mode === 'offline' || mode === 'missing-local') throw new TypeError('network unavailable');
+        if (mode === 'offline' || mode === 'missing-local' || mode === 'malformed-local') throw new TypeError('network unavailable');
         if (phase === 2) return { ok: false, status: 429, json: async () => ({}) };
         const u = new URL(url), p = u.pathname;
         if ((phase === 3 && p.endsWith('/orderbook')) || (phase === 5 && p.endsWith('/candlesticks')) || (phase === 4 && p.endsWith('/markets/' + first))) return { ok: false, status: 503, json: async () => ({}) };
@@ -175,6 +176,17 @@ function check(label, fn) { try { fn(); checks++; } catch (e) { e.message = labe
   await until(() => w.DashboardShell.state.mode === 'snapshot' && !w.DashboardShell.state.running, 'retry watchlist');
   check('retry loads saved watchlist without duplicated listeners', () => { assert.equal(d.querySelector('#stat-watch').textContent, String(marketCount)); d.querySelector('#show-all').click(); assert.match(d.querySelector('#show-all').textContent, /fewer/); });
   check('no runtime exceptions', () => assert.deepEqual(h.errors, []));
+  h.dom.window.close();
+}
+
+// Malformed local JSON fails closed, then recovers on retry rather than throwing.
+{
+  const h = build('malformed-local'), { window: w } = h.dom, d = w.document;
+  await until(() => w.DashboardShell && w.DashboardShell.state.mode === 'unavailable' && !w.DashboardShell.state.booting, 'malformed watchlist');
+  check('malformed watchlist is visibly unavailable', () => { assert.match(d.querySelector('#notice').textContent, /watchlist/); assert.equal(d.querySelector('#stat-watch').textContent, '—'); assert.deepEqual(h.errors, []); });
+  h.setPhase(1); d.querySelector('#refresh').click();
+  await until(() => w.DashboardShell.state.mode === 'snapshot' && !w.DashboardShell.state.running, 'malformed watchlist retry');
+  check('malformed watchlist recovers on retry', () => assert.equal(d.querySelector('#stat-watch').textContent, String(marketCount)));
   h.dom.window.close();
 }
 
