@@ -1,0 +1,59 @@
+name: Integration — landing, directory & navigation
+
+# Guards the integration layer owned by session arena/2c938c6c-demo1:
+#   1. the root landing page's figures still match the committed official snapshot
+#   2. the generated page directory lists every shipped page and no dead file
+#   3. every page is still reachable from index.html (no orphans after a nav change)
+#   4. every internal link still resolves
+#
+# Drift in the two generated files is reported, not fatal: a data refresh from another
+# desk must not turn this check red. Reachability and broken links are fatal, because
+# those are real site defects.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Landing figures and directory coverage (offline unit tests)
+        run: python3 -m unittest tests.test_landing_directory -v
+
+      - name: Regenerate and report drift (informational)
+        run: |
+          set +e
+          python3 tools/build_landing.py --check || echo "::warning file=index.html::landing data blocks are stale — run python3 tools/build_landing.py"
+          python3 tools/build_directory.py --check || echo "::warning file=integration/page-directory.html::page directory is stale — run python3 tools/build_directory.py"
+
+      - name: Every page must be reachable from index.html
+        run: python3 tools/check_page_reachability.py
+
+      - name: No broken internal links, no committed key material
+        run: node tools/check-links.mjs
+
+      - name: Python and JavaScript syntax
+        run: |
+          python3 -m py_compile tools/build_landing.py tools/build_directory.py tools/check_page_reachability.py
+          node --check assets/common.js
