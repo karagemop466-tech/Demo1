@@ -42,7 +42,15 @@ jobs:
       - name: Engine arithmetic tests (fee schedule, jump rule, fills, provenance)
         run: python3 engine/test_engine.py
       - name: Fetch demo market data for the engine
-        run: python3 tools/engine_refresh.py --out engine/data/live-snapshot.json
+        run: |
+          set -o pipefail
+          if python3 tools/engine_refresh.py --out engine/data/live-snapshot.json 2>&1 | tee "$RUNNER_TEMP/engine-refresh.log"; then
+            exit 0
+          else
+            # Expose the failure tail via the GitHub check annotations API as well as logs.
+            tail -n 30 "$RUNNER_TEMP/engine-refresh.log" | python3 -c 'import sys; s=sys.stdin.read().replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"); print("::error::engine refresh failed: " + s)'
+            exit 1
+          fi
       - name: Recompute jumps and strategy results from the refreshed data
         run: |
           python3 tools/jump_scan.py --charts engine/data/live-snapshot.json \
