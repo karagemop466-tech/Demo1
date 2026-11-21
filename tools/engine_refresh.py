@@ -215,6 +215,14 @@ def main() -> int:
                     if m.get("ticker") in seen_tickers:
                         continue
                     seen_tickers.add(m.get("ticker"))
+                    # GET /markets does NOT return series_ticker (it is an /events field;
+                    # confirmed against the live response on 2026-11-21 and against the
+                    # Get Markets schema). The series a row belongs to is known exactly
+                    # from the documented `series_ticker` filter that returned it, so it
+                    # is recorded as the request's value — not inferred from the ticker.
+                    m = dict(m)
+                    m["series_ticker"] = series
+                    m["series_from_request"] = url
                     markets.append(m)
                     series_added += 1
         log(f"series fan-out -> {series_added} additional open markets from "
