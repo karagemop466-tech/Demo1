@@ -3,6 +3,6 @@
  "access_control_allow_origin": "https://karagemop466-tech.github.io",
  "access_control_allow_methods": null,
  "access_control_allow_headers": null,
- "checked_at": "2026-11-20T19:12:10Z",
+ "checked_at": "2026-11-21T00:47:45Z",
  "method": "HTTP GET with Origin header, response headers read from the official demo API"
 }

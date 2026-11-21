@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-20T19:12:47Z",
+ "fetched_at": "2026-11-21T00:48:29Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/events",
  "events": [
   {
@@ -208,18 +208,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "GOVPARTYAL-26",
-   "series_ticker": "GOVPARTYAL",
-   "title": "Who will win the governorship in Alabama?",
-   "category": "Politics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "GOVPARTYDE-28",
    "series_ticker": "GOVPARTYDE",
    "title": "Delaware governor winner? (2028)",
@@ -367,18 +355,6 @@
    "event_ticker": "GOVPARTYSC-26",
    "series_ticker": "GOVPARTYSC",
    "title": "Who will win the governorship in South Carolina?",
-   "category": "Politics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "GOVPARTYTX-26",
-   "series_ticker": "GOVPARTYTX",
-   "title": "Who will win the governorship in Texas?",
    "category": "Politics",
    "status": "",
    "volume_fp": null,
@@ -1072,18 +1048,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXACTBLUESECOND-26OCT23",
-   "series_ticker": "KXACTBLUESECOND",
-   "title": "Who will be the second-highest ActBlue fundraiser on Oct 23, 2026?",
-   "category": "Politics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXACTBLUESECOND-26OCT30",
    "series_ticker": "KXACTBLUESECOND",
    "title": "Who will be the second-highest ActBlue fundraiser on Oct 30, 2026?",
@@ -1168,9 +1132,9 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXACTBLUETOP-26OCT23",
+   "event_ticker": "KXACTBLUETOP-26NOV27",
    "series_ticker": "KXACTBLUETOP",
-   "title": "Who will be the top ActBlue fundraiser on Oct 23, 2026?",
+   "title": "Who will be the top ActBlue fundraiser on Nov 27, 2026?",
    "category": "Politics",
    "status": "",
    "volume_fp": null,
@@ -6304,18 +6268,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXCANHOME-27JAN15",
-   "series_ticker": "KXCANHOME",
-   "title": "Canada home price above $700K in December?",
-   "category": "Economics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXCANHOUSTART-27JAN18",
    "series_ticker": "KXCANHOUSTART",
    "title": "Will Canada housing starts go above 275K this year?",
@@ -7843,18 +7795,6 @@
    "event_ticker": "KXCLMPSOEMAJ-27MAY23",
    "series_ticker": "KXCLMPSOEMAJ",
    "title": "PSOE majority in the Cortes of Castilla-La Mancha?",
-   "category": "Elections",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXCLOSESTGOVERNOR-27JAN20",
-   "series_ticker": "KXCLOSESTGOVERNOR",
-   "title": "Closest Governor race in 2026?",
    "category": "Elections",
    "status": "",
    "volume_fp": null,
@@ -11704,18 +11644,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXEARNINGSMENTIONCALM-27JAN06",
-   "series_ticker": "KXEARNINGSMENTIONCALM",
-   "title": "What will Cal-Maine Foods say during their next earnings call?",
-   "category": "Mentions",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXEARNINGSMENTIONCAR-27FEB18",
    "series_ticker": "KXEARNINGSMENTIONCAR",
    "title": "What will Avis say during their next earnings call?",
@@ -12992,54 +12920,6 @@
    "series_ticker": "KXECCOMPACT",
    "title": "Will the National Popular Vote Interstate Compact reach 270 electoral votes before 2030?",
    "category": "Elections",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXECONSTATCORECPIYOY-27JAN13",
-   "series_ticker": "KXECONSTATCORECPIYOY",
-   "title": "CPI core year-over-year in Dec 2026",
-   "category": "Economics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXECONSTATCPI-27JAN13",
-   "series_ticker": "KXECONSTATCPI",
-   "title": "CPI month-over-month in Dec 2026",
-   "category": "Economics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXECONSTATCPICORE-27JAN13",
-   "series_ticker": "KXECONSTATCPICORE",
-   "title": "CPI core month-over-month in Dec 2026",
-   "category": "Economics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXECONSTATCPIYOY-27JAN13",
-   "series_ticker": "KXECONSTATCPIYOY",
-   "title": "CPI year-over-year in Dec 2026",
-   "category": "Economics",
    "status": "",
    "volume_fp": null,
    "open_interest_fp": null,
@@ -26944,9 +26824,177 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
+   "event_ticker": "KXJOINCLUB-27SEP03ABASTONI",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Alessandro Bastoni: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03AWHARTON",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Adam Wharton: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
    "event_ticker": "KXJOINCLUB-27SEP03BFERNANDES",
    "series_ticker": "KXJOINCLUB",
    "title": "Bruno Fernandes: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03EJKROUPI",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Eli Junior Kroupi: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03ENDRICK",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Endrick: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03JALVAREZ",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Juli\u00e1n \u00c1lvarez: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03JBRANTHWAITE",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Jarrad Branthwaite: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03JGITTENS",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Jamie Gittens: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03JMATETA",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Jean-Philippe Mateta: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03KMITOMA",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Kaoru Mitoma: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03LDELAP",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Liam Delap: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03LMARTINEZ",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Lisandro Mart\u00ednez: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03NPAZ",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Nico Paz: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03RICHARLISON",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Richarlison: Next Club",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXJOINCLUB-27SEP03VINI7",
+   "series_ticker": "KXJOINCLUB",
+   "title": "Vin\u00edcius J\u00fanior: Next Club",
    "category": "Sports",
    "status": "",
    "volume_fp": null,
@@ -29620,9 +29668,9 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXMAMDANIEO-26OCT24",
+   "event_ticker": "KXMAMDANIEO-26NOV28",
    "series_ticker": "KXMAMDANIEO",
-   "title": "Will Mamdani sign an executive order this week? (10/18 - 10/24)",
+   "title": "Will Mamdani sign an executive order this week? (11/22 - 11/28)",
    "category": "Politics",
    "status": "",
    "volume_fp": null,
@@ -55132,6 +55180,18 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
+   "event_ticker": "KXNFLNEXTTEAM-27DJONES17",
+   "series_ticker": "KXNFLNEXTTEAM",
+   "title": "Daniel Jones Next Team",
+   "category": "Sports",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
    "event_ticker": "KXNFLNEXTTEAM-27JHERBERT10",
    "series_ticker": "KXNFLNEXTTEAM",
    "title": "Justin Herbert Next Team",
@@ -58816,30 +58876,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXOSCARNOMACTO-27",
-   "series_ticker": "KXOSCARNOMACTO",
-   "title": "Oscar nominations for Best Actor?",
-   "category": "Entertainment",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXOSCARNOMACTR-27",
-   "series_ticker": "KXOSCARNOMACTR",
-   "title": "Oscar nominations for Best Actress?",
-   "category": "Entertainment",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXOSCARNOMASPLAY-27",
    "series_ticker": "KXOSCARNOMASPLAY",
    "title": "Oscar nominations for Best Adapted Screenplay?",
@@ -58876,18 +58912,6 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
   },
   {
-   "event_ticker": "KXOSCARNOMDIR-27",
-   "series_ticker": "KXOSCARNOMDIR",
-   "title": "Oscar nominations for Best Director?",
-   "category": "Entertainment",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
    "event_ticker": "KXOSCARNOMDOCU-27",
    "series_ticker": "KXOSCARNOMDOCU",
    "title": "Oscar nominations for Best Documentary Feature Film?",
@@ -58915,18 +58939,6 @@
    "event_ticker": "KXOSCARNOMMAKEUP-27",
    "series_ticker": "KXOSCARNOMMAKEUP",
    "title": "Oscar nominations for Best Makeup and Hairstyling?",
-   "category": "Entertainment",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXOSCARNOMPIC-27",
-   "series_ticker": "KXOSCARNOMPIC",
-   "title": "Oscar nominations for Best Picture?",
    "category": "Entertainment",
    "status": "",
    "volume_fp": null,
@@ -60019,18 +60031,6 @@
    "event_ticker": "KXPGAR1LEAD-MAST27",
    "series_ticker": "KXPGAR1LEAD",
    "title": "The Masters End of Round 1 Leader",
-   "category": "Sports",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXPGARETURN-27JAN21",
-   "series_ticker": "KXPGARETURN",
-   "title": "Who will rejoin the PGA Tour before Jan 21, 2027",
    "category": "Sports",
    "status": "",
    "volume_fp": null,
@@ -67412,18 +67412,6 @@
    "series_ticker": "KXSKYLINEDELAY",
    "title": "Will HART push back Skyline's 2031 opening date?",
    "category": "Politics",
-   "status": "",
-   "volume_fp": null,
-   "open_interest_fp": null,
-   "notional_value_dollars": null,
-   "close_time": null,
-   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
-  },
-  {
-   "event_ticker": "KXSLATECOUNT-26Q4",
-   "series_ticker": "KXSLATECOUNT",
-   "title": "How many wide film releases next quarter?",
-   "category": "Entertainment",
    "status": "",
    "volume_fp": null,
    "open_interest_fp": null,
@@ -139663,6 +139651,18 @@
    "event_ticker": "KXVHAPRPOTUS-26NOV20",
    "series_ticker": "KXVHAPRPOTUS",
    "title": "Trump's VoteHub approval rating on Nov 20, 2026?",
+   "category": "Politics",
+   "status": "",
+   "volume_fp": null,
+   "open_interest_fp": null,
+   "notional_value_dollars": null,
+   "close_time": null,
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/events"
+  },
+  {
+   "event_ticker": "KXVHAPRPOTUS-26NOV27",
+   "series_ticker": "KXVHAPRPOTUS",
+   "title": "Trump's VoteHub approval rating on Nov 27, 2026?",
    "category": "Politics",
    "status": "",
    "volume_fp": null,

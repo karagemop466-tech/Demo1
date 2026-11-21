@@ -1,6 +1,6 @@
 {
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "fetched_at": "2026-11-20T19:12:46Z",
+ "fetched_at": "2026-11-21T00:48:28Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/series",
  "series": [
   {
@@ -83187,6 +83187,26 @@
     {
      "name": "Instituto Estatal Electoral de Chihuahua",
      "url": "https://www.ieechihuahua.org.mx/"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXCHIJOHNSONBALLOT",
+   "title": "Will Brandon Johnson qualify for Chicago's mayoral ballot?",
+   "category": "Elections",
+   "categories": [
+    "Elections"
+   ],
+   "tags": [
+    "Mayors & local",
+    "US Elections"
+   ],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "Chicago Board of Election Commissioners",
+     "url": "https://chicagoelections.gov/getting-ballot/candidates"
     }
    ],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
@@ -416227,6 +416247,43 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
   },
   {
+   "ticker": "KXTEMNHLPERIODPSPREAD",
+   "title": "s",
+   "category": "Sports",
+   "categories": [
+    "Sports"
+   ],
+   "tags": [],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "NBC Sports",
+     "url": "https://www.nbcsports.com/"
+    },
+    {
+     "name": "National Hockey League",
+     "url": "https://www.nhl.com"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "Fox Sports",
+     "url": "https://www.foxsports.com/"
+    },
+    {
+     "name": "CBS Sports",
+     "url": "https://www.cbssports.com/"
+    },
+    {
+     "name": "The Athletic",
+     "url": "https://theathletic.com"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
    "ticker": "KXTEMP",
    "title": "Average annual temperature deviation",
    "category": "Climate and Weather",
@@ -416470,6 +416527,43 @@
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
   },
   {
+   "ticker": "KXTEMPNHLAST",
+   "title": "ast temp",
+   "category": "Sports",
+   "categories": [
+    "Sports"
+   ],
+   "tags": [],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "NBC Sports",
+     "url": "https://www.nbcsports.com/"
+    },
+    {
+     "name": "National Hockey League",
+     "url": "https://www.nhl.com"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "Fox Sports",
+     "url": "https://www.foxsports.com/"
+    },
+    {
+     "name": "CBS Sports",
+     "url": "https://www.cbssports.com/"
+    },
+    {
+     "name": "The Athletic",
+     "url": "https://theathletic.com"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
    "ticker": "KXTEMPNYCH",
    "title": "Hourly Directional NYC Temperature",
    "category": "Climate and Weather",
@@ -416503,6 +416597,80 @@
     {
      "name": "Synoptic Data",
      "url": "https://synopticdata.com/"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXTEMPPLAYERPTS",
+   "title": "Temp Player Pts",
+   "category": "Sports",
+   "categories": [
+    "Sports"
+   ],
+   "tags": [],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "NBC Sports",
+     "url": "https://www.nbcsports.com/"
+    },
+    {
+     "name": "National Hockey League",
+     "url": "https://www.nhl.com"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "Fox Sports",
+     "url": "https://www.foxsports.com/"
+    },
+    {
+     "name": "CBS Sports",
+     "url": "https://www.cbssports.com/"
+    },
+    {
+     "name": "The Athletic",
+     "url": "https://theathletic.com"
+    }
+   ],
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
+  },
+  {
+   "ticker": "KXTEMPSAVES",
+   "title": "temp goalie saves",
+   "category": "Sports",
+   "categories": [
+    "Sports"
+   ],
+   "tags": [],
+   "frequency": "one_off",
+   "settlement_sources": [
+    {
+     "name": "NBC Sports",
+     "url": "https://www.nbcsports.com/"
+    },
+    {
+     "name": "National Hockey League",
+     "url": "https://www.nhl.com"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "Fox Sports",
+     "url": "https://www.foxsports.com/"
+    },
+    {
+     "name": "CBS Sports",
+     "url": "https://www.cbssports.com/"
+    },
+    {
+     "name": "The Athletic",
+     "url": "https://theathletic.com"
     }
    ],
    "source": "https://external-api.demo.kalshi.co/trade-api/v2/series"
