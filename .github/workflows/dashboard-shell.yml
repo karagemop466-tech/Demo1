@@ -51,5 +51,8 @@ jobs:
           node --check dashboard-shell/app.js
           node --check dashboard-shell/test_dashboard.mjs
           node dashboard-shell/test_dashboard.mjs
+          python3 -m py_compile dashboard-shell/audit_rows.py
+      - name: Informational repository row-source triage
+        run: python3 dashboard-shell/audit_rows.py
       - name: Local link integrity
         run: node tools/check-links.mjs dashboard-shell
