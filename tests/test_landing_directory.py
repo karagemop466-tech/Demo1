@@ -13,6 +13,7 @@ Run: python3 -m unittest tests.test_landing_directory -v
 """
 from __future__ import annotations
 
+import html
 import json
 import re
 import subprocess
@@ -138,13 +139,17 @@ class PageDirectory(unittest.TestCase):
             self.assertTrue((ROOT / rel).exists(), f"directory lists a file that does not exist: {rel}")
 
     def test_rows_carry_the_pages_own_title(self):
-        for rel in list(self.linked)[:25]:
+        # Compare on rendered text, not raw markup: the directory escapes titles
+        # (e.g. "Trader&#x27;s Guide"), so an escaped-vs-raw comparison is a false
+        # failure waiting for a page with an apostrophe or ampersand in its title.
+        plain = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", self.dir_html)))
+        for rel in sorted(self.linked):
             text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
             m = re.search(r"<title>(.*?)</title>", text, re.S | re.I)
-            if m:
-                title = re.sub(r"\s+", " ", m.group(1)).strip()
-                self.assertIn(title.split("&")[0][:20].replace("<", "&lt;"), self.dir_html,
-                              f"title of {rel} not reflected in the directory")
+            if not m:
+                continue
+            title = re.sub(r"\s+", " ", html.unescape(m.group(1))).strip()
+            self.assertIn(title, plain, f"title of {rel} not reflected in the directory")
 
 
 class Reachability(unittest.TestCase):
