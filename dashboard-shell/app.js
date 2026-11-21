@@ -73,7 +73,7 @@
   function liveQuote(ticker) {
     var r = state.liveMarkets[ticker];
     if (!r || Date.now() - r.at > 90000) return null;
-    return { bid: r.market.yes_bid_dollars, ask: r.market.yes_ask_dollars, volume: r.market.volume_24h_fp, url: r.url };
+    return { bid: r.market.yes_bid_dollars, ask: r.market.yes_ask_dollars, volume: r.market.volume_24h_fp, url: r.url, at: r.at };
   }
   function onBubble(b) {
     /* The shared engine applies the inclusive $0.10 threshold. It also has its
@@ -84,7 +84,7 @@
     var item = { kind: 'live', ticker: b.ticker, event: w.event_ticker, title: w.title,
       topic: w.topic, before: b.from, after: b.to, delta: b.delta, at: b.t * 1000,
       basis: b.basis === 'last' ? 'poll-to-poll last trade' : 'individual trades',
-      src: b.source_url, quoteSrc: q && q.url, screen: screen };
+      src: b.source_url, quoteSrc: q && q.url, quoteAt: q && q.at, screen: screen };
     state.alerts.unshift(item); if (state.alerts.length > 250) state.alerts.pop();
     if (screen) { state.modelAlerts.unshift(item); if (state.modelAlerts.length > 250) state.modelAlerts.pop(); }
   }
@@ -280,7 +280,9 @@
         rows.push('<tr><td>' + esc(t.label) + '</td><td>—</td><td>Candidate unavailable · <a href="review.html#ranking-limit">flagged</a></td><td>' + external('https://docs.kalshi.com/api-reference/events/get-event', 'Event reference') + '</td></tr>'); return;
       }
       var estimate = candidateEstimate(e);
-      rows.push('<tr><td><span class="topic-dot ' + esc(t.cls) + '"></span> <strong>' + esc(t.label) + ' · ' + esc(e.title || e.event_ticker) + '</strong><span class="market-ticker">' + esc(e.event_ticker) + '</span></td>' +
+      var pick = watchItems().find(function (r) { return r.event.event_ticker === e.event_ticker; });
+      var name = esc(t.label + ' · ' + (e.title || e.event_ticker));
+      rows.push('<tr><td><span class="topic-dot ' + esc(t.cls) + '"></span> ' + (pick ? '<button type="button" class="market-title inline-title" data-select="' + esc(pick.market.market_ticker) + '">' + name + '</button>' : '<strong>' + name + '</strong>') + '<span class="market-ticker">' + esc(e.event_ticker) + (pick ? ' · choose to inspect' : '') + '</span></td>' +
         '<td>' + esc(money(estimate)) + '</td><td>' + (estimate === null ? 'Inputs incomplete · <a href="review.html#ranking-limit">flagged</a>' : 'Saved inputs complete') + '</td><td>' + external(e.api_url, 'Event API') + '</td></tr>');
     });
     body.innerHTML = rows.join('') || '<tr><td colspan="4">No candidates for this topic · ' + external('https://docs.kalshi.com/api-reference/events/get-event', 'Event reference') + '</td></tr>';
@@ -447,7 +449,7 @@
       var q = { bid: s.bid, ask: s.ask, volume: s.vol24h };
       return { kind: 'snapshot', ticker: s.ticker, event: s.event_ticker, title: s.title, topic: s.topic,
         before: s.before, after: s.after, delta: s.delta, at: Date.parse(s.ts), basis: '24-hour previous → last', src: s.src,
-        quoteSrc: s.src, screen: modelScreen(q) };
+        quoteSrc: s.src, quoteAt: Date.parse(s.ts), screen: modelScreen(q) };
     }).filter(function (s) {
       var before = num(s.before), after = num(s.after), delta = num(s.delta);
       return s.src === marketUrl(s.ticker) && Number.isFinite(s.at) && before !== null && after !== null && delta !== null &&
@@ -461,7 +463,7 @@
       var t = topic(a.topic), sign = a.delta >= 0 ? 'up' : 'down';
       return '<article class="feed-item"><div class="feed-item-top"><span class="topic-dot ' + esc(t.cls) + '"></span><span class="feed-topic">' + esc(t.label) + '</span><span>· ' + esc(a.basis) + '</span><span class="feed-time">' + esc(shortUtc(a.at)) + '</span></div>' +
         '<div class="feed-title">' + esc((a.title || a.ticker).replace(/\*\*/g, '')) + '</div><div class="feed-price"><b>' + esc(price(a.before)) + ' → ' + esc(price(a.after)) + '</b> <span class="move ' + sign + '">' + esc(formatDelta(a.delta)) + '</span>' +
-        (isModel && a.screen ? '<span>YES win gross ' + (a.screen.gross * 100).toFixed(0) + '% before fees</span>' : '') + '</div>' +
+        (isModel && a.screen ? '<span>YES win gross ' + (a.screen.gross * 100).toFixed(0) + '% before fees · quote ' + esc(shortUtc(a.quoteAt)) + '</span>' : '') + '</div>' +
         '<div class="feed-links">' + (findWatch(a.ticker) ? '<button type="button" data-select="' + esc(a.ticker) + '">Inspect chart ↑</button>' : '') +
         external(a.src, 'Price API') + (isModel ? external(a.quoteSrc, 'Quote API') : '') + external(eventUrl(a.event), 'Event API') +
         '<a href="' + esc(newsUrl(a.title || a.ticker)) + '" target="_blank" rel="noopener noreferrer">News search (unverified) ↗</a></div></article>';
