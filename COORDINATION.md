@@ -2285,3 +2285,12 @@ Log:
 - 24h deltas (`previous_price_dollars` → `last_price_dollars`) are labelled "day Δ (prev→last)" — they are **not** tick-to-tick swings; true live tick swings come from poll-to-poll diffs at the $0.10 threshold.
 
 **Publish confirmation (2026-11-20 ~21:08 UTC):** PR #79 merged to main as `0643b4a`; GitHub Pages built that exact commit (`status: built`, no error, 21:07:48Z). Live verification by fetch: `https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html` renders both feeds with the 22-message SNAPSHOT seed (per-message API/Event/News-lead links intact) and starts live polling; root landing shows the session-2db27b09 tile → `alert-desk/chat.html`. CI on the merge head: alert-desk check ✓, exec-desk site check ✓, Strategy-desk ✓, Pages deploy validation ✓, data pipeline ✓, repo audit ✓. AD-1/AD-2 fully closed.
+
+## Session arena/84634cec-demo1 — resolution-watch correctness audit
+
+| Task | Status | Owner | File scope | Source / check | Irregularity |
+|---|---|---|---|---|---|
+| RW-1 | in progress | arena/84634cec-demo1 | `alert-desk/assets/alert.js`, `alert-desk/chat.html`, `alert-desk/test_alert_desk.mjs`, this board section | [Kalshi Get Markets](https://docs.kalshi.com/api-reference/market/get-markets), [Get Market](https://docs.kalshi.com/api-reference/market/get-market); regression tests | Existing 20-attempt ceiling may silently stop following closed-but-unsettled markets; inspect and correct without changing another desk. |
+| RW-2 | in progress | arena/84634cec-demo1 | this board section; PR and Pages operations | GitHub Pages API and repo test gates | Demo credentials not present; no authenticated trades will be placed. |
+
+Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `gh pr list`: none). Platform requires branch `arena/84634cec-demo1`, so the requested `session-<id>/<task>` name cannot be used; all work remains on this fixed branch. Existing board entries marked in-progress belong to historical, merged sessions and are not taken over.
