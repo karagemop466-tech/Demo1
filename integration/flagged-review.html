@@ -178,6 +178,84 @@
       </table>
     </div>
 
+    <h2 id="data-pipeline-findings">Findings added by the final integration pass (2026-11-21)</h2>
+    <p class="section-intro">Added by session <code>arena/2c938c6c-demo1</code> as the final integration
+    record. Existing findings above are unchanged; these are new, each with the file or run it comes from.
+    No market value is supplied here, and no code owned by another session was edited for them.</p>
+    <div class="table-wrap">
+      <table class="audit-table">
+        <thead>
+          <tr><th>ID</th><th>Finding</th><th>Impact / verification</th><th>Status</th><th>Evidence and official source</th></tr>
+        </thead>
+        <tbody>
+          <tr id="data-01">
+            <td class="id">DATA-01</td>
+            <td>Two collectors disagree on how many open markets the same five topics contain.</td>
+            <td><code>snapshot/</code> (bounded series scan, 494 requests) holds <b>1,399</b> open markets —
+              gas 116, elections 255, culture 191, crypto 474, golf 363 — generated 2026-11-20T11:43:59Z.
+              <code>data/</code> (broad <code>/markets</code> scan) matched <b>22,334</b> <b>active</b>
+              topic markets — gas 465, elections 57, culture 92, crypto 21,624, golf 96 — at
+              2026-11-21T00:48:28Z, out of 25,097 topic-matched records drawn from 80,000 returned markets.
+              Counted directly from both JSON files with the same status filter (<code>active</code>), so the
+              difference is real, not a definition of “resolved”. Cause is not established here: discovery
+              method (series list vs market scan) and topic keyword rules both differ, and the snapshot is
+              documented as a bounded scan. Neither collector calls its total a census.</td>
+            <td class="status">Open · do not compare counts across pages</td>
+            <td class="refs"><a href="../snapshot/metadata.json">snapshot/metadata.json ↗</a><a href="../data/meta.json">data/meta.json ↗</a><a href="../data/markets.json">data/markets.json ↗</a><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Official GET /markets ↗</a></td>
+          </tr>
+          <tr id="ops-04">
+            <td class="id">OPS-04</td>
+            <td>The snapshot that feeds every <code>site/*</code> topic table has no schedule trigger.</td>
+            <td><code>.github/workflows/live-data.yml</code> runs only on a push that touches
+              <code>tools/**</code> on the branch <code>arena/4df8be5b-demo1</code>, or on manual dispatch.
+              That branch is not a long-lived default branch, so in practice the snapshot refreshes only when
+              someone dispatches it. Last snapshot: 2026-11-20T11:43:59Z. The live path for a trader is the
+              browser-polling desk, not these tables.</td>
+            <td class="status">Open · request logged to the data owner</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/blob/main/.github/workflows/live-data.yml">live-data.yml ↗</a><a href="../snapshot/collect-log.txt">collection log ↗</a><a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule" target="_blank" rel="noopener">Official schedule docs ↗</a></td>
+          </tr>
+          <tr id="ops-05">
+            <td class="id">OPS-05</td>
+            <td>Scheduled refreshes run far less often than their cron says.</td>
+            <td><code>fetch-data.yml</code> declares <code>*/15 * * * *</code>, but its last two scheduled
+              successes were 6 h and 11 h apart (runs 44846160721 and 44799888285); <code>data/</code> was
+              generated 2026-11-21T00:48:28Z. GitHub documents scheduled workflows as best-effort, and this
+              repository runs several committing workflows against <code>main</code>, which can delay or
+              cancel runs. Recorded so that a stale figure is not read as a live one.</td>
+            <td class="status">Open · documented limitation</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/actions/workflows/fetch-data.yml">fetch-data runs ↗</a><a href="../data/meta.json">data/meta.json ↗</a><a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule" target="_blank" rel="noopener">Official schedule docs ↗</a></td>
+          </tr>
+          <tr id="ops-06">
+            <td class="id">OPS-06</td>
+            <td>The scheduled desk pipeline failed repeatedly on <code>main</code> and therefore published nothing.</td>
+            <td>Run <code>44857400562</code> (and <code>44820305923</code>) failed at the
+              “Headless page and data checks” step, after the site build and before the commit step, so the
+              refreshed desk data and pages were discarded each time. <b>Current state:</b> the desk workflow
+              succeeded on <code>main</code> at run <code>44876980889</code> after PR #92 merged. The engine
+              refresh last failed at run <code>44858037385</code> (“Fetch demo market data for the engine”);
+              its next scheduled run is the check that matters. Step-level conclusions come from the jobs
+              API; the run logs themselves are not downloadable from this sandbox (egress allowlist), so the
+              failing line inside the step is unverified here.</td>
+            <td class="status">Partly resolved · desk green, engine pending next run</td>
+            <td class="refs"><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44857400562">Desk failure ↗</a><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44876980889">Desk success ↗</a><a href="https://github.com/karagemop466-tech/Demo1/actions/runs/44858037385">Engine failure ↗</a><a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows" target="_blank" rel="noopener">Official Actions docs ↗</a></td>
+          </tr>
+          <tr id="nav-01">
+            <td class="id">NAV-01</td>
+            <td>The same brief requirement is implemented by several independent desks; navigation had grown to 36 entries.</td>
+            <td>Six chat/alert implementations (<code>trade-desk/</code>, <code>alerts-live.html</code>,
+              <code>alerts.html</code>, <code>alerts/index.html</code>, <code>alert-desk/</code>,
+              <code>tape-desk/</code>) measure a “move” against different prices (best ask, last print,
+              candle close), so a flag on one need not appear on another in the same minute. Resolution of
+              this pass: <code>trade-desk/</code> is the designated working path, the shared nav is 10
+              entries, and <code>integration/page-directory.html</code> lists all 155 other pages with the
+              description each page carries itself. Nothing was deleted.</td>
+            <td class="status">Consolidated · not a defect</td>
+            <td class="refs"><a href="page-directory.html">Page directory ↗</a><a href="../tape-desk/consolidation-map.html">Consolidation map ↗</a><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Official order-book definitions ↗</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2>Existing desk-specific review register</h2>
     <p class="section-intro">The live desk also maintains its original UNVERIFIED and repository-irregularity register. This audit addendum does not replace it.</p>
     <div class="grid">
