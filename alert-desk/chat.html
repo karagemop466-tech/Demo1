@@ -151,9 +151,14 @@
         (<a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits ↗</a>).
         REST responses are cached a few seconds by the exchange
         (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a>).</li>
-      <li><b>Resolution watching is per-message.</b> We re-check markets that disappeared from
-        the open list (capped per poll). A resolution the page never witnessed is not invented —
-        see the <a href="../site/resolved.html">resolved snapshot</a> instead.</li>
+      <li><b>Resolution watching lasts while this tab is open.</b> Markets previously seen in the
+        open list that disappear are re-checked individually (up to four due checks per poll,
+        with per-market backoff) until the API returns a YES, NO, or scalar result. An
+        active market can also disappear from a bounded first page; disappearance is not
+        a resolution. The watch queue is not persisted across reloads or closed tabs,
+        and markets never seen on that page are not watched. A result never observed is
+        left unverified — see the <a href="../site/resolved.html">resolved snapshot</a> instead.
+        <a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market ↗</a></li>
       <li><b>Topic rules are keyword rules</b>, same published patterns as the consolidated desk,
         not an official Kalshi taxonomy. Weak/known false matches (e.g. KXWTI crude oil) are
         excluded — repo flag FL-05.</li>

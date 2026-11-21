@@ -47,7 +47,7 @@
   var BACKOFF_MAX_MS = 300000;
   var MAX_MSGS = 250;        // per feed, oldest dropped
   var MAX_RESOLVE_CHECKS = 4; // single-market GETs per poll (rate-limit friendly)
-  var MAX_RESOLVE_ATTEMPTS = 20;
+  var RESOLVE_RETRY_MAX_MS = 300000; // per-market backoff; do not silently abandon unsettled markets
   var LIST_URL = API + "/markets?status=open&limit=1000";
 
   /* ---- topic rules: same published keyword patterns as desk/assets/core.js
@@ -73,8 +73,8 @@
     picked: {},            // ticker -> true once scored >= 4/5 (ROI resolutions)
     baseline: {},          // ticker -> {series:'last'|'mid', price:number}
     openPrev: {},          // ticker -> true if topic market was on the open list last poll
-    pendingResolve: {},    // ticker -> attempts (disappeared from open list)
-    checkedOnce: {},       // ticker -> true (never re-queue an active/off-page market)
+    pendingResolve: {},    // ticker -> {attempts, nextAt}; pending until API returns a result
+    checkedOnce: {},       // ticker -> true only after an observed result
     seenKeys: {},          // message id -> true (dedupe)
     dayDone: false,        // day-move pass runs on first live poll only
     filter: "all",
@@ -419,6 +419,7 @@
     var bits = [];
     if (state.lastPollAt) bits.push("last poll " + hhmmss(state.lastPollAt));
     if (state.lastStats) bits.push(state.lastStats);
+    bits.push(Object.keys(state.pendingResolve).length + " pending result checks");
     bits.push(state.paused ? "paused" : "every " + POLL_MS / 1000 + "s");
     el.textContent = bits.join(" · ");
   }
@@ -486,6 +487,9 @@
       var topic = classify(m);
       if (!topic) return;
       topicNow[m.ticker] = true;
+      // A market may temporarily leave page one and return. Stop its single-market
+      // watch while it is visible on the open list; re-queue on the next departure.
+      delete state.pendingResolve[m.ticker];
       var f = marketFields(m);
       var ser = seriesOf(m, f);
       var base = state.baseline[m.ticker];
@@ -533,7 +537,7 @@
     if (opts.first !== true) {
       Object.keys(state.openPrev).forEach(function (t) {
         if (!topicNow[t] && !state.pendingResolve[t] && !state.checkedOnce[t]) {
-          state.pendingResolve[t] = 0;
+          state.pendingResolve[t] = { attempts: 0, nextAt: 0 };
         }
       });
     }
@@ -543,17 +547,26 @@
   }
 
   function checkResolutions() {
-    var queue = Object.keys(state.pendingResolve);
+    var now = Date.now();
+    var queue = Object.keys(state.pendingResolve).filter(function (t) {
+      return state.pendingResolve[t].nextAt <= now;
+    });
     if (!queue.length) return Promise.resolve(0);
     var slice = queue.slice(0, MAX_RESOLVE_CHECKS);
     var done = 0;
-    /* retire = stop watching this ticker; retry = bounded re-check later */
+    /* Never declare a result from status alone. Keep failed/closed/active
+     * off-page tickers pending, with bounded request frequency and fair rotation. */
     function retire(t) { delete state.pendingResolve[t]; state.checkedOnce[t] = true; }
     function retry(t) {
-      var a = state.pendingResolve[t];
-      if (a === undefined) return;
-      if (a + 1 >= MAX_RESOLVE_ATTEMPTS) retire(t);
-      else state.pendingResolve[t] = a + 1;
+      var watch = state.pendingResolve[t];
+      if (!watch) return;
+      var attempts = watch.attempts + 1;
+      delete state.pendingResolve[t]; // reinsert at end so later tickers are not starved
+      state.pendingResolve[t] = {
+        attempts: attempts,
+        nextAt: Date.now() + Math.min(RESOLVE_RETRY_MAX_MS,
+          POLL_MS * Math.pow(2, Math.min(attempts - 1, 5))),
+      };
     }
     var chain = slice.reduce(function (p, ticker) {
       return p.then(function () {
@@ -563,7 +576,7 @@
           return r.json();
         }).then(function (data) {
           var m = data && data.market;
-          if (!m) { retire(ticker); return; }
+          if (!m) { retry(ticker); return; }
           var res = String(m.result || "").toLowerCase();
           if (res === "yes" || res === "no" || res === "scalar") {
             retire(ticker);
@@ -577,11 +590,9 @@
               src: url, venue: venueUrl(m),
               news: newsUrl(m), source: "live",
             }), true)) done++;
-          } else if (String(m.status || "") === "active") {
-            /* fell off page 1 but still trading — cannot watch it; disclosed limit */
-            retire(ticker);
           } else {
-            /* closed/determined but result not out yet: bounded retries */
+            /* Closed awaiting settlement, or still active but off page one:
+             * neither means YES or NO. Continue checking at a bounded rate. */
             retry(ticker);
           }
         }).catch(function () { retry(ticker); });
@@ -611,7 +622,8 @@
         esc(state.lastStats) + ". Alerts fire at <b>|Δ| ≥ $0.10</b> either direction; " +
         "markets that leave the open list are re-checked for a YES/NO result.");
       return checkResolutions().then(function (n) {
-        if (n > 0) { renderAll(); setPollInfo(); }
+        if (n > 0) renderAll();
+        setPollInfo();
         return res;
       });
     }).catch(function (e) {
@@ -696,6 +708,7 @@
     classify: classify, scoreModel: scoreModel, marketFields: marketFields,
     seriesOf: seriesOf, makeSwing: makeSwing, makeResolution: makeResolution,
     addMessage: addMessage, renderAll: renderAll, handleList: handleList,
+    checkResolutions: checkResolutions,
     API: API, LIST_URL: LIST_URL, THRESHOLD: THRESHOLD, TOPICS: TOPICS,
   };
 

@@ -312,7 +312,47 @@ console.log("\ncase 2 — live (official-shaped payloads through the real code p
   E.pause();
 }
 
-console.log("\ncase 3 — seed failure degrades honestly");
+console.log("\ncase 3 — closed markets remain under watch until a confirmed result");
+{
+  const tickers = Array.from({ length: 6 }, (_, i) => `KXBTC-26NOV23-WATCH${i}`);
+  const resolve = Object.fromEntries(tickers.map((ticker) => [ticker, mkt({
+    ticker, event_ticker: "KXBTC-26NOV23", title: "Will Bitcoin reach a threshold?",
+    status: "closed", result: "", settlement_ts: "",
+  })]));
+  const { win, doc, fx } = await boot({ seedFails: true, list: () => ({ markets: [] }), resolve });
+  const E = win.__alertdesk;
+  E.pause();
+  for (const ticker of tickers) E.state.pendingResolve[ticker] = { attempts: 0, nextAt: 0 };
+  await E.checkResolutions();
+  ok("per-poll resolution requests capped at four",
+     fx.calls.filter((u) => tickers.some((t) => u.endsWith(`/markets/${t}`))).length === 4);
+  // Force the scheduled due time only in this deterministic test; production
+  // waits for each ticker's nextAt before another request.
+  for (const watch of Object.values(E.state.pendingResolve)) watch.nextAt = 0;
+  await E.checkResolutions();
+  ok("later queue entries are checked despite four older unsettled entries",
+     tickers.slice(4).every((t) => fx.calls.some((u) => u.endsWith(`/markets/${t}`))));
+  for (let i = 0; i < 35; i++) {
+    for (const watch of Object.values(E.state.pendingResolve)) watch.nextAt = 0;
+    await E.checkResolutions();
+  }
+  ok("unsettled markets survive more than the old 20-attempt ceiling",
+     tickers.every((t) => E.state.pendingResolve[t] && !E.state.checkedOnce[t]));
+  resolve[tickers[0]].result = "no";
+  resolve[tickers[0]].settlement_ts = "2026-11-21T02:00:00Z";
+  for (const watch of Object.values(E.state.pendingResolve)) watch.nextAt = 0;
+  await E.checkResolutions();
+  ok("observed NO result retires only its resolved ticker",
+     !E.state.pendingResolve[tickers[0]] && E.state.checkedOnce[tickers[0]] &&
+     tickers.slice(1).every((t) => E.state.pendingResolve[t]));
+  ok("NO result is sourced from its individual market request",
+     E.state.messages.some((m) => m.kind === "resolution" && m.ticker === tickers[0] &&
+       m.result === "no" && m.src === `${API}/markets/${tickers[0]}`));
+  ok("watch is explicitly limited to the current tab",
+     /not persisted across reloads/.test(doc.body.textContent));
+}
+
+console.log("\ncase 4 — seed failure degrades honestly");
 {
   const { doc, errors } = await boot({ seedFails: true });
   ok("no script errors", errors.length === 0, errors.slice(0, 2).join(" | "));
