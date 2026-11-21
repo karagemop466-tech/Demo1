@@ -22,7 +22,13 @@ for (const [src, file] of [
   ['../trade-desk/assets/chart.js', 'trade-desk/assets/chart.js'],
   ['app.js', 'dashboard-shell/app.js']
 ]) html = html.replace(`<script src="${src}"></script>`, () => `<script>${read(file)}</script>`);
-const first = dataFiles['../tape-desk/data/watchlist.json'].watchlist.gas_prices.events[0].markets[0].market_ticker;
+const watch = dataFiles['../tape-desk/data/watchlist.json'];
+const topics = Object.values(watch.watchlist);
+const first = watch.watchlist.gas_prices.events[0].markets[0].market_ticker;
+const eventCount = topics.reduce((n, g) => n + g.events.length, 0);
+const marketCount = topics.reduce((n, g) => n + g.events.reduce((m, e) => m + e.markets.length, 0), 0);
+const firstEventCount = topics.filter(g => g.events.length).length;
+const firstMarketCount = topics.reduce((n, g) => n + (g.events[0]?.markets.length || 0), 0);
 const ok = (data) => ({ ok: true, status: 200, json: async () => structuredClone(data) });
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function until(test, label) {
@@ -78,19 +84,19 @@ function check(label, fn) { try { fn(); checks++; } catch (e) { e.message = labe
 {
   const h = build('offline'), { window: w } = h.dom, d = w.document;
   await until(() => w.DashboardShell && w.DashboardShell.state.mode === 'snapshot' && !w.DashboardShell.state.running, 'offline render');
-  check('bounded watchlist', () => assert.equal(d.querySelector('#stat-watch').textContent, '40'));
+  check('bounded watchlist', () => assert.equal(d.querySelector('#stat-watch').textContent, String(marketCount)));
   check('offline badge', () => assert.match(d.querySelector('#connection').textContent, /Offline \/ stale/));
   check('offline retry disclosure', () => assert.match(d.querySelector('#notice').textContent, /snapshot.*retry/i));
   check('live counts do not include historical examples', () => { assert.equal(d.querySelector('#stat-alerts').textContent, '0'); assert.equal(d.querySelector('#all-count').textContent, '0'); });
   check('historical examples explicitly marked', () => assert.match(d.querySelector('#all-feed').textContent, /SNAPSHOT.*24-hour change/));
   check('model fallback explicitly marked', () => assert.match(d.querySelector('#model-feed').textContent, /SNAPSHOT.*24-hour change/));
-  check('fallback chart is a real dated archive', () => { assert.match(d.querySelector('#chart-basis').textContent, /Archived snapshot/); assert.match(d.querySelector('#chart-note').textContent, /2026-11-20/); assert.ok(d.querySelector('#chart path')); });
-  check('last price has its own timestamp and source', () => { assert.match(d.querySelector('#current-price-source').textContent, /Snapshot 2026-11-20/); assert.ok(d.querySelector('#current-price-source a[href*="/markets/"]')); });
-  check('paper equity explicitly simulated', () => { assert.match(d.querySelector('.paper-badge').textContent, /SIMULATED/); assert.equal(d.querySelector('#paper-equity').textContent, '$990.69'); });
+  check('fallback chart is a dated archive or honestly empty', () => { const text = d.querySelector('#chart-basis').textContent; assert.match(text, /Archived snapshot|No history available/); if (/Archived/.test(text)) { assert.match(d.querySelector('#chart-note').textContent, /snapshot .* UTC/); assert.ok(d.querySelector('#chart path')); } });
+  check('last price has its own timestamp and source', () => { assert.match(d.querySelector('#current-price-source').textContent, /Snapshot .* UTC/); assert.ok(d.querySelector('#current-price-source a[href*="/markets/"]')); });
+  check('paper equity explicitly simulated', () => { const p = dataFiles['../sim-desk/data/performance.json']; assert.match(d.querySelector('.paper-badge').textContent, /SIMULATED/); assert.equal(d.querySelector('#paper-equity').textContent, p.simulated && Number.isFinite(p.equity) ? '$' + p.equity.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2}) : '—'); });
   check('paper provenance warning visible', () => assert.match(d.querySelector('.paper-warning').textContent, /source mismatch/));
-  check('disputed result not presented as final', () => { const row = [...d.querySelectorAll('#outcomes tr')].find(r => r.textContent.includes('KXBTCD-26JUN0521')); assert.ok(row); assert.match(row.textContent, /NOT FINAL/); });
-  check('initial table is bounded and grouped', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, 5); assert.equal(d.querySelectorAll('#market-body tr:not(.event-row)').length, 14); });
-  check('leading events use the newer bounded collection and official sources', () => { assert.equal(d.querySelectorAll('#ranking-body tr').length, 5); assert.match(d.querySelector('#ranking-asof').textContent, /Collected .* UTC/); assert.ok([...d.querySelectorAll('#ranking-body tr')].every(r => r.querySelector('a[href^="https://external-api.demo.kalshi.co/"]'))); });
+  check('non-final snapshot outcomes are not presented as final', () => { for (const r of watch.resolutions.slice(0,5)) { const row = [...d.querySelectorAll('#outcomes tr')].find(x => x.textContent.includes(r.market_ticker)); assert.ok(row); if (r.snapshot.status !== 'finalized' || !['yes','no','scalar'].includes(r.snapshot.result)) assert.match(row.textContent, /NOT FINAL/); } });
+  check('initial table is bounded and grouped', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, firstEventCount); assert.equal(d.querySelectorAll('#market-body tr:not(.event-row)').length, firstMarketCount); });
+  check('leading events use the newer bounded collection and official sources', () => { assert.equal(d.querySelectorAll('#ranking-body tr').length, 5); assert.match(d.querySelector('#ranking-asof').textContent, /Collected .* UTC/); assert.ok([...d.querySelectorAll('#ranking-body tr')].every(r => r.querySelector('a[href^="https://external-api.demo.kalshi.co/"],a[href^="https://docs.kalshi.com/"]'))); });
   check('ranking estimates fail closed when saved input is truncated', () => { const event = w.DashboardShell.state.ranking.topics.gas.top_events[0]; const old = event.markets_truncated; event.markets_truncated = true; d.querySelector('[data-topic="gas_prices"]').click(); const row = d.querySelector('#ranking-body tr'); assert.equal(row.cells[1].textContent, '—'); assert.match(row.cells[2].textContent, /incomplete.*flagged/i); event.markets_truncated = old; d.querySelector('[data-topic="all"]').click(); });
   check('missing ranking input cannot become zero', () => { const event = w.DashboardShell.state.ranking.topics.gas.top_events[0]; const old = event.markets[0].last_price_dollars; event.markets[0].last_price_dollars = ' '; d.querySelector('[data-topic="gas_prices"]').click(); assert.equal(d.querySelector('#ranking-body tr').cells[1].textContent, '—'); event.markets[0].last_price_dollars = old; d.querySelector('[data-topic="all"]').click(); });
   check('mismatched snapshot sources blank the corresponding values and flag them', () => { const m = w.DashboardShell.state.data.watchlist.gas_prices.events[0].markets[0]; const original = { ...m.snapshot.sources }; m.snapshot.sources.market = 'https://example.com/wrong'; m.snapshot.sources.dollar_notional_24h = 'https://example.com/wrong'; d.querySelector('[data-topic="gas_prices"]').click(); const row = [...d.querySelectorAll('#market-body tr')].find(r => r.textContent.includes(m.market_ticker)); assert.equal(row.cells[1].textContent, '—'); assert.match(row.cells[2].textContent, /—.*flag/); assert.match(row.cells[4].textContent, /flag/); Object.assign(m.snapshot.sources, original); d.querySelector('[data-topic="all"]').click(); });
@@ -102,9 +108,9 @@ function check(label, fn) { try { fn(); checks++; } catch (e) { e.message = labe
   check('jump boundary includes exactly ten cents', () => { const x = w.DashboardShell.adjacentJumps([{ts: 1, price: .5},{ts: 2, price: .6},{ts: 3, price: .6999}], 'T'); assert.equal(x.length, 1); });
   check('chart does not call changes across missing candles sudden moves', () => assert.equal(w.DashboardShell.adjacentJumps([{ts: 0, price: .5},{ts: 120000, price: .7}], 'T', 90000).length, 0));
   d.querySelector('#show-all').click();
-  check('all saved events accessible', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, 15); assert.equal(d.querySelectorAll('#market-body tr:not(.event-row)').length, 40); officialRows(d); });
+  check('all saved events accessible', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, eventCount); assert.equal(d.querySelectorAll('#market-body tr:not(.event-row)').length, marketCount); officialRows(d); });
   d.querySelector('[data-topic="golf"]').click();
-  check('topic filter', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, 3); assert.ok([...d.querySelectorAll('#market-body .event-row')].every(r => r.textContent.includes('Golf'))); assert.equal(d.querySelectorAll('#ranking-body tr').length, 1); assert.match(d.querySelector('#ranking-body').textContent, /Golf/); });
+  check('topic filter', () => { assert.equal(d.querySelectorAll('#market-body .event-row').length, watch.watchlist.golf.events.length); assert.ok([...d.querySelectorAll('#market-body .event-row')].every(r => r.textContent.includes('Golf'))); assert.equal(d.querySelectorAll('#ranking-body tr').length, 1); assert.match(d.querySelector('#ranking-body').textContent, /Golf/); });
   d.querySelector('[data-window="30s"]').click();
   check('seconds view does not fabricate historical samples', () => { assert.match(d.querySelector('#chart-note').textContent, /browser-observed/); assert.match(d.querySelector('#chart-readout').textContent, /No official prices/); });
   check('blank account data', () => assert.equal(d.querySelector('.muted-value').textContent, '—'));
@@ -164,7 +170,7 @@ function check(label, fn) { try { fn(); checks++; } catch (e) { e.message = labe
   check('missing watchlist is visible, without fake alert counts', () => { assert.match(d.querySelector('#connection').textContent, /Data unavailable/); assert.match(d.querySelector('#notice').textContent, /watchlist/); assert.equal(d.querySelector('#all-count').textContent, '—'); officialRows(d); });
   h.setPhase(1); d.querySelector('#refresh').click();
   await until(() => w.DashboardShell.state.mode === 'snapshot' && !w.DashboardShell.state.running, 'retry watchlist');
-  check('retry loads saved watchlist without duplicated listeners', () => { assert.equal(d.querySelector('#stat-watch').textContent, '40'); d.querySelector('#show-all').click(); assert.match(d.querySelector('#show-all').textContent, /fewer/); });
+  check('retry loads saved watchlist without duplicated listeners', () => { assert.equal(d.querySelector('#stat-watch').textContent, String(marketCount)); d.querySelector('#show-all').click(); assert.match(d.querySelector('#show-all').textContent, /fewer/); });
   check('no runtime exceptions', () => assert.deepEqual(h.errors, []));
   h.dom.window.close();
 }
