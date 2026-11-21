@@ -700,10 +700,11 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/events/get-event",
-      "uses": 1,
+      "uses": 2,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
+        "COORDINATION.md",
         "decision/js/kalshi.js"
       ]
     },
