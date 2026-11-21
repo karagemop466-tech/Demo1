@@ -123,6 +123,42 @@ def classify(market: dict) -> tuple[str | None, str, str]:
     return None, "", ""
 
 
+def candle_point(c: dict) -> dict:
+    """Transcribe documented nested candle fields; missing values stay blank."""
+    price = c.get("price") or {}
+    bid = c.get("yes_bid") or {}
+    ask = c.get("yes_ask") or {}
+    return {
+        "t": c.get("end_period_ts"),
+        "price_close": fnum(price.get("close_dollars")),
+        "price_open": fnum(price.get("open_dollars")),
+        "price_high": fnum(price.get("high_dollars")),
+        "price_low": fnum(price.get("low_dollars")),
+        "yes_bid_close": fnum(bid.get("close_dollars")),
+        "yes_ask_close": fnum(ask.get("close_dollars")),
+        "volume": fnum(c.get("volume_fp")),
+    }
+
+
+def event_series(event_ticker, events, base):
+    """Read the series from the official event, never infer it from a ticker."""
+    if not event_ticker:
+        return None, None, "market has no event_ticker"
+    event = events.get(event_ticker)
+    if event is None:
+        payload, url, err = get_json(
+            f"/events/{urllib.parse.quote(event_ticker, safe='')}", None, base)
+        if err:
+            return None, url, err
+        event = (payload or {}).get("event") or {}
+        event = {**event, "source": url}
+        events[event_ticker] = event
+    series = event.get("series_ticker")
+    if not isinstance(series, str) or not series:
+        return None, event.get("source"), "event has no series_ticker"
+    return series, event.get("source"), None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=BASE)
@@ -232,17 +268,17 @@ def main() -> int:
     #    official volume_24h_fp x notional_value_dollars; both operands come from the
     #    API, the product is labelled computed.
     scored = []
-    skipped_no_series = 0
+    skipped_no_series = 0   # counted below: rows whose series the event lookup did not supply
     for m in markets:
         topic, matched, field = classify(m)
         if not topic:
             continue
-        # The candlestick path is /series/{series}/markets/{ticker}/candlesticks, so a
-        # market without a series_ticker cannot be charted. Observed 2026-11-21: the
-        # topic rule matched on title text only, series_ticker was None, and
-        # urllib.parse.quote(None) raised "TypeError: quote_from_bytes() expected bytes",
-        # which is the crash that kept run 44876739087 red.
-        if not m.get("ticker") or not m.get("series_ticker"):
+        # A market with no series_ticker cannot be charted: the candlestick path is
+        # /series/{series}/markets/{ticker}/candlesticks. GET /markets omits the field,
+        # so it is resolved from the official event (event_series(), step 4) for the
+        # selected rows only. Observed 2026-11-21: quote(None) raised
+        # "TypeError: quote_from_bytes() expected bytes" and kept run 44876739087 red.
+        if not m.get("ticker"):
             skipped_no_series += 1
             continue
         vol24 = fnum(m.get("volume_24h_fp")) or fnum(m.get("volume_fp")) or 0.0
@@ -283,13 +319,21 @@ def main() -> int:
     log(f"topic picks -> " + ", ".join(f"{t}:{len(v)}" for t, v in ranked.items()) +
          f" (of {len(scored)} topic-matched; {skipped_no_series} skipped for a missing series_ticker)")
 
+    # Keep the initial events probe separate from per-market event lookups.
+    event_cache = dict(events)
+
     # 4. order book + candles for each chosen market
     for row in chosen:
         t = row["market_ticker"]
-        ser = row["series_ticker"]
-        if not t or not ser:
-            log(f"skip {t}: no series_ticker, so no documented candle path exists")
-            continue
+        # Resolve the series from the official event (GET /events/{ticker}); never from a
+        # ticker prefix. A market with no resolvable series still gets its order book, and
+        # its candle slots are emitted empty with the reason, so nothing is invented.
+        ser, ser_source, ser_err = event_series(row.get("event_ticker"), event_cache, args.base)
+        if not ser:
+            log(f"  {t}: no series_ticker ({ser_err}); candles left empty")
+        row["series_ticker"] = ser
+        row["series_source"] = ser_source
+        row["series_error"] = ser_err
         ob, ob_url, ob_err = get_json(f"/markets/{urllib.parse.quote(t)}/orderbook", None, args.base)
         book = (ob or {}).get("orderbook_fp") or (ob or {}).get("orderbook") or {}
         yb = book.get("yes_dollars") or book.get("yes") or []
@@ -305,23 +349,16 @@ def main() -> int:
         }
         candles = {}
         for label, span_hours, interval in CANDLE_WINDOWS:
+            if not ser:
+                candles[label] = {"period_minutes": interval, "points": [],
+                                  "source": None, "error": ser_err}
+                continue
             end = int(time.time())
             start = end - int(span_hours * 3600)
             payload, url, err = get_json(
-                f"/series/{urllib.parse.quote(ser)}/markets/{urllib.parse.quote(t)}/candlesticks",
+                f"/series/{urllib.parse.quote(ser, safe='')}/markets/{urllib.parse.quote(t, safe='')}/candlesticks",
                 {"start_ts": start, "end_ts": end, "period_interval": interval}, args.base)
-            pts = []
-            for c in (payload or {}).get("candlesticks", []) or []:
-                pts.append({
-                    "t": c.get("time"),
-                    "price_close": fnum(c.get("price_close_dollars")),
-                    "price_open": fnum(c.get("price_open_dollars")),
-                    "price_high": fnum(c.get("price_high_dollars")),
-                    "price_low": fnum(c.get("price_low_dollars")),
-                    "yes_bid_close": fnum(c.get("yes_bid_dollars")),
-                    "yes_ask_close": fnum(c.get("yes_ask_dollars")),
-                    "volume": fnum(c.get("volume_fp")),
-                })
+            pts = [candle_point(c) for c in (payload or {}).get("candlesticks", []) or []]
             candles[label] = {"period_minutes": interval, "points": pts,
                               "source": url, "error": err}
         row["candles"] = candles

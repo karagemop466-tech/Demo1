@@ -2286,6 +2286,131 @@ Log:
 
 **Publish confirmation (2026-11-20 ~21:08 UTC):** PR #79 merged to main as `0643b4a`; GitHub Pages built that exact commit (`status: built`, no error, 21:07:48Z). Live verification by fetch: `https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html` renders both feeds with the 22-message SNAPSHOT seed (per-message API/Event/News-lead links intact) and starts live polling; root landing shows the session-2db27b09 tile → `alert-desk/chat.html`. CI on the merge head: alert-desk check ✓, exec-desk site check ✓, Strategy-desk ✓, Pages deploy validation ✓, data pipeline ✓, repo audit ✓. AD-1/AD-2 fully closed.
 
+## Session arena/84634cec-demo1 — resolution-watch correctness audit
+
+| Task | Status | Owner | File scope | Source / check | Irregularity |
+|---|---|---|---|---|---|
+| RW-1 | done | arena/84634cec-demo1 | `alert-desk/assets/alert.js`, `alert-desk/chat.html`, `alert-desk/test_alert_desk.mjs`, this board section | [Kalshi Get Markets](https://docs.kalshi.com/api-reference/market/get-markets), [Get Market](https://docs.kalshi.com/api-reference/market/get-market); regression tests | Existing 20-attempt ceiling may silently stop following closed-but-unsettled markets; inspect and correct without changing another desk. |
+| RW-2 | done | arena/84634cec-demo1 | this board section; PR and Pages operations | GitHub Pages API and repo test gates | Demo credentials not present; no authenticated trades will be placed. |
+
+Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `gh pr list`: none). Platform requires branch `arena/84634cec-demo1`, so the requested `session-<id>/<task>` name cannot be used; all work remains on this fixed branch. Existing board entries marked in-progress belong to historical, merged sessions and are not taken over.
+
+### RW-1 verification record (2026-11-21 UTC)
+
+- **Defect confirmed by code inspection:** `alert-desk/assets/alert.js` stopped re-checking a disappeared market after 20 failed/unsettled polls, and stopped immediately for an `active` market that fell off page one; with four queued first, later entries could starve. Neither `closed` nor absent from a paginated list is evidence of YES/NO. Official references checked directly: [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) documents `status`, `result`, `cursor`; [Get Market](https://docs.kalshi.com/api-reference/market/get-market) documents individual market `result`, `status`, `settlement_ts`. [API Environments](https://docs.kalshi.com/getting_started/api_environments) confirms the recommended demo REST and WebSocket hosts.
+- **Fix:** per-ticker due-time backoff capped at five minutes; retry unresolved/active/missing/error instead of fabricating settlement or silently retiring; rotate after each retry to avoid starvation; retire only after an observed `yes`/`no`/`scalar` result; clear pending watch if ticker reappears. UI shows pending count; limitations explicitly say in-memory only, not guaranteed across page reload/closed tab or for never-seen markets. No credentials, no orders.
+- **Verification:** `node alert-desk/test_alert_desk.mjs` **52/52** (added six-ticker queue, cap/fairness, >20 retries, observed NO/source checks); `node alert-desk/test_boot.mjs` **35/35**; `npm test` PASS; `node trade-desk/tests/engine.test.mjs` **45/45**; `node trade-desk/tests/links.test.mjs` **13/13**; `python3 build_site.py` 17 pages, link check OK; `node tools/check-links.mjs` PASS (444 files); `python3 -m unittest discover -s tests` 33/33 (pre-existing ResourceWarnings for unclosed test fixture files); `git diff --check` PASS. Only official-shaped mocked market payloads used in the regression test; no claim of live demo API response from this sandbox.
+- **Remaining needs review:** browser-only tracking cannot persist after tab closure; bounded first-page scan omits never-seen markets; no user-supplied demo API key or server-side signer, so no authenticated portfolio or orders in this task. Existing site review pages document these limitations. GitHub Pages status before PR: `built` at main `de7b8c0` (Pages builds/latest). RW-2 PR/merge/deploy pending.
+
+### RW-2 publish record (2026-11-21 UTC)
+
+- PR [#89](https://github.com/karagemop466-tech/Demo1/pull/89) merged without waiting for approval on 2026-11-21T06:37:54Z. Merge commit: `90f8f26d5b84bba91faad2c49d5ac2202a292259` (GitHub PR API). All five PR check jobs passed before merge (audit, build, two checks, links).
+- GitHub Pages built **that exact merge commit**, `status: built`, no error (`updated_at: 2026-11-21T06:38:16Z`); built-in [Pages deployment run 44876453258](https://github.com/karagemop466-tech/Demo1/actions/runs/44876453258) succeeded including build, report-build-status, and deploy. The [published chat page](https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html) was fetched and rendered the two source-linked feeds. Source: GitHub Pages builds API and live page. GitHub Actions emitted an upstream Node 20 deprecation warning for `actions/upload-artifact@v4`; deployment succeeded; review as a maintenance item, not a blocker.
+- This append-only board record is being shipped as a follow-up PR because a PR cannot record its own eventual merge result before merging. RW-2 **done**. No claims of authenticated demo fills, live browser API access or guaranteed post-tab resolution.
+---
+
+# Session arena/559f93df-demo1 — final close-out verification + PR/merge/Pages confirmation
+
+## Session claim
+
+- **Session ID:** `arena/559f93df-demo1` — branch `arena/559f93df-demo1` (platform-fixed name; recorded as a documented deviation, branch not renamed).
+- **Claimed at:** 2026-11-21 (UTC), before any implementation commit.
+- **Basis:** board read end-to-end; `gh pr list --state all` shows one OPEN pull request owned by another session (#88, `arena/b71d695c-demo1`, "Document operational audit and outstanding dashboard risks") — this session does **not** touch it or any of its files (`operational-audit/`, `verification/`). Every brief content area already has a merged, published counterpart from earlier sessions: executive summary, five topic pages (gas/elections/culture/crypto/golf), dashboards with live price graph (time axis, seconds/minutes/hours windows), order-book depth & liquidity-at-price, the dual scrolling-chat ≥ $0.10 alert system (all-events feed + selective high-ROI model-feed), resolution tracking to YES/NO, automated simulated-trading/strategy engines, demo-account portfolio gating (credential-gated, blank by design), suggestions, questions, Flagged-for-Review registers, sources, and a trader guide. The site is live at https://karagemop466-tech.github.io/Demo1/ with Pages `status: built`, source `{branch: main, path: /}`.
+- **Role:** final close-out / integration session for this branch — re-verify the combined tree line by line, run the full local gate suite, then PR → `main`, merge without waiting for approval, confirm GitHub Pages deploys, and record the PR link + merge result here.
+- **File scope (exclusive):** `COORDINATION.md` (this section only, appended per board convention). No other session's file is edited, and no other session's in-progress task is taken over.
+
+## Task board (this session)
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|---|---|---|---|---|---|---|
+| C-1 | Close-out verification of the combined tree (build, line-by-line verification, link/secret/source audit) | done | arena/559f93df-demo1 | `COORDINATION.md` (this section) | `build_site.py`, `tools/verify_site.py`, `tools/check-links.mjs` | `python3 build_site.py` → `built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10 pruned=0; link check: OK`. `python3 tools/verify_site.py` → `verification status: PASS`, rows checked markets=250 resolved=250 topics=600 liquidity=48 index-figures=10, errors=0 warnings=2 (informational: section-level liquidity source link; external official settlement sources listed). `node tools/check-links.mjs` → PASS, 444 files scanned, html links checked, source-link audit on 11 pages, no broken links, no secret material | none new |
+| C-2 | PR → `main`, merge without waiting for approval, confirm GitHub Pages deploys | in progress | arena/559f93df-demo1 | GitHub PR/merge + Pages API | https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages | See publish record below | — |
+| C-3 | Record sources, verification, irregularities and links for manual review | in progress | arena/559f93df-demo1 | `COORDINATION.md` (this section) | official docs listed below | See record below | — |
+
+## Official sources re-confirmed this session (docs.kalshi.com, the host named in the brief)
+
+- Demo REST (recommended): `https://external-api.demo.kalshi.co/trade-api/v2` (also supported: `https://demo-api.kalshi.co/trade-api/v2`)
+- Demo WebSocket: `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (also `wss://demo-api.kalshi.co/trade-api/ws/v2`)
+- https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/demo_env (demo = mock funds; prices/behavior may not reflect real markets)
+- https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (`period_interval` ∈ {1, 60, 1440} minutes)
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/getting_started/orderbook_responses (bids only; YES bid x ⇔ NO ask 1.00 − x)
+- https://docs.kalshi.com/getting_started/market_lifecycle
+- https://docs.kalshi.com/getting_started/market_settlement ($1 per winning contract; YES/NO result)
+- https://docs.kalshi.com/getting_started/api_keys (signed requests: KALSHI-ACCESS-KEY/SIGNATURE/TIMESTAMP)
+- https://docs.kalshi.com/api-reference/orders/create-order-v2 (POST /portfolio/events/orders; legacy /portfolio/orders → 410 Gone)
+- https://docs.kalshi.com/api-reference/portfolio/get-balance · /get-positions · /get-fills
+- https://docs.kalshi.com/getting_started/quick_start_websockets (WS handshake requires authentication → public static site polls REST)
+- https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+
+## Verification performed this session (all green)
+
+| Gate | Command | Result |
+|---|---|---|
+| Site build + link gate | `python3 build_site.py` | built 17 pages; markets=1399/1399 resolved=2469/2469 charts=10; link check: OK |
+| Line-by-line verification | `python3 tools/verify_site.py` | PASS; 0 errors; 2 informational warnings (never inferred values) |
+| Link / secret / source audit | `node tools/check-links.mjs` | PASS; 444 files; no broken links; no secret material |
+
+## Irregularities (non-blocking; already published on the site's Flagged-for-Review pages — no new code change, none block merge)
+
+1. **No demo API key in the repo or environment.** Portfolio balance/positions/fills and order placement require authenticated signed requests; those cells are blank and flagged, never inferred. A static GitHub Pages site must never hold a private key.
+2. **Demo venue only.** Values are mock-funds demo-book values, not production liquidity (official demo_env warning).
+3. **"Highest dollar amount" is not an official field.** Ranking uses computed 24 h traded notional / est. USD activity, disclosed per row, never presented as an official dollar-volume figure.
+4. **Topic matching is heuristic** (published keyword rules over series tickers/tags), not an official Kalshi taxonomy.
+5. **Site fragmentation** — several dashboard variants coexist (root, `site/`, `exec-desk/`, `desk/`, `engine/`, `sim-desk/`, `tape-desk/`, `alert-desk/`, `alerts/`, `trade-desk/`, `live-desk/`, `monitor/`, `verified-desk/`, `strategy-desk/`, `docs/`); the root landing links all of them. Consolidation is the repo owner's call, logged as a suggestion, not forced here.
+6. **Sandbox egress** is restricted to github.com / npm / pypi; `*.kalshi.co` is not reachable from bash. Live Kalshi values were not re-fetched from the shell this session; every rendered value carries its source request URL from the committed, logged official snapshot. Browser→API CORS was evidenced by earlier sessions via `data/cors.json` and deployed desks.
+
+## Links provided for manual review
+
+- Live site (landing): https://karagemop466-tech.github.io/Demo1/
+- Executive summary (root): https://karagemop466-tech.github.io/Demo1/executive-summary.html
+- Executive summary (integration): https://karagemop466-tech.github.io/Demo1/integration/executive-summary.html
+- Five topic pages: `site/gas-prices.html`, `site/elections.html`, `site/culture.html`, `site/crypto.html`, `site/golf.html`
+- Live desk + price graph (time axis, s/m/h windows) + liquidity: `site/liquidity.html`, `exec-desk/dashboard.html`
+- Dual scrolling-chat alert feeds (≥ $0.10, all events + high-ROI filter): https://karagemop466-tech.github.io/Demo1/alert-desk/chat.html
+- Price jumps (≥ $0.10 with event + venue links): `exec-desk/jumps.html`, `pages/price-jumps.html`
+- Resolved events (YES/NO): `site/resolved.html`
+- Simulated trades / strategies: `sim-desk/index.html`, `engine/strategy.html`
+- Portfolio (demo account, credential-gated): `site/portfolio.html`
+- Suggestions: `site/suggestions.html`; Questions: `site/questions.html`
+- Flagged for Review: https://karagemop466-tech.github.io/Demo1/integration/flagged-review.html
+- Line-by-line verification: https://karagemop466-tech.github.io/Demo1/site/verification.html
+- Sources: https://karagemop466-tech.github.io/Demo1/site/sources.html
+- Trader's guide: https://karagemop466-tech.github.io/Demo1/trader-guide/index.html
+- Open PR owned by another session (not touched here): https://github.com/karagemop466-tech/Demo1/pull/88
+
+## Publish record — session arena/559f93df-demo1
+
+| Item | Result |
+|---|---|
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/90 — `arena/559f93df-demo1` → `main` |
+| Merge result | **MERGED** via `gh pr merge 90 --merge` on 2026-11-21T06:40:12Z; merge commit `6a0d68566e51a3654917647bd0a126f80d0f1a52`; no approval waited on, per the brief. Pre-merge gates green: `build_site.py` link check OK; `verify_site.py` PASS errors=0; `check-links.mjs` PASS 444 files. |
+| GitHub Pages deploy | My merge commit's legacy build errored instantly ("Page build failed.", duration 0s) — the documented platform build starvation (10 builds/hour soft limit / supersession during the merge storm), not a content defect (verified locally: `build_site.py` → 17 pages, link check: OK; `verify_site.py` PASS). A subsequent main build at `75f88ca`, which contains my merge as an ancestor, completed `status: built` with no error. Live site serves the merged content at https://karagemop466-tech.github.io/Demo1/ |
+| Live verification | Confirmed `status: built`; `git merge-base --is-ancestor 6a0d685 origin/main` → YES (my merge is in main). Follow-up PR below records this completed result back onto `main`'s COORDINATION.md (this branch was already merged by PR #90). |
+
+### Claim log
+
+| Date/time (UTC) | Session ID | Action |
+|---|---|---|
+| 2026-11-21 | arena/559f93df-demo1 | Claimed close-out scope C-1..C-3; claim committed and pushed before implementation (this section). |
+## Session arena/f64b0e24-demo1 — scheduled data pipeline reliability
+
+- Claim time: 2026-11-21T06:35Z. Branch name is platform-fixed, a deviation from the requested session naming convention.
+- **R1 — in progress:** investigate and, if reproducible and safely correctable, repair the failed scheduled engine and desk workflows. Scope: `.github/workflows/engine-refresh.yml`, `.github/workflows/desk.yml`, directly related tests if necessary, and this section of `COORDINATION.md`. Prior ownership was completed; no open PRs were listed at claim time. No other implementation files will be edited without a new claim.
+- **R2 — in progress:** report verified release limitations on the existing `flagged.html` page (additive section only) and record verification, PR, merge and Pages status here. Source: GitHub Actions run/job API, official GitHub Actions and Pages documentation, and official Kalshi API documentation. Investigations and changes will distinguish observed failures from unverified hypotheses.
+- Initial evidence: GitHub API listed engine refresh run 44858037385 and desk run 44857400562 as failed at `de7b8c0`; the latest Pages build of the same commit reported `built`. The sandbox cannot access the Actions log download host; job API and workflow definitions will be used instead.
+- **R3 — in progress (claimed 2026-11-21T06:37Z):** repair the newly observed engine crash with official event-to-series lookup, and add regression tests. Additional exclusive scope: `tools/engine_refresh.py`, new `tests/test_engine_refresh.py`. The prior engine refresh owner marked the feature done. Evidence: branch dispatch [44876362134](https://github.com/karagemop466-tech/Demo1/actions/runs/44876362134) produced a `TypeError` when quoting a missing `series_ticker`; official [Get Event](https://docs.kalshi.com/api-reference/events/get-event) documents that field on the event. No ticker prefix will be inferred.
+- **Investigation:** GitHub's jobs API identified failed fetch in engine run 44858037385 and failed headless/summary steps in desk run 44857400562. Their logs could not be downloaded due sandbox network restrictions; the exact historical causes remain unverified. A branch reproduction (44876362134) exposed `quote(None)` for missing `series_ticker` in the check annotation. Official Get Event documents `event.series_ticker`; Get Market Candlesticks documents nested `price`, `yes_bid`, `yes_ask`, and `end_period_ts`. Code now looks up the event, preserves a source, skips candles with an explicit error if series unavailable, and transcribes the documented candle shape. Initial events probe accounting stays separate from the lookup cache.
+- **Branch checks:** desk dispatch [44876364319](https://github.com/karagemop466-tech/Demo1/actions/runs/44876364319) passed after switching its jsdom test runtime to Node 22, using `npm ci`, and correcting the summary heredoc. Main-only commit guard prevents a branch dispatch from writing to main. Engine non-publishing dispatch [44876462143](https://github.com/karagemop466-tech/Demo1/actions/runs/44876462143) passed; annotation reported 1 selected market, 29 requests, 0 failed. This is a narrow, capped scan, not proof of complete market coverage. `python3 engine/test_engine.py` 11/11; `node desk/tools/dom_test.mjs` 105/105; `python3 -m unittest discover -s tests -p 'test_*.py'` 36/36 before the additional missing-series regression. `python3 build_site.py` 17 pages/link check OK, `tools/verify_site.py` PASS with 2 informational warnings, `npm run check:links` PASS (444 files, external links not fetched), `npm test` PASS. Existing tests emit unclosed-file ResourceWarnings. Both workflow YAML files parse; summary script ran locally.
+- **Irregularities:** REL-01..04 published on `flagged.html`: main-schedule success still needs observation; ranking fallbacks and bounded scans do not establish highest dollar markets; REST polling and paper trades do not establish continuous coverage, authenticated account performance, or profitability. Demo funds are mock and prices can differ from real markets ([demo docs](https://docs.kalshi.com/getting_started/demo_env)). No demo credentials were available, no orders were placed, and the full repo was not certified line by line. The audit workflow independently committed generated verification files to this branch, requiring a rebase after a rejected push; its work was preserved without conflict.
+- **Sources checked:** https://docs.kalshi.com/getting_started/api_environments, https://docs.kalshi.com/getting_started/demo_env, https://docs.kalshi.com/api-reference/events/get-event, https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/getting_started/quick_start_websockets, https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule; GitHub Actions run/job/check APIs cited above.
+- **Rebase conflict:** main advanced with session `arena/84634cec-demo1`'s resolution-watch work while this session was running. On rebasing, the appended coordination sections conflicted; both sessions' complete entries were retained in order, without discarding changes. Rebase completed successfully. Final engine branch test [44876563005](https://github.com/karagemop466-tech/Demo1/actions/runs/44876563005) passed with the separate probe cache; 29 live requests and 0 reported request failures. Four new regression tests pass, including a missing-series full run. R1/R2/R3 implementation and review **done**; publication and a main-branch refresh observation remain pending.
+- **Second rebase:** PR #92 could not merge because main advanced to `75f88ca` with concurrent work. Rebased onto that tip; append-only board conflict resolved by retaining both sides. No other files conflicted and no sibling work was discarded. PR checks before the rebase were green; rerun on the rebased head before merging.
+- **Publish record:** [PR #92](https://github.com/karagemop466-tech/Demo1/pull/92) merged at 2026-11-21T06:44:30Z as `e736f1eb828455f0ee3a7244856f7bf7df3be425`, after all five PR checks passed. Main desk workflow [44876980889](https://github.com/karagemop466-tech/Demo1/actions/runs/44876980889) subsequently passed. Engine main schedule has not yet been observed. Pages builds for `e736f1e` and the following desk-data commit were cancelled as later updates arrived; the subsequent [Pages run 44877270437](https://github.com/karagemop466-tech/Demo1/actions/runs/44877270437) succeeded for descendant `28468a90739d8c7931a319b07ce3bdd220d78af7`; Pages builds API reports `built`. Fetching [the published flagged page](https://karagemop466-tech.github.io/Demo1/flagged.html?release=28468a9) confirmed REL-01..04. Cache-busting was necessary: an earlier page fetch returned stale content after the successful deploy. This is a publish confirmation, not a guarantee of future freshness or full verification.
+
 ## Session arena/e16652d7-demo1 — live-scan repair, CI repair, consolidation (final integration round)
 
 **Claimed:** 2026-11-21 (UTC), before implementation. **Branch:** `arena/e16652d7-demo1` (platform-fixed name; `session-<id>/<task>` naming is not available, recorded as a deviation like every prior session).
