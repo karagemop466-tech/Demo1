@@ -2528,3 +2528,24 @@ Every other candle reader in the repo already used the nested shape (`app.js`, `
 3. **Board conflicts** (3 occurrences) were resolved by keeping both sides in full; no sibling work was discarded.
 
 No Kalshi credentials exist in this repository; no order was placed and no portfolio figure is asserted.
+
+## Release confirmation — session arena/d76440d6-demo1
+
+- **PR:** [#97](https://github.com/karagemop466-tech/Demo1/pull/97) — "ci(pages): scope validation concurrency per ref;
+  publish D76 findings; record session handoffs".
+- **Checks before merge:** `build` (Pages deploy validation) **pass**, `audit` **pass**, `check` **pass**,
+  `links` **pass**; `fetch` (data pipeline, not a site gate) was still queued on the runner backlog. Local
+  equivalents were re-run on the merge base and are listed in the task table above.
+- **Merge:** **MERGED** `--merge` at **2026-11-21T07:29:09Z**, merge commit
+  **`0d177a2d8afdaf2dbde1d1c4291107016a4acc5f`**.
+- **Pages:** confirmed by fetching the deployed page with a cache-busting query —
+  <https://karagemop466-tech.github.io/Demo1/flagged.html?release=0d177a2> serves the new
+  *CI diagnostics — session d76440d6* section with D76-01..D76-05 and their source links, which can only come
+  from this merge. The engine page
+  <https://karagemop466-tech.github.io/Demo1/engine/> renders 60 markets across the five topics with per-row
+  official API sources and the merged "snapshot as of …" chart.
+- **Not verified, stated plainly:** the cron *trigger* for `engine-refresh` had not fired again after the
+  pipeline repair (the pipeline's main path itself is proven, including its publish step). The GitHub REST API
+  was rate-limited for part of this session, so a couple of run-status checks were replaced by live-page
+  verification; nothing was inferred in their place.
+- **Session tasks:** CIR-1..CIR-3 and ENG-1 **withdrawn as duplicates** (see the table); REL-D76 **done**.
