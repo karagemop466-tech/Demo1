@@ -184,9 +184,18 @@ def main() -> int:
     #    official volume_24h_fp x notional_value_dollars; both operands come from the
     #    API, the product is labelled computed.
     scored = []
+    skipped_no_series = 0
     for m in markets:
         topic, matched, field = classify(m)
         if not topic:
+            continue
+        # The candlestick path is /series/{series}/markets/{ticker}/candlesticks, so a
+        # market without a series_ticker cannot be charted. Observed 2026-11-21: the
+        # topic rule matched on title text only, series_ticker was None, and
+        # urllib.parse.quote(None) raised "TypeError: quote_from_bytes() expected bytes",
+        # which is the crash that kept run 44876739087 red.
+        if not m.get("ticker") or not m.get("series_ticker"):
+            skipped_no_series += 1
             continue
         vol24 = fnum(m.get("volume_24h_fp")) or fnum(m.get("volume_fp")) or 0.0
         notional = fnum(m.get("notional_value_dollars")) or 1.0
@@ -224,12 +233,15 @@ def main() -> int:
             bucket.append(row)
     chosen = [r for rows in ranked.values() for r in rows]
     log(f"topic picks -> " + ", ".join(f"{t}:{len(v)}" for t, v in ranked.items()) +
-         f" (of {len(scored)} topic-matched)")
+         f" (of {len(scored)} topic-matched; {skipped_no_series} skipped for a missing series_ticker)")
 
     # 4. order book + candles for each chosen market
     for row in chosen:
         t = row["market_ticker"]
         ser = row["series_ticker"]
+        if not t or not ser:
+            log(f"skip {t}: no series_ticker, so no documented candle path exists")
+            continue
         ob, ob_url, ob_err = get_json(f"/markets/{urllib.parse.quote(t)}/orderbook", None, args.base)
         book = (ob or {}).get("orderbook_fp") or (ob or {}).get("orderbook") or {}
         yb = book.get("yes_dollars") or book.get("yes") or []
