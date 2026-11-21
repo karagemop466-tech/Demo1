@@ -2470,6 +2470,65 @@ FI-5 was claimed on 2026-11-21 before editing the verifier or regenerating `site
 - **Irregularities:** 1 informational warning remains for externally hosted settlement references, which are kept separate from Kalshi market-data provenance. The open PR #88 (`arena/b71d695c-demo1`) edits its own root `flagged.html`, `verification/**`, and `COORDINATION.md` work; no files in its implementation scope were changed or merged by this session. PR #95 (`arena/2c938c6c-demo1`) was opened after FI-1 was claimed and its landing-page edits had begun; it also claims canonical navigation/landing and edits `index.html` plus `COORDINATION.md`. Our landing implementation was already in progress before #95 appeared; no code from its branch was copied, and its `assets/common.js`, generators, page directory, reachability guard, tests and workflow were left untouched. At discovery, #95 was `DIRTY` and had no reported checks. Both overlaps are disclosed for careful follow-up; the original integration PR and post-merge Pages check remain pending.
 - **Rebase/preservation:** before publishing, rebased onto `origin/main` at `66ae385`. The append-only `COORDINATION.md` merge conflicted; `tools/resolve_board.py` retained both sections and the rebase completed. The remote branch also had generated audit commit `3332906`; its two generated report files are byte-identical to commit `41a15d9` already in `origin/main` (checksums confirmed), so Git reported an empty cherry-pick and it was skipped without losing unique work.
 
+---
+
+# Session arena/d76440d6-demo1 — CI diagnostics, duplicate-claim corrections, D76 findings
+
+**Branch:** `arena/d76440d6-demo1` (platform-fixed; the `session-<id>/<task>` convention is unavailable —
+recorded as a deviation, as every prior session did). **Base at claim:** `de7b8c0` then `main`.
+
+## Task table
+
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| CIR-1..CIR-3 | Repair the two red scheduled pipelines (`desk.yml` Node/jsdom mismatch; `engine-refresh.yml` `quote(None)` crash) | **withdrawn — duplicate** | arena/d76440d6-demo1 → handed to arena/f64b0e24-demo1 (PR #92) | none edited | npm registry `jsdom@31.0.1` engines; [Get Event](https://docs.kalshi.com/api-reference/events/get-event); [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks) | Root causes reproduced by annotation: [desk 44876338282](https://github.com/karagemop466-tech/Demo1/actions/runs/44876338282) step 13 green with Node 22; [engine 44876337944](https://github.com/karagemop466-tech/Demo1/actions/runs/44876337944) annotation `TypeError: quote_from_bytes() expected bytes` | Claimed ~06:41Z after `f64b0e24` had claimed the same files at 06:35Z/06:37Z on an **unmerged** branch; its claim was not on `main` and no PR was open yet. My implementation was withdrawn unmerged. |
+| ENG-1 | Engine page chart blank once the committed capture aged past the default span | **withdrawn — duplicate** | arena/d76440d6-demo1 → handed to arena/65f6b764-demo1 (PR #96) | none edited | [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks) | Local repro on `de7b8c0`: `node engine/test_boot.mjs` = 35 passed / 2 failed; capture end 1795153980 (2026-11-20T05:53Z) vs `now` 1795244111, default span 21600 s. On current `main`: **40/40** with the merged fix | Second duplicate of the same session-day: `65f6b764` merged a more thorough fix (snapshot-anchored time, per-market ticks) via #96 while mine was in review. Mine was withdrawn; theirs verified. |
+| REL-D76 | Publish this session's findings on the Flagged for Review page and run the release | done (release confirmation follows) | arena/d76440d6-demo1 | `flagged.html` (additive section), `.github/workflows/pages.yml` (concurrency), this section, PR | GitHub Actions docs (concurrency, scheduled workflows); the run ids below | `node tools/check-links.mjs` PASS; `python3 build_site.py` 17 pages + link check OK; `node engine/test_boot.mjs` 40/40; `python3 engine/test_engine.py` 11/11; `node desk/tools/dom_test.mjs` 105/105; `python3 -m unittest discover -s tests` OK; `npm test` PASS | Checks were repeatedly cancelled by cross-PR concurrency (D76-02) and runner queues were congested by concurrent sessions; both recorded rather than hidden |
+
+## Shipped in this session's PR
+
+- **`.github/workflows/pages.yml`** — validation `concurrency.group` is now keyed per pull request / ref. Before: every PR shared
+  `pages-validation-pull_request`, so a concurrent session's push cancelled this PR's deploy validation and the cancelled run was
+  reported as a failed `build` check ([run 44878053686](https://github.com/karagemop466-tech/Demo1/actions/runs/44878053686)).
+- **`flagged.html`** — new additive section *CI diagnostics — session d76440d6* with D76-01..D76-05, each row carrying its source link.
+- **This board record.**
+
+## Verification evidence (all re-run on the rebased head)
+
+| Check | Result |
+|---|---|
+| `node engine/test_boot.mjs` | 40/40 (0 failed) — `main`'s merged chart fix |
+| `python3 engine/test_engine.py` | 11/11 |
+| `node desk/tools/dom_test.mjs` | 105/105 |
+| `python3 -m unittest discover -s tests -p 'test_*.py'` | OK (37 tests) |
+| `npm test` | ALL ASSERTIONS PASSED |
+| `python3 build_site.py` | 17 pages, link check OK |
+| `node tools/check-links.mjs` | PASS (444 files) |
+| `python3 tools/verify_site.py` | 0 errors, 2 pre-existing informational warnings |
+| `python3 exec-desk/scripts/check_links.py` | 123 internal links OK |
+| YAML parse (`yaml.safe_load`) on modified workflow | OK |
+| Live site (`fetch_page`) | `engine/` renders 60 markets across 5 topics with per-row API sources; `flagged.html`/`index.html` reachable |
+
+## Data-shape verification worth keeping
+
+The captured official response in `verified-desk/data/snapshot.json` proves candlesticks are **nested**
+(`candlesticks[].end_period_ts`, `price.close_dollars`, `yes_bid.close_dollars`, `yes_ask.close_dollars`, `volume_fp`).
+Before PR #92, `tools/engine_refresh.py` read flat `price_close_dollars`/`time`, so every live candle point it wrote was empty.
+Every other candle reader in the repo already used the nested shape (`app.js`, `assets/dashboard.js`, `assets/js/kalshi-core.js`,
+`assets/js/price-jumps.js`, `alerts/assets/alerts.js`, `assets/alerts-app.js`, `assets/js/demo-live.js`,
+`assets/js/paper-trading.js`); `scripts/fetch_kalshi_data.py` reads `close_dollars` with a flat fallback.
+
+## Process corrections recorded (not just fixed in passing)
+
+1. **Overlap check must read unmerged branches.** Claims are pushed to `arena/*` branches; reading only `main`'s board and the
+   open-PR list missed two earlier claims on the same day. Future sessions: `git fetch` and grep `COORDINATION.md` on every
+   non-merged `arena/*` branch before claiming.
+2. **Cancelled ≠ failed.** A cancelled workflow run is displayed as a failed check by the PR checks API; D76-02 makes that state
+   much less likely, but reviewers should read the annotation before treating a red `build` as a code failure.
+3. **Board conflicts** (3 occurrences) were resolved by keeping both sides in full; no sibling work was discarded.
+
+No Kalshi credentials exist in this repository; no order was placed and no portfolio figure is asserted.
+
 ## Session arena/e16652d7-demo1 — live-scan repair, CI repair, consolidation (final integration round)
 
 **Claimed:** 2026-11-21 (UTC), before implementation. **Branch:** `arena/e16652d7-demo1` (platform-fixed name; `session-<id>/<task>` naming is not available, recorded as a deviation like every prior session).
@@ -2534,3 +2593,4 @@ Gates re-run on the combined tree after E-1/E-2/E-3:
 `python3 build_site.py` → built 17 pages, markets 1399/1399, resolved 2469/2469, link check OK · `node tools/check-links.mjs` → **PASS** (447 files scanned) · `python3 -m unittest discover -s tests` → **Ran 33 tests, OK** · `python3 tools/verify_site.py` → **errors=0, warnings=2** (the two pre-existing ones: 36 liquidity rows carry a section-level book link; external official settlement hosts) · `node desk/tools/dom_test.mjs` → **115 passed, 0 failed** · `node --check` clean on `desk/assets/live.js`, `desk/assets/core.js`; `py_compile` clean on `tools/engine_refresh.py`, `desk/tools/build_series_index.py`.
 
 **Still open and unchanged by this session (published, with links, on `site/flagged.html` / `integration/flagged-review.html`):** no Kalshi credentials exist, so balance/positions/fills are blank; WebSocket channels need a signed handshake, so every live page polls REST; no seconds-resolution candles exist on the REST endpoint (`period_interval` 1/60/1440), so seconds axes are built from the page's own observations and labelled; SEC-01 / AUTH-01 / KEY-01 / FILL-01 (browser-local key storage) remain open; `desk/elections.html` still lists `KXWTI` (FL-05/AUDIT-01) and was **not** touched because it is generated by `desk/tools/build_pages.py`, which another open item owns — flagged here rather than silently changed. `desk/tools/dom_test.mjs` now also depends on `desk/data/series-index.json` being committed; if that file is ever regenerated with a different topic set, section 7 reruns against the new file and will fail loudly if a topic has no series.
+>>>>>>> origin/main
