@@ -262,10 +262,13 @@ def main() -> int:
     log(f"topic picks -> " + ", ".join(f"{t}:{len(v)}" for t, v in ranked.items()) +
          f" (of {len(scored)} topic-matched)")
 
+    # Keep the initial events probe separate from per-market event lookups.
+    event_cache = dict(events)
+
     # 4. order book + candles for each chosen market
     for row in chosen:
         t = row["market_ticker"]
-        ser, ser_source, ser_err = event_series(row.get("event_ticker"), events, args.base)
+        ser, ser_source, ser_err = event_series(row.get("event_ticker"), event_cache, args.base)
         row["series_ticker"] = ser
         row["series_source"] = ser_source
         row["series_error"] = ser_err
