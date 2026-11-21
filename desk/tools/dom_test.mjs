@@ -123,6 +123,86 @@ check("totals match the entry list",
   log.totals.resolved === resolved.length && log.totals.awaiting === log.entries.length - resolved.length,
   JSON.stringify(log.totals));
 
+console.log("7. live scan boots and covers the five topics (live.html + core.js + live.js)");
+
+/* The scan is exercised with official-shaped payloads: the index file the page really
+ * ships, two per-series responses, and a newest-page response made of multivariate
+ * combos only (the shape that produced zero matches on 2026-11-21). */
+const liveHtml = fs.readFileSync(path.join(DESK, "live.html"), "utf8")
+  .replace(/<script[^>]*src="[^"]*"[^>]*><\/script>/g, "");
+const liveDom = new JSDOM(liveHtml, {
+  runScripts: "outside-only", pretendToBeVisual: true,
+  url: "file://" + path.join(DESK, "live.html"),
+});
+liveDom.window.HTMLCanvasElement.prototype.getContext = function () {
+  const noop = () => {};
+  return { setTransform: noop, clearRect: noop, beginPath: noop, moveTo: noop, lineTo: noop,
+    stroke: noop, fill: noop, fillText: noop, arc: noop, closePath: noop,
+    createLinearGradient: () => ({ addColorStop: noop }),
+    set strokeStyle(v) {}, set fillStyle(v) {}, set lineWidth(v) {}, set font(v) {}, set globalAlpha(v) {} };
+};
+const seriesIndex = JSON.parse(fs.readFileSync(path.join(DESK, "data", "series-index.json"), "utf8"));
+const slim = fs.readFileSync(path.join(DESK, "data", "snapshot-slim.json"), "utf8");
+const marketFor = (series) => series === "KXAAAGASW"
+  ? { ticker: "KXAAAGASW-26NOV23-3.9400", series_ticker: "KXAAAGASW", event_ticker: "KXAAAGASW-26NOV23",
+      title: "Will average **gas prices** be above $3.9400?", status: "active", yes_bid_dollars: "0.0100",
+      yes_ask_dollars: "0.0300", no_bid_dollars: "0.9700", no_ask_dollars: "0.9900",
+      last_price_dollars: "0.0200", volume_24h_fp: "1200.00", open_interest_fp: "3421.27",
+      close_time: "2026-11-23T04:59:00Z", result: "" }
+  : { ticker: "KXPGATOUR-THRC26-TMOO", series_ticker: "KXPGATOUR", event_ticker: "KXPGATOUR-THRC26",
+      title: "The RSM Classic: Taylor Moore wins", status: "active", yes_bid_dollars: "0.0400",
+      yes_ask_dollars: "0.0600", no_bid_dollars: "0.9400", no_ask_dollars: "0.9600",
+      last_price_dollars: "0.0500", volume_24h_fp: "840965.93", open_interest_fp: "18000.00",
+      close_time: "2026-12-06T00:00:00Z", result: "" };
+const combo = { ticker: "KXMVECROSSCATEGORY-S2026EL25MYXJS4XJ25SU-SYXFWBWET",
+  event_ticker: "KXMVECROSSCATEGORY-S2026EL25MYXJS4XJ25SU", series_ticker: "KXMVECROSSCATEGORY",
+  title: "yes Central Connecticut St.,yes Portland St.", status: "active", volume_24h_fp: "0.00",
+  open_interest_fp: "100.00", yes_bid_dollars: "0.0000", yes_ask_dollars: "1.0000",
+  no_bid_dollars: "0.0000", no_ask_dollars: "1.0000", last_price_dollars: "0.4500", close_time: "2026-11-24T22:00:00Z" };
+const seen = [];
+liveDom.window.fetch = (input) => {
+  const url = String(input);
+  seen.push(url);
+  const json = (obj) => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(obj) });
+  if (url.indexOf("series-index.json") >= 0) return json(seriesIndex);
+  if (url.indexOf("snapshot-slim.json") >= 0) return json(JSON.parse(slim));
+  if (url.indexOf("/exchange/status") >= 0) return json({ exchange_active: true, trading_active: true });
+  if (url.indexOf("candlesticks") >= 0) return json({ candlesticks: [] });
+  if (url.indexOf("/orderbook") >= 0) return json({ orderbook_fp: { yes_dollars: [], no_dollars: [] } });
+  if (url.indexOf("series_ticker=") >= 0) {
+    const s = decodeURIComponent(url.split("series_ticker=")[1].split("&")[0]);
+    return json({ markets: [marketFor(s)] });
+  }
+  if (url.indexOf("/markets?") >= 0 && url.indexOf("status=open") >= 0) {
+    return json({ markets: [combo], cursor: null });
+  }
+  return json({ markets: [], candlesticks: [] });
+};
+liveDom.window.eval(fs.readFileSync(path.join(DESK, "assets", "core.js"), "utf8"));
+liveDom.window.eval(fs.readFileSync(path.join(DESK, "assets", "live.js"), "utf8"));
+/* 28 series requests are spaced 120 ms apart by design; wait for the pass to finish. */
+await new Promise(r => setTimeout(r, 6000));
+const liveDoc = liveDom.window.document;
+const tableHtml = liveDoc.getElementById("live-table").innerHTML;
+check("scan asked for the committed series index", seen.some(u => u.indexOf("series-index.json") >= 0));
+check("scan used the documented mve_filter=exclude on the newest page",
+  seen.some(u => u.indexOf("status=open") >= 0 && u.indexOf("mve_filter=exclude") >= 0 && u.indexOf("series_ticker=") < 0));
+check("scan used series_ticker + mve_filter per series",
+  seen.some(u => u.indexOf("series_ticker=KXPGATOUR") >= 0 && u.indexOf("mve_filter=exclude") >= 0),
+  seen.filter(u => u.indexOf("series_ticker=") >= 0).slice(0, 2).join(" "));
+check("golf market from a series request is rendered", tableHtml.indexOf("KXPGATOUR-THRC26-TMOO") >= 0);
+check("gas market from a series request is rendered", tableHtml.indexOf("KXAAAGASW-26NOV23-3.9400") >= 0);
+check("multivariate combo market is not rendered", tableHtml.indexOf("KXMVECROSSCATEGORY") < 0);
+check("row source points at the series request that produced it",
+  tableHtml.indexOf("series_ticker=KXAAAGASW") >= 0);
+check("banner reports the live scan and cites mve_filter",
+  (liveDoc.getElementById("api-banner").innerHTML || "").indexOf("mve_filter") >= 0,
+  liveDoc.getElementById("api-banner").textContent.slice(0, 120));
+check("live count reports matched markets",
+  /open markets matched/.test(liveDoc.getElementById("live-count").textContent));
+check("the scan stores one row per ticker (2 real markets)", (liveDom.window.__lastRows || []).length === 2,
+  String((liveDom.window.__lastRows || []).length));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail) { console.log("\nFAILURES:"); problems.forEach(p => console.log("  - " + p)); process.exit(1); }
 process.exit(0);

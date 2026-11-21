@@ -382,8 +382,28 @@ def main() -> int:
            f"pending={len(pending)} "
            f"events_probe={len(events)} (err={ev_err or 'none'}) "
            f"requests={len(requests_log)} failures={len(payload['failed_requests'])} bytes={size}")
-    return 0 if not payload["failed_requests"] else 0
+    if not chosen:
+        # Publishing an empty snapshot would silently blank the engine page. Fail loudly
+        # instead, with the reason in a check annotation that survives the log host.
+        first = payload["failed_requests"][0] if payload["failed_requests"] else None
+        print("::error::engine_refresh collected 0 topic markets"
+              + (f" — first failed request {first.get('url')}: {first.get('error')}" if first else ""),
+              flush=True)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except BaseException as exc:  # noqa: BLE001 - last-resort diagnostic for CI
+        import traceback
+
+        tb = traceback.format_exc()
+        print(tb, file=sys.stderr, flush=True)
+        last = tb.strip().splitlines()[-1] if tb.strip() else ""
+        print(f"::error::engine_refresh crashed: {type(exc).__name__}: {exc} "
+              f"| {last}", flush=True)
+        sys.exit(1)
