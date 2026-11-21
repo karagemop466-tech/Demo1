@@ -2410,3 +2410,22 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 - **Rebase conflict:** main advanced with session `arena/84634cec-demo1`'s resolution-watch work while this session was running. On rebasing, the appended coordination sections conflicted; both sessions' complete entries were retained in order, without discarding changes. Rebase completed successfully. Final engine branch test [44876563005](https://github.com/karagemop466-tech/Demo1/actions/runs/44876563005) passed with the separate probe cache; 29 live requests and 0 reported request failures. Four new regression tests pass, including a missing-series full run. R1/R2/R3 implementation and review **done**; publication and a main-branch refresh observation remain pending.
 - **Second rebase:** PR #92 could not merge because main advanced to `75f88ca` with concurrent work. Rebased onto that tip; append-only board conflict resolved by retaining both sides. No other files conflicted and no sibling work was discarded. PR checks before the rebase were green; rerun on the rebased head before merging.
 - **Publish record:** [PR #92](https://github.com/karagemop466-tech/Demo1/pull/92) merged at 2026-11-21T06:44:30Z as `e736f1eb828455f0ee3a7244856f7bf7df3be425`, after all five PR checks passed. Main desk workflow [44876980889](https://github.com/karagemop466-tech/Demo1/actions/runs/44876980889) subsequently passed. Engine main schedule has not yet been observed. Pages builds for `e736f1e` and the following desk-data commit were cancelled as later updates arrived; the subsequent [Pages run 44877270437](https://github.com/karagemop466-tech/Demo1/actions/runs/44877270437) succeeded for descendant `28468a90739d8c7931a319b07ce3bdd220d78af7`; Pages builds API reports `built`. Fetching [the published flagged page](https://karagemop466-tech.github.io/Demo1/flagged.html?release=28468a9) confirmed REL-01..04. Cache-busting was necessary: an earlier page fetch returned stale content after the successful deploy. This is a publish confirmation, not a guarantee of future freshness or full verification.
+
+
+---
+
+# Session arena/65f6b764-demo1 — final integration: simplify the landing page and close out current verification
+
+## Session claim
+- **Session ID / fixed branch:** `arena/65f6b764-demo1` (platform-provided; branch will not be renamed).
+- **Claimed:** 2026-11-21 UTC, before implementation.
+- **Basis:** reviewed the existing coordination board; the current branch starts at `origin/main` (`de7b8c0`), and `gh pr list --state open` is empty. Existing feature sessions are recorded as complete. The root landing currently presents six overlapping alert desks and several duplicate navigation links, despite a separate consolidation map; this conflicts with the brief's request for a simple, trader-oriented front door.
+- **Scope (exclusive for this session):** `index.html` and this append-only section of `COORDINATION.md`. This final integration may update the shared landing/navigation now that prior implementation tasks are complete. No market data, strategy engine, account/authentication, or trade-execution code will be changed.
+
+## Task board
+| # | Task | Status | Owner | File scope | Sources | Verification | Irregularities |
+|---|------|--------|-------|------------|---------|--------------|----------------|
+| FI-1 | Simplify root landing and navigation to one primary live desk, five topic pages, simulation, resolutions, portfolio limits, sources and review; retain alternate implementations under a clearly secondary link | in progress | arena/65f6b764-demo1 | `index.html` | Existing official-source register in `SOURCES.md`; source URLs already shown on the linked pages | Pending | Existing duplicate desks are retained, not deleted; account trading remains unavailable without user-managed credentials |
+| FI-2 | Re-run repository build, link/source audits and relevant dashboard/simulator tests; publish a final integration PR and confirm merge/Pages status | in progress | arena/65f6b764-demo1 | `COORDINATION.md` and release operations | Kalshi official docs listed in `SOURCES.md`; GitHub Pages API/docs | Pending | This sandbox cannot independently access Kalshi endpoints from shell under its network allowlist; no live API values will be claimed as re-verified here |
+
+Claim log: 2026-11-21 — `arena/65f6b764-demo1` claimed FI-1 and FI-2 on the platform-fixed current branch. Claim is pushed before implementation. This session is the final integration owner; no other branch will be created.
