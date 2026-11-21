@@ -2671,6 +2671,22 @@ Gates on the merge head `1f68f96`: all five PR checks **pass** (`build`, `check`
 
 **Irregularity for the record:** the audit bot pushes to this branch between every push, so `git push` was rejected twice and each round needed a fetch+merge of generated files only. Nothing of the bot's work was overwritten and nothing of this session's work was lost.
 
+
+**Published (2026-11-21T07:54:23Z).** [PR #98](https://github.com/karagemop466-tech/Demo1/pull/98) merged into `main` as **`9d64897c08f74a6fab6f3f224ca68d229e1e5189`** with all five required checks green on head `698c647` (*build*, *check*, *links*, *audit*, *fetch*; PR state CLEAN).
+
+**One extra fix after the merge candidate was green, worth recording:** a sibling session's new test (`tests/test_landing_directory.py`, from PR #95's integration work) requires every shipped page to appear in the generated `integration/page-directory.html`. The new `archive/index.html` was not listed, so `unittest discover` went from OK to **2 failures** on the merged tree. Fixed by regenerating the directory (`python3 tools/build_directory.py` → 156 pages), not by editing the test; committed as `698c647` and re-verified before the merge. This is exactly the kind of cross-session interaction the board exists for: the failure was invisible on my branch alone because the test arrived with `main`.
+
+**Pages deployment confirmed.** `GET /repos/.../pages/builds` reports `built` for commit `9d64897` (created 07:54:25Z; two later builds for sibling commits `64b5df0` / `340857a` errored and are not this session's). Fetched from the live site after the build, with cache-busting because GitHub Pages served a stale copy on the first try:
+
+- `https://karagemop466-tech.github.io/Demo1/archive/index.html` — renders the canonical-pages tiles and the full superseded-page table (15 rows, every link live), and states plainly that it carries no market values so it owes no per-row API source.
+- `https://karagemop466-tech.github.io/Demo1/index.html` — the trader path, the topic totals table, and this session's additions: the “One canonical page per job” paragraph in the trading workbench, the *Archive & overlap index* card in the review section, and the nav entry.
+- `https://karagemop466-tech.github.io/Demo1/desk/data/series-index.json` — served with 28 series over 5 topics, `requests_per_refresh: 28`, each entry carrying its `series_ticker=…&mve_filter=exclude` source URL.
+- `https://karagemop466-tech.github.io/Demo1/desk/live.html` — serves the new copy explaining both documented filters and linking the index; the order-book panel on that same page shows live levels fetched at 07:56:55Z (`KXAAAGASW-26NOV23-3.6400`: YES bids 2.0¢/1.0¢, NO bids 97¢…90¢ plus 16¢), which is direct evidence from the published page that browser→demo-API reads still work.
+
+**Caveat for the record:** the live table body itself is rendered by JavaScript, so a page fetch shows its placeholder (“Fetching open markets…”) rather than rows. That path is covered by `desk/tools/dom_test.mjs` §7 (115/115) against official-shaped payloads; it was **not** observed end-to-end in a real browser from this sandbox, which has no route to `*.kalshi.co`. Said plainly rather than claimed as witnessed.
+
+**Still open, unchanged:** no credentials ⇒ balance/positions/fills blank; WS needs a signed handshake ⇒ REST polling; no seconds-resolution candles ⇒ seconds axes are built from observed ticks; SEC-01/AUTH-01/KEY-01/FILL-01 open; `desk/elections.html` still lists `KXWTI` (FL-05/AUDIT-01), flagged not silently edited; 36 liquidity rows keep a section-level book link; `desk.yml`/`engine-refresh.yml` still reference actions GitHub now forces onto Node 24 (warning only). All appear on `site/flagged.html` / `integration/flagged-review.html` with source links.
+
 **Request to the owner of `operational-audit/**`:** E-1/E-2 change behaviour that an audit will measure; the evidence (live API responses, run IDs, docs links) is recorded in this section so the audit can cite it instead of re-deriving it. No file inside `operational-audit/**` is touched by this session.
 
 ### E-1 … E-4 record (sources, verification, irregularities)
