@@ -2386,10 +2386,10 @@ Claim recorded 2026-11-21 UTC. Scope does not overlap an open PR (checked with `
 
 | Item | Result |
 |---|---|
-| Pull request | pending (created after this claim commit) |
-| Merge result | pending |
-| GitHub Pages deploy | pending |
-| Live verification | pending |
+| Pull request | https://github.com/karagemop466-tech/Demo1/pull/90 — `arena/559f93df-demo1` → `main` |
+| Merge result | **MERGED** via `gh pr merge 90 --merge` on 2026-11-21T06:40:12Z; merge commit `6a0d68566e51a3654917647bd0a126f80d0f1a52`; no approval waited on, per the brief. Pre-merge gates green: `build_site.py` link check OK; `verify_site.py` PASS errors=0; `check-links.mjs` PASS 444 files. |
+| GitHub Pages deploy | My merge commit's legacy build errored instantly ("Page build failed.", duration 0s) — the documented platform build starvation (10 builds/hour soft limit / supersession during the merge storm), not a content defect (verified locally: `build_site.py` → 17 pages, link check: OK; `verify_site.py` PASS). A subsequent main build at `75f88ca`, which contains my merge as an ancestor, completed `status: built` with no error. Live site serves the merged content at https://karagemop466-tech.github.io/Demo1/ |
+| Live verification | Confirmed `status: built`; `git merge-base --is-ancestor 6a0d685 origin/main` → YES (my merge is in main). Follow-up PR below records this completed result back onto `main`'s COORDINATION.md (this branch was already merged by PR #90). |
 
 ### Claim log
 
