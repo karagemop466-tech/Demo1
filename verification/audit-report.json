@@ -71,7 +71,7 @@
     }
   },
   "counts": {
-    "files_scanned": 460,
+    "files_scanned": 461,
     "findings": 6,
     "errors": 0,
     "warnings": 4,
@@ -1393,7 +1393,7 @@
     },
     {
       "url": "https://docs.kalshi.com/api-reference/market/get-markets",
-      "uses": 94,
+      "uses": 95,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2418,7 +2418,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/demo_env",
-      "uses": 110,
+      "uses": 111,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
@@ -2713,7 +2713,7 @@
     },
     {
       "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
-      "uses": 25,
+      "uses": 26,
       "status": "in-index",
       "note": "listed in https://docs.kalshi.com/llms.txt",
       "files": [
