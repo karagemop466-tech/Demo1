@@ -1,41 +1,20 @@
 // Shared navigation + helpers for all pages. No external dependencies.
 (function () {
+  // Primary navigation only. The full inventory of every page (156 at the time of
+  // writing) lives in integration/page-directory.html, which is generated from the
+  // shipped HTML files by tools/build_directory.py, so trimming this list cannot
+  // orphan a page. Root index.html carries the same primary set inline.
   var pages = [
     ["index.html", "Home"],
-    ["alerts.html", "Price swing alerts"],
-    ["alerts-live.html", "Alert tapes (live)"],
-    ["tape-desk/index.html", "Tape desk"],
-    ["site/gas-prices.html", "Gas prices"],
-    ["site/elections.html", "Elections"],
-    ["site/culture.html", "Culture"],
-    ["site/crypto.html", "Crypto"],
-    ["site/golf.html", "Golf"],
-    ["site/index.html", "Topic snapshots"],
-    ["exec-desk/dashboard.html", "Live desk"],
-    ["desk/index.html", "Consolidated desk"],
-    ["exec-desk/jumps.html", "Price jumps"],
-    ["exec-desk/markets.html", "Resolutions"],
-    ["pages/paper-trading.html", "Paper strategies"],
+    ["trade-desk/index.html", "Trader desk"],
+    ["trade-desk/chart.html", "Chart & depth"],
+    ["trade-desk/resolutions.html", "Resolutions"],
+    ["trade-desk/strategies.html", "Paper trades"],
+    ["site/index.html", "Topics"],
+    ["integration/page-directory.html", "All pages"],
     ["integration/executive-summary.html", "Executive summary"],
-    ["exec-desk/sources.html", "Sources"],
-    ["integration/flagged-review.html", "Flagged for Review"],
-    ["pages/price-jumps.html", "Earlier jump scan"],
-    ["executive-summary.html", "Earlier summary"],
-    ["markets.html", "Earlier markets"],
-    ["dashboard.html", "Earlier dashboard"],
-    ["portfolio.html", "Earlier portfolio"],
-    ["analysis.html", "Analysis"],
-    ["questions.html", "Questions & gaps"],
-    ["suggestions.html", "Suggestions"],
-    ["alerts/index.html", "Alert chat (generated feed)"],
-    ["trade-desk/index.html", "Trade desk"],
-    ["alert-desk/index.html", "Alert desk"],
-    ["sim-desk/index.html", "Sim strategies"],
-    ["engine/index.html", "Strategy engine"],
-    ["flagged.html", "Earlier review"],
-    ["sources.html", "Earlier sources"],
-    ["monitor/index.html", "Monitor (single page)"],
-    ["pages/landing-executive-summary.html", "Multi-page site"]
+    ["integration/flagged-review.html", "Flagged for review"],
+    ["site/sources.html", "Sources"]
   ];
   var script = document.currentScript;
   var siteRoot = new URL("../", script && script.src ? script.src : location.href);
