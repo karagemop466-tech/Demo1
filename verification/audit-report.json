@@ -75,8 +75,8 @@
     "findings": 9,
     "errors": 0,
     "warnings": 4,
-    "mismatches": 3,
-    "explained": 2,
+    "mismatches": 4,
+    "explained": 1,
     "doc_links_used": 351,
     "doc_links_in_index": 337,
     "doc_links_not_in_index": 0,
@@ -84,7 +84,7 @@
     "doc_links_unverified": 0,
     "tables_checked": 25,
     "cross_desk_quantities": 69,
-    "cross_desk_differences": 9
+    "cross_desk_differences": 10
   },
   "findings": [
     {
@@ -120,7 +120,7 @@
         56,
         5,
         51,
-        1
+        15
       ],
       "canonical": [
         1,
@@ -131,8 +131,7 @@
         255,
         387
       ],
-      "status": "EXPLAINED",
-      "detail": "The page matches its own data source, desk/data/resolutions-log.json (tracked 57, resolved 56, awaiting 1). The snapshot holds 132 records for this topic; the difference of 75 is the series-prefix exclusion declared in desk/tools/track_resolutions.py (see C8). The row itself does not state the exclusion, so a reader comparing desks sees two different numbers."
+      "status": "MISMATCH"
     },
     {
       "check": "C3",
@@ -141,10 +140,10 @@
       "topic": "crypto",
       "field": "topic summary row",
       "claimed": [
-        705,
-        28,
-        677,
-        2090
+        754,
+        40,
+        714,
+        2091
       ],
       "canonical": [
         9,
@@ -3810,12 +3809,12 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 232,
-        "desk/resolutions.html": 2090,
+        "desk/resolutions.html": 2091,
         "verification/index.html": 232
       },
       "distinct_values": [
         232,
-        2090
+        2091
       ],
       "status": "differ"
     },
@@ -3837,13 +3836,14 @@
       "topic": "elections",
       "values": {
         "desk/markets.html": 1,
-        "desk/resolutions.html": 1,
+        "desk/resolutions.html": 15,
         "verification/index.html": 1
       },
       "distinct_values": [
-        1
+        1,
+        15
       ],
-      "status": "agree"
+      "status": "differ"
     },
     {
       "quantity": "awaiting",
@@ -4042,12 +4042,12 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 659,
-        "desk/resolutions.html": 677,
+        "desk/resolutions.html": 714,
         "verification/index.html": 659
       },
       "distinct_values": [
         659,
-        677
+        714
       ],
       "status": "differ"
     },
@@ -4326,11 +4326,11 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 668,
-        "desk/resolutions.html": 705
+        "desk/resolutions.html": 754
       },
       "distinct_values": [
         668,
-        705
+        754
       ],
       "status": "differ"
     },
@@ -4557,12 +4557,12 @@
       "topic": "crypto",
       "values": {
         "desk/markets.html": 9,
-        "desk/resolutions.html": 28,
+        "desk/resolutions.html": 40,
         "verification/index.html": 9
       },
       "distinct_values": [
         9,
-        28
+        40
       ],
       "status": "differ"
     },
